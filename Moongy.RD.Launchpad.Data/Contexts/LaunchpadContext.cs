@@ -5,6 +5,17 @@ namespace Moongy.RD.Launchpad.Data.Contexts;
 
 public class LaunchpadContext : DbContext
 {
+    public LaunchpadContext(DbContextOptions options) : base(options)
+    {
+
+    }
+
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<ContractType>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
+    }
+
     public DbSet<ContractType> ContractTypes { get; set; }
 
     public DbSet<ContractVariant> ContractsVariants { get; set; }

@@ -6,7 +6,7 @@ namespace Moongy.RD.Launchpad.Data.Entities;
 
 public class BlockchainNetwork : EntityWithNameAndDescription
 {
-    public Blob Image { get; set; }
+    public string? Image { get; set; }
 
     public virtual ICollection<PublishResult> PublishResults { get; set; } = [];
 }

@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Moongy.RD.Launchpad.Data.Base;
 
 namespace Moongy.RD.Launchpad.Data.Entities;
 
-public class FeatureOnContractFeatureGroup
+public class FeatureOnContractFeatureGroup : Entity
 {
 
     [ForeignKey(nameof(ContractFeature))]

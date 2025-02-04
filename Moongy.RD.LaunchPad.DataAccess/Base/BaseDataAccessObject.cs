@@ -13,7 +13,7 @@ public class BaseDataAccessObject<T>(LaunchpadContext context) : IBaseDataAccess
     {
         var result = await _context.AddAsync(contractType);
         await _context.SaveChangesAsync();
-        return result.Entity.Uuid;
+        return result.Entity.Uuid ?? Guid.Empty;
     }
 
     public async Task DeleteAsync(T contractType)
