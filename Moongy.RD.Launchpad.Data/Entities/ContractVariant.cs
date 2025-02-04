@@ -18,4 +18,8 @@ public class ContractVariant
     public int ContractTypeId { get; set; }
 
     public virtual ContractType? ContractType { get; set; }
+
+    public virtual ICollection<CharacteristicInContractVariant> CharacteristicInContractVariants { get; set; } = [];
+
+    public virtual ICollection<ContractGenerationResult> ContractGenerationResults { get; set; } = [];
 }

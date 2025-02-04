@@ -2,7 +2,7 @@
 
 namespace Moongy.RD.Launchpad.Data.Entities;
 
-public class ContractType
+public class BlockchainNetwork
 {
     [Key]
     public int Id { get; set; }
@@ -13,5 +13,5 @@ public class ContractType
 
     public string? Description { get; set; }
 
-    public virtual ICollection<ContractVariant> ContractVariants { get; set; } = [];
+    public virtual ICollection<PublishResult> PublishResults { get; set; } = [];
 }

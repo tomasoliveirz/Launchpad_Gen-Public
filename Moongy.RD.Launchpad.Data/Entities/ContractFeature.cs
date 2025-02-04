@@ -2,7 +2,7 @@
 
 namespace Moongy.RD.Launchpad.Data.Entities;
 
-public class ContractType
+public class ContractFeature
 {
     [Key]
     public int Id { get; set; }
@@ -11,7 +11,7 @@ public class ContractType
 
     public string? Name { get; set; }
 
-    public string? Description { get; set; }
+    public DataType DataType { get; set; }
 
-    public virtual ICollection<ContractVariant> ContractVariants { get; set; } = [];
+    public virtual ICollection<FeatureOnContractFeatureGroup> FeatureOnContractFeatureGroups { get; set; } = [];
 }
