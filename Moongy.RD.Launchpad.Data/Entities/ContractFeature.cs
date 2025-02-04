@@ -12,6 +12,6 @@ public class ContractFeature
     public string? Name { get; set; }
 
     public DataType DataType { get; set; }
-
+    
     public virtual ICollection<FeatureOnContractFeatureGroup> FeatureOnContractFeatureGroups { get; set; } = [];
 }

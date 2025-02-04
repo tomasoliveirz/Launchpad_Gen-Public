@@ -10,8 +10,4 @@
     <ProjectReference Include="..\Moongy.RD.Launchpad.Data\Moongy.RD.Launchpad.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Base\" />
-  </ItemGroup>
-
 </Project>

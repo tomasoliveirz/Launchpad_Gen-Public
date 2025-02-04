@@ -1,17 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Moongy.RD.Launchpad.Data.Base;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Moongy.RD.Launchpad.Data.Entities;
-public class ContractVariant
+public class ContractVariant : CommonAtributes
 {
     [Key]
     public int Id { get; set; }
 
     public Guid UUid { get; set; }
-
-    public string? Name { get; set; }
-
-    public string? Description { get; set; }
 
 
     [ForeignKey(nameof(ContractType))]

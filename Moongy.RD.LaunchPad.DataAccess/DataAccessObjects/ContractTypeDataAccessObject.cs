@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Moongy.RD.Launchpad.Data.Contexts;
 using Moongy.RD.Launchpad.Data.Entities;
+using Moongy.RD.LaunchPad.DataAccess.Base.Interfaces;
 using Moongy.RD.LaunchPad.DataAccess.Interfaces;
 
 namespace Moongy.RD.LaunchPad.DataAccess.DataAccessObjects
 {
-    public class ContractTypeDataAccessObject(LaunchpadContext context) : IContractTypeDataAccessObject
+    public class ContractTypeDataAccessObject(LaunchpadContext context) : IUniversalDataAccessObject<ContractType>
     {
         
         private readonly LaunchpadContext _context = context;
@@ -46,7 +47,5 @@ namespace Moongy.RD.LaunchPad.DataAccess.DataAccessObjects
             _context.Update(contractType);
             await _context.SaveChangesAsync();
         }
-
-
     }
 }

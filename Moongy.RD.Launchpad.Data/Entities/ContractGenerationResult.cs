@@ -1,20 +1,17 @@
-﻿using System;
+﻿using Moongy.RD.Launchpad.Data.Base;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Moongy.RD.Launchpad.Data.Entities;
 
-public class ContractGenerationResult
+public class ContractGenerationResult : CommonAtributes
 {
     [Key]
     public int Id { get; set; }
     
     public Guid UUid { get; set; }
-
-    public string? Name { get; set; }
-
-    public string? Description { get; set; }
 
     public DateOnly CreateAt { get; set; }
 
