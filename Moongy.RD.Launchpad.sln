@@ -5,6 +5,8 @@ VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Moongy.RD.Launchpad.Data", "Moongy.RD.Launchpad.Data\Moongy.RD.Launchpad.Data.csproj", "{87C0C067-ADFD-43F0-92CF-1166043BEB70}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moongy.RD.LaunchPad.DataAccess", "Moongy.RD.LaunchPad.DataAccess\Moongy.RD.LaunchPad.DataAccess.csproj", "{B2E98871-97A9-4130-A941-445EC0884EC0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{87C0C067-ADFD-43F0-92CF-1166043BEB70}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87C0C067-ADFD-43F0-92CF-1166043BEB70}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87C0C067-ADFD-43F0-92CF-1166043BEB70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2E98871-97A9-4130-A941-445EC0884EC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2E98871-97A9-4130-A941-445EC0884EC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2E98871-97A9-4130-A941-445EC0884EC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2E98871-97A9-4130-A941-445EC0884EC0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
