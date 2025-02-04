@@ -3,12 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Moongy.RD.Launchpad.Data.Entities;
 
-public class ContractType : CommonAtributes
+public class ContractType : EntityWithNameAndDescription
 {
-    [Key]
-    public int Id { get; set; }
-
-    public Guid UUid { get; set; }
-
     public virtual ICollection<ContractVariant> ContractVariants { get; set; } = [];
 }

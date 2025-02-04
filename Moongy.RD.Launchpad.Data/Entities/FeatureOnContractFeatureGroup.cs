@@ -5,10 +5,6 @@ namespace Moongy.RD.Launchpad.Data.Entities;
 
 public class FeatureOnContractFeatureGroup
 {
-    [Key]
-    public int Id { get; set; }
-
-    public Guid UUid { get; set; }
 
     [ForeignKey(nameof(ContractFeature))]
     public int ContractFeatureId { get; set; }

@@ -1,17 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Moongy.RD.Launchpad.Data.Base;
 
 namespace Moongy.RD.Launchpad.Data.Entities;
 
-public class ContractFeature
+public class ContractFeature : EntityWithNameAndDescription
 {
-    [Key]
-    public int Id { get; set; }
-
-    public Guid UUid { get; set; }
-
-    public string? Name { get; set; }
-
-    public DataType DataType { get; set; }
+    public string? DataType { get; set; }
     
     public virtual ICollection<FeatureOnContractFeatureGroup> FeatureOnContractFeatureGroups { get; set; } = [];
 }

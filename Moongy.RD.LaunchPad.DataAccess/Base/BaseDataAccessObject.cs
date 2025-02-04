@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Moongy.RD.Launchpad.Data.Base;
 using Moongy.RD.Launchpad.Data.Contexts;
-using Moongy.RD.Launchpad.Data.Entities;
 using Moongy.RD.LaunchPad.DataAccess.Base.Interfaces;
 
 namespace Moongy.RD.LaunchPad.DataAccess.Base;
 
-public class UniversalDataAccessObject<T>(LaunchpadContext context) : IUniversalDataAccessObject<T>
+public class BaseDataAccessObject<T>(LaunchpadContext context) : IBaseDataAccessObject<T> where T : Entity
 {
     private readonly LaunchpadContext _context = context;
 
@@ -13,7 +13,7 @@ public class UniversalDataAccessObject<T>(LaunchpadContext context) : IUniversal
     {
         var result = await _context.AddAsync(contractType);
         await _context.SaveChangesAsync();
-        return result.Entity.UUid;
+        return result.Entity.Uuid;
     }
 
     public async Task DeleteAsync(T contractType)
@@ -22,26 +22,26 @@ public class UniversalDataAccessObject<T>(LaunchpadContext context) : IUniversal
         await _context.SaveChangesAsync();
     }
 
-    public async Task<ContractType?> GetAsync(Guid contractId)
+    public async Task<T?> GetAsync(Guid contractId)
     {
-        var result = await _context.ContractTypes.Where(x => x.UUid == contractId).SingleOrDefaultAsync();
+        var result = await _context.Set<T>().Where(x => x.Uuid == contractId).SingleOrDefaultAsync();
         return result;
     }
 
-    public async Task<IEnumerable<ContractType>> ListAsync()
+    public async Task<IEnumerable<T>> ListAsync()
     {
-        var result = await _context.ContractTypes.ToListAsync();
+        var result = await _context.Set<T>().ToListAsync();
         return result;
     }
 
-    public async Task<(int, IEnumerable<ContractType>)> ListAsync(int offset, int limit)
+    public async Task<(int, IEnumerable<T>)> ListAsync(int offset, int limit)
     {
-        var result = await _context.ContractTypes.Skip(offset).Take(limit).ToListAsync();
-        var total = await _context.ContractTypes.CountAsync();
+        var result = await _context.Set<T>().Skip(offset).Take(limit).ToListAsync();
+        var total = await _context.Set<T>().CountAsync();
         return (total, result);
     }
 
-    public async Task UpdateAsync(ContractType contractType)
+    public async Task UpdateAsync(T contractType)
     {
         _context.Update(contractType);
         await _context.SaveChangesAsync();

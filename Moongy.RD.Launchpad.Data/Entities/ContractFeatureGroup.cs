@@ -1,18 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using Moongy.RD.Launchpad.Data.Base;
 
 namespace Moongy.RD.Launchpad.Data.Entities;
 
-public class ContractFeatureGroup
+public class ContractFeatureGroup : EntityWithNameAndDescription
 {
-    [Key]
-    public int Id { get; set; }
+    public string? DataType { get; set; }
 
-    public Guid UUid { get; set; }
-
-    public string? Name { get; set; }
-
-    public DataType DataType { get; set; }
-
+    [ForeignKey(nameof(ContractGenerationResult))]
+    public int ContractGenerationResultId { get; set; }
     public virtual ContractGenerationResult? ContractGenerationResult { get; set; }
 
     public virtual ICollection<FeatureOnContractFeatureGroup> FeatureOnContractFeatureGroups { get; set; } = [];

@@ -6,12 +6,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Moongy.RD.Launchpad.Data.Entities;
 
-public class ContractGenerationResult : CommonAtributes
+public class ContractGenerationResult : EntityWithNameAndDescription
 {
-    [Key]
-    public int Id { get; set; }
-    
-    public Guid UUid { get; set; }
 
     public DateOnly CreateAt { get; set; }
 

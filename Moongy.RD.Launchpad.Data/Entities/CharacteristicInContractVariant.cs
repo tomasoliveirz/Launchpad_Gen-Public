@@ -1,14 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Moongy.RD.Launchpad.Data.Base;
 
 namespace Moongy.RD.Launchpad.Data.Entities;
 
-public class CharacteristicInContractVariant
+public class CharacteristicInContractVariant : Entity
 {
-    [Key]
-	public int Id { get; set; }
-
-    public Guid UUid { get; set; }
 
     [ForeignKey(nameof(ContractVariant))]
     public int ContractVariantId { get; set; }

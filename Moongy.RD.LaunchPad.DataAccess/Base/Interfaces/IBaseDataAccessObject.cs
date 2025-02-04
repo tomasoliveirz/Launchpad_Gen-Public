@@ -1,6 +1,8 @@
-﻿namespace Moongy.RD.LaunchPad.DataAccess.Base.Interfaces;
+﻿using Moongy.RD.Launchpad.Data.Base;
 
-public interface IUniversalDataAccessObject<T>
+namespace Moongy.RD.LaunchPad.DataAccess.Base.Interfaces;
+
+public interface IBaseDataAccessObject<T> where T : Entity
 {
     Task<Guid> CreateAsync(T e);
     Task<T?> GetAsync(Guid id);

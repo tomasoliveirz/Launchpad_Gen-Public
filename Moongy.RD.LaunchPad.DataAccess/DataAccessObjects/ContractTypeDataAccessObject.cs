@@ -1,51 +1,31 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Moongy.RD.Launchpad.Data.Contexts;
 using Moongy.RD.Launchpad.Data.Entities;
-using Moongy.RD.LaunchPad.DataAccess.Base.Interfaces;
+using Moongy.RD.LaunchPad.DataAccess.Base;
 using Moongy.RD.LaunchPad.DataAccess.Interfaces;
 
 namespace Moongy.RD.LaunchPad.DataAccess.DataAccessObjects
 {
-    public class ContractTypeDataAccessObject(LaunchpadContext context) : IUniversalDataAccessObject<ContractType>
+    public class ContractTypeDataAccessObject(LaunchpadContext context) : BaseDataAccessObject<ContractType>(context), IContractTypeDataAccessObject
     {
-        
-        private readonly LaunchpadContext _context = context;
-        public async Task<Guid> CreateAsync(ContractType contractType)
+        public async Task<IEnumerable<(ContractType, int)>> GetContractTypesWithVariantCount()
         {
-            var result = await _context.AddAsync(contractType);
-            await _context.SaveChangesAsync();
-            return result.Entity.UUid;
-        }
+            var query = from types in context.ContractTypes
+                        join variants in context.ContractsVariants on types.Id equals variants.ContractTypeId
+                        select new { Type = types, Variant = variants };
 
-        public async Task DeleteAsync(ContractType contractType)
-        {
-            _context.Remove(contractType);
-            await _context.SaveChangesAsync();
-        }
+            var subQuery = from queryResult in query 
+                           group queryResult by queryResult.Type into g
+                           select new {Type = g.Key, Variants = g};
 
-        public async Task<ContractType?> GetAsync(Guid contractId)
-        {
-            var result = await _context.ContractTypes.Where(x => x.UUid == contractId).SingleOrDefaultAsync();
+            var subQueryResult = await subQuery.ToListAsync();
+            var result = new List<(ContractType, int)>();
+
+            foreach (var item in subQueryResult) 
+            {
+                result.Add((item.Type, item.Variants.Count()));    
+            }
             return result;
-        }
-
-        public async Task<IEnumerable<ContractType>> ListAsync()
-        {
-            var result = await _context.ContractTypes.ToListAsync();
-            return result;
-        }
-
-        public async Task<(int, IEnumerable<ContractType>)> ListAsync(int offset, int limit)
-        {
-            var result = await _context.ContractTypes.Skip(offset).Take(limit).ToListAsync();
-            var total = await _context.ContractTypes.CountAsync();
-            return (total, result);
-        }
-
-        public async Task UpdateAsync(ContractType contractType)
-        {
-            _context.Update(contractType);
-            await _context.SaveChangesAsync();
         }
     }
 }
