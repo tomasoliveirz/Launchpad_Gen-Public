@@ -5,6 +5,6 @@ using Moongy.RD.LaunchPad.DataAccess.Interfaces;
 
 namespace Moongy.RD.LaunchPad.DataAccess.DataAccessObjects;
 
-public class FeatureOnContractFeatureGroupDataAccessObject(LaunchpadContext context) : BaseDataAccessObject<FeatureOnContractFeatureGroup>(context), IFeatureOnContractFeatureGrouoDataAccessObject
+public class FeatureOnContractFeatureGroupDataAccessObject(LaunchpadContext context) : BaseDataAccessObject<FeatureOnContractFeatureGroup>(context), IFeatureOnContractFeatureGroupDataAccessObject
 {
 }

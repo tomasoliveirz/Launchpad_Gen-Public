@@ -3,6 +3,6 @@ using Moongy.RD.LaunchPad.DataAccess.Base.Interfaces;
 
 namespace Moongy.RD.LaunchPad.DataAccess.Interfaces;
 
-public interface IFeatureOnContractFeatureGrouoDataAccessObject : IBaseDataAccessObject<FeatureOnContractFeatureGroup>
+public interface IFeatureOnContractFeatureGroupDataAccessObject : IBaseDataAccessObject<FeatureOnContractFeatureGroup>
 {
 }
