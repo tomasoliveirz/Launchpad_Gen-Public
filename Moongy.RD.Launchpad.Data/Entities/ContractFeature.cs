@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Moongy.RD.Launchpad.Data.Base;
+﻿using Moongy.RD.Launchpad.Data.Base;
 
 namespace Moongy.RD.Launchpad.Data.Entities;
 
