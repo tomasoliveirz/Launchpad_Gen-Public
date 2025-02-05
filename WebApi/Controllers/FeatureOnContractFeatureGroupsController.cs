@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Moongy.RD.Launchpad.Data.Entities;
 using Moongy.RD.Launchpad.Business.Interfaces;
+using Moongy.RD.Launchpad.Business.Exceptions;
 
 namespace WebApi.Controllers
 {
@@ -12,29 +13,49 @@ namespace WebApi.Controllers
         public async Task<ActionResult<IEnumerable<FeatureOnContractFeatureGroup>>> ListAsync()
         {
             var result = await bo.ListAsync();
-            return Ok(result);
+            if (result.IsSuccessful) return Ok(result);
+            return Problem(result.Exception?.Message ?? "");
         }
 
         [HttpPost("new")]
         public async Task<ActionResult<Guid>> CreateAsync([FromBody] FeatureOnContractFeatureGroup featureOnContractFeatureGroup)
         {
-            var result = await bo.CreateAsync(featureOnContractFeatureGroup);
-            return StatusCode(201, result);
+            var result = await bo.CreateAsync(featureOnContractFeatureGroup, 
+                featureOnContractFeatureGroup.ContractFeature?.Uuid ?? Guid.Empty,
+                featureOnContractFeatureGroup.ContractFeatureGroup?.Uuid ?? Guid.Empty);
+            if (result.IsSuccessful) StatusCode(201, result.Result);
+            if (result.Exception is InvalidModelException ime) return BadRequest(ime.Message);
+            return Problem(result.Exception?.Message ?? "");
         }
 
         [HttpDelete]
         public async Task<ActionResult> DeleteAsync(Guid uuid)
         {
-            var result = await bo.GetAsync(uuid) ?? throw new Exception("Result not found");
-            await bo.DeleteAsync(result);
-            return StatusCode(204, result);
+            var result = await bo.DeleteAsync(uuid);
+            if (result.IsSuccessful) return Ok();
+            if (result.Exception is NotFoundException nfe) return NotFound(nfe.Id);
+            return Problem(result.Exception?.Message ?? "");
         }
 
         [HttpGet("{uuid}")]
         public async Task<ActionResult<FeatureOnContractFeatureGroup>> GetAsync(Guid uuid)
         {
             var result = await bo.GetAsync(uuid);
-            return Ok(result);
+            if (result.IsSuccessful) return Ok(result.Result);
+            if (result.Exception is NotFoundException nfe) return NotFound(nfe.Id);
+            return Problem(result.Exception?.Message ?? "");
+        }
+
+        [HttpPut("{uuid}")]
+        public async Task<ActionResult> UpdateAsync(Guid uuid, FeatureOnContractFeatureGroup featureOnContractFeatureGroup)
+        {
+            var result = await bo.UpdateAsync(uuid, featureOnContractFeatureGroup, 
+                featureOnContractFeatureGroup.ContractFeature?.Uuid,
+                featureOnContractFeatureGroup.ContractFeatureGroup?.Uuid);
+            if (result.IsSuccessful) return Ok();
+            if (result.Exception is NotFoundException nfe) return NotFound(nfe.Id);
+            if (result.Exception is InvalidModelException ime) return BadRequest(ime.Message);
+            return Problem(result.Exception?.Message ?? "");
         }
     }
 }
