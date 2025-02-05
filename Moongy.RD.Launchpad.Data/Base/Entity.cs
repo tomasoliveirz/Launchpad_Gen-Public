@@ -15,5 +15,6 @@ namespace Moongy.RD.Launchpad.Data.Base
         public int Id { get; set; }
 
         public Guid? Uuid { get; set; }
+
     }
 }

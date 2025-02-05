@@ -5,70 +5,53 @@ using Moongy.RD.LaunchPad.DataAccess.Base.Interfaces;
 
 namespace Moongy.RD.Launchpad.Business.Base
 {
-    public abstract class EntityBusinessObject<T>(IBaseDataAccessObject<T> dao) : IEntityBusinessObject<T> where T : Entity
+    public abstract class EntityBusinessObject<T>(IBaseDataAccessObject<T> dao) : BaseBusinessObject, IEntityBusinessObject<T> where T : Entity
     {
+
         public async virtual Task<OperationResult<Guid>> CreateAsync(T entity)
         {
-            try
+            return await ExecuteOperation(async () =>
             {
-                using var scope = new TransactionScope(TransactionScopeOption.RequiresNew, new TransactionOptions() { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.FromSeconds(90) }, TransactionScopeAsyncFlowOption.Enabled);
                 var result = await dao.CreateAsync(entity);
-                scope.Complete();
-                return new OperationResult<Guid>() { Result = result };
-            }
-            catch (Exception ex)
-            {
-                return new OperationResult<Guid>() { Exception = ex };
-            }
+                return result;
+            });
         }
 
         public async Task<OperationResult> DeleteAsync(Guid uuid)
         {
-            try
+            return await ExecuteOperation(async () =>
             {
-                using var scope = new TransactionScope(TransactionScopeOption.RequiresNew, new TransactionOptions() { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.FromSeconds(90) }, TransactionScopeAsyncFlowOption.Enabled);
                 var record = await dao.GetAsync(uuid);
                 if (record == null) throw new Exception("Record not found");
-                 await dao.DeleteAsync(record);
-                scope.Complete();
-                return new OperationResult() {  };
-            }
-            catch (Exception ex)
-            {
-                return new OperationResult() { Exception = ex };
-            }
+                await dao.DeleteAsync(record);
+            });
         }
 
         public async Task<OperationResult<T?>> GetAsync(Guid uuid)
         {
-            try
+            return await ExecuteOperation(async () =>
             {
-                using var scope = new TransactionScope(TransactionScopeOption.RequiresNew, new TransactionOptions() { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.FromSeconds(90) }, TransactionScopeAsyncFlowOption.Enabled);
                 var result = await dao.GetAsync(uuid);
-                scope.Complete();
-                return new OperationResult<T?>() { Result = result };
-            }
-            catch (Exception ex)
-            {
-                return new OperationResult<T?>() { Exception = ex };
-            }
+                return result;
+            });
         }
 
         public async Task<OperationResult<IEnumerable<T>>> ListAsync()
         {
-            try
+            return await ExecuteOperation(async () =>
             {
-                using var scope = new TransactionScope(TransactionScopeOption.RequiresNew, new TransactionOptions() { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.FromSeconds(90) }, TransactionScopeAsyncFlowOption.Enabled);
                 var result = await dao.ListAsync();
-                scope.Complete();
-                return new OperationResult<IEnumerable<T>>() { Result = result };
-            }
-            catch (Exception ex)
-            {
-                return new OperationResult<IEnumerable<T>>() { Exception = ex };
-            }
+                return result;
+            });
+
         }
 
-        public  abstract Task<OperationResult> UpdateAsync(Guid uuid, T entity);
+        public  async virtual Task<OperationResult> UpdateAsync(Guid uuid, T entity)
+        {
+            return await Task.Run(() =>
+            {
+                return new OperationResult() { Exception = new NotImplementedException() };
+            });
+        }
     }
 }
