@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Moongy.RD.Launchpad.Data.Base;
+﻿using Microsoft.AspNetCore.Mvc;
 using Moongy.RD.Launchpad.Data.Entities;
 using Moongy.RD.LaunchPad.DataAccess.Interfaces;
 
@@ -8,20 +6,19 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ContractTypesController(IContractTypeDataAccessObject dao) : ControllerBase
+    public class ContractFeatureGroupsController(IContractFeatureGroupDataAccessObject dao) : ControllerBase
     {
-
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ContractType>>> ListAsync()
+        public async Task<ActionResult<IEnumerable<ContractFeatureGroup>>> ListAsync()
         {
             var result = await dao.ListAsync();
             return Ok(result);
         }
 
         [HttpPost("new")]
-        public async Task<ActionResult<Guid>> CreateAsync([FromBody]ContractType type)
+        public async Task<ActionResult<Guid>> CreateAsync([FromBody] ContractFeatureGroup contractFeatureGroup)
         {
-            var result = await dao.CreateAsync(type);
+            var result = await dao.CreateAsync(contractFeatureGroup);
             return StatusCode(201, result);
         }
 
@@ -35,10 +32,11 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("{uuid}")]
-        public async Task<ActionResult<ContractType>> GetAsync(Guid uuid)
+        public async Task<ActionResult<ContractFeatureGroup>> GetAsync(Guid uuid)
         {
             var result = await dao.GetAsync(uuid);
             return Ok(result);
         }
+
     }
 }

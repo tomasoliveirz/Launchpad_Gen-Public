@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Moongy.RD.Launchpad.Business.Interfaces;
 using Moongy.RD.Launchpad.Data.Contexts;
+using Moongy.RD.Launchpad.Data.Entities;
 using Moongy.RD.LaunchPad.DataAccess.DataAccessObjects;
 using Moongy.RD.LaunchPad.DataAccess.Interfaces;
 using Scalar.AspNetCore;
@@ -16,6 +18,18 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 builder.Services.AddScoped<IContractTypeDataAccessObject, ContractTypeDataAccessObject>();
+builder.Services.AddScoped<IBlockchainNetworkDataAccessObject, BlockchainNetworkDataAccessObject>();
+builder.Services.AddScoped<ICharacteristicInContractVariantDataAccessObject, CharacteristicInContractVariantDataAccessObject>();
+builder.Services.AddScoped<IContractCharacteristicDataAccessObject, ContractCharacteristicDataAccessObject>();
+builder.Services.AddScoped<IContractFeatureDataAccessObject, ContractFeatureDataAccessObject>();
+builder.Services.AddScoped<IContractFeatureGroupDataAccessObject, ContractFeatureGroupDataAccessObject>();
+builder.Services.AddScoped<IContractGenerationResultDataAccessObject, ContractGenerationResultDataAccessObject>();
+builder.Services.AddScoped<IContractVariantDataAccessObject, ContractVariantDataAccessObject>();
+builder.Services.AddScoped<IPublishResultDataAccessObject, PublishResultDataAccessObject>();
+builder.Services.AddScoped<IFeatureOnContractFeatureGroupDataAccessObject, FeatureOnContractFeatureGroupDataAccessObject>();
+
+builder.Services.AddScoped<IBlockchainNetworkBusinessObject, IBlockchainNetworkBusinessObject>();
+
 
 builder.Services.AddCors(options =>
 {

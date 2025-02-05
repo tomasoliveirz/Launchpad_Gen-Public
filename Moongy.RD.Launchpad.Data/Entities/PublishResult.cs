@@ -15,10 +15,11 @@ public class PublishResult : Entity
 
     [ForeignKey(nameof(ContractGenerationResult))]
     public int ContractGenerationResultId { get; set; }
-    public virtual BlockchainNetwork? BlockchainNetwork { get; set; }
+    public virtual ContractGenerationResult? ContractGenerationResult { get; set; }
+    
 
 
     [ForeignKey(nameof(BlockchainNetwork))]
     public int BlockchainNetworkId { get; set; }
-    public virtual ContractGenerationResult? ContractGenerationResult { get; set; }
+    public virtual BlockchainNetwork? BlockchainNetwork { get; set; }
 }
