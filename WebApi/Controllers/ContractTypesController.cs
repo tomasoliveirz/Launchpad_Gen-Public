@@ -2,42 +2,41 @@
 using Microsoft.AspNetCore.Mvc;
 using Moongy.RD.Launchpad.Data.Base;
 using Moongy.RD.Launchpad.Data.Entities;
-using Moongy.RD.LaunchPad.DataAccess.Interfaces;
+using Moongy.RD.Launchpad.Business.Interfaces;
 
 namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ContractTypesController(IContractTypeDataAccessObject dao) : ControllerBase
+    public class ContractTypesController(IContractTypeBusinessObject bo) : ControllerBase
     {
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ContractType>>> ListAsync()
         {
-            var result = await dao.ListAsync();
+            var result = await bo.ListAsync();
             return Ok(result);
         }
 
         [HttpPost("new")]
         public async Task<ActionResult<Guid>> CreateAsync([FromBody]ContractType type)
         {
-            var result = await dao.CreateAsync(type);
+            var result = await bo.CreateAsync(type);
             return StatusCode(201, result);
         }
 
         [HttpDelete]
         public async Task<ActionResult> DeleteAsync(Guid uuid)
         {
-            var result = await dao.GetAsync(uuid);
-            if (result == null) throw new Exception("Result not found");
-            await dao.DeleteAsync(result);
+            var result = await bo.GetAsync(uuid) ?? throw new Exception("Result not found");
+            await bo.DeleteAsync(result);
             return StatusCode(204, result);
         }
 
         [HttpGet("{uuid}")]
         public async Task<ActionResult<ContractType>> GetAsync(Guid uuid)
         {
-            var result = await dao.GetAsync(uuid);
+            var result = await bo.GetAsync(uuid);
             return Ok(result);
         }
     }

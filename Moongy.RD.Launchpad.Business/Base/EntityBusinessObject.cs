@@ -21,8 +21,7 @@ namespace Moongy.RD.Launchpad.Business.Base
         {
             return await ExecuteOperation(async () =>
             {
-                var record = await dao.GetAsync(uuid);
-                if (record == null) throw new Exception("Record not found");
+                var record = await dao.GetAsync(uuid) ?? throw new Exception("Record not found");
                 await dao.DeleteAsync(record);
             });
         }

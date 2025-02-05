@@ -1,4 +1,5 @@
 ﻿using Moongy.RD.Launchpad.Business.Base;
+using Moongy.RD.Launchpad.Business.Exceptions;
 using Moongy.RD.Launchpad.Business.Interfaces;
 using Moongy.RD.Launchpad.Data.Entities;
 using Moongy.RD.LaunchPad.DataAccess.Base.Interfaces;
@@ -12,12 +13,11 @@ public class ContractGenerationResultBusinessObject(IContractGenerationResultDat
     {
         return await ExecuteOperation(async () =>
         {
-            if (string.IsNullOrEmpty(contractGenerationResult.Name)) throw new Exception("Invalid model exception: name is missing");
-            if (string.IsNullOrEmpty(contractGenerationResult.Description)) throw new Exception("Invalid model exception: description is missing");
+            if (string.IsNullOrEmpty(contractGenerationResult.Name)) throw new InvalidModelException("name is missing");
+            if (string.IsNullOrEmpty(contractGenerationResult.Description)) throw new InvalidModelException("description is missing");
             contractGenerationResult.CreateAt = DateOnly.FromDateTime(DateTime.Now);
 
-            var contractVariant = await genericDao.GetAsync<ContractVariant>(contractVariantUuid);
-            if (contractVariant == null) throw new Exception("Contract Variant not found");
+            var contractVariant = await genericDao.GetAsync<ContractVariant>(contractVariantUuid) ?? throw new NotFoundException("Contract Variant", contractVariantUuid.ToString());
             contractGenerationResult.ContractVariantId = contractVariant.Id;
 
             var result = await dao.CreateAsync(contractGenerationResult);
@@ -29,17 +29,15 @@ public class ContractGenerationResultBusinessObject(IContractGenerationResultDat
     {
         return await ExecuteOperation(async () =>
         {
-            if (string.IsNullOrEmpty(contractGenerationResult.Name)) throw new Exception("Invalid model exception: name is missing");
-            if (string.IsNullOrEmpty(contractGenerationResult.Description)) throw new Exception("Invalid model exception: description is missing");
-            var oldRecord = await dao.GetAsync(uuid);
-            if (oldRecord == null) throw new Exception("Record not found");
+            if (string.IsNullOrEmpty(contractGenerationResult.Name)) throw new InvalidModelException("name is missing");
+            if (string.IsNullOrEmpty(contractGenerationResult.Description)) throw new InvalidModelException("description is missing");
+            var oldRecord = await dao.GetAsync(uuid) ?? throw new NotFoundException("Contract Generation Result", uuid.ToString());
             oldRecord.Name = contractGenerationResult.Name;
             oldRecord.Description = contractGenerationResult.Description;
 
             if (contractVariantUuid != null)
             {
-                var contractVariant = await genericDao.GetAsync<ContractVariant>(contractVariantUuid.Value);
-                if (contractVariant == null) throw new Exception("Contract Variant not found");
+                var contractVariant = await genericDao.GetAsync<ContractVariant>(contractVariantUuid.Value) ?? throw new NotFoundException("Contract Variant", contractVariantUuid.Value.ToString());
                 oldRecord.ContractVariantId = contractVariant.Id;
             }
             await dao.UpdateAsync(oldRecord);

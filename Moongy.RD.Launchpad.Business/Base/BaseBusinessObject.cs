@@ -4,7 +4,7 @@ namespace Moongy.RD.Launchpad.Business.Base
 {
     public class BaseBusinessObject()
     {
-        public async Task<OperationResult<TResult>> ExecuteOperation<TResult>(Func<Task<TResult>> operation, IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, long timeOut = 90)
+        public static async Task<OperationResult<TResult>> ExecuteOperation<TResult>(Func<Task<TResult>> operation, IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, long timeOut = 90)
         {
             try
             {
@@ -19,7 +19,7 @@ namespace Moongy.RD.Launchpad.Business.Base
             }
         }
 
-        public async Task<OperationResult> ExecuteOperation(Func<Task> operation, IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, long timeOut = 90)
+        public static async Task<OperationResult> ExecuteOperation(Func<Task> operation, IsolationLevel isolationLevel = IsolationLevel.ReadCommitted, long timeOut = 90)
         {
             try
             {

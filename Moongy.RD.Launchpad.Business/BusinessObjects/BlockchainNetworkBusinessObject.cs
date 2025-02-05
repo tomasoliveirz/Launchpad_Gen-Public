@@ -1,4 +1,5 @@
 ﻿using Moongy.RD.Launchpad.Business.Base;
+using Moongy.RD.Launchpad.Business.Exceptions;
 using Moongy.RD.Launchpad.Business.Interfaces;
 using Moongy.RD.Launchpad.Data.Entities;
 using Moongy.RD.LaunchPad.DataAccess.Interfaces;
@@ -12,7 +13,7 @@ public class BlockchainNetworkBusinessObject(IBlockchainNetworkDataAccessObject 
     {
         return await ExecuteOperation(async () =>
         {
-            if (string.IsNullOrEmpty(blockchainNetwork.Name)) throw new Exception("Invalid model exception: name is missing");
+            if (string.IsNullOrEmpty(blockchainNetwork.Name)) throw new InvalidModelException("name is missing");
             var result = await dao.CreateAsync(blockchainNetwork);
             return result;
         });
@@ -22,9 +23,8 @@ public class BlockchainNetworkBusinessObject(IBlockchainNetworkDataAccessObject 
     {
         return await ExecuteOperation(async () =>
         {
-            if (string.IsNullOrEmpty(blockchainNetwork.Name)) throw new Exception("Invalid model exception: name is missing");
-            var oldRecord = await dao.GetAsync(uuid);
-            if (oldRecord == null) throw new Exception("Record not found");
+            if (string.IsNullOrEmpty(blockchainNetwork.Name)) throw new InvalidModelException("name is missing");
+            var oldRecord = await dao.GetAsync(uuid) ?? throw new NotFoundException("Blockchain Network", uuid.ToString());
             oldRecord.Name = blockchainNetwork.Name;
             oldRecord.Description = blockchainNetwork.Description;
             oldRecord.Image = blockchainNetwork.Image;

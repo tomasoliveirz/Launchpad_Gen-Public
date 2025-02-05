@@ -3,14 +3,8 @@ using Moongy.RD.Launchpad.Data.Entities;
 
 namespace Moongy.RD.Launchpad.Data.Contexts;
 
-public class LaunchpadContext : DbContext
+public class LaunchpadContext(DbContextOptions options) : DbContext(options)
 {
-    public LaunchpadContext(DbContextOptions options) : base(options)
-    {
-
-    }
-
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ContractType>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
@@ -28,7 +22,7 @@ public class LaunchpadContext : DbContext
 
     public DbSet<PublishResult> PublishResults { get; set; }
 
-    public DbSet<BlockchainNetwork> blockchainNetworks { get; set; }
+    public DbSet<BlockchainNetwork> BlockchainNetworks { get; set; }
 
     public DbSet<ContractFeatureGroup> ContractFeatureGroups { get; set; }
 

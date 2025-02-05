@@ -1,4 +1,5 @@
 ﻿using Moongy.RD.Launchpad.Business.Base;
+using Moongy.RD.Launchpad.Business.Exceptions;
 using Moongy.RD.Launchpad.Business.Interfaces;
 using Moongy.RD.Launchpad.Data.Entities;
 using Moongy.RD.LaunchPad.DataAccess.Base.Interfaces;
@@ -12,12 +13,8 @@ namespace Moongy.RD.Launchpad.Business.BusinessObjects
         {
             return await ExecuteOperation(async () =>
             {
-                var contractFeature = await genericDao.GetAsync<ContractFeature>(featureUuid);
-                if (contractFeature == null) throw new Exception("Contract Feature not found");
-
-                var featureGroup = await genericDao.GetAsync<ContractFeatureGroup>(featureGroupUuid);
-                if (featureGroup == null) throw new Exception("Contract Feature Group not found");
-
+                var contractFeature = await genericDao.GetAsync<ContractFeature>(featureUuid) ?? throw new NotFoundException("Contract Feature", featureUuid.ToString());
+                var featureGroup = await genericDao.GetAsync<ContractFeatureGroup>(featureGroupUuid) ?? throw new NotFoundException("Contract Feature Group", featureGroupUuid.ToString());
                 feature.ContractFeatureGroupId = featureGroup.Id;
                 feature.ContractFeatureId = contractFeature.Id;
 
@@ -30,20 +27,16 @@ namespace Moongy.RD.Launchpad.Business.BusinessObjects
         {
             return await ExecuteOperation(async () =>
             {
-                var oldRecord = await dao.GetAsync(uuid);
-                if (oldRecord == null) throw new Exception("Contract Feature on group not found");
-
-                if(featureUuid != null)
+                var oldRecord = await dao.GetAsync(uuid) ?? throw new NotFoundException("Feature in Contract Feature Group", uuid.ToString());
+                if (featureUuid != null)
                 {
-                    var contractFeature = await genericDao.GetAsync<ContractFeature>(featureUuid.Value);
-                    if (contractFeature == null) throw new Exception("Contract Feature not found");
+                    var contractFeature = await genericDao.GetAsync<ContractFeature>(featureUuid.Value) ?? throw new NotFoundException("Contract Feature", featureUuid.Value.ToString());
                     oldRecord.ContractFeatureId = contractFeature.Id;
                 }
 
                 if (featureGroupUuid != null)
                 {
-                    var featureGroup = await genericDao.GetAsync<ContractFeatureGroup>(featureGroupUuid.Value);
-                    if (featureGroup == null) throw new Exception("Contract Feature Group not found");
+                    var featureGroup = await genericDao.GetAsync<ContractFeatureGroup>(featureGroupUuid.Value) ?? throw new NotFoundException("Contract Feature Group", featureGroupUuid.Value.ToString());
                     oldRecord.ContractFeatureGroupId = featureGroup.Id;
                 }
                 await dao.UpdateAsync(oldRecord);

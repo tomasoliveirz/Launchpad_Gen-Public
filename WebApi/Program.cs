@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using Moongy.RD.Launchpad.Business.BusinessObjects;
 using Moongy.RD.Launchpad.Business.Interfaces;
 using Moongy.RD.Launchpad.Data.Contexts;
-using Moongy.RD.Launchpad.Data.Entities;
+using Moongy.RD.LaunchPad.DataAccess.Base;
+using Moongy.RD.LaunchPad.DataAccess.Base.Interfaces;
 using Moongy.RD.LaunchPad.DataAccess.DataAccessObjects;
 using Moongy.RD.LaunchPad.DataAccess.Interfaces;
 using Scalar.AspNetCore;
@@ -17,6 +19,7 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+builder.Services.AddScoped<IGenericDataAccessObject, GenericDataAccessObject>();
 builder.Services.AddScoped<IContractTypeDataAccessObject, ContractTypeDataAccessObject>();
 builder.Services.AddScoped<IBlockchainNetworkDataAccessObject, BlockchainNetworkDataAccessObject>();
 builder.Services.AddScoped<ICharacteristicInContractVariantDataAccessObject, CharacteristicInContractVariantDataAccessObject>();
@@ -28,7 +31,17 @@ builder.Services.AddScoped<IContractVariantDataAccessObject, ContractVariantData
 builder.Services.AddScoped<IPublishResultDataAccessObject, PublishResultDataAccessObject>();
 builder.Services.AddScoped<IFeatureOnContractFeatureGroupDataAccessObject, FeatureOnContractFeatureGroupDataAccessObject>();
 
-builder.Services.AddScoped<IBlockchainNetworkBusinessObject, IBlockchainNetworkBusinessObject>();
+builder.Services.AddScoped<IContractTypeBusinessObject, ContractTypeBusinessObject>();
+builder.Services.AddScoped<IBlockchainNetworkBusinessObject, BlockchainNetworkBusinessObject>();
+builder.Services.AddScoped<ICharacteristicInContractVariantBusinessObject, CharacteristicInContractVariantBusinessObject>();
+builder.Services.AddScoped<IContractCharacteristicBusinessObject, ContractCharacteristicBusinessObject>();
+builder.Services.AddScoped<IContractFeatureBusinessObject, ContractFeatureBusinessObject>();
+builder.Services.AddScoped<IContractFeatureGroupBusinessObject, ContractFeatureGroupBusinessObject>();
+builder.Services.AddScoped<IContractGenerationResultBusinessObject, ContractGenerationResultBusinessObject>();
+builder.Services.AddScoped<IContractVariantBusinessObject, ContractVariantBusinessObject>();
+builder.Services.AddScoped<IPublishResultBusinessObject, PublishResultBusinessObject>();
+builder.Services.AddScoped<IFeatureOnContractFeatureGroupBusinessObject, FeatureOnContractFeatureGroupBusinessObject>();
+
 
 
 builder.Services.AddCors(options =>

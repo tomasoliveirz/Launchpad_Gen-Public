@@ -1,4 +1,5 @@
 ﻿using Moongy.RD.Launchpad.Business.Base;
+using Moongy.RD.Launchpad.Business.Exceptions;
 using Moongy.RD.Launchpad.Business.Interfaces;
 using Moongy.RD.Launchpad.Data.Entities;
 using Moongy.RD.LaunchPad.DataAccess.Base.Interfaces;
@@ -12,12 +13,8 @@ public class CharacteristicInContractVariantBusinessObject(ICharacteristicInCont
     {
         return await ExecuteOperation(async () =>
         {
-            var contractVariant = await genericDao.GetAsync<ContractVariant>(contractVariantUuid);
-            if (contractVariant == null) throw new Exception("Contract Variant not found");
-
-            var contractCharacteristic = await genericDao.GetAsync<ContractCharacteristic>(contractCharacteristicUuid);
-            if (contractCharacteristic == null) throw new Exception("Contract Characteristic not found");
-
+            var contractVariant = await genericDao.GetAsync<ContractVariant>(contractVariantUuid) ?? throw new Exception("Contract Variant not found");
+            var contractCharacteristic = await genericDao.GetAsync<ContractCharacteristic>(contractCharacteristicUuid) ?? throw new Exception("Contract Characteristic not found");
             characteristicInContractVariant.ContractVariantId = contractVariant.Id;
             characteristicInContractVariant.ContractCharacteristicId = contractCharacteristic.Id;
 
@@ -30,20 +27,16 @@ public class CharacteristicInContractVariantBusinessObject(ICharacteristicInCont
     {
         return await ExecuteOperation(async () =>
         {
-            var oldRecord = await dao.GetAsync(uuid);
-            if (oldRecord == null) throw new Exception("Record not found");
-
+            var oldRecord = await dao.GetAsync(uuid) ?? throw new NotFoundException("Characteristic in Contract Variant", uuid.ToString());
             if (contractVariantUuid != null)
             {
-                var contractVariant = await genericDao.GetAsync<ContractVariant>(contractVariantUuid.Value);
-                if (contractVariant == null) throw new Exception("Contract Variant Result not found");
+                var contractVariant = await genericDao.GetAsync<ContractVariant>(contractVariantUuid.Value) ?? throw new NotFoundException("Contract Variant", uuid.ToString());
                 oldRecord.ContractVariantId = contractVariant.Id;
             }
 
             if (contractCharacteristicUuid != null)
             {
-                var contractCharacteristic = await genericDao.GetAsync<BlockchainNetwork>(contractCharacteristicUuid.Value);
-                if (contractCharacteristic == null) throw new Exception("Blockchain Network Result not found");
+                var contractCharacteristic = await genericDao.GetAsync<ContractCharacteristic>(contractCharacteristicUuid.Value) ?? throw new NotFoundException("Contract Characteristic", uuid.ToString());
                 oldRecord.ContractCharacteristicId = contractCharacteristic.Id;
             }
             await dao.UpdateAsync(oldRecord);

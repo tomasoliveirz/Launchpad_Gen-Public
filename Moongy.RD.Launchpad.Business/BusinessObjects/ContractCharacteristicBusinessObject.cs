@@ -1,4 +1,5 @@
 ﻿using Moongy.RD.Launchpad.Business.Base;
+using Moongy.RD.Launchpad.Business.Exceptions;
 using Moongy.RD.Launchpad.Business.Interfaces;
 using Moongy.RD.Launchpad.Data.Entities;
 using Moongy.RD.LaunchPad.DataAccess.Interfaces;
@@ -11,7 +12,7 @@ public class ContractCharacteristicBusinessObject(IContractCharacteristicDataAcc
     {
         return await ExecuteOperation(async () =>
         {
-            if (string.IsNullOrEmpty(contractCharacteristic.Name)) throw new Exception("Invalid model exception: name is missing");
+            if (string.IsNullOrEmpty(contractCharacteristic.Name)) throw new InvalidModelException("name is missing");
             var result = await dao.CreateAsync(contractCharacteristic);
             return result;
         });
@@ -21,9 +22,8 @@ public class ContractCharacteristicBusinessObject(IContractCharacteristicDataAcc
     {
         return await ExecuteOperation(async () =>
         {
-            if (string.IsNullOrEmpty(contractCharacteristic.Name)) throw new Exception("Invalid model exception: name is missing");
-            var oldRecord = await dao.GetAsync(uuid);
-            if (oldRecord == null) throw new Exception("Record not found");
+            if (string.IsNullOrEmpty(contractCharacteristic.Name)) throw new InvalidModelException("name is missing");
+            var oldRecord = await dao.GetAsync(uuid) ?? throw new NotFoundException("Contract Characteristic", uuid.ToString());
             oldRecord.Name = contractCharacteristic.Name;
             oldRecord.Description = contractCharacteristic.Description;
             await dao.UpdateAsync(oldRecord);

@@ -3,6 +3,7 @@ using Moongy.RD.LaunchPad.DataAccess.Interfaces;
 using Moongy.RD.Launchpad.Data.Entities;
 using Moongy.RD.Launchpad.Business.Interfaces;
 using Moongy.RD.LaunchPad.DataAccess.Base.Interfaces;
+using Moongy.RD.Launchpad.Business.Exceptions;
 
 namespace Moongy.RD.Launchpad.Business.BusinessObjects;
 
@@ -12,9 +13,8 @@ public class ContractVariantBusinessObject(IContractVariantDataAccessObject dao,
     {
         return await ExecuteOperation(async () =>
         {
-            if (string.IsNullOrEmpty(contractVariant.Name)) throw new Exception("Invalid model exception: name is missing");
-            var contractType = await genericDao.GetAsync<ContractType>(contractTypeUuid);
-            if (contractType == null) throw new Exception("Contract Type not found");
+            if (string.IsNullOrEmpty(contractVariant.Name)) throw new InvalidModelException("name is missing");
+            var contractType = await genericDao.GetAsync<ContractType>(contractTypeUuid) ?? throw new NotFoundException("Contract Type", contractTypeUuid.ToString());
             contractVariant.ContractTypeId = contractType.Id;
             var result = await dao.CreateAsync(contractVariant);
             return result;
@@ -25,15 +25,13 @@ public class ContractVariantBusinessObject(IContractVariantDataAccessObject dao,
     {
         return await ExecuteOperation(async () =>
         {
-            if (string.IsNullOrEmpty(contractVariant.Name)) throw new Exception("Invalid model exception: name is missing");
-            var oldRecord = await dao.GetAsync(uuid);
-            if (oldRecord == null) throw new Exception("Record not found");
+            if (string.IsNullOrEmpty(contractVariant.Name)) throw new InvalidModelException("name is missing");
+            var oldRecord = await dao.GetAsync(uuid) ?? throw new NotFoundException("Contract Variant", uuid.ToString());
             oldRecord.Name = contractVariant.Name;
             oldRecord.Description = contractVariant.Description;
             if (contractTypeUuid != null)
             {
-                var contractType = await genericDao.GetAsync<ContractType>(contractTypeUuid.Value);
-                if (contractType == null) throw new Exception("Contract Type not found");
+                var contractType = await genericDao.GetAsync<ContractType>(contractTypeUuid.Value) ?? throw new NotFoundException("Contract Type", contractTypeUuid.Value.ToString());
                 oldRecord.ContractTypeId = contractType.Id;
             }
             await dao.UpdateAsync(oldRecord);

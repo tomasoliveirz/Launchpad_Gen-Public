@@ -1,4 +1,5 @@
 ﻿using Moongy.RD.Launchpad.Business.Base;
+using Moongy.RD.Launchpad.Business.Exceptions;
 using Moongy.RD.Launchpad.Business.Interfaces;
 using Moongy.RD.Launchpad.Data.Entities;
 using Moongy.RD.LaunchPad.DataAccess.Base.Interfaces;
@@ -12,15 +13,11 @@ public class PublishResultBusinessObject(IPublishResultDataAccessObject dao, IGe
     {
         return await ExecuteOperation(async () =>
         {
-            if (string.IsNullOrEmpty(publishResult.Address)) throw new Exception("Invalid model exception: address is missing");
-            if (string.IsNullOrEmpty(publishResult.Bytecode)) throw new Exception("Invalid model exception: bytecode is missing");
-            if (string.IsNullOrEmpty(publishResult.Abi)) throw new Exception("Invalid model exception: abi is missing");
-            var contractGenerationResult = await genericDao.GetAsync<ContractGenerationResult>(contractGenerationResultUuid);
-            if (contractGenerationResult == null) throw new Exception("Contract Generation Result not found");
-
-            var blockchainNetwork = await genericDao.GetAsync<BlockchainNetwork>(blockchainNetworkUuid);
-            if (blockchainNetwork == null) throw new Exception("Blockchain Network not found");
-
+            if (string.IsNullOrEmpty(publishResult.Address)) throw new InvalidModelException(" address is missing");
+            if (string.IsNullOrEmpty(publishResult.Bytecode)) throw new InvalidModelException(" bytecode is missing");
+            if (string.IsNullOrEmpty(publishResult.Abi)) throw new InvalidModelException(" abi is missing");
+            var contractGenerationResult = await genericDao.GetAsync<ContractGenerationResult>(contractGenerationResultUuid) ?? throw new NotFoundException("Contract Generation Result", contractGenerationResultUuid.ToString());
+            var blockchainNetwork = await genericDao.GetAsync<BlockchainNetwork>(blockchainNetworkUuid) ?? throw new NotFoundException("Blockchain Network", blockchainNetworkUuid.ToString());
             publishResult.ContractGenerationResultId = contractGenerationResult.Id;
             publishResult.BlockchainNetworkId = blockchainNetwork.Id;
 
@@ -33,26 +30,23 @@ public class PublishResultBusinessObject(IPublishResultDataAccessObject dao, IGe
     {
         return await ExecuteOperation(async () =>
         {
-            if (string.IsNullOrEmpty(publishResult.Address)) throw new Exception("Invalid model exception: address is missing");
-            if (string.IsNullOrEmpty(publishResult.Bytecode)) throw new Exception("Invalid model exception: bytecode is missing");
-            if (string.IsNullOrEmpty(publishResult.Abi)) throw new Exception("Invalid model exception: abi is missing");
-            var oldRecord = await dao.GetAsync(uuid);
-            if (oldRecord == null) throw new Exception("Record not found");
+            if (string.IsNullOrEmpty(publishResult.Address)) throw new InvalidModelException(" address is missing");
+            if (string.IsNullOrEmpty(publishResult.Bytecode)) throw new InvalidModelException(" bytecode is missing");
+            if (string.IsNullOrEmpty(publishResult.Abi)) throw new InvalidModelException(" abi is missing");
+            var oldRecord = await dao.GetAsync(uuid) ?? throw new NotFoundException("Publishing result", uuid.ToString());
             oldRecord.Address = publishResult.Address;
             oldRecord.Bytecode = publishResult.Bytecode;
             oldRecord.Abi = publishResult.Abi;
 
             if (contractGenerationResultUuid != null)
             {
-                var contractGenerationResult = await genericDao.GetAsync<ContractGenerationResult>(contractGenerationResultUuid.Value);
-                if (contractGenerationResult == null) throw new Exception("Contract Generation Result not found");
+                var contractGenerationResult = await genericDao.GetAsync<ContractGenerationResult>(contractGenerationResultUuid.Value) ?? throw new NotFoundException("Contract Generation Result", contractGenerationResultUuid.Value.ToString());
                 oldRecord.ContractGenerationResultId = contractGenerationResult.Id;
             }
 
             if (blockchainNetworkUuid != null)
             {
-                var blockchainNetwork = await genericDao.GetAsync<BlockchainNetwork>(blockchainNetworkUuid.Value);
-                if (blockchainNetwork == null) throw new Exception("Blockchain Network Result not found");
+                var blockchainNetwork = await genericDao.GetAsync<BlockchainNetwork>(blockchainNetworkUuid.Value) ?? throw new NotFoundException("Blockchain Network", blockchainNetworkUuid.Value.ToString());
                 oldRecord.BlockchainNetworkId = blockchainNetwork.Id;
             }
             await dao.UpdateAsync(oldRecord);

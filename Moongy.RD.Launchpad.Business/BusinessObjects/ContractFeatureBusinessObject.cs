@@ -1,4 +1,5 @@
 ﻿using Moongy.RD.Launchpad.Business.Base;
+using Moongy.RD.Launchpad.Business.Exceptions;
 using Moongy.RD.Launchpad.Business.Interfaces;
 using Moongy.RD.Launchpad.Data.Entities;
 using Moongy.RD.LaunchPad.DataAccess.Interfaces;
@@ -11,8 +12,8 @@ public class ContractFeatureBusinessObject(IContractFeatureDataAccessObject dao)
     {
         return await ExecuteOperation(async () =>
         {
-            if (string.IsNullOrEmpty(contractFeature.Name)) throw new Exception("Invalid model exception: name is missing");
-            if (string.IsNullOrEmpty(contractFeature.DataType)) throw new Exception("Invalid model exception: dataType is missing");
+            if (string.IsNullOrEmpty(contractFeature.Name)) throw new InvalidModelException("name is missing");
+            if (string.IsNullOrEmpty(contractFeature.DataType)) throw new InvalidModelException("dataType is missing");
             var result = await dao.CreateAsync(contractFeature);
             return result;
         });
@@ -22,9 +23,8 @@ public class ContractFeatureBusinessObject(IContractFeatureDataAccessObject dao)
     {
         return await ExecuteOperation(async () =>
         {
-            if (string.IsNullOrEmpty(contractFeature.Name)) throw new Exception("Invalid model exception: name is missing");
-            var oldRecord = await dao.GetAsync(uuid);
-            if (oldRecord == null) throw new Exception("Record not found");
+            if (string.IsNullOrEmpty(contractFeature.Name)) throw new InvalidModelException("name is missing");
+            var oldRecord = await dao.GetAsync(uuid) ?? throw new NotFoundException("Contract Feature", uuid.ToString());
             oldRecord.Name = contractFeature.Name;
             oldRecord.Description = contractFeature.Description;
             oldRecord.DataType = contractFeature.DataType;
