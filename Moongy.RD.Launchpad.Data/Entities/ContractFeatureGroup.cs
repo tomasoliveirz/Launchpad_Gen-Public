@@ -11,5 +11,5 @@ public class ContractFeatureGroup : EntityWithNameAndDescription
     public int ContractGenerationResultId { get; set; }
     public virtual ContractGenerationResult? ContractGenerationResult { get; set; }
 
-    public virtual ICollection<FeatureOnContractFeatureGroup> FeatureOnContractFeatureGroups { get; set; } = [];
+    public virtual ICollection<FeatureOnContractFeatureGroup> FeaturesOnContractFeatureGroup { get; set; } = [];
 }

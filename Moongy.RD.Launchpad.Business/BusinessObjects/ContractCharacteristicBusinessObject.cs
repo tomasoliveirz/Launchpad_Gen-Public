@@ -15,38 +15,24 @@ public class ContractCharacteristicBusinessObject(IContractCharacteristicDataAcc
 {
     public override async Task<OperationResult<Guid>> CreateAsync(ContractCharacteristic contractCharacteristic)
     {
-        try
+        return await ExecuteOperation(async () =>
         {
-            using var scope = new TransactionScope(TransactionScopeOption.RequiresNew, new TransactionOptions() { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.FromSeconds(90) }, TransactionScopeAsyncFlowOption.Enabled);
             if (string.IsNullOrEmpty(contractCharacteristic.Name)) throw new Exception("Invalid model exception: name is missing");
             var result = await dao.CreateAsync(contractCharacteristic);
-            scope.Complete();
-            return new OperationResult<Guid>() { Result = result };
-        }
-        catch (Exception ex)
-        {
-            return new OperationResult<Guid>() { Exception = ex };
-        }
+            return result;
+        });
     }
 
     public override async Task<OperationResult> UpdateAsync(Guid uuid, ContractCharacteristic contractCharacteristic)
     {
-        try
+        return await ExecuteOperation(async () =>
         {
-            using var scope = new TransactionScope(TransactionScopeOption.RequiresNew, new TransactionOptions() { IsolationLevel = IsolationLevel.ReadCommitted, Timeout = TimeSpan.FromSeconds(90) }, TransactionScopeAsyncFlowOption.Enabled);
             if (string.IsNullOrEmpty(contractCharacteristic.Name)) throw new Exception("Invalid model exception: name is missing");
             var oldRecord = await dao.GetAsync(uuid);
             if (oldRecord == null) throw new Exception("Record not found");
             oldRecord.Name = contractCharacteristic.Name;
             oldRecord.Description = contractCharacteristic.Description;
             await dao.UpdateAsync(oldRecord);
-            scope.Complete();
-            return new OperationResult() { };
-
-        }
-        catch (Exception ex)
-        {
-            return new OperationResult() { Exception = ex };
-        }
+        });
     }
 }
