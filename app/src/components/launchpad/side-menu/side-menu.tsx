@@ -3,6 +3,7 @@ import { FaCode, FaFileCode, FaHammer } from "react-icons/fa";
 import { FaCloudArrowUp, FaDroplet } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import SideMenuItem from "./side-menu-item";
+import { IoIosSettings } from "react-icons/io";
 
 export default function()
 {
@@ -14,6 +15,7 @@ export default function()
             <SideMenuItem title="Generate App" to="/app/generate" icon={FaFileCode}/>
             <SideMenuItem title="Manage Contract" to="/contract/manage" icon={FaDroplet}/>
             <Spacer/>
+            <SideMenuItem title="Settings" to="/settings/contractType" icon={IoIosSettings}/>
         </VStack>
     
 }

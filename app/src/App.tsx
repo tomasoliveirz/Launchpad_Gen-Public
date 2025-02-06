@@ -5,6 +5,8 @@ import ContractGeneratorPage from "./pages/ContractGeneratorPage/ContractGenerat
 import AppGeneratorPage from "./pages/AppGeneratorPage/AppGeneratorPage"
 import ContractManagerPage from "./pages/ContractManagerPage/ContractManagerPage"
 import ContractPublisherPage from "./pages/ContractPublisherPage/ContractPublisherPage"
+import HomePage from "./pages/HomePage/HomePage"
+import ContractTypesSettings from "./pages/Settings/ContractTypesSettings/ContractTypesSettings"
 
 function App() {
 
@@ -19,6 +21,7 @@ function App() {
               <Route element={<ContractPublisherPage/>} path="/contract/publish"/>
               <Route element={<AppGeneratorPage/>} path="/app/generate"/>
               <Route element={<ContractManagerPage/>} path="/contract/manage"/>
+              <Route element={<ContractTypesSettings/>} path="/settings/contractType"/>
               <Route path="/" element={<HomePage/>}/>
             </Routes>
           </Box>
