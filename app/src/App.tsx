@@ -7,11 +7,12 @@ import ContractManagerPage from "./pages/ContractManagerPage/ContractManagerPage
 import ContractPublisherPage from "./pages/ContractPublisherPage/ContractPublisherPage"
 import HomePage from "./pages/HomePage/HomePage"
 import ContractTypesSettings from "./pages/Settings/ContractTypesSettings/ContractTypesSettings"
+import ContractCharacteristicsPage from "./pages/ContractCharacteristicsPage/ContractCharacteristicsPage"
 
 function App() {
 
   return (
-    <Box w="100vw" h="100vh">
+    <Box w="100vw" h="100vh" bg="#353941">
       <BrowserRouter>
         <HStack h="100%" w="100%">
           <SideMenu/>
@@ -22,6 +23,7 @@ function App() {
               <Route element={<AppGeneratorPage/>} path="/app/generate"/>
               <Route element={<ContractManagerPage/>} path="/contract/manage"/>
               <Route element={<ContractTypesSettings/>} path="/settings/contractType"/>
+              <Route element={<ContractCharacteristicsPage/>} path="/settings/contracts/characteristics"/>
               <Route path="/" element={<HomePage/>}/>
             </Routes>
           </Box>
