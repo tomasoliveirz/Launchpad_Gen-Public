@@ -15,7 +15,8 @@ export default function()
             <SideMenuItem title="Generate App" to="/app/generate" icon={FaFileCode}/>
             <SideMenuItem title="Manage Contract" to="/contract/manage" icon={FaDroplet}/>
             <Spacer/>
-            <SideMenuItem title="Settings" to="/settings/contractType" icon={IoIosSettings}/>
+            <SideMenuItem mb="1em" title="Settings" to="/settings/contracts/types" icon={IoIosSettings}/>
+            
         </VStack>
     
 }

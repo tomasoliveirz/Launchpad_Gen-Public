@@ -13,20 +13,14 @@ import {
 import { FaPencilAlt } from "react-icons/fa"
 import { Field } from "@/components/ui/field"
 
-
-export interface Item {
-    uuid: string
-    name: string
-}
-
 export interface ContractTypesModalProps extends BoxProps
 {
-    item: Item[]
+  uuid: string
+  name: string
+  description: string
 }
 
-
-
-export default function({item, ...props}:ContractTypesModalProps)
+export default function({uuid, name, description, ...props}:ContractTypesModalProps)
 {
     return <> 
           <HStack>
@@ -38,15 +32,15 @@ export default function({item, ...props}:ContractTypesModalProps)
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>{item.name ?? "New Contract Type"}</DialogTitle>
+                <DialogTitle>{name ?? "New Contract Type"}</DialogTitle>
               </DialogHeader>
               <DialogBody>
                 <VStack gap="4em">
                     <Field label="Name" required>
-                        <Input variant="subtle" value={item.name} />
+                        <Input variant="subtle" value={name} />
                     </Field>
                     <Field label="Description">
-                        <Textarea size="xl" resize="none" variant="subtle" value={item.description} />
+                        <Textarea size="xl" resize="none" variant="subtle" value={description} />
                     </Field>
                 </VStack>
               </DialogBody>
