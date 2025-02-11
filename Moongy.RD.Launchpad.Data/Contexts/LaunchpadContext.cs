@@ -8,6 +8,16 @@ public class LaunchpadContext(DbContextOptions options) : DbContext(options)
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ContractType>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
+        modelBuilder.Entity<ContractVariant>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
+        modelBuilder.Entity<FeatureOnContractFeatureGroup>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
+        modelBuilder.Entity<GenerationFeatureValue>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
+        modelBuilder.Entity<PublishResult>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
+        modelBuilder.Entity<BlockchainNetwork>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
+        modelBuilder.Entity<CharacteristicInContractVariant>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
+        modelBuilder.Entity<ContractCharacteristic>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
+        modelBuilder.Entity<ContractFeature>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
+        modelBuilder.Entity<ContractFeatureGroup>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
+        modelBuilder.Entity<ContractGenerationResult>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
         modelBuilder.Entity<GenerationFeatureValue>().HasOne<FeatureOnContractFeatureGroup>().WithMany(x => x.ContractGenerationFeatureValues).OnDelete(DeleteBehavior.NoAction);
         modelBuilder.Entity<GenerationFeatureValue>().HasOne(x => x.ContractGenerationResult).WithMany(x => x.ContractGenerationFeatureValues).OnDelete(DeleteBehavior.NoAction);
     }
