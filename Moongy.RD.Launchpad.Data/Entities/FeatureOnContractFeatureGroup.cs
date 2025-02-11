@@ -18,4 +18,7 @@ public class FeatureOnContractFeatureGroup : Entity
 
     public virtual ContractFeatureGroup? ContractFeatureGroup { get; set; }
 
+    public virtual ICollection<GenerationFeatureValue> ContractGenerationFeatureValues { get; set; } = [];
+
+
 }

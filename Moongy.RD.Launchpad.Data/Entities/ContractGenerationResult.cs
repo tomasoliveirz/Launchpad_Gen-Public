@@ -21,6 +21,6 @@ public class ContractGenerationResult : EntityWithNameAndDescription
     public virtual ICollection<PublishResult> PublishResults { get; set; } = [];
 
     [JsonIgnore]
-    public virtual ICollection<ContractFeatureGroup> ContractFeatureGroups { get; set; } = [];
+    public virtual ICollection<GenerationFeatureValue> ContractGenerationFeatureValues { get; set; } = [];
 
 }

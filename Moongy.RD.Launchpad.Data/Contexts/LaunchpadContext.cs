@@ -8,9 +8,12 @@ public class LaunchpadContext(DbContextOptions options) : DbContext(options)
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ContractType>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
+        modelBuilder.Entity<GenerationFeatureValue>().HasOne<FeatureOnContractFeatureGroup>().WithMany(x => x.ContractGenerationFeatureValues).OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<GenerationFeatureValue>().HasOne(x => x.ContractGenerationResult).WithMany(x => x.ContractGenerationFeatureValues).OnDelete(DeleteBehavior.NoAction);
     }
 
     public DbSet<ContractType> ContractTypes { get; set; }
+    public DbSet<GenerationFeatureValue> GenerationFeatureValues { get; set; }
 
     public DbSet<ContractVariant> ContractsVariants { get; set; }
 

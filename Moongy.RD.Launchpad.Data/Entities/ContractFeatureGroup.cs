@@ -8,9 +8,9 @@ public class ContractFeatureGroup : EntityWithNameAndDescription
 {
     public string? DataType { get; set; }
 
-    [ForeignKey(nameof(ContractGenerationResult))]
-    public int ContractGenerationResultId { get; set; }
-    public virtual ContractGenerationResult? ContractGenerationResult { get; set; }
+    [ForeignKey(nameof(ContractVariant))]
+    public int ContractVariantId { get; set; }
+    public virtual ContractVariant? ContractVariant{ get; set; }
 
     [JsonIgnore]
     public virtual ICollection<FeatureOnContractFeatureGroup> FeaturesOnContractFeatureGroup { get; set; } = [];

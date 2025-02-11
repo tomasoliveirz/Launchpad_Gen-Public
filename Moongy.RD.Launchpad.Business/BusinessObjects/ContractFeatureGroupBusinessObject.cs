@@ -9,19 +9,19 @@ namespace Moongy.RD.Launchpad.Business.BusinessObjects;
 
 public class ContractFeatureGroupBusinessObject(IContractFeatureGroupDataAccessObject dao, IGenericDataAccessObject genericDataAccessObject) : EntityBusinessObject<ContractFeatureGroup>(dao), IContractFeatureGroupBusinessObject
 {
-    public  async Task<OperationResult<Guid>> CreateAsync(ContractFeatureGroup contractFeatureGroup, Guid generationResultUuid)
+    public  async Task<OperationResult<Guid>> CreateAsync(ContractFeatureGroup contractFeatureGroup, Guid variantId)
     {
         return await ExecuteOperation(async () => {
             if (string.IsNullOrEmpty(contractFeatureGroup.Name)) throw new InvalidModelException("name is missing");
             if (string.IsNullOrEmpty(contractFeatureGroup.DataType)) throw new InvalidModelException("dataType is missing");
-            var generationResult = await genericDataAccessObject.GetAsync<ContractGenerationResult>(generationResultUuid) ?? throw new NotFoundException("Generation Result", generationResultUuid.ToString());
-            contractFeatureGroup.ContractGenerationResultId = generationResult.Id;
+            var contractVariant = await genericDataAccessObject.GetAsync<ContractVariant>(variantId) ?? throw new NotFoundException("Generation Result", variantId.ToString());
+            contractFeatureGroup.ContractVariantId = contractVariant.Id;
             var result = await dao.CreateAsync(contractFeatureGroup);
             return result;
         });
     }
 
-    public  async Task<OperationResult> UpdateAsync(Guid uuid, ContractFeatureGroup contractFeatureGroup, Guid? generationResultUuid)
+    public  async Task<OperationResult> UpdateAsync(Guid uuid, ContractFeatureGroup contractFeatureGroup, Guid? variantId)
     {
         return await ExecuteOperation(async () =>
         {
@@ -30,10 +30,10 @@ public class ContractFeatureGroupBusinessObject(IContractFeatureGroupDataAccessO
             oldRecord.Name = contractFeatureGroup.Name;
             oldRecord.Description = contractFeatureGroup.Description;
             oldRecord.DataType = contractFeatureGroup.DataType;
-            if(generationResultUuid != null)
+            if(variantId != null)
             {
-                var generationResult = await genericDataAccessObject.GetAsync<ContractGenerationResult>(generationResultUuid.Value) ?? throw new NotFoundException("Generation Result", generationResultUuid.Value.ToString());
-                oldRecord.ContractGenerationResultId = generationResult.Id;
+                var contractVariant = await genericDataAccessObject.GetAsync<ContractVariant>(variantId.Value) ?? throw new NotFoundException("Generation Result", variantId.Value.ToString());
+                oldRecord.ContractVariantId = contractVariant.Id;
             }
             await dao.UpdateAsync(oldRecord);
         });

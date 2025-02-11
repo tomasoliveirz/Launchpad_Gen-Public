@@ -13,8 +13,12 @@ public class ContractVariant : EntityWithNameAndDescription
     public virtual ContractType? ContractType { get; set; }
 
     [JsonIgnore]
-    public virtual ICollection<CharacteristicInContractVariant> CharacteristicInContractVariants { get; set; } = [];
+    public virtual ICollection<CharacteristicInContractVariant> CharacteristicInContractVariant { get; set; } = [];
 
     [JsonIgnore]
     public virtual ICollection<ContractGenerationResult> ContractGenerationResults { get; set; } = [];
+
+
+    [JsonIgnore]
+    public virtual ICollection<ContractFeatureGroup> FeatureGroupsInContractVariant { get; set; } = [];
 }

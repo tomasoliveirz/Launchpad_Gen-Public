@@ -30,6 +30,7 @@ builder.Services.AddScoped<IContractGenerationResultDataAccessObject, ContractGe
 builder.Services.AddScoped<IContractVariantDataAccessObject, ContractVariantDataAccessObject>();
 builder.Services.AddScoped<IPublishResultDataAccessObject, PublishResultDataAccessObject>();
 builder.Services.AddScoped<IFeatureOnContractFeatureGroupDataAccessObject, FeatureOnContractFeatureGroupDataAccessObject>();
+builder.Services.AddScoped<IGenerationFeatureValueDataAccessObject, GenerationFeatureValueDataAccessObject>();
 
 builder.Services.AddScoped<IContractTypeBusinessObject, ContractTypeBusinessObject>();
 builder.Services.AddScoped<IBlockchainNetworkBusinessObject, BlockchainNetworkBusinessObject>();
@@ -41,6 +42,7 @@ builder.Services.AddScoped<IContractGenerationResultBusinessObject, ContractGene
 builder.Services.AddScoped<IContractVariantBusinessObject, ContractVariantBusinessObject>();
 builder.Services.AddScoped<IPublishResultBusinessObject, PublishResultBusinessObject>();
 builder.Services.AddScoped<IFeatureOnContractFeatureGroupBusinessObject, FeatureOnContractFeatureGroupBusinessObject>();
+builder.Services.AddScoped<IGenerationFeatureValueBusinessObject, GenerationFeatureValueBusinessObject>();
 
 
 
