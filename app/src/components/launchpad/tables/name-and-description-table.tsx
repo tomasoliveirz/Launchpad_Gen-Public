@@ -1,13 +1,13 @@
 import { EntityWithNameAndDescription } from "@/models/EntityWithNameAndDescription";
 import { Table, TableRootProps } from "@chakra-ui/react";
 import { useState } from "react";
-import { LauchpadButton } from "../buttons/button";
+import { LaunchpadButton } from "../buttons/button";
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 
-export interface LauchpadNameTableProps extends TableRootProps {
+export interface LaunchpadNameTableProps extends TableRootProps {
     items: EntityWithNameAndDescription[]
   }
-  export function LauchpadNameTable({ items, ...props }: LauchpadNameTableProps) {
+  export function LaunchpadNameTable({ items, ...props }: LaunchpadNameTableProps) {
     const [open, setOpen] = useState<boolean>(false);
     return <Table.Root zIndex="0" size="sm" w="40%" striped {...props}>
       <Table.Header>
@@ -21,8 +21,8 @@ export interface LauchpadNameTableProps extends TableRootProps {
           <Table.Row key={item.uuid}>
             <Table.Cell>{item.name}</Table.Cell>
             <Table.Cell w="10em">
-              <LauchpadButton onClick={() => setOpen(!open)} icon={FaPencilAlt} color="white" bg="none" />
-              <LauchpadButton onClick={() => setOpen(!open)} icon={FaTrashAlt} color="white" bg="none" />
+              <LaunchpadButton onClick={() => setOpen(!open)} icon={FaPencilAlt} color="white" bg="none" />
+              <LaunchpadButton onClick={() => setOpen(!open)} icon={FaTrashAlt} color="white" bg="none" />
             </Table.Cell>
           </Table.Row>
         ))}

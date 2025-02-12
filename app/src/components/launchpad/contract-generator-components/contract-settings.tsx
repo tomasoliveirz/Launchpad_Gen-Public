@@ -1,6 +1,6 @@
 import { Field } from "@/components/ui/field";
 import { Box, Flex, Input } from "@chakra-ui/react";
-import { LauchpadButton } from "../buttons/button";
+import { LaunchpadButton } from "../buttons/button";
 
 export function ContractSettings() {
     return (
@@ -16,7 +16,7 @@ export function ContractSettings() {
                     <Input variant="subtle"/>
                 </Box>
             </Flex>
-            <LauchpadButton text="Generate" bg="#5CB338" color="white" mt="2em"/>
+            <LaunchpadButton text="Generate" bg="#5CB338" color="white" mt="2em"/>
         </Box>
     )
 }

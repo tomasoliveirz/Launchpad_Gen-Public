@@ -1,13 +1,14 @@
 import { Button, ButtonProps, HStack, Text } from "@chakra-ui/react";
 import { IconType } from "react-icons";
+import { FaPlus } from "react-icons/fa";
 
 
-export interface LauchpadButtonProps extends ButtonProps {
+export interface LaunchpadButtonProps extends ButtonProps {
     icon?: IconType,
     text?: string
 }
 
-export function LauchpadButton({ icon, text, ...props }: LauchpadButtonProps) {
+export function LaunchpadButton({ icon, text, ...props }: LaunchpadButtonProps) {
     const Icon = icon
     return <Button {...props}>
         <HStack>
@@ -15,4 +16,9 @@ export function LauchpadButton({ icon, text, ...props }: LauchpadButtonProps) {
             {text && <Text>{text}</Text>}
         </HStack>
     </Button>
+}
+
+export function LaunchpadNewButton({...props}:LaunchpadButtonProps)
+{
+    return <LaunchpadButton icon={FaPlus} text="New" color="white" bg="#5CB338" {...props}/>
 }

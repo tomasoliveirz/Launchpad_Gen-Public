@@ -1,18 +1,19 @@
 import { Field } from "@/components/ui/field"
-import { DialogActionTrigger, DialogBody, DialogContent, DialogFooter, DialogHeader, DialogRoot, DialogTitle, Input, Textarea } from "@chakra-ui/react"
+import { DialogActionTrigger, DialogBody, DialogContent, DialogFooter, DialogHeader, DialogRoot, DialogTitle } from "@/components/ui/dialog"
 import axios from "axios"
 import { useForm } from "react-hook-form"
-import { LauchpadButton } from "../buttons/button"
+import { LaunchpadButton } from "../buttons/button"
 import { FaSave } from "react-icons/fa"
+import { Input, Textarea } from "@chakra-ui/react"
 
 export interface EntityWithNameAndDescriptionDialogProps {
   open: boolean,
-  setOpen: (b: boolean) => void,
+  onClose: ()=>void,
   entityUrl: string,
   title: string
 }
 
-export function EntityWithNameAndDescriptionDialog({ open, setOpen, entityUrl, title }: EntityWithNameAndDescriptionDialogProps) {
+export function EntityWithNameAndDescriptionDialog({ open, onClose, entityUrl, title }: EntityWithNameAndDescriptionDialogProps) {
 
     interface FormValues {
       name: string
@@ -32,16 +33,16 @@ export function EntityWithNameAndDescriptionDialog({ open, setOpen, entityUrl, t
       } catch {
   
       }
-      setOpen(false)
+      onClose();
     })
   
-    return <DialogRoot lazyMount open={open} onOpenChange={(e) => setOpen(e.open)}>
-      <DialogContent position="fixed" right="35%" bottom="20%">
+    return <DialogRoot lazyMount open={open}>
+      <DialogContent>
+        <form onSubmit={onSubmit}>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
           <DialogBody>
-        <form onSubmit={onSubmit}>
             <Field
               label="Name"
               invalid={!!errors.name}
@@ -62,14 +63,16 @@ export function EntityWithNameAndDescriptionDialog({ open, setOpen, entityUrl, t
                 {...register("description")}
           />
             </Field>
-            <LauchpadButton type="submit" icon={FaSave} text="Save" color="white" bg="#5CB338" />
-        </form>
           </DialogBody>
+
           <DialogFooter>
+            <LaunchpadButton type="submit" icon={FaSave} text="Save" color="white" bg="#5CB338" />
             <DialogActionTrigger asChild>
-              <LauchpadButton text="Cancel" color="white" bg="#FF7518" />
+            <LaunchpadButton text="Cancel" onClick={onClose} color="white" bg="#FF7518" />
             </DialogActionTrigger>
           </DialogFooter>
+        </form>
+
       </DialogContent>
     </DialogRoot>
   }

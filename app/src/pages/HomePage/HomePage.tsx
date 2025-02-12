@@ -7,7 +7,7 @@ export default function(){
     return <>
     <Center height="100%">
         <VStack gap="4em">
-            <Heading as="h1" textStyle="7xl" alignSelf="start">Lauchpad</Heading>
+            <Heading as="h1" textStyle="7xl" alignSelf="start">Launchpad</Heading>
             <HStack gap="6em">
                 <HomePageCard to="/contract/generate" icon={FaCode} title="Generate" description="Generate a smart contract through a simple interface"/>
                 <HomePageCard to="/contract/publish" icon={FaCloudArrowUp} title="Publish" description="Publish a smart contract on your favorite network"/>
