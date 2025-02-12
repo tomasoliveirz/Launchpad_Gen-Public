@@ -9,6 +9,7 @@ import HomePage from "./pages/HomePage/HomePage"
 import ContractTypesSettings from "./pages/Settings/ContractTypesSettings/ContractTypesSettings"
 import ContractCharacteristicsPage from "./pages/ContractCharacteristicsPage/ContractCharacteristicsPage"
 import ContractTypesPage from "./pages/ContractTypesPage/ContractTypesPage"
+import SettingsMenuPage from "./pages/SettingsMenuPage/SettingsMenuPage"
 
 function App() {
 
@@ -23,6 +24,7 @@ function App() {
               <Route element={<ContractPublisherPage/>} path="/contract/publish"/>
               <Route element={<AppGeneratorPage/>} path="/app/generate"/>
               <Route element={<ContractManagerPage/>} path="/contract/manage"/>
+              <Route element={<SettingsMenuPage/>} path="/settings" />
               <Route element={<ContractTypesPage/>} path="/settings/contracts/types"/>
               <Route element={<ContractCharacteristicsPage/>} path="/settings/contracts/characteristics"/>
               <Route path="/" element={<HomePage/>}/>

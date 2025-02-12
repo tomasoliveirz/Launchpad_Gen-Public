@@ -1,40 +1,35 @@
 import { PageWrapper } from "@/components/launchpad/wrappers/page-wrapper"
-import { Box, Button, ButtonProps, DialogActionTrigger, DialogBody, DialogCloseTrigger, DialogContent, DialogFooter, DialogHeader, DialogRoot, DialogTitle, HStack, Input, Text, Textarea, VStack } from "@chakra-ui/react"
-import { useState } from "react";
+import { Box, HStack, VStack } from "@chakra-ui/react"
+import { useEffect, useState } from "react";
 import { FaPalette, FaPlus } from "react-icons/fa"
-import { Field } from "@/components/ui/field"
-import { ContractCharateristicModal } from "@/components/launchpad/settings/contract-characteristic-modal";
+import { LauchpadButton } from "@/components/launchpad/buttons/button";
+import axios from "axios";
+import { LauchpadNameTable } from "@/components/launchpad/tables/name-and-description-table";
+import { EntityWithNameAndDescriptionDialog } from "@/components/launchpad/dialogs/entity-with-name-and-description-dialog";
 
 export default function () {
-  const [open, setOpen] = useState<boolean>(false);
+  const url = import.meta.env.VITE_APP_API_URL
 
+  const [ContractCharacteristics, setContractCharacteristics] = useState([]);
+  useEffect(() => {
+    axios.get(`${url}/ContractCharacteristics`)
+      .then((response) => {
+        setContractCharacteristics(response.data)
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
+  const [open, setOpen] = useState<boolean>(false);
   return <Box minW="100%" minH="100%">
-    <PageWrapper w="100%" h="100%" title="Contract Characteristics (Settings)" icon={FaPalette}>
+    <PageWrapper w="100%" h="100%" title="Contract Characteristics (Settings)" description="Manage your contract characteristics" icon={FaPalette}>
       <VStack w="100%" h="100%" py="3em">
         <HStack w="100%">
-          <NewButton onClick={() => setOpen(!open)} />
-          <ContractCharateristicModal uuid="" name="" description="" open={open} setOpen={setOpen} />
+          <LauchpadButton onClick={() => setOpen(!open)} icon={FaPlus} text="New" color="white" bg="#5CB338" />
         </HStack>
-        <ContractCharacteristicsTable />
       </VStack>
+      <LauchpadNameTable items={ContractCharacteristics} />
     </PageWrapper>
-  </Box>
-}
-
-
-export function NewButton(props: ButtonProps) {
-  return <Button color="white" bg="forestgreen" {...props}>
-    <HStack>
-      <FaPlus />
-      <Text>New</Text>
-    </HStack>
-  </Button>
-}
-
-
-export function ContractCharacteristicsTable() {
-  return <Box>
-
+    <EntityWithNameAndDescriptionDialog open={open} setOpen={setOpen} entityUrl="ContractCharacteristics/new" title="New Contract Characteristic" />
   </Box>
 }
 

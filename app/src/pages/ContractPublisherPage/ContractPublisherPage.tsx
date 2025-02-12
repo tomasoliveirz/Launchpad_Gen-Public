@@ -1,7 +1,10 @@
-import { Heading } from "@chakra-ui/react";
+import { PageWrapper } from "@/components/launchpad/wrappers/page-wrapper";
+import { FaCloudArrowUp } from "react-icons/fa6";
 
 export default function(){
-    return <>
-    <Heading as="h1">Publish your code</Heading>
-    </>
+    return <PageWrapper title="Publish your code" icon={FaCloudArrowUp}>
+                    
+                </PageWrapper>
+
+    
 }

@@ -13,10 +13,8 @@ export default function()
             <SideMenuItem title="Generate Contract" to="/contract/generate" icon={FaCode}/>
             <SideMenuItem title="Publish Contract" to="/contract/publish" icon={FaCloudArrowUp}/>
             <SideMenuItem title="Generate App" to="/app/generate" icon={FaFileCode}/>
-            <SideMenuItem title="Manage Contract" to="/contract/manage" icon={FaDroplet}/>
+            <SideMenuItem title="Manage Liquidity" to="/contract/manage" icon={FaDroplet}/>
             <Spacer/>
-            <SideMenuItem mb="1em" title="Settings" to="/settings/contracts/types" icon={IoIosSettings}/>
-            
+            <SideMenuItem mb="1em" title="Settings" to="/settings" icon={IoIosSettings}/>
         </VStack>
-    
 }

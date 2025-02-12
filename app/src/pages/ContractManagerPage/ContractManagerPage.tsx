@@ -1,7 +1,8 @@
-import { Heading } from "@chakra-ui/react";
+import { PageWrapper } from "@/components/launchpad/wrappers/page-wrapper";
+import { FaDroplet } from "react-icons/fa6";
 
 export default function(){
-    return <>
-    <Heading as="h1">Manage Liquidity</Heading>
-    </>
+    return <PageWrapper title="Manage Liquidity" icon={FaDroplet}>
+                    
+                </PageWrapper>
 }

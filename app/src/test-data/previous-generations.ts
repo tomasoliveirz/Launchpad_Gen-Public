@@ -10,3 +10,4 @@ export  const previousGenerationsData: PreviousGeneration[] = [
     { uuid: "g", name: "test 7", createdAt: new Date("2024-01-07T07:50:00Z"), description: "This one has an early timestamp", contractVariantUuid:"c" },
     { uuid: "h", name: "test 8", createdAt: new Date("2024-01-08T22:10:00Z"), description: "Latest item for testing" , contractVariantUuid:"e"}
 ];
+

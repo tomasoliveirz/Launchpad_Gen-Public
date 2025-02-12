@@ -1,3 +1,5 @@
+import ContractResult from "@/components/launchpad/contract-generator-components/contract-results";
+import { ContractSettings } from "@/components/launchpad/contract-generator-components/contract-settings";
 import { LaunchpadSelect } from "@/components/launchpad/select/select";
 import { PageWrapper } from "@/components/launchpad/wrappers/page-wrapper";
 import { ContractVariant } from "@/models/ContractVariant";
@@ -5,14 +7,25 @@ import { namedEntityToListCollection, previousGenerationToListCollection } from 
 import { contractTypesData } from "@/test-data/contract-types";
 import { contractVariantsData } from "@/test-data/contract-variants";
 import { previousGenerationsData } from "@/test-data/previous-generations";
-import { Flex, HStack, ListCollection, Spacer, VStack } from "@chakra-ui/react";
+import { Flex, HStack, ListCollection, Show, Spacer, VStack } from "@chakra-ui/react";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { FaCode } from "react-icons/fa";
 
 export default function()
 {
+    const url = import.meta.env.VITE_APP_API_URL
 
     //DATA
+    const [contractsGenerated, setContractsGenerated] = useState([]);
+    useEffect(() => {
+        axios.get(`${url}/ContractGenerationResults`)
+        .then( (response) => {
+            console.log(response.data)
+            setContractsGenerated(response.data)})
+        .catch((error) => console.error(error));
+    }, []);
+
     
     //CONTROL
     const [contractType, setContractType] = useState<string>();
@@ -23,8 +36,33 @@ export default function()
 
     const contractTypesList : ListCollection = namedEntityToListCollection(contractTypesData)
     const contracVariantsList : ListCollection = namedEntityToListCollection(contractVariants);
-    const previousGeneratedList:ListCollection = previousGenerationToListCollection(previousGenerationsData);
+    const previousGeneratedList:ListCollection = previousGenerationToListCollection(contractsGenerated);
 
+    const [contractFeatureGroup, setContractFeatureGroup] = useState<{ label: string; value: string }[]>([]);
+
+    useEffect(() => {
+        if (contractType) {
+            const contractTypeIdx = contractTypesData.findIndex(x => x.uuid == contractType);
+            const contractTypeRecord = contractTypesData[contractTypeIdx];
+            setContractFeatureGroup(prev => [
+                ...prev.filter(item => item.label !== "Contract type"),
+                { label: "Contract type", value: contractTypeRecord.name }
+            ]);
+        }
+    }, [contractType]);
+
+    useEffect(() => {
+        if (contractVariant) {
+            const contractVariantIdx = contractVariantsData.findIndex(x => x.uuid == contractVariant);
+            const contractVariantRecord = contractVariantsData[contractVariantIdx];
+            setContractFeatureGroup(prev => [
+                ...prev.filter(item => item.label !== "Contract Variant"),
+                { label: "Contract Variant", value: contractVariantRecord.name }
+            ]);
+        }
+    }, [contractVariant]);
+
+    
 
     useEffect(()=>
     {
@@ -69,21 +107,27 @@ export default function()
     //VIEW
     return <PageWrapper title="Contract Generator" icon={FaCode}>
                 <HStack mt="2em" w="100%">
-                    <LaunchpadSelect w="30%" collection={previousGeneratedList} title="Previous contracts" value={previousGeneration} onValueChange={setPreviousGeneration} />
+                    <Show when={previousGeneratedList.size > 0}>
+                        <LaunchpadSelect w="20%" collection={previousGeneratedList} title="Previous contracts" value={previousGeneration} onValueChange={setPreviousGeneration} />
+                    </Show>
                     <Spacer maxW="100%"/>
                 </HStack>
                 <VStack w="100%" mt="3em">
-                    <Flex w="100%">
-                        <LaunchpadSelect w="30%" collection={contractTypesList} title="Contract Types" value={contractType} onValueChange={setContractType} />
-                        <LaunchpadSelect w="30%" collection={contracVariantsList} title="Contract variants" value={contractVariant}onValueChange={setContractVariant} />
-                    </Flex>                    
-                    {/* <ContractSettingsAndResult/> */}
+                    <Flex w="100%" gap="10em">
+                        <LaunchpadSelect w="20%" collection={contractTypesList} title="Contract Types" value={contractType} onValueChange={setContractType} />
+                        <Show when={contractType}>
+                            <LaunchpadSelect w="20%" collection={contracVariantsList} title="Contract variants" value={contractVariant}onValueChange={setContractVariant} />
+                        </Show>
+                    </Flex>       
                 </VStack>
+                <Show when={contractVariant}>
+                    <Flex w="100%" gap="10em">
+                            <ContractSettings/>
+                            <ContractResult contractFeatureGroup={contractFeatureGroup}/>  
+                        </Flex>
+                    </Show>
+                
             </PageWrapper>
 }
-
-
-
-
 
 

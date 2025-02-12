@@ -1,63 +1,34 @@
+import { LauchpadButton } from "@/components/launchpad/buttons/button"
 import { PageWrapper } from "@/components/launchpad/wrappers/page-wrapper"
-import {Box, Button, ButtonProps, DialogActionTrigger, DialogBody, DialogCloseTrigger, DialogContent, DialogFooter, DialogHeader, DialogRoot, DialogTitle, HStack, Text, VStack} from "@chakra-ui/react"
-import { FaPalette, FaPlus } from "react-icons/fa"
+import { Box, HStack, VStack } from "@chakra-ui/react"
+import { useEffect, useState } from "react";
+import { FaPalette, FaPlus} from "react-icons/fa"
+import axios from "axios";
+import { LauchpadNameTable } from "@/components/launchpad/tables/name-and-description-table";
+import { EntityWithNameAndDescriptionDialog } from "@/components/launchpad/dialogs/entity-with-name-and-description-dialog";
 
-export default function()
-{
-    return <Box minW="100%" minH="100%">
-                <PageWrapper w="100%" h="100%" title="Contract Characteristics (Settings)" icon={FaPalette}>
-                    <VStack w="100%" h="100%" py="3em">
-                        <HStack w="100%">
-                            <NewButton bg="red"/>
-                        </HStack>
-                        <ContractCharacteristicsTable/>
-                    </VStack>
-                </PageWrapper>
-                <ContractCharateristicModal/>
-                <DeleteContractCharacteristicModal/>
-            </Box>
-}
+export default function () {
+  const url = import.meta.env.VITE_APP_API_URL
 
+  const [ContractTypes, setContractTypes] = useState([]);
+  useEffect(() => {
+    axios.get(`${url}/ContractTypes`)
+      .then((response) => {
+        setContractTypes(response.data)
+      })
+      .catch((error) => console.error(error));
+  }, []);
 
-export function NewButton(props : ButtonProps)
-{
-    return <Button color="white" bg="forestgreen" {...props}>
-                <HStack>
-                    <FaPlus/>
-                    <Text>New</Text>
-                </HStack>
-        </Button>
-}
-
-
-export function ContractCharacteristicsTable(){
-    return <></>
-}
-
-
-export function ContractCharateristicModal(){
-    return <></>
-    
-}
-
-
-export function DeleteContractCharacteristicModal(){
-    return <DialogContent>
-    <DialogHeader>
-      <DialogTitle>Dialog Title</DialogTitle>
-    </DialogHeader>
-    <DialogBody>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-        eiusmod tempor incididunt ut labore et dolore magna aliqua.
-      </p>
-    </DialogBody>
-    <DialogFooter>
-      <DialogActionTrigger asChild>
-        <Button variant="outline">Cancel</Button>
-      </DialogActionTrigger>
-      <Button>Save</Button>
-    </DialogFooter>
-    <DialogCloseTrigger />
-  </DialogContent>
+  const [open, setOpen] = useState<boolean>(false);
+  return <Box minW="100%" minH="100%">
+    <PageWrapper w="100%" h="100%" title="Contract Type (Settings)" description="Manage your contract types" icon={FaPalette}>
+      <VStack w="100%" h="100%" py="3em">
+        <HStack w="100%">
+          <LauchpadButton onClick={() => setOpen(!open)} icon={FaPlus} text="New" color="white" bg="#5CB338" />
+        </HStack>
+      </VStack>
+      <LauchpadNameTable items={ContractTypes} />
+    </PageWrapper>
+    <EntityWithNameAndDescriptionDialog open={open} setOpen={setOpen} entityUrl="ContractTypes/new" title="New Contract Type" />
+  </Box>
 }

@@ -13,7 +13,7 @@ namespace WebApi.Controllers
         public async Task<ActionResult<IEnumerable<ContractCharacteristic>>> ListAsync()
         {
             var result = await bo.ListAsync();
-            if (result.IsSuccessful) return Ok(result);
+            if (result.IsSuccessful) return Ok(result.Result);
             return Problem(result.Exception?.Message ?? "");
         }
 

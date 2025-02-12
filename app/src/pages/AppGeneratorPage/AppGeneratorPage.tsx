@@ -1,21 +1,11 @@
-import PreviewContractsInput from "@/components/launchpad/preview-contracts-input";
+import { PageWrapper } from "@/components/launchpad/wrappers/page-wrapper";
 import { Heading } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { FaFileCode } from "react-icons/fa";
 
 export default function(){
-    const apiUrl = process.env.REACT_APP_API_URL;
-    const [contractsGenerated, setContractsGenerated] = useState([]);
-    useEffect(() => {
-        axios.get(`${apiUrl}/`)
-        .then( (response) => {
-            console.log(response.data)
-            setContractsGenerated(response.data)})
-        .catch((error) => console.error(error));
-    }, []);
-
-    return <>
-    <Heading as="h1">Create an App</Heading>
-    <PreviewContractsInput/>
-    </>
+    return <PageWrapper title="Create an app" icon={FaFileCode}>
+                        
+                    </PageWrapper>
 }
