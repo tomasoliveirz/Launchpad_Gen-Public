@@ -1,6 +1,7 @@
-export type EntityWithNameAndDescription = {
-    uuid:string,
-    name:string,
-    description:string
+import { Entity } from "./Entity"
+
+export type EntityWithNameAndDescription = Entity & {
+    name?:string,
+    description?:string
 }
 

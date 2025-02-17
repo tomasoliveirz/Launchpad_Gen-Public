@@ -6,7 +6,6 @@ using System.Text.Json.Serialization;
 namespace Moongy.RD.Launchpad.Data.Entities;
 public class ContractVariant : EntityWithNameAndDescription
 {
-
     [ForeignKey(nameof(ContractType))]
     public int ContractTypeId { get; set; }
 
