@@ -7,9 +7,14 @@ import { LaunchpadNewButton } from "@/components/launchpad/buttons/button";
 import { Toaster, toaster } from "@/components/ui/toaster"
 import { launchpadApi } from "@/services/launchpad/launchpadService";
 import { useState } from "react";
+import { ContractType } from "@/models/ContractType";
+import { useEntity } from "@/services/launchpad/testService";
 
 
 export default function () {
+  const URL = "contractTypes"
+
+
   const { data = [], error, isLoading, refetch } = launchpadApi.useGetContractTypesQuery()
   const [page, setPage] = useState(1);
   const pageSize = 6;
