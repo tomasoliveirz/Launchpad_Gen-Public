@@ -26,7 +26,7 @@ namespace WebApi.Controllers
             return Problem(result.Exception?.Message ?? "");
         }
 
-        [HttpDelete]
+        [HttpDelete("{uuid}")]
         public async Task<ActionResult> DeleteAsync(Guid uuid)
         {
             var result = await bo.DeleteAsync(uuid);

@@ -14,7 +14,7 @@ namespace WebApi.Controllers
         public async Task<ActionResult<IEnumerable<GenerationFeatureValue>>> ListAsync()
         {
             var result = await bo.ListAsync();
-            if (result.IsSuccessful) return Ok(result);
+            if (result.IsSuccessful) return Ok(result.Result);
             return Problem(result.Exception?.Message ?? "");
         }
 
@@ -29,7 +29,7 @@ namespace WebApi.Controllers
             return Problem(result.Exception?.Message ?? "");
         }
 
-        [HttpDelete]
+        [HttpDelete("{uuid}")]
         public async Task<ActionResult> DeleteAsync(Guid uuid)
         {
             var result = await bo.DeleteAsync(uuid);
