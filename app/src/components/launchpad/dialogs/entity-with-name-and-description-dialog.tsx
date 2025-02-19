@@ -27,11 +27,16 @@ export function EntityWithNameAndDescriptionDialog({ open, onClose, title, onSub
   });
 
   useEffect(() => {
-    if (defaultValues) {
-      setValue("name", defaultValues.name);
-      setValue("description", defaultValues.description);
+    if (open) {
+      if (defaultValues) {
+        setValue("name", defaultValues.name);
+        setValue("description", defaultValues.description);
+      } else {
+        setValue("name", "");
+        setValue("description", "");
+      }
     }
-  }, [defaultValues, setValue]);
+  }, [open, defaultValues, setValue]);
 
   return <DialogRoot lazyMount open={open} placement="center">
     <DialogContent>
