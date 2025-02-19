@@ -23,7 +23,7 @@ namespace WebApi.Controllers
             var result = await bo.CreateAsync(publishResult, 
                 publishResult.ContractGenerationResult?.Uuid ?? Guid.Empty,
                 publishResult.BlockchainNetwork?.Uuid ?? Guid.Empty);
-            if (result.IsSuccessful) StatusCode(201, result.Result);
+            if (result.IsSuccessful) return StatusCode(201, result.Result);
             if (result.Exception is InvalidModelException ime) return BadRequest(ime.Message);
             return Problem(result.Exception?.Message ?? "");
         }
