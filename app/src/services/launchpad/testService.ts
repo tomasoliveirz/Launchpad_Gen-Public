@@ -1,47 +1,107 @@
-import { Entity } from "@/models/Entity"
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { BaseQueryFn, createApi, EndpointBuilder, FetchArgs, fetchBaseQuery, FetchBaseQueryError, FetchBaseQueryMeta } from "@reduxjs/toolkit/query/react";
 
+type ApiEndPointBuilder = EndpointBuilder<
+  BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError, {}, FetchBaseQueryMeta>, 
+  never, 
+  "api"
+>;
 
-const url = import.meta.env.VITE_APP_API_URL
+const fetchQuery = {baseUrl: import.meta.env.VITE_API_URL}
 
-export const launchpadApi = createApi({
-    reducerPath: 'launchpadApi',
-    baseQuery: fetchBaseQuery({ baseUrl: url }),
-    tagTypes: ['Entity'],
-    endpoints: <T> (builder) => ({
-        getAllEntity : builder.query<T[], { entityType: string }>({
-            query: ({ entityType }) => `${entityType}`,
+const getQuery = <T>(builder:ApiEndPointBuilder) => 
+    builder.query<T, { entityName: string, uuid: string }>({
+        query: ({ entityName, uuid }) => `${entityName}/${uuid}`,
+    });
+
+const listQuery = <T>(builder:ApiEndPointBuilder) =>
+    builder.query<T[], string>({
+        query: (entityName) => `${entityName}`,
+    });
+    
+const createMutation = <T>(builder:ApiEndPointBuilder) =>
+    builder.mutation<string, { entityName: string, data: T }>({
+        query: ({ entityName, data }) => ({
+          url: `${entityName}`,
+          method: 'POST',
+          body: data,
+          responseHandler: async (response) => {
+            const text = await response.text();
+            return text;
+          },
         }),
-        getEntity: builder.query<T, { entityType: string, id: string }>({
-            query: ({ entityType, id }) => `${entityType}/${id}`
+        transformResponse: (response: string) => {
+          return response.trim();
+        },
+    });
+
+const updateMutation = <T>(builder:ApiEndPointBuilder) =>
+    builder.mutation<void, { entityName: string, uuid: string, data: T }>({
+        query: ({ entityName, uuid, data }) => ({
+        url: `${entityName}/${uuid}`,
+        method: 'PUT',
+        body: data,
         }),
-        createEntity: builder.mutation<T, {entityType:string; newEntity: Omit<T, 'id'>} >({
-            query: ({entityType, newEntity}) => ({
-                url: `${entityType}/new`,
-                method: 'POST',
-                body: newEntity
-            }),
+    });
+
+const deleteMutation = (builder:ApiEndPointBuilder) =>
+    builder.mutation<any, { entityName: string, uuid: string }>({
+        query: ({ entityName, uuid }) => ({
+        url: `${entityName}/${uuid}`,
+        method: 'DELETE',
         }),
-        updateEntity: builder.mutation<None, { entityType: string, id: string, updatedEntity: Partial<T> }>({
-            query: ({ entityType, id, updatedEntity }) => ({
-                url: `${entityType}/${id}`,
-                method: 'PATCH',
-                body: updatedEntity
-            }),
-        }),
-        deleteEntity: builder.mutation<void, { entityType: string; id: string | number }>({
-            query: ({ entityType, id }) => ({
-                url: `/${entityType}/${id}`,
-                method: 'DELETE'
-            })
-        })
+    });
+
+const basePath = {
+    reducerPath:"api",
+    baseQuery: fetchBaseQuery(fetchQuery),
+    endpoints: (builder:ApiEndPointBuilder) => ({
+        get:    getQuery(builder),
+        list:   listQuery(builder),
+        create: createMutation(builder),
+        update: updateMutation(builder),
+        delete: deleteMutation(builder),
     })
-})
+}
 
-export const {
-    useGetAllEntityQuery,
-    useGetEntityQuery,
-    useCreateEntityMutation,
-    useUpdateEntityMutation,
-    useDeleteEntityMutation
-} = launchpadApi;
+export function useEntity<T>(slug:string)
+{
+    const useGetQuery = (uuid: string) =>
+        EntityApi.endpoints.get.useQuery({ entityName: slug, uuid });
+    
+    const useListsQuery = () =>
+        EntityApi.endpoints.list.useQuery(slug);
+    
+    const useCreateMutation = () => {
+        const mutation = EntityApi.endpoints.create.useMutation();
+        return [
+            (data:T ) =>
+                mutation[0]({ entityName: slug, data }),
+            mutation[1],
+        ] as const;
+    };
+    
+    const useUpdateMutation = () => {
+        const mutation = EntityApi.endpoints.update.useMutation();
+        return [
+            ({ uuid, data }: { uuid: string; data: Partial<T> }) =>
+                mutation[0]({ entityName: slug, uuid, data }),
+            mutation[1],
+        ] as const;
+    };
+    
+    const useDeleteMutation = () => {
+        const mutation = EntityApi.endpoints.delete.useMutation();
+        return [
+            (uuid: string) => mutation[0]({ entityName: slug, uuid }),
+            mutation[1],
+        ] as const;
+    };
+
+    return {get:useGetQuery, list:useListsQuery, create:useCreateMutation, update:useUpdateMutation, remove:useDeleteMutation}
+
+}
+
+
+
+
+export const EntityApi = createApi(basePath);
