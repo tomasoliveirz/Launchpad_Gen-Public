@@ -12,6 +12,7 @@ public class ContractCharacteristicBusinessObject(IContractCharacteristicDataAcc
     {
         return await ExecuteOperation(async () =>
         {
+            if (string.IsNullOrEmpty(contractCharacteristic.Name)) throw new InvalidModelException("name is missing");
             var result = await dao.CreateAsync(contractCharacteristic);
             return result;
         });

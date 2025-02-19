@@ -21,7 +21,7 @@ namespace WebApi.Controllers
         public async Task<ActionResult<Guid>> CreateAsync([FromBody] ContractVariant contractVariant)
         {
             var result = await bo.CreateAsync(contractVariant, contractVariant.ContractType?.Uuid ?? Guid.Empty);
-            if (result.IsSuccessful) return StatusCode(201, result.Result);
+            if (result.IsSuccessful) StatusCode(201, result.Result);
             if (result.Exception is InvalidModelException ime) return BadRequest(ime.Message);
             return Problem(result.Exception?.Message ?? "");
         }

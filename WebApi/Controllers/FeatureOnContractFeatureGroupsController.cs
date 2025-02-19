@@ -23,7 +23,7 @@ namespace WebApi.Controllers
             var result = await bo.CreateAsync(featureOnContractFeatureGroup, 
                 featureOnContractFeatureGroup.ContractFeature?.Uuid ?? Guid.Empty,
                 featureOnContractFeatureGroup.ContractFeatureGroup?.Uuid ?? Guid.Empty);
-            if (result.IsSuccessful) return StatusCode(201, result.Result);
+            if (result.IsSuccessful) StatusCode(201, result.Result);
             if (result.Exception is InvalidModelException ime) return BadRequest(ime.Message);
             return Problem(result.Exception?.Message ?? "");
         }
