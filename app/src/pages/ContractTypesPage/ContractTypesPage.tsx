@@ -9,21 +9,28 @@ import { launchpadApi } from "@/services/launchpad/launchpadService";
 import { useState } from "react";
 import { ContractType } from "@/models/ContractType";
 import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-diaolg";
+import { useEntity } from "@/services/launchpad/testService";
 
 
 export default function () {
-  const { data = [], error, isLoading, refetch } = launchpadApi.useGetContractTypesQuery();
+  const URL_SLUG = "ContractTypes";
+  
+  const entityApi = useEntity<ContractType>(URL_SLUG);
+  const { data = [], error, isLoading, refetch } = entityApi.list();
+  const [createContractType, status] = entityApi.create();
+
+  //const { data = [], error, isLoading, refetch } = launchpadApi.useGetContractTypesQuery()
+  //const [createContractType] = launchpadApi.useCreateContractTypeMutation()
+  const [updateContractType] = launchpadApi.useUpdateContractTypeMutation()
+  const [removeContractType] = launchpadApi.useRemoveContractTypeMutation()
+  
+  const [selectedItem, setSelectedItem] = useState<ContractType | null>(null);
+  
   const [page, setPage] = useState(1);
   const pageSize = 6;
   const paginatedItems = data.slice((page - 1) * pageSize, page * pageSize);
   const pageCount = Math.ceil(data.length / pageSize);
-
-  const [selectedItem, setSelectedItem] = useState<ContractType | null>(null);
-
-  const [createContractType] = launchpadApi.useCreateContractTypeMutation()
-  const [updateContractType] = launchpadApi.useUpdateContractTypeMutation()
-  const [removeContractType] = launchpadApi.useRemoveContractTypeMutation()
-
+  console.log(createContractType);
   const onSubmitCreate = async (data: ContractType) => {
     console.log("data", data);
     try {
@@ -34,7 +41,8 @@ export default function () {
         type: "success",
       })
       refetch();
-    } catch {
+    } catch (e) {
+      console.log(status);
       toaster.create({
         title: "Failed",
         description: "Contract Type Created Failed",
