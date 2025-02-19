@@ -10,6 +10,7 @@ import ContractTypesSettings from "./pages/Settings/ContractTypesSettings/Contra
 import ContractCharacteristicsPage from "./pages/ContractCharacteristicsPage/ContractCharacteristicsPage"
 import ContractTypesPage from "./pages/ContractTypesPage/ContractTypesPage"
 import SettingsMenuPage from "./pages/SettingsMenuPage/SettingsMenuPage"
+import ContractVariantsPage from "./pages/ContractVariantsPage/ContractVariantsPage"
 
 function App() {
 
@@ -27,6 +28,7 @@ function App() {
               <Route element={<SettingsMenuPage/>} path="/settings" />
               <Route element={<ContractTypesPage/>} path="/settings/contracts/types"/>
               <Route element={<ContractCharacteristicsPage/>} path="/settings/contracts/characteristics"/>
+              <Route element={<ContractVariantsPage/>} path="/settings/contracts/variants"/>
               <Route path="/" element={<HomePage/>}/>
             </Routes>
           </Box>

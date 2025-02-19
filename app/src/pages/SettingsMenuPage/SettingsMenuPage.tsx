@@ -12,7 +12,7 @@ export default function(){
             <HStack gap="4em" flexWrap="wrap">
                 <LauchpadHomeCard to="/settings/contracts/types" icon={RiFilePaper2Fill} title="Contract Type" description="Manage your contract types"/>
                 <LauchpadHomeCard to="/settings/contracts/characteristics" icon={FaPalette} title="Contract Characteristics" description="Manage your contract characteristics"/>
-                <LauchpadHomeCard to="/settings" icon={IoGitBranchOutline} title="Contract Variants" description="Manage your contract variants"/>
+                <LauchpadHomeCard to="/settings/contract/variants" icon={IoGitBranchOutline} title="Contract Variants" description="Manage your contract variants"/>
                 <LauchpadHomeCard to="/settings" icon={FaNetworkWired} title="Blockchain Networks" description="Manage your contract variants"/>
             </HStack>
         </VStack>
