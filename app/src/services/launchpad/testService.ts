@@ -8,21 +8,21 @@ export const launchpadApi = createApi({
     reducerPath: 'launchpadApi',
     baseQuery: fetchBaseQuery({ baseUrl: url }),
     tagTypes: ['Entity'],
-    endpoints: (builder) => ({
-        getAllEntity : builder.query<Entity[], { entityType: string }>({
+    endpoints: <T> (builder) => ({
+        getAllEntity : builder.query<T[], { entityType: string }>({
             query: ({ entityType }) => `${entityType}`,
         }),
-        getEntity: builder.query<Entity, { entityType: string, id: string }>({
+        getEntity: builder.query<T, { entityType: string, id: string }>({
             query: ({ entityType, id }) => `${entityType}/${id}`
         }),
-        createEntity: builder.mutation<Entity, {entityType:string; newEntity: Omit<Entity, 'id'>} >({
+        createEntity: builder.mutation<T, {entityType:string; newEntity: Omit<T, 'id'>} >({
             query: ({entityType, newEntity}) => ({
                 url: `${entityType}/new`,
                 method: 'POST',
                 body: newEntity
             }),
         }),
-        updateEntity: builder.mutation<Entity, { entityType: string, id: string, updatedEntity: Partial<Entity> }>({
+        updateEntity: builder.mutation<None, { entityType: string, id: string, updatedEntity: Partial<T> }>({
             query: ({ entityType, id, updatedEntity }) => ({
                 url: `${entityType}/${id}`,
                 method: 'PATCH',

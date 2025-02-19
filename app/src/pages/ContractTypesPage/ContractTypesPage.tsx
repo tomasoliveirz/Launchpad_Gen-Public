@@ -2,26 +2,30 @@ import { PageWrapper } from "@/components/launchpad/wrappers/page-wrapper"
 import { Box, HStack, useDisclosure, VStack } from "@chakra-ui/react"
 import { FaPalette } from "react-icons/fa"
 import { LaunchpadNameTable } from "@/components/launchpad/tables/name-table";
-import { EntityWithNameAndDescriptionDialog, FormValues } from "@/components/launchpad/dialogs/entity-with-name-and-description-dialog";
+import { EntityWithNameAndDescriptionDialog } from "@/components/launchpad/dialogs/entity-with-name-and-description-dialog";
 import { LaunchpadNewButton } from "@/components/launchpad/buttons/button";
 import { Toaster, toaster } from "@/components/ui/toaster"
 import { launchpadApi } from "@/services/launchpad/launchpadService";
 import { useState } from "react";
+import { ContractType } from "@/models/ContractType";
+import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-diaolg";
 
 
 export default function () {
-  const { data = [], error, isLoading, refetch } = launchpadApi.useGetContractTypesQuery()
+  const { data = [], error, isLoading, refetch } = launchpadApi.useGetContractTypesQuery();
   const [page, setPage] = useState(1);
   const pageSize = 6;
-  const paginatedItems = data.slice(
-    (page - 1) * pageSize,
-    page * pageSize
-  );
+  const paginatedItems = data.slice((page - 1) * pageSize, page * pageSize);
   const pageCount = Math.ceil(data.length / pageSize);
 
-  const [createContractType] = launchpadApi.useCreateContractTypeMutation()
+  const [selectedItem, setSelectedItem] = useState<ContractType | null>(null);
 
-  const onSubmit = async (data: FormValues) => {
+  const [createContractType] = launchpadApi.useCreateContractTypeMutation()
+  const [updateContractType] = launchpadApi.useUpdateContractTypeMutation()
+  const [removeContractType] = launchpadApi.useRemoveContractTypeMutation()
+
+  const onSubmitCreate = async (data: ContractType) => {
+    console.log("data", data);
     try {
       await createContractType(data).unwrap();
       toaster.create({
@@ -37,26 +41,68 @@ export default function () {
         type: "error",
       })
     }
-    onClose();
+    onCloseCreate();
   }
 
-  const { onOpen, onClose, open } = useDisclosure();
+  const onSubmitEdit = async (data: ContractType) => {
+    if (!selectedItem) return;
+    console.log("data", data);
+    console.log("selectedItem", selectedItem);
+    try {
+      await updateContractType({ uuid: selectedItem.uuid, contractType: data })
+      toaster.create({
+        title: "Success",
+        description: "Contract Type Updated Successfully",
+        type: "success",
+      })
+      refetch();
+    } catch {
+      toaster.create({
+        title: "Failed",
+        description: "Contract Type Updated Failed",
+        type: "error",
+      })
+    }
+    onCloseEdit();
+  }
+
+  const onSubmitRemove = async () => {
+    if (!selectedItem) return;
+
+    console.log("selectedItem", selectedItem);
+    try {
+      await removeContractType(selectedItem.uuid);
+      toaster.create({
+        title: "Success",
+        description: "Contract Type Removed Successfully",
+        type: "success",
+      });
+      refetch();
+    } catch {
+      toaster.create({
+        title: "Failed",
+        description: "Contract Type Removal Failed",
+        type: "error",
+      });
+    }
+    onCloseRemove();
+  };
+
+  const { onOpen: onOpenCreate, onClose: onCloseCreate, open: openCreate } = useDisclosure();
+  const { onOpen: onOpenEdit, onClose: onCloseEdit, open: openEdit } = useDisclosure();
+  const { onOpen: onOpenRemove, onClose: onCloseRemove, open: openRemove } = useDisclosure();
   return <Box minW="100%" minH="100%">
     <PageWrapper w="100%" h="100%" title="Contract Type (Settings)" description="Manage your contract types" icon={FaPalette}>
       <VStack w="100%" h="100%" py="3em">
         <HStack w="100%">
-          <LaunchpadNewButton onClick={onOpen} />
-
+          <LaunchpadNewButton onClick={onOpenCreate} />
         </HStack>
       </VStack>
-      <LaunchpadNameTable items={paginatedItems} pageCount={pageCount} page={page} setPage={setPage} />
+      <LaunchpadNameTable items={paginatedItems} pageCount={pageCount} page={page} setPage={setPage} editButtonOnClick={(item => { setSelectedItem(item); onOpenEdit(); })} removeButtonOnClick={(item => { setSelectedItem(item); onOpenRemove(); })} />
     </PageWrapper>
-    <EntityWithNameAndDescriptionDialog open={open} onClose={onClose} onSubmit={onSubmit} title="New Contract Type" />
+    <EntityWithNameAndDescriptionDialog open={openCreate} onClose={onCloseCreate} onSubmit={onSubmitCreate} title="New Contract Type" />
+    <EntityWithNameAndDescriptionDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={selectedItem || undefined} title="Edit Contract Type" />
+    <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Contract Type (${selectedItem?.name})`} onSubmit={onSubmitRemove} />
     <Toaster />
   </Box>
 }
-
-
-
-
-

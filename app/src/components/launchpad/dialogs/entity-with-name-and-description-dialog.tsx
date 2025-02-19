@@ -4,25 +4,34 @@ import { useForm } from "react-hook-form"
 import { LaunchpadButton } from "../buttons/button"
 import { FaSave } from "react-icons/fa"
 import { Input, Textarea } from "@chakra-ui/react"
+import { EntityWithNameAndDescription } from "@/models/EntityWithNameAndDescription"
+import { useEffect } from "react"
 
 
 export interface EntityWithNameAndDescriptionDialogProps {
   open: boolean,
   onClose: () => void,
   title: string,
-  onSubmit: (data: FormValues) => void
+  onSubmit: (data: EntityWithNameAndDescription) => void
+  defaultValues?: EntityWithNameAndDescription;
 }
 
-export interface FormValues {
-  name: string
-  description: string
-}
-export function EntityWithNameAndDescriptionDialog({ open, onClose, title, onSubmit }: EntityWithNameAndDescriptionDialogProps) {
+export function EntityWithNameAndDescriptionDialog({ open, onClose, title, onSubmit, defaultValues }: EntityWithNameAndDescriptionDialogProps) {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
-  } = useForm<FormValues>()
+  } = useForm<EntityWithNameAndDescription>({
+    defaultValues: defaultValues,
+  });
+
+  useEffect(() => {
+    if (defaultValues) {
+      setValue("name", defaultValues.name);
+      setValue("description", defaultValues.description);
+    }
+  }, [defaultValues, setValue]);
 
   return <DialogRoot lazyMount open={open} placement="center">
     <DialogContent>

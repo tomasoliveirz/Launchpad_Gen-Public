@@ -1,36 +1,108 @@
 import { PageWrapper } from "@/components/launchpad/wrappers/page-wrapper"
 import { Box, HStack, useDisclosure, VStack } from "@chakra-ui/react"
-import { useEffect, useState } from "react";
-import { FaPalette, FaPlus } from "react-icons/fa"
-import { LaunchpadButton, LaunchpadNewButton } from "@/components/launchpad/buttons/button";
-import axios from "axios";
+import { FaPalette } from "react-icons/fa"
 import { LaunchpadNameTable } from "@/components/launchpad/tables/name-table";
 import { EntityWithNameAndDescriptionDialog } from "@/components/launchpad/dialogs/entity-with-name-and-description-dialog";
+import { LaunchpadNewButton } from "@/components/launchpad/buttons/button";
+import { Toaster, toaster } from "@/components/ui/toaster"
+import { launchpadApi } from "@/services/launchpad/launchpadService";
+import { useState } from "react";
+import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-diaolg";
+import { ContractCharacteristic } from "@/models/ContractCharacteristic";
+
 
 export default function () {
-  const url = import.meta.env.VITE_APP_API_URL
+  const { data = [], error, isLoading, refetch } = launchpadApi.useGetContractCharacteristicsQuery();
+  const [page, setPage] = useState(1);
+  const pageSize = 6;
+  const paginatedItems = data.slice((page - 1) * pageSize, page * pageSize);
+  const pageCount = Math.ceil(data.length / pageSize);
 
-  const [ContractCharacteristics, setContractCharacteristics] = useState([]);
-  useEffect(() => {
-    axios.get(`${url}/ContractCharacteristics`)
-      .then((response) => {
-        setContractCharacteristics(response.data)
+  const [selectedItem, setSelectedItem] = useState<ContractCharacteristic | null>(null);
+
+  const [createContractCharacteristic] = launchpadApi.useCreateContractCharacteristicMutation()
+  const [updateContractCharacteristic] = launchpadApi.useUpdateContractCharacteristicMutation()
+  const [removeContractCharacteristic] = launchpadApi.useRemoveContractCharacteristicMutation()
+
+  const onSubmitCreate = async (data: ContractCharacteristic) => {
+    console.log("data", data);
+    try {
+      await createContractCharacteristic(data).unwrap();
+      toaster.create({
+        title: "Success",
+        description: "Contract Characteristic Created Successfully",
+        type: "success",
       })
-      .catch((error) => console.error(error));
-  }, []);
+      refetch();
+    } catch {
+      toaster.create({
+        title: "Failed",
+        description: "Contract Characteristic Created Failed",
+        type: "error",
+      })
+    }
+    onCloseCreate();
+  }
 
-  const {onOpen, onClose, open } = useDisclosure();
+  const onSubmitEdit = async (data: ContractCharacteristic) => {
+    if (!selectedItem) return;
+    console.log("data", data);
+    console.log("selectedItem", selectedItem);
+    try {
+      await updateContractCharacteristic({ uuid: selectedItem.uuid, contractCharacteristic: data })
+      toaster.create({
+        title: "Success",
+        description: "Contract Characteristic Updated Successfully",
+        type: "success",
+      })
+      refetch();
+    } catch {
+      toaster.create({
+        title: "Failed",
+        description: "Contract Characteristic Updated Failed",
+        type: "error",
+      })
+    }
+    onCloseEdit();
+  }
+
+  const onSubmitRemove = async () => {
+    if (!selectedItem) return;
+
+    console.log("selectedItem", selectedItem);
+    try {
+      await removeContractCharacteristic(selectedItem.uuid);
+      toaster.create({
+        title: "Success",
+        description: "Contract Characteristic Removed Successfully",
+        type: "success",
+      });
+      refetch();
+    } catch {
+      toaster.create({
+        title: "Failed",
+        description: "Contract Characteristic Removal Failed",
+        type: "error",
+      });
+    }
+    onCloseRemove();
+  };
+
+  const { onOpen: onOpenCreate, onClose: onCloseCreate, open: openCreate } = useDisclosure();
+  const { onOpen: onOpenEdit, onClose: onCloseEdit, open: openEdit } = useDisclosure();
+  const { onOpen: onOpenRemove, onClose: onCloseRemove, open: openRemove } = useDisclosure();
   return <Box minW="100%" minH="100%">
-    <PageWrapper w="100%" h="100%" title="Contract Characteristics (Settings)" description="Manage your contract characteristics" icon={FaPalette}>
+    <PageWrapper w="100%" h="100%" title="Contract Characteristic (Settings)" description="Manage your contract types" icon={FaPalette}>
       <VStack w="100%" h="100%" py="3em">
         <HStack w="100%">
-          <LaunchpadNewButton onClick={onOpen} />
+          <LaunchpadNewButton onClick={onOpenCreate} />
         </HStack>
       </VStack>
-      <LaunchpadNameTable items={ContractCharacteristics} />
+      <LaunchpadNameTable items={paginatedItems} pageCount={pageCount} page={page} setPage={setPage} editButtonOnClick={(item => { setSelectedItem(item); onOpenEdit(); })} removeButtonOnClick={(item => { setSelectedItem(item); onOpenRemove(); })} />
     </PageWrapper>
-    <EntityWithNameAndDescriptionDialog open={open} onClose={onClose} title="New Contract Characteristic" />
+    <EntityWithNameAndDescriptionDialog open={openCreate} onClose={onCloseCreate} onSubmit={onSubmitCreate} title="New Contract Characteristic" />
+    <EntityWithNameAndDescriptionDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={selectedItem || undefined} title="Edit Contract Characteristic" />
+    <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Contract Characteristic (${selectedItem?.name})`} onSubmit={onSubmitRemove} />
+    <Toaster />
   </Box>
 }
-
-
