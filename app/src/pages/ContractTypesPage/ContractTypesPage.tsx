@@ -14,25 +14,24 @@ import { useEntity } from "@/services/launchpad/testService";
 
 export default function () {
   const URL_SLUG = "ContractTypes";
-  
   const entityApi = useEntity<ContractType>(URL_SLUG);
-  const { data = [], error, isLoading, refetch } = entityApi.list();
-  const [createContractType, status] = entityApi.create();
 
-  //const { data = [], error, isLoading, refetch } = launchpadApi.useGetContractTypesQuery()
-  //const [createContractType] = launchpadApi.useCreateContractTypeMutation()
-  const [updateContractType] = launchpadApi.useUpdateContractTypeMutation()
-  const [removeContractType] = launchpadApi.useRemoveContractTypeMutation()
+  const { data = [], error, isLoading, refetch } = entityApi.list();
+  const [createContractType] = entityApi.create();
+  const [updateContractType] = entityApi.update();
+  const [removeContractType] = entityApi.remove();
+
+  const contractTypeData = data as ContractType[];
   
   const [selectedItem, setSelectedItem] = useState<ContractType | null>(null);
   
   const [page, setPage] = useState(1);
   const pageSize = 6;
-  const paginatedItems = data.slice((page - 1) * pageSize, page * pageSize);
+  const paginatedItems = contractTypeData.slice((page - 1) * pageSize, page * pageSize);
   const pageCount = Math.ceil(data.length / pageSize);
-  console.log(createContractType);
+
   const onSubmitCreate = async (data: ContractType) => {
-    console.log("data", data);
+
     try {
       await createContractType(data).unwrap();
       toaster.create({
@@ -41,8 +40,7 @@ export default function () {
         type: "success",
       })
       refetch();
-    } catch (e) {
-      console.log(status);
+    } catch {
       toaster.create({
         title: "Failed",
         description: "Contract Type Created Failed",
@@ -54,10 +52,9 @@ export default function () {
 
   const onSubmitEdit = async (data: ContractType) => {
     if (!selectedItem) return;
-    console.log("data", data);
-    console.log("selectedItem", selectedItem);
+
     try {
-      await updateContractType({ uuid: selectedItem.uuid, contractType: data })
+      await updateContractType({ uuid: selectedItem.uuid, data })
       toaster.create({
         title: "Success",
         description: "Contract Type Updated Successfully",
@@ -77,7 +74,6 @@ export default function () {
   const onSubmitRemove = async () => {
     if (!selectedItem) return;
 
-    console.log("selectedItem", selectedItem);
     try {
       await removeContractType(selectedItem.uuid);
       toaster.create({

@@ -33,7 +33,7 @@ export function LaunchpadNameTable({ items, pageCount, page, setPage, editButton
         ))}
       </Table.Body>
     </Table.Root>
-    <Box mt="2em">
+    <Box mt="2em" w="60%" display="flex" justifyContent="flex-end">
     <LaunchpadPagination 
         page={page}
         pageCount={pageCount}

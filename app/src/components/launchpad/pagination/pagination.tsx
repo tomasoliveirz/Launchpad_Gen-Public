@@ -14,7 +14,7 @@ interface LaunchpadPaginationProps{
         pageSize={1}
         page={page}
         onPageChange={(e) => onPageChange(e.page)}
-        variant="solid"
+        variant="outline"
       >
         <Group attached>
           <PaginationPrevTrigger />

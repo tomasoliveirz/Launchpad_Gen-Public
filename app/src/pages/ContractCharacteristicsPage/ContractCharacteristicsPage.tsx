@@ -9,20 +9,26 @@ import { launchpadApi } from "@/services/launchpad/launchpadService";
 import { useState } from "react";
 import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-diaolg";
 import { ContractCharacteristic } from "@/models/ContractCharacteristic";
+import { useEntity } from "@/services/launchpad/testService";
 
 
 export default function () {
-  const { data = [], error, isLoading, refetch } = launchpadApi.useGetContractCharacteristicsQuery();
-  const [page, setPage] = useState(1);
-  const pageSize = 6;
-  const paginatedItems = data.slice((page - 1) * pageSize, page * pageSize);
-  const pageCount = Math.ceil(data.length / pageSize);
-
-  const [selectedItem, setSelectedItem] = useState<ContractCharacteristic | null>(null);
-
-  const [createContractCharacteristic] = launchpadApi.useCreateContractCharacteristicMutation()
-  const [updateContractCharacteristic] = launchpadApi.useUpdateContractCharacteristicMutation()
-  const [removeContractCharacteristic] = launchpadApi.useRemoveContractCharacteristicMutation()
+    const URL_SLUG = "ContractCharacteristics";
+    const entityApi = useEntity<ContractCharacteristic>(URL_SLUG);
+  
+    const { data = [], error, isLoading, refetch } = entityApi.list();
+    const [createContractCharacteristic] = entityApi.create();
+    const [updateContractCharacteristic] = entityApi.update();
+    const [removeContractCharacteristic] = entityApi.remove();
+  
+    const contractCharacteristicData = data as ContractCharacteristic[];
+    
+    const [selectedItem, setSelectedItem] = useState<ContractCharacteristic | null>(null);
+    
+    const [page, setPage] = useState(1);
+    const pageSize = 6;
+    const paginatedItems = contractCharacteristicData.slice((page - 1) * pageSize, page * pageSize);
+    const pageCount = Math.ceil(data.length / pageSize);
 
   const onSubmitCreate = async (data: ContractCharacteristic) => {
     console.log("data", data);
@@ -46,10 +52,9 @@ export default function () {
 
   const onSubmitEdit = async (data: ContractCharacteristic) => {
     if (!selectedItem) return;
-    console.log("data", data);
-    console.log("selectedItem", selectedItem);
+
     try {
-      await updateContractCharacteristic({ uuid: selectedItem.uuid, contractCharacteristic: data })
+      await updateContractCharacteristic({ uuid: selectedItem.uuid, data })
       toaster.create({
         title: "Success",
         description: "Contract Characteristic Updated Successfully",
@@ -92,7 +97,7 @@ export default function () {
   const { onOpen: onOpenEdit, onClose: onCloseEdit, open: openEdit } = useDisclosure();
   const { onOpen: onOpenRemove, onClose: onCloseRemove, open: openRemove } = useDisclosure();
   return <Box minW="100%" minH="100%">
-    <PageWrapper w="100%" h="100%" title="Contract Characteristic (Settings)" description="Manage your contract types" icon={FaPalette}>
+    <PageWrapper w="100%" h="100%" title="Contract Characteristic (Settings)" description="Manage your contract characteristics" icon={FaPalette}>
       <VStack w="100%" h="100%" py="3em">
         <HStack w="100%">
           <LaunchpadNewButton onClick={onOpenCreate} />

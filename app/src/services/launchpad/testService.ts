@@ -21,7 +21,7 @@ const listQuery = <T>(builder:ApiEndPointBuilder) =>
 const createMutation = <T>(builder:ApiEndPointBuilder) =>
     builder.mutation<string, { entityName: string, data: T }>({
         query: ({ entityName, data }) => ({
-          url: `${entityName}`,
+          url: `${entityName}/new`,
           method: 'POST',
           body: data,
           responseHandler: async (response) => {

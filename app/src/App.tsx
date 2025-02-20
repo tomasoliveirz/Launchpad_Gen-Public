@@ -6,11 +6,11 @@ import AppGeneratorPage from "./pages/AppGeneratorPage/AppGeneratorPage"
 import ContractManagerPage from "./pages/ContractManagerPage/ContractManagerPage"
 import ContractPublisherPage from "./pages/ContractPublisherPage/ContractPublisherPage"
 import HomePage from "./pages/HomePage/HomePage"
-import ContractTypesSettings from "./pages/Settings/ContractTypesSettings/ContractTypesSettings"
 import ContractCharacteristicsPage from "./pages/ContractCharacteristicsPage/ContractCharacteristicsPage"
 import ContractTypesPage from "./pages/ContractTypesPage/ContractTypesPage"
 import SettingsMenuPage from "./pages/SettingsMenuPage/SettingsMenuPage"
 import ContractVariantsPage from "./pages/ContractVariantsPage/ContractVariantsPage"
+import BlockchainNetworksPage from "./pages/BlockchainNetworksPage/BlockchainNetworksPage"
 
 function App() {
 
@@ -26,9 +26,10 @@ function App() {
               <Route element={<AppGeneratorPage/>} path="/app/generate"/>
               <Route element={<ContractManagerPage/>} path="/contract/manage"/>
               <Route element={<SettingsMenuPage/>} path="/settings" />
-              <Route element={<ContractTypesPage/>} path="/settings/contracts/types"/>
-              <Route element={<ContractCharacteristicsPage/>} path="/settings/contracts/characteristics"/>
-              <Route element={<ContractVariantsPage/>} path="/settings/contracts/variants"/>
+              <Route element={<ContractTypesPage/>} path="/settings/contract/types"/>
+              <Route element={<ContractCharacteristicsPage/>} path="/settings/contract/characteristics"/>
+              <Route element={<ContractVariantsPage/>} path="/settings/contract/variants"/>
+              <Route element={<BlockchainNetworksPage/>} path="/settings/blockchain/networks"/>
               <Route path="/" element={<HomePage/>}/>
             </Routes>
           </Box>
