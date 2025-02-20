@@ -7,16 +7,17 @@ using Moongy.RD.Launchpad.Business.Exceptions;
 
 namespace Moongy.RD.Launchpad.Business.BusinessObjects;
 
-public class ContractVariantBusinessObject(IContractVariantDataAccessObject dao, IGenericDataAccessObject genericDao) : EntityBusinessObject<ContractVariant>(dao), IContractVariantBusinessObject
+public class ContractVariantBusinessObject(IContractVariantDataAccessObject dao, IGenericDataAccessObject genericDao) : EntityBusinessObject<ContractVariant>(dao, genericDao), IContractVariantBusinessObject
 {
     public  async Task<OperationResult<Guid>> CreateAsync(ContractVariant contractVariant, Guid contractTypeUuid)
     {
         return await ExecuteOperation(async () =>
         {
             if (string.IsNullOrEmpty(contractVariant.Name)) throw new InvalidModelException("name is missing");
-            var contractType = await genericDao.GetAsync<ContractType>(contractTypeUuid) ?? throw new NotFoundException("Contract Type", contractTypeUuid.ToString());
-            contractVariant.ContractTypeId = contractType.Id;
+            contractVariant = await FindAndAttach(contractVariant, contractTypeUuid, x => x.ContractType, x => x.ContractTypeId);
             var result = await dao.CreateAsync(contractVariant);
+            var defaultFeatureGroup = new ContractFeatureGroup() { ContractVariantId = contractVariant.Id, Name = "Main" };
+            await genericDao.CreateAsync(defaultFeatureGroup);
             return result;
         });
     }

@@ -14,7 +14,7 @@ namespace Moongy.RD.Launchpad.Business.BusinessObjects
 {
  
 
-    public class GenerationFeatureValueBusinessObject(IGenerationFeatureValueDataAccessObject dao, IGenericDataAccessObject genericDao) : EntityBusinessObject<GenerationFeatureValue>(dao), IGenerationFeatureValueBusinessObject
+    public class GenerationFeatureValueBusinessObject(IGenerationFeatureValueDataAccessObject dao, IGenericDataAccessObject genericDao) : EntityBusinessObject<GenerationFeatureValue>(dao, genericDao), IGenerationFeatureValueBusinessObject
     {
         public async Task<OperationResult<Guid>> CreateAsync(GenerationFeatureValue value, Guid featureOnContractFeatureGroupUuid, Guid contractGenerationResultUuid)
         {

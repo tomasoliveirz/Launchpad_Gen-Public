@@ -2,11 +2,12 @@
 using Moongy.RD.Launchpad.Business.Exceptions;
 using Moongy.RD.Launchpad.Business.Interfaces;
 using Moongy.RD.Launchpad.Data.Entities;
+using Moongy.RD.LaunchPad.DataAccess.Base.Interfaces;
 using Moongy.RD.LaunchPad.DataAccess.Interfaces;
 
 namespace Moongy.RD.Launchpad.Business.BusinessObjects;
 
-public class ContractFeatureBusinessObject(IContractFeatureDataAccessObject dao) : EntityBusinessObject<ContractFeature>(dao), IContractFeatureBusinessObject
+public class ContractFeatureBusinessObject(IContractFeatureDataAccessObject dao, IGenericDataAccessObject genericDao) : EntityBusinessObject<ContractFeature>(dao, genericDao), IContractFeatureBusinessObject
 {
     public override async Task<OperationResult<Guid>> CreateAsync(ContractFeature contractFeature)
     {

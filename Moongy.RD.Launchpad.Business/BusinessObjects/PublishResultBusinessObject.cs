@@ -7,7 +7,7 @@ using Moongy.RD.LaunchPad.DataAccess.Interfaces;
 
 namespace Moongy.RD.Launchpad.Business.BusinessObjects;
 
-public class PublishResultBusinessObject(IPublishResultDataAccessObject dao, IGenericDataAccessObject genericDao) : EntityBusinessObject<PublishResult>(dao), IPublishResultBusinessObject
+public class PublishResultBusinessObject(IPublishResultDataAccessObject dao, IGenericDataAccessObject genericDao) : EntityBusinessObject<PublishResult>(dao, genericDao), IPublishResultBusinessObject
 {
     public async Task<OperationResult<Guid>> CreateAsync(PublishResult publishResult, Guid contractGenerationResultUuid, Guid blockchainNetworkUuid)
     {

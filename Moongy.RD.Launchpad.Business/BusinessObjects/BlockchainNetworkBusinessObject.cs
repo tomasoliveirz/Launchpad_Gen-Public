@@ -2,12 +2,13 @@
 using Moongy.RD.Launchpad.Business.Exceptions;
 using Moongy.RD.Launchpad.Business.Interfaces;
 using Moongy.RD.Launchpad.Data.Entities;
+using Moongy.RD.LaunchPad.DataAccess.Base.Interfaces;
 using Moongy.RD.LaunchPad.DataAccess.Interfaces;
 
 
 namespace Moongy.RD.Launchpad.Business.BusinessObjects;
 
-public class BlockchainNetworkBusinessObject(IBlockchainNetworkDataAccessObject dao) : EntityBusinessObject<BlockchainNetwork>(dao), IBlockchainNetworkBusinessObject
+public class BlockchainNetworkBusinessObject(IBlockchainNetworkDataAccessObject dao, IGenericDataAccessObject genericDao) : EntityBusinessObject<BlockchainNetwork>(dao, genericDao), IBlockchainNetworkBusinessObject
 {
     public override async Task<OperationResult<Guid>> CreateAsync(BlockchainNetwork blockchainNetwork)
     {

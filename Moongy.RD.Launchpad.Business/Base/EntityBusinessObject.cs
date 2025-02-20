@@ -1,12 +1,34 @@
-﻿using System.Transactions;
+﻿using System.Linq.Expressions;
+using System.Reflection;
+using System.Transactions;
+using Moongy.RD.Launchpad.Business.Exceptions;
 using Moongy.RD.Launchpad.Business.Interfaces;
 using Moongy.RD.Launchpad.Data.Base;
+using Moongy.RD.Launchpad.Data.Entities;
 using Moongy.RD.LaunchPad.DataAccess.Base.Interfaces;
 
 namespace Moongy.RD.Launchpad.Business.Base
 {
-    public abstract class EntityBusinessObject<T>(IBaseDataAccessObject<T> dao) : BaseBusinessObject, IEntityBusinessObject<T> where T : Entity
+    public abstract class EntityBusinessObject<T>(IBaseDataAccessObject<T> dao, IGenericDataAccessObject genericDao) : BaseBusinessObject, IEntityBusinessObject<T> where T : Entity
     {
+        private static PropertyInfo GetPropertyInfo<TProperty>(Expression<Func<T, TProperty>> propertyExpression)
+        {
+            if (propertyExpression.Body is MemberExpression memberExpression)
+            {
+                return (PropertyInfo)memberExpression.Member;
+            }
+            throw new ArgumentException("Expression must be a property expression");
+        }
+
+        protected async Task<T> FindAndAttach<T1>(T record, Guid uuid, Expression<Func<T, T1?>>property, Expression<Func<T, int>> foreignKey) where T1:Entity
+        {
+            var relRecord = await genericDao.GetAsync<T1>(uuid) ?? throw new NotFoundException(nameof(T1), uuid.ToString());
+            var propertyInfo = GetPropertyInfo(property);
+            var foreignKeyInfo = GetPropertyInfo(foreignKey);
+            propertyInfo.SetValue(record, relRecord);
+            foreignKeyInfo.SetValue(record, relRecord.Id);
+            return record;
+        }
 
         public async virtual Task<OperationResult<Guid>> CreateAsync(T entity)
         {

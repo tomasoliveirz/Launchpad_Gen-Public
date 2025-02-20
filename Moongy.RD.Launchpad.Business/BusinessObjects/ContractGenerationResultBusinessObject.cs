@@ -7,7 +7,7 @@ using Moongy.RD.LaunchPad.DataAccess.Interfaces;
 
 namespace Moongy.RD.Launchpad.Business.BusinessObjects;
 
-public class ContractGenerationResultBusinessObject(IContractGenerationResultDataAccessObject dao, IGenericDataAccessObject genericDao) : EntityBusinessObject<ContractGenerationResult>(dao), IContractGenerationResultBusinessObject
+public class ContractGenerationResultBusinessObject(IContractGenerationResultDataAccessObject dao, IGenericDataAccessObject genericDao) : EntityBusinessObject<ContractGenerationResult>(dao, genericDao), IContractGenerationResultBusinessObject
 {
     public async Task<OperationResult<Guid>> CreateAsync(ContractGenerationResult contractGenerationResult, Guid contractVariantUuid)
     {

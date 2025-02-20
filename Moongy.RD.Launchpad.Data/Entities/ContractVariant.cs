@@ -6,10 +6,11 @@ using System.Text.Json.Serialization;
 namespace Moongy.RD.Launchpad.Data.Entities;
 public class ContractVariant : EntityWithNameAndDescription
 {
+    [JsonIgnore]
     [ForeignKey(nameof(ContractType))]
     public int ContractTypeId { get; set; }
 
-    public virtual ContractType? ContractType { get; set; }
+    public virtual ContractType? ContractType { get; set; } 
 
     [JsonIgnore]
     public virtual ICollection<CharacteristicInContractVariant> CharacteristicInContractVariant { get; set; } = [];
