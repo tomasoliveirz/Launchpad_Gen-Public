@@ -7,65 +7,65 @@ import { LaunchpadNewButton } from "@/components/launchpad/buttons/button";
 import { Toaster, toaster } from "@/components/ui/toaster"
 import { launchpadApi } from "@/services/launchpad/launchpadService";
 import { useState } from "react";
-import { ContractType } from "@/models/ContractType";
+import { ContractFeature } from "@/models/ContractFeature";
 import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-diaolg";
 import { useEntity } from "@/services/launchpad/testService";
 import { TableWrapper } from "@/components/launchpad/wrappers/table-wrapper";
 
 
 export default function () {
-  const URL_SLUG = "ContractTypes";
-  const entityApi = useEntity<ContractType>(URL_SLUG);
+  const URL_SLUG = "ContractFeatures";
+  const entityApi = useEntity<ContractFeature>(URL_SLUG);
 
   const { data = [], error, isLoading, refetch } = entityApi.list();
-  const [createContractType] = entityApi.create();
-  const [updateContractType] = entityApi.update();
-  const [removeContractType] = entityApi.remove();
+  const [createContractFeature] = entityApi.create();
+  const [updateContractFeature] = entityApi.update();
+  const [removeContractFeature] = entityApi.remove();
 
-  const contractTypeData = data as ContractType[];
+  const ContractFeatureData = data as ContractFeature[];
 
-  const [selectedItem, setSelectedItem] = useState<ContractType | null>(null);
+  const [selectedItem, setSelectedItem] = useState<ContractFeature | null>(null);
 
   const [page, setPage] = useState(1);
   const pageSize = 6;
-  const paginatedItems = contractTypeData.slice((page - 1) * pageSize, page * pageSize);
+  const paginatedItems = ContractFeatureData.slice((page - 1) * pageSize, page * pageSize);
   const pageCount = Math.ceil(data.length / pageSize);
 
-  const onSubmitCreate = async (data: ContractType) => {
+  const onSubmitCreate = async (data: ContractFeature) => {
 
     try {
-      await createContractType(data).unwrap();
+      await createContractFeature(data).unwrap();
       toaster.create({
         title: "Success",
-        description: "Contract Type Created Successfully",
+        description: "Contract Feature Created Successfully",
         type: "success",
       })
       refetch();
     } catch {
       toaster.create({
         title: "Failed",
-        description: "Contract Type Created Failed",
+        description: "Contract Feature Created Failed",
         type: "error",
       })
     }
     onCloseCreate();
   }
 
-  const onSubmitEdit = async (data: ContractType) => {
+  const onSubmitEdit = async (data: ContractFeature) => {
     if (!selectedItem) return;
 
     try {
-      await updateContractType({ uuid: selectedItem.uuid, data })
+      await updateContractFeature({ uuid: selectedItem.uuid, data })
       toaster.create({
         title: "Success",
-        description: "Contract Type Updated Successfully",
+        description: "Contract Feature Updated Successfully",
         type: "success",
       })
       refetch();
     } catch {
       toaster.create({
         title: "Failed",
-        description: "Contract Type Updated Failed",
+        description: "Contract Feature Updated Failed",
         type: "error",
       })
     }
@@ -76,17 +76,17 @@ export default function () {
     if (!selectedItem) return;
 
     try {
-      await removeContractType(selectedItem.uuid);
+      await removeContractFeature(selectedItem.uuid);
       toaster.create({
         title: "Success",
-        description: "Contract Type Removed Successfully",
+        description: "Contract Feature Removed Successfully",
         type: "success",
       });
       refetch();
     } catch {
       toaster.create({
         title: "Failed",
-        description: "Contract Type Removal Failed",
+        description: "Contract Feature Removal Failed",
         type: "error",
       });
     }
@@ -97,14 +97,14 @@ export default function () {
   const { onOpen: onOpenEdit, onClose: onCloseEdit, open: openEdit } = useDisclosure();
   const { onOpen: onOpenRemove, onClose: onCloseRemove, open: openRemove } = useDisclosure();
   return <Box minW="100%" minH="100%">
-    <PageWrapper w="100%" h="100%" title="Contract Type (Settings)" description="Manage your contract types" icon={FaPalette}>
+    <PageWrapper w="100%" h="100%" title="Contract Feature (Settings)" description="Manage your contract features" icon={FaPalette}>
       <TableWrapper newButtonOnClick={onOpenCreate}>
         <LaunchpadNameTable items={paginatedItems} pageCount={pageCount} page={page} setPage={setPage} editButtonOnClick={(item => { setSelectedItem(item); onOpenEdit(); })} removeButtonOnClick={(item => { setSelectedItem(item); onOpenRemove(); })} />
       </TableWrapper>
     </PageWrapper>
-    <EntityWithNameAndDescriptionDialog open={openCreate} onClose={onCloseCreate} onSubmit={onSubmitCreate} title="New Contract Type" />
-    <EntityWithNameAndDescriptionDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={selectedItem || undefined} title="Edit Contract Type" />
-    <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Contract Type (${selectedItem?.name})`} onSubmit={onSubmitRemove} />
+    <EntityWithNameAndDescriptionDialog open={openCreate} onClose={onCloseCreate} onSubmit={onSubmitCreate} title="New Contract Feature" />
+    <EntityWithNameAndDescriptionDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={selectedItem || undefined} title="Edit Contract Feature" />
+    <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Contract Feature (${selectedItem?.name})`} onSubmit={onSubmitRemove} />
     <Toaster />
   </Box>
 }

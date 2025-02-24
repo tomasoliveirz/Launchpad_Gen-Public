@@ -11,6 +11,7 @@ import ContractTypesPage from "./pages/ContractTypesPage/ContractTypesPage"
 import SettingsMenuPage from "./pages/SettingsMenuPage/SettingsMenuPage"
 import ContractVariantsPage from "./pages/ContractVariantsPage/ContractVariantsPage"
 import BlockchainNetworksPage from "./pages/BlockchainNetworksPage/BlockchainNetworksPage"
+import ContractFeaturesPage from "./pages/ContractFeaturesPage/ContractFeaturesPage"
 
 function App() {
 
@@ -30,6 +31,7 @@ function App() {
               <Route element={<ContractCharacteristicsPage/>} path="/settings/contract/characteristics"/>
               <Route element={<ContractVariantsPage/>} path="/settings/contract/variants"/>
               <Route element={<BlockchainNetworksPage/>} path="/settings/blockchain/networks"/>
+              <Route element={<ContractFeaturesPage/>} path="/settings/contract/features"/>
               <Route path="/" element={<HomePage/>}/>
             </Routes>
           </Box>

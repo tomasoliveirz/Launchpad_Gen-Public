@@ -3,6 +3,7 @@ import { ContractVariantDialog } from "@/components/launchpad/dialogs/contract-v
 import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-diaolg";
 import { LaunchpadContractVariantTable } from "@/components/launchpad/tables/contract-variants-table";
 import { PageWrapper } from "@/components/launchpad/wrappers/page-wrapper";
+import { TableWrapper } from "@/components/launchpad/wrappers/table-wrapper";
 import { Toaster, toaster } from "@/components/ui/toaster";
 import { ContractType } from "@/models/ContractType";
 import { ContractVariant } from "@/models/ContractVariant";
@@ -104,12 +105,9 @@ export default function () {
     const { onOpen: onOpenRemove, onClose: onCloseRemove, open: openRemove } = useDisclosure();
     return <Box minW="100%" minH="100%">
         <PageWrapper w="100%" h="100%" title="Contract Variants (Settings)" description="Manage your contract variants" icon={IoGitBranchOutline}>
-            <VStack w="100%" h="100%" py="3em">
-                <HStack w="100%">
-                    <LaunchpadNewButton onClick={onOpenCreate} />
-                </HStack>
-            </VStack>
-            <LaunchpadContractVariantTable items={paginatedItems} pageCount={pageCount} page={page} setPage={setPage} editButtonOnClick={(item => { setSelectedItem(item); onOpenEdit(); })} removeButtonOnClick={(item => { setSelectedItem(item); onOpenRemove(); })} />
+            <TableWrapper newButtonOnClick={onOpenCreate}>
+                <LaunchpadContractVariantTable items={paginatedItems} pageCount={pageCount} page={page} setPage={setPage} editButtonOnClick={(item => { setSelectedItem(item); onOpenEdit(); })} removeButtonOnClick={(item => { setSelectedItem(item); onOpenRemove(); })} />
+            </TableWrapper>
         </PageWrapper>
         <ContractVariantDialog open={openCreate} onClose={onCloseCreate} onSubmit={onSubmitCreate} title="New Contract Variant" collection={contractTypesCollection} selectValue={contractTypeUuid} selectOnValueChange={setContractTypeUuid} />
         <ContractVariantDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={selectedItem || undefined} title="Edit Contract Variant" collection={contractTypesCollection} selectValue={contractTypeUuid} selectOnValueChange={setContractTypeUuid} />

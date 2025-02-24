@@ -7,6 +7,8 @@ namespace Moongy.RD.Launchpad.Data.Entities;
 public class FeatureOnContractFeatureGroup : Entity
 {
 
+    public string? TriggerValue { get; set; }
+
     [ForeignKey(nameof(ContractFeature))]
     public int ContractFeatureId { get; set; }
 

@@ -1,5 +1,5 @@
 import { PageWrapper } from "@/components/launchpad/wrappers/page-wrapper"
-import { Box, HStack, useDisclosure, VStack } from "@chakra-ui/react"
+import { Box, HStack, Table, useDisclosure, VStack } from "@chakra-ui/react"
 import { FaPalette } from "react-icons/fa"
 import { LaunchpadNameTable } from "@/components/launchpad/tables/name-table";
 import { EntityWithNameAndDescriptionDialog } from "@/components/launchpad/dialogs/entity-with-name-and-description-dialog";
@@ -10,6 +10,7 @@ import { useState } from "react";
 import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-diaolg";
 import { ContractCharacteristic } from "@/models/ContractCharacteristic";
 import { useEntity } from "@/services/launchpad/testService";
+import { TableWrapper } from "@/components/launchpad/wrappers/table-wrapper";
 
 
 export default function () {
@@ -98,12 +99,9 @@ export default function () {
   const { onOpen: onOpenRemove, onClose: onCloseRemove, open: openRemove } = useDisclosure();
   return <Box minW="100%" minH="100%">
     <PageWrapper w="100%" h="100%" title="Contract Characteristic (Settings)" description="Manage your contract characteristics" icon={FaPalette}>
-      <VStack w="100%" h="100%" py="3em">
-        <HStack w="100%">
-          <LaunchpadNewButton onClick={onOpenCreate} />
-        </HStack>
-      </VStack>
-      <LaunchpadNameTable items={paginatedItems} pageCount={pageCount} page={page} setPage={setPage} editButtonOnClick={(item => { setSelectedItem(item); onOpenEdit(); })} removeButtonOnClick={(item => { setSelectedItem(item); onOpenRemove(); })} />
+      <TableWrapper newButtonOnClick={onOpenCreate}>
+        <LaunchpadNameTable items={paginatedItems} pageCount={pageCount} page={page} setPage={setPage} editButtonOnClick={(item => { setSelectedItem(item); onOpenEdit(); })} removeButtonOnClick={(item => { setSelectedItem(item); onOpenRemove(); })} />
+      </TableWrapper>
     </PageWrapper>
     <EntityWithNameAndDescriptionDialog open={openCreate} onClose={onCloseCreate} onSubmit={onSubmitCreate} title="New Contract Characteristic" />
     <EntityWithNameAndDescriptionDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={selectedItem || undefined} title="Edit Contract Characteristic" />

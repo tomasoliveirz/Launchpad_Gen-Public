@@ -8,6 +8,9 @@ public class ContractFeatureGroup : EntityWithNameAndDescription
 {
     public string? DataType { get; set; }
 
+    public string? NormalizedName { get; set; }
+    public string? DefaultValue { get; set; }
+
     [ForeignKey(nameof(ContractVariant))]
     public int ContractVariantId { get; set; }
     public virtual ContractVariant? ContractVariant{ get; set; }

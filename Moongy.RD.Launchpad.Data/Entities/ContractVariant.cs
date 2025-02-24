@@ -10,7 +10,7 @@ public class ContractVariant : EntityWithNameAndDescription
     [ForeignKey(nameof(ContractType))]
     public int ContractTypeId { get; set; }
 
-    public virtual ContractType? ContractType { get; set; } 
+    public virtual ContractType? ContractType { get; set; }
 
     [JsonIgnore]
     public virtual ICollection<CharacteristicInContractVariant> CharacteristicInContractVariant { get; set; } = [];

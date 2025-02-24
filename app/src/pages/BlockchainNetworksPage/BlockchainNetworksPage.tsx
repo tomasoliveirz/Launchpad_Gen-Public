@@ -9,6 +9,7 @@ import { useEntity } from "@/services/launchpad/testService";
 import { BlockchainNetwork } from "@/models/BlockchainNetwork";
 import { BlockchainNetworksTable } from "@/components/launchpad/tables/blockchain-networks-table";
 import { BlockchainNetworksDialog } from "@/components/launchpad/dialogs/blockchain-network-dialog";
+import { TableWrapper } from "@/components/launchpad/wrappers/table-wrapper";
 
 export default function () {
     const URL_SLUG = "BlockchainNetworks";
@@ -30,9 +31,7 @@ export default function () {
     const pageCount = Math.ceil(data.length / pageSize);
 
     const onSubmitCreate = async (data: BlockchainNetwork) => {
-
         try {
-
             await createBlockchainNetwork(data).unwrap();
             toaster.create({
                 title: "Success",
@@ -97,12 +96,9 @@ export default function () {
     const { onOpen: onOpenRemove, onClose: onCloseRemove, open: openRemove } = useDisclosure();
     return <Box minW="100%" minH="100%">
         <PageWrapper w="100%" h="100%" title="Blockchain Network (Settings)" description="Manage your blockchain networks" icon={FaNetworkWired}>
-            <VStack w="100%" h="100%" py="3em">
-                <HStack w="100%">
-                    <LaunchpadNewButton onClick={onOpenCreate} />
-                </HStack>
-            </VStack>
-            <BlockchainNetworksTable items={paginatedItems} pageCount={pageCount} page={page} setPage={setPage} editButtonOnClick={(item => { setSelectedItem(item); onOpenEdit(); })} removeButtonOnClick={(item => { setSelectedItem(item); onOpenRemove(); })} />
+            <TableWrapper newButtonOnClick={onOpenCreate}>
+                <BlockchainNetworksTable items={paginatedItems} pageCount={pageCount} page={page} setPage={setPage} editButtonOnClick={(item => { setSelectedItem(item); onOpenEdit(); })} removeButtonOnClick={(item => { setSelectedItem(item); onOpenRemove(); })} />
+            </TableWrapper>
         </PageWrapper>
         <BlockchainNetworksDialog open={openCreate} onClose={onCloseCreate} onSubmit={onSubmitCreate} title="New Blockchain Network" />
         <BlockchainNetworksDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} title="New Blockchain Network" defaultValues={selectedItem || undefined} />

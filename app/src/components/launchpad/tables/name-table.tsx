@@ -14,7 +14,7 @@ export interface LaunchpadNameTableProps extends Omit<TableRootProps, "page"> {
 }
 export function LaunchpadNameTable({ items, pageCount, page, setPage, editButtonOnClick, removeButtonOnClick, ...props }: LaunchpadNameTableProps) {
   return <>
-    <Table.Root zIndex="0" size="sm" w="60%" striped {...props}>
+    <Table.Root zIndex="0" size="sm" w="90%" striped {...props}>
       <Table.Header>
         <Table.Row>
           <Table.ColumnHeader>Name</Table.ColumnHeader>
@@ -33,7 +33,7 @@ export function LaunchpadNameTable({ items, pageCount, page, setPage, editButton
         ))}
       </Table.Body>
     </Table.Root>
-    <Box mt="2em" w="60%" display="flex" justifyContent="flex-end">
+    <Box mt="1em" w="90%" display="flex" justifyContent="flex-end">
     <LaunchpadPagination 
         page={page}
         pageCount={pageCount}
