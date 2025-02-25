@@ -5,7 +5,7 @@ import { ContractVariant } from "@/models/ContractVariant";
 import { Input, ListCollection, Textarea } from "@chakra-ui/react";
 import { RefObject, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
-import { ContractTypeSelect } from "../select/contract-variant-select";
+import { ContractTypeSelect } from "../select/contract-type-select";
 import { LaunchpadButton } from "../buttons/button";
 import { FaSave } from "react-icons/fa";
 
@@ -34,7 +34,7 @@ export function ContractVariantDialog({ open, onClose, title, onSubmit, defaultV
         if (defaultValues) {
             setValue("name", defaultValues.name);
             setValue("description", defaultValues.description);
-            setValue("contractType", defaultValues.contractType);
+            setValue("contractType.uuid", defaultValues.contractType.uuid);
         }
     }, [defaultValues, setValue]);
 

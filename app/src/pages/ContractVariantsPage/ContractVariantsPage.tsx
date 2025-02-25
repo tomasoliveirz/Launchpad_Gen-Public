@@ -1,4 +1,3 @@
-import { LaunchpadNewButton } from "@/components/launchpad/buttons/button";
 import { ContractVariantDialog } from "@/components/launchpad/dialogs/contract-variants-dialog";
 import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-diaolg";
 import { LaunchpadContractVariantTable } from "@/components/launchpad/tables/contract-variants-table";
@@ -6,15 +5,16 @@ import { PageWrapper } from "@/components/launchpad/wrappers/page-wrapper";
 import { TableWrapper } from "@/components/launchpad/wrappers/table-wrapper";
 import { Toaster, toaster } from "@/components/ui/toaster";
 import { ContractType } from "@/models/ContractType";
-import { ContractVariant } from "@/models/ContractVariant";
+import { ContractVariant, ContractVariantWithTypeName } from "@/models/ContractVariant";
 import { useEntity } from "@/services/launchpad/testService";
-import { Box, createListCollection, HStack, useDisclosure, VStack } from "@chakra-ui/react";
+import { Box, createListCollection, useDisclosure} from "@chakra-ui/react";
 import { useState } from "react";
 import { IoGitBranchOutline } from "react-icons/io5";
 
 export default function () {
     const URL_SLUG = "ContractVariants";
     const entityApi = useEntity<ContractVariant>(URL_SLUG);
+    const variantApi = useEntity<ContractVariant>("ContractVariants/withTypes");
 
     const entityApiContractType = useEntity<ContractType>("ContractTypes");
     const { data: contractTypesData = [] } = entityApiContractType.list();
@@ -22,12 +22,12 @@ export default function () {
         items: contractTypesData as ContractType[],
     })
 
-    const { data = [], refetch } = entityApi.list();
+    const { data = [], refetch } = variantApi.list();
     const [createContractVariant] = entityApi.create();
     const [updateContractVariant] = entityApi.update();
     const [removeContractVariant] = entityApi.remove();
 
-    const contractVariantData = data as ContractVariant[];
+    const contractVariantData = data as ContractVariantWithTypeName[];
 
     const [selectedItem, setSelectedItem] = useState<ContractVariant | null>(null);
 
@@ -38,6 +38,7 @@ export default function () {
     const [contractTypeUuid, setContractTypeUuid] = useState<string>("");
 
     const onSubmitCreate = async (data: ContractVariant) => {
+        console.log
         try {
             await createContractVariant(data).unwrap();
             toaster.create({
@@ -48,6 +49,7 @@ export default function () {
             refetch();
         } catch (error) {
             console.log("error", error);
+            console.log("data", data);
             toaster.create({
                 title: "Failed",
                 description: "Contract Variant Created Failed",

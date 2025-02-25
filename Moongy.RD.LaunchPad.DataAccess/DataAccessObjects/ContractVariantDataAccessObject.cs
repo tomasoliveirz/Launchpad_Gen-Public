@@ -8,22 +8,19 @@ namespace Moongy.RD.LaunchPad.DataAccess.DataAccessObjects;
 
 public class ContractVariantDataAccessObject(LaunchpadContext context) : BaseDataAccessObject<ContractVariant>(context), IContractVariantDataAccessObject
 {
-    public async Task<IEnumerable<(ContractVariant, string?)>> GetContractVariantAndTypeName()
+    public async Task<IEnumerable<ContractVariantDto>> GetContractVariantAndTypeName()
     {
 
 
         var query = from variants in context.ContractsVariants
                     join types in context.ContractTypes on variants.ContractTypeId equals types.Id
-                    select new { Type = types, Variant = variants };
+                    select new ContractVariantDto
+                    { 
+                        ContractVariant = variants,
+                        ContractTypeName = types.Name,
+                    };
 
 
-        var queryResult = await query.ToListAsync();
-        var result = new List<(ContractVariant, string?)>();
-
-        foreach (var item in queryResult)
-        {
-            result.Add((item.Variant, item.Type?.Name));
-        }
-        return result;
+        return await query.ToListAsync();
     }
 }

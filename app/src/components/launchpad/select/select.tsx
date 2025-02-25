@@ -1,4 +1,5 @@
-import { SelectContent, SelectItem, SelectLabel, SelectRoot, SelectRootProps, SelectTrigger, SelectValueText} from "@chakra-ui/react";
+import { SelectContent, SelectItem, SelectLabel, SelectRoot, SelectTrigger, SelectValueText} from "@/components/ui/select";
+import { SelectRootProps } from "@chakra-ui/react";
 
 export interface LaunchpadSelectProps extends Omit<Omit<SelectRootProps, "onValueChange">, "value">
 {
