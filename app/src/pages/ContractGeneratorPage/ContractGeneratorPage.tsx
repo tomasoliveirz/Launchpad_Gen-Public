@@ -1,6 +1,3 @@
-import ContractResult from "@/components/launchpad/contract-generator-components/contract-results";
-import { ContractSettings } from "@/components/launchpad/contract-generator-components/contract-settings";
-import { LaunchpadSelect } from "@/components/launchpad/select/select";
 import { PageWrapper } from "@/components/launchpad/wrappers/page-wrapper";
 import { ContractType } from "@/models/ContractType";
 import { ContractVariant } from "@/models/ContractVariant";

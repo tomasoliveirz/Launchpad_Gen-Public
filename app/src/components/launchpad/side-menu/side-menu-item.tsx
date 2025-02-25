@@ -13,7 +13,7 @@ export interface SideMenuItemProps extends BoxProps
 export default function({icon, to, title, isMain, ...props}:SideMenuItemProps)
 {
     const Icon = icon
-    return <Box _hover={{fontSize:isMain ? "1.75em":"1.5em"}} {...props}>
+    return <Box {...props}>
                 <Link to={to}>
                     <Box fontSize={isMain? "1.5em": "1.25em"}>
                         <Icon color="white" title={title}/>
