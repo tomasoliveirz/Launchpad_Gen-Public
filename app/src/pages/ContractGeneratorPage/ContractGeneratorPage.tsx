@@ -1,132 +1,29 @@
-import ContractResult from "@/components/launchpad/contract-generator-components/contract-results";
-import { ContractSettings } from "@/components/launchpad/contract-generator-components/contract-settings";
-import { LaunchpadSelect } from "@/components/launchpad/select/select";
 import { PageWrapper } from "@/components/launchpad/wrappers/page-wrapper";
-import { ContractVariant } from "@/models/ContractVariant";
-import { namedEntityToListCollection, previousGenerationToListCollection } from "@/support/adapters";
-import { contractTypesData } from "@/test-data/contract-types";
-import { contractVariantsData } from "@/test-data/contract-variants";
-import { previousGenerationsData } from "@/test-data/previous-generations";
-import { Flex, HStack, ListCollection, Show, Spacer, VStack } from "@chakra-ui/react";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { TypeField } from "@/components/reUIsables/ControlledInput/controlled-input";
+import { DecimalInput } from "@/components/reUIsables/ControlledInput/decimal-input";
+import { MnemonicInput } from "@/components/reUIsables/ControlledInput/mnemonic-input";
+import { FieldErrorText, FieldLabel, FieldRoot } from "@chakra-ui/react";
+import { useState } from "react";
 import { FaCode } from "react-icons/fa";
 
 export default function()
 {
-    const url = import.meta.env.VITE_APP_API_URL
-
-    //DATA
-    const [contractsGenerated, setContractsGenerated] = useState([]);
-    useEffect(() => {
-        axios.get(`${url}/ContractGenerationResults`)
-        .then( (response) => {
-            console.log(response.data)
-            setContractsGenerated(response.data)})
-        .catch((error) => console.error(error));
-    }, []);
-
-    
-    //CONTROL
-    const [contractType, setContractType] = useState<string>();
-    const [contractVariant,setContractVariant ] = useState<string>();
-    const [previousGeneration,setPreviousGeneration ] = useState<string>();
-    
-    const [contractVariants, setContractVariants] = useState<ContractVariant[]>(contractVariantsData);
-
-    const contractTypesList : ListCollection = namedEntityToListCollection(contractTypesData)
-    const contracVariantsList : ListCollection = namedEntityToListCollection(contractVariants);
-    const previousGeneratedList:ListCollection = previousGenerationToListCollection(contractsGenerated);
-
-    const [contractFeatureGroup, setContractFeatureGroup] = useState<{ label: string; value: string }[]>([]);
-
-    useEffect(() => {
-        if (contractType) {
-            const contractTypeIdx = contractTypesData.findIndex(x => x.uuid == contractType);
-            const contractTypeRecord = contractTypesData[contractTypeIdx];
-            setContractFeatureGroup(prev => [
-                ...prev.filter(item => item.label !== "Contract type"),
-                { label: "Contract type", value: contractTypeRecord.name }
-            ]);
-        }
-    }, [contractType]);
-
-    useEffect(() => {
-        if (contractVariant) {
-            const contractVariantIdx = contractVariantsData.findIndex(x => x.uuid == contractVariant);
-            const contractVariantRecord = contractVariantsData[contractVariantIdx];
-            setContractFeatureGroup(prev => [
-                ...prev.filter(item => item.label !== "Contract Variant"),
-                { label: "Contract Variant", value: contractVariantRecord.name }
-            ]);
-        }
-    }, [contractVariant]);
-
-    
-
-    useEffect(()=>
-    {
-        if(previousGeneration)
-        {
-            const generationIdx = previousGenerationsData.findIndex(x => x.uuid == previousGeneration);
-            if(generationIdx != -1)
-            {
-                const previousGenerationRecord = previousGenerationsData[generationIdx];
-                setContractVariant(previousGenerationRecord.contractVariantUuid);
-                const variantIdx = contractVariantsData.findIndex(x => x.uuid == previousGenerationRecord.contractVariantUuid);
-                if(variantIdx != -1)
-                {
-                    const variantRecord = contractVariantsData[variantIdx];
-                    setContractType(variantRecord.contractTypeUuid);
-                }
-            }
-        }
-    },[previousGeneration])
-
-    useEffect(()=>
-    {
-        if(contractVariant)
-        {
-            const idx = contractVariants.findIndex(x => x.uuid == contractVariant);
-            if(idx != -1)
-            {
-                const contractVariantsRecord = contractVariants[idx];
-                setContractType(contractVariantsRecord.contractTypeUuid);
-            } 
-        }
-    },[contractVariant])
-
-    useEffect(()=>{
-        let variants:ContractVariant[] = [];
-        contractVariantsData.forEach((x:ContractVariant)=>{
-                if(x.contractTypeUuid == contractType) variants.push(x);
-        });
-        setContractVariants(variants);
-    }, [contractType])
-
-    //VIEW
+    const [error, setError] = useState<boolean|string>(false);
+    const [val, setVal] = useState<string>()
+    console.log(error);
+    const defaultError = "Email is not valid";
     return <PageWrapper title="Contract Generator" icon={FaCode}>
-                <HStack mt="2em" w="100%">
-                    <Show when={previousGeneratedList.size > 0}>
-                        <LaunchpadSelect w="20%" collection={previousGeneratedList} title="Previous contracts" value={previousGeneration} onValueChange={setPreviousGeneration} />
-                    </Show>
-                    <Spacer maxW="100%"/>
-                </HStack>
-                <VStack w="100%" mt="3em">
-                    <Flex w="100%" gap="10em">
-                        <LaunchpadSelect w="20%" collection={contractTypesList} title="Contract Types" value={contractType} onValueChange={setContractType} />
-                        <Show when={contractType}>
-                            <LaunchpadSelect w="20%" collection={contracVariantsList} title="Contract variants" value={contractVariant}onValueChange={setContractVariant} />
-                        </Show>
-                    </Flex>       
-                </VStack>
-                <Show when={contractVariant}>
-                    <Flex w="100%" gap="10em">
-                            <ContractSettings/>
-                            <ContractResult contractFeatureGroup={contractFeatureGroup}/>  
-                        </Flex>
-                    </Show>
-                
+                <FieldRoot invalid={(error && (typeof(error) === "string" && error !== "") || (typeof(error) === "boolean" && error === true))}>
+                    <FieldLabel>
+                    </FieldLabel>
+                    <MnemonicInput bg="transparent" value="val" setError={setError} onChange={(setVal)} color="white"/>
+                    {/* <EmailInput value="val" setError={setError} onChange={(setVal)}/> */}
+                    {/* <DecimalInput value={val} setError={setError} onChange={setVal}/> */}
+                    {error && <FieldErrorText>{typeof(error)==="string" ? error : defaultError }</FieldErrorText>}
+                </FieldRoot>
+
+                <TypeField label="Security Contact" type="email" description="Where people can contact you to report security issues. Will only be visible if contract metadata is verified."/>
+            
             </PageWrapper>
 }
 
