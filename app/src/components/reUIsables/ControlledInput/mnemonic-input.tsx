@@ -1,5 +1,4 @@
-import { Button, HStack,  Spacer, VStack } from "@chakra-ui/react";
-import { GenericInputProps } from "./generic-input";
+import { Button, HStack,  InputProps,  Spacer, VStack } from "@chakra-ui/react";
 import {
     MenuContent,
     MenuItem,
@@ -8,19 +7,24 @@ import {
   } from "@/components/ui/menu"
 import { useEffect, useState } from "react";
 
-export interface MnemonicInputProps
+export interface MnemonicInputProps extends Omit<InputProps, "onChange"|"value">
 {
     itemsPerRow:number
+    value:string|undefined
+    setError?:(v:boolean|string)=>void
+    onChange:(s:string|undefined)=>void
 }
 
 
-export function MnemonicInput({itemsPerRow}:MnemonicInputProps) {
+export function MnemonicInput({itemsPerRow, ...props}:MnemonicInputProps) {
     const [words, setWords] = useState<number>(12);
     const rowCount = (12%itemsPerRow > 0) ? Math.ceil(12/itemsPerRow): 12/itemsPerRow;
     const [rows, setRows] = useState<number>(rowCount);
 
     useEffect(()=>{
-        setRows((12%itemsPerRow > 0) ? Math.ceil(12/itemsPerRow): 12/itemsPerRow);
+        setRows((12%itemsPerRow > 0) ? 
+                 Math.ceil(12/itemsPerRow): 
+                 12/itemsPerRow);
     }, [words])
 
     return (
@@ -40,23 +44,23 @@ export function MnemonicInput({itemsPerRow}:MnemonicInputProps) {
                 </MenuContent>
             </MenuRoot>
         </HStack>
-        {}
+        {/* {rows.map((x, idx)=><MnemonicWordRow startAt={}/>)} */}
       </VStack>
     );
   }
 
-interface MnemonicWordRowProps
-{
-    startAt:number
-    limit:number
-}
+// interface MnemonicWordRowProps
+// {
+//     startAt:number
+//     limit:number
+// }
 
-function MnemonicWordRow({startAt, limit}:MnemonicWordRowProps)
-{
-    return <HStack>
-                {}
-            </HStack>
-}
+// function MnemonicWordRow({startAt, limit}:MnemonicWordRowProps)
+// {
+//     return <HStack>
+//                 {}
+//             </HStack>
+// }
 
 
 function updateMnemonicValue(
