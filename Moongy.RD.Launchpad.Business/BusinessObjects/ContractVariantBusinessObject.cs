@@ -38,11 +38,11 @@ public class ContractVariantBusinessObject(IContractVariantDataAccessObject dao,
         });
     }
 
-    public async Task<OperationResult<IEnumerable<ContractVariantDto>>> GetVariantsWithTypes()
+    public async Task<OperationResult<IEnumerable<ContractVariant>>> GetVariantsWithTypes()
     {
         return await ExecuteOperation(async () =>
         {
-            var records = await dao.GetContractVariantAndTypeName();
+            var records = await dao.GetContractVariantWithType();
             return records;
         });
 

@@ -1,7 +1,7 @@
 import { GenericInput, GenericInputProps } from "./generic-input";
 
 
-export function EmailInput({setError, onChange, ...props} : GenericInputProps<string>)
+export function EmailInput({setError, onChange, ...props} : GenericInputProps<string|undefined>)
 {
     return <GenericInput type="email" {...props} onChange={(s)=>updateValue(s, onChange, setError)}/>
 }

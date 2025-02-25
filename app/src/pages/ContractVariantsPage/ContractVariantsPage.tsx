@@ -14,7 +14,6 @@ import { IoGitBranchOutline } from "react-icons/io5";
 export default function () {
     const URL_SLUG = "ContractVariants";
     const entityApi = useEntity<ContractVariant>(URL_SLUG);
-    const variantApi = useEntity<ContractVariant>("ContractVariants/withTypes");
 
     const entityApiContractType = useEntity<ContractType>("ContractTypes");
     const { data: contractTypesData = [] } = entityApiContractType.list();
@@ -22,7 +21,7 @@ export default function () {
         items: contractTypesData as ContractType[],
     })
 
-    const { data = [], refetch } = variantApi.list();
+    const { data = [], refetch } = entityApi.list();
     const [createContractVariant] = entityApi.create();
     const [updateContractVariant] = entityApi.update();
     const [removeContractVariant] = entityApi.remove();

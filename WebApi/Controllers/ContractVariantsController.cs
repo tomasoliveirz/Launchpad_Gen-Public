@@ -12,7 +12,7 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ContractVariant>>> ListAsync()
         {
-            var result = await bo.ListAsync();
+            var result = await bo.GetVariantsWithTypes();
             if (result.IsSuccessful) return Ok(result.Result);
             return Problem(result.Exception?.Message ?? "");
         }
@@ -54,12 +54,5 @@ namespace WebApi.Controllers
             return Problem(result.Exception?.Message ?? "");
         }
 
-        [HttpGet("withTypes")]
-        public async Task<ActionResult<IEnumerable<ContractVariantDto>>> ListContractVariantsAndTypeName()
-        {
-            var result = await bo.GetVariantsWithTypes();
-            if (result.IsSuccessful) return Ok(result.Result);
-            return Problem(result.Exception?.Message ?? "");
-        }
     }
 }
