@@ -1,13 +1,11 @@
-import { ContractVariant } from "@/models/ContractVariant";
+import { ContractVariant, ContractVariantWithTypeName } from "@/models/ContractVariant";
 import { Box, Table, TableRootProps } from "@chakra-ui/react";
 import { LaunchpadButton } from "../buttons/button";
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 import { LaunchpadPagination } from "../pagination/pagination";
-import { useEntity } from "@/services/launchpad/testService";
-import { ContractType } from "@/models/ContractType";
 
 export interface LaunchpadContractVariantTableProps extends Omit<TableRootProps, "page"> {
-    items: ContractVariant[],
+    items: ContractVariantWithTypeName[],
     pageCount: number,
     page: number,
     setPage: (page: number) => void;
@@ -15,6 +13,7 @@ export interface LaunchpadContractVariantTableProps extends Omit<TableRootProps,
     removeButtonOnClick?: (item: ContractVariant) => void;
 }
 export function LaunchpadContractVariantTable({ items, pageCount, page, setPage, editButtonOnClick, removeButtonOnClick, ...props }: LaunchpadContractVariantTableProps) {
+    console.log("items", items);
     return <>
         <Table.Root zIndex="0" size="sm" w="90%" striped {...props}>
             <Table.Header>
@@ -26,12 +25,12 @@ export function LaunchpadContractVariantTable({ items, pageCount, page, setPage,
             </Table.Header>
             <Table.Body>
                 {items.map((item) => (
-                    <Table.Row key={item.uuid}>
-                    <Table.Cell ps="1em">{item.name}</Table.Cell>
-                    <Table.Cell ps="1em">{item.contractType.name}</Table.Cell>
+                    <Table.Row key={item.contractVariant.uuid}>
+                    <Table.Cell ps="1em">{item.contractVariant.name}</Table.Cell>
+                    <Table.Cell ps="1em">{item.contractTypeName}</Table.Cell>
                     <Table.Cell w="10em">
-                        <LaunchpadButton onClick={() => editButtonOnClick?.(item)} icon={FaPencilAlt} color="white" bg="none" />
-                        <LaunchpadButton onClick={() => removeButtonOnClick?.(item)} icon={FaTrashAlt} color="white" bg="none" />
+                        <LaunchpadButton onClick={() => editButtonOnClick?.(item.contractVariant)} icon={FaPencilAlt} color="white" bg="none" />
+                        <LaunchpadButton onClick={() => removeButtonOnClick?.(item.contractVariant)} icon={FaTrashAlt} color="white" bg="none" />
                     </Table.Cell>
                 </Table.Row>
                 ))}
@@ -46,20 +45,3 @@ export function LaunchpadContractVariantTable({ items, pageCount, page, setPage,
         </Box>
     </>
 }
-
-export interface ContractTypeCellProps {
-    contractType: ContractType;
-}
-export function ContractTypeCell({ contractType }: ContractTypeCellProps) {
-    const entityApiContractType = useEntity<ContractType>("ContractTypes");
-    const { data: data } = entityApiContractType.get(contractType.uuid);
-    const ct = data as ContractType;
-
-    console.log("aaa", contractType)
-
-    return (
-        <Table.Cell ps="1em">
-            {ct.name}
-        </Table.Cell>
-    );
-};

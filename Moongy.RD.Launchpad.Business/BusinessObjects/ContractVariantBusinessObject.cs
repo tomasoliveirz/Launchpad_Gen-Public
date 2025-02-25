@@ -4,7 +4,6 @@ using Moongy.RD.Launchpad.Data.Entities;
 using Moongy.RD.Launchpad.Business.Interfaces;
 using Moongy.RD.LaunchPad.DataAccess.Base.Interfaces;
 using Moongy.RD.Launchpad.Business.Exceptions;
-
 namespace Moongy.RD.Launchpad.Business.BusinessObjects;
 
 public class ContractVariantBusinessObject(IContractVariantDataAccessObject dao, IGenericDataAccessObject genericDao) : EntityBusinessObject<ContractVariant>(dao, genericDao), IContractVariantBusinessObject
@@ -37,5 +36,15 @@ public class ContractVariantBusinessObject(IContractVariantDataAccessObject dao,
             }
             await dao.UpdateAsync(oldRecord);
         });
+    }
+
+    public async Task<OperationResult<IEnumerable<ContractVariantDto>>> GetVariantsWithTypes()
+    {
+        return await ExecuteOperation(async () =>
+        {
+            var records = await dao.GetContractVariantAndTypeName();
+            return records;
+        });
+
     }
 }

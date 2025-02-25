@@ -7,4 +7,6 @@ public interface IContractVariantBusinessObject : IEntityBusinessObject<Contract
 {
     public Task<OperationResult<Guid>> CreateAsync(ContractVariant contractVariant, Guid contractTypeUuid);
     public Task<OperationResult> UpdateAsync(Guid uuid, ContractVariant contractVariant, Guid? contractTypeUuid);
+
+    public Task<OperationResult<IEnumerable<ContractVariantDto>>> GetVariantsWithTypes();
 }

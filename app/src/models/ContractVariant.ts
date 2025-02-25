@@ -1,5 +1,12 @@
-import { ContractType } from "./ContractType";
 import { EntityWithNameAndDescription } from "./EntityWithNameAndDescription";
 
 export type ContractVariant = EntityWithNameAndDescription & {
-    contractType: ContractType};
+    contractType: {
+        uuid: string
+    }
+};
+
+export type ContractVariantWithTypeName = {
+    contractVariant: ContractVariant;
+    contractTypeName: string;
+}

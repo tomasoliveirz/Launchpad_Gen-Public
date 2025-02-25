@@ -4,6 +4,6 @@ namespace Moongy.RD.LaunchPad.DataAccess.Interfaces;
 
 public interface IContractVariantDataAccessObject : IBaseDataAccessObject<ContractVariant>
 {
-    Task<IEnumerable<(ContractVariant, string?)>> GetContractVariantAndTypeName();
+    Task<IEnumerable<ContractVariantDto>> GetContractVariantAndTypeName();
 
 }
