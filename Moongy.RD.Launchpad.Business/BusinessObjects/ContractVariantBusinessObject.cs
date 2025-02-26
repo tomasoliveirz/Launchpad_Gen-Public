@@ -42,9 +42,17 @@ public class ContractVariantBusinessObject(IContractVariantDataAccessObject dao,
     {
         return await ExecuteOperation(async () =>
         {
-            var records = await dao.GetContractVariantWithType();
+            var records = await dao.GetContractVariantsWithType();
             return records;
         });
+    }
 
+    public async Task<OperationResult<ContractVariant>> GetVariantWithType(Guid contractVariantUuid)
+    {
+        return await ExecuteOperation(async () =>
+        {
+            var records = await dao.GetContractVariantWithType(contractVariantUuid);
+            return records;
+        });
     }
 }

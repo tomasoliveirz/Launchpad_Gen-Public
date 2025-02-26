@@ -38,7 +38,7 @@ namespace WebApi.Controllers
         [HttpGet("{uuid}")]
         public async Task<ActionResult<ContractVariant>> GetAsync(Guid uuid)
         {
-            var result = await bo.GetAsync(uuid);
+            var result = await bo.GetVariantWithType(uuid);
             if (result.IsSuccessful) return Ok(result.Result);
             if (result.Exception is NotFoundException nfe) return NotFound(nfe.Id);
             return Problem(result.Exception?.Message ?? "");
