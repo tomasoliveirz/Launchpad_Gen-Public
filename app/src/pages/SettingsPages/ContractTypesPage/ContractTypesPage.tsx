@@ -1,16 +1,15 @@
 import { PageWrapper } from "@/components/launchpad/wrappers/page-wrapper"
-import { Box, HStack, useDisclosure, VStack } from "@chakra-ui/react"
-import { FaPalette } from "react-icons/fa"
+import { Box, useDisclosure } from "@chakra-ui/react"
 import { LaunchpadNameTable } from "@/components/launchpad/tables/name-table";
 import { EntityWithNameAndDescriptionDialog } from "@/components/launchpad/dialogs/entity-with-name-and-description-dialog";
-import { LaunchpadNewButton } from "@/components/launchpad/buttons/button";
-import { Toaster, toaster } from "@/components/ui/toaster"
-import { launchpadApi } from "@/services/launchpad/launchpadService";
-import { useState } from "react";
+import { Toaster} from "@/components/ui/toaster"
+import { useEffect, useState } from "react";
 import { ContractType } from "@/models/ContractType";
-import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-diaolg";
-import { useEntity } from "@/services/launchpad/testService";
+import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-dialog";
+import { useEntity } from "@/services/launchpad/entityService";
 import { TableWrapper } from "@/components/launchpad/wrappers/table-wrapper";
+import { LaunchpadErrorToaster, LaunchpadSuccessToaster } from "@/components/reUIsables/Toaster/toaster";
+import { RiFilePaper2Fill } from "react-icons/ri";
 
 
 export default function () {
@@ -35,18 +34,10 @@ export default function () {
 
     try {
       await createContractType(data).unwrap();
-      toaster.create({
-        title: "Success",
-        description: "Contract Type Created Successfully",
-        type: "success",
-      })
+      LaunchpadSuccessToaster("Contract Type Created Successfully");
       refetch();
     } catch {
-      toaster.create({
-        title: "Failed",
-        description: "Contract Type Created Failed",
-        type: "error",
-      })
+      LaunchpadErrorToaster("Contract Type Created Failed");
     }
     onCloseCreate();
   }
@@ -56,18 +47,10 @@ export default function () {
 
     try {
       await updateContractType({ uuid: selectedItem.uuid, data })
-      toaster.create({
-        title: "Success",
-        description: "Contract Type Updated Successfully",
-        type: "success",
-      })
+      LaunchpadSuccessToaster("Contract Type Updated Successfully");
       refetch();
     } catch {
-      toaster.create({
-        title: "Failed",
-        description: "Contract Type Updated Failed",
-        type: "error",
-      })
+      LaunchpadErrorToaster("Contract Type Updated Failed");
     }
     onCloseEdit();
   }
@@ -77,29 +60,32 @@ export default function () {
 
     try {
       await removeContractType(selectedItem.uuid);
-      toaster.create({
-        title: "Success",
-        description: "Contract Type Removed Successfully",
-        type: "success",
-      });
+      LaunchpadSuccessToaster("Contract Type Removed Successfully");
       refetch();
     } catch {
-      toaster.create({
-        title: "Failed",
-        description: "Contract Type Removal Failed",
-        type: "error",
-      });
+      LaunchpadErrorToaster("Contract Type Removal Failed");
     }
     onCloseRemove();
   };
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   const { onOpen: onOpenCreate, onClose: onCloseCreate, open: openCreate } = useDisclosure();
   const { onOpen: onOpenEdit, onClose: onCloseEdit, open: openEdit } = useDisclosure();
   const { onOpen: onOpenRemove, onClose: onCloseRemove, open: openRemove } = useDisclosure();
   return <Box minW="100%" minH="100%">
-    <PageWrapper w="100%" h="100%" title="Contract Type (Settings)" description="Manage your contract types" icon={FaPalette}>
+    <PageWrapper w="100%" h="100%" title="Contract Type (Settings)" description="Manage your contract types" icon={RiFilePaper2Fill}>
       <TableWrapper newButtonOnClick={onOpenCreate}>
-        <LaunchpadNameTable items={paginatedItems} pageCount={pageCount} page={page} setPage={setPage} editButtonOnClick={(item => { setSelectedItem(item); onOpenEdit(); })} removeButtonOnClick={(item => { setSelectedItem(item); onOpenRemove(); })} />
+        <LaunchpadNameTable 
+          items={paginatedItems} 
+          pageCount={pageCount} 
+          page={page} 
+          setPage={setPage} 
+          editButtonOnClick={(item => { setSelectedItem(item); onOpenEdit(); })}
+          detailsLink={(item) => `/settings/contract/types/${item.uuid}`}
+          removeButtonOnClick={(item => { setSelectedItem(item); onOpenRemove(); })} />
       </TableWrapper>
     </PageWrapper>
     <EntityWithNameAndDescriptionDialog open={openCreate} onClose={onCloseCreate} onSubmit={onSubmitCreate} title="New Contract Type" />

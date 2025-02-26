@@ -1,13 +1,12 @@
 import { DialogActionTrigger, DialogBody, DialogContent, DialogFooter, DialogHeader, DialogRoot, DialogTitle } from "@/components/ui/dialog";
 import { Field } from "@/components/ui/field";
 import { BlockchainNetwork } from "@/models/BlockchainNetwork";
-import { Button, Input, Textarea } from "@chakra-ui/react";
-import { useCallback, useEffect } from "react";
-import { useForm, UseFormSetValue } from "react-hook-form";
+import { Input, Textarea } from "@chakra-ui/react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { LaunchpadButton } from "../buttons/button";
 import { FaSave } from "react-icons/fa";
-import { FileUploadList, FileUploadRoot, FileUploadTrigger } from "@/components/ui/file-upload";
-import { HiUpload } from "react-icons/hi";
+import { ImageUpload } from "@/components/reUIsables/ImageInput/image-input";
 
 export interface BlockchainNetworksDialogProps {
     open: boolean,
@@ -74,7 +73,10 @@ export function BlockchainNetworksDialog({ open, onClose, title, onSubmit, defau
                         invalid={!!errors.image}
                         errorText={errors.image?.message}
                     >
-                        <ImageUpload setValue={setValue} />
+                    <ImageUpload
+                        setValue={setValue}
+                        formField="image"
+                    />
                     </Field>
                 </DialogBody>
                 <DialogFooter>
@@ -88,27 +90,3 @@ export function BlockchainNetworksDialog({ open, onClose, title, onSubmit, defau
     </DialogRoot>
 }
 
-function ImageUpload({ setValue }: { setValue: UseFormSetValue<BlockchainNetwork> }) {
-    const handleFileChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const dataURL = reader.result as string;
-          setValue('image', dataURL);
-        };
-        reader.readAsDataURL(file); 
-      }
-    }, [setValue]);
-
-    return (
-        <FileUploadRoot onChange={handleFileChange}>
-            <FileUploadTrigger asChild>
-                <Button variant="outline" size="sm">
-                    <HiUpload /> Upload Image
-                </Button>
-            </FileUploadTrigger>
-            <FileUploadList />
-        </FileUploadRoot>
-    );
-}

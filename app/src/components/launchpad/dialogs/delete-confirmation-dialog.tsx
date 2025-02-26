@@ -1,7 +1,7 @@
 import { DialogActionTrigger, DialogBody, DialogContent, DialogFooter, DialogHeader, DialogRoot, DialogTitle } from "@/components/ui/dialog"
 import { useForm } from "react-hook-form"
 import { LaunchpadButton } from "../buttons/button"
-import { FaSave } from "react-icons/fa"
+import { FaSave, FaTrashAlt } from "react-icons/fa"
 import { Text } from "@chakra-ui/react"
 import { EntityWithNameAndDescription } from "@/models/EntityWithNameAndDescription"
 
@@ -28,7 +28,7 @@ export function DeleteConfirmationDialog({ open, onClose, title, onSubmit }: Del
           <Text>Are you sure you want to delete ?</Text>
         </DialogBody>
         <DialogFooter>
-          <LaunchpadButton type="submit" icon={FaSave} text="Delete" color="white" bg="#dd1717" />
+          <LaunchpadButton type="submit" icon={FaTrashAlt} text="Delete" color="white" bg="#dd1717" />
           <DialogActionTrigger asChild>
             <LaunchpadButton text="Cancel" onClick={onClose} color="white" bg="#FF7518" />
           </DialogActionTrigger>

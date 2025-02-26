@@ -1,16 +1,15 @@
 import { PageWrapper } from "@/components/launchpad/wrappers/page-wrapper"
-import { Box, HStack, useDisclosure, VStack } from "@chakra-ui/react"
-import { FaPalette } from "react-icons/fa"
+import { Box, useDisclosure } from "@chakra-ui/react"
+import { FaPalette, FaQuestion } from "react-icons/fa"
 import { LaunchpadNameTable } from "@/components/launchpad/tables/name-table";
 import { EntityWithNameAndDescriptionDialog } from "@/components/launchpad/dialogs/entity-with-name-and-description-dialog";
-import { LaunchpadNewButton } from "@/components/launchpad/buttons/button";
 import { Toaster, toaster } from "@/components/ui/toaster"
-import { launchpadApi } from "@/services/launchpad/launchpadService";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ContractFeature } from "@/models/ContractFeature";
-import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-diaolg";
-import { useEntity } from "@/services/launchpad/testService";
+import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-dialog";
+import { useEntity } from "@/services/launchpad/entityService";
 import { TableWrapper } from "@/components/launchpad/wrappers/table-wrapper";
+import { LaunchpadErrorToaster, LaunchpadSuccessToaster } from "@/components/reUIsables/Toaster/toaster";
 
 
 export default function () {
@@ -32,21 +31,12 @@ export default function () {
   const pageCount = Math.ceil(data.length / pageSize);
 
   const onSubmitCreate = async (data: ContractFeature) => {
-
     try {
       await createContractFeature(data).unwrap();
-      toaster.create({
-        title: "Success",
-        description: "Contract Feature Created Successfully",
-        type: "success",
-      })
+      LaunchpadSuccessToaster("Contract Feature Created Successfully");
       refetch();
     } catch {
-      toaster.create({
-        title: "Failed",
-        description: "Contract Feature Created Failed",
-        type: "error",
-      })
+      LaunchpadErrorToaster("Contract Feature Created Failed");
     }
     onCloseCreate();
   }
@@ -56,18 +46,10 @@ export default function () {
 
     try {
       await updateContractFeature({ uuid: selectedItem.uuid, data })
-      toaster.create({
-        title: "Success",
-        description: "Contract Feature Updated Successfully",
-        type: "success",
-      })
+      LaunchpadSuccessToaster("Contract Feature Updated Successfully");
       refetch();
     } catch {
-      toaster.create({
-        title: "Failed",
-        description: "Contract Feature Updated Failed",
-        type: "error",
-      })
+      LaunchpadErrorToaster("Contract Feature Updated Failed");
     }
     onCloseEdit();
   }
@@ -77,18 +59,10 @@ export default function () {
 
     try {
       await removeContractFeature(selectedItem.uuid);
-      toaster.create({
-        title: "Success",
-        description: "Contract Feature Removed Successfully",
-        type: "success",
-      });
+      LaunchpadSuccessToaster("Contract Feature Removed Successfully");
       refetch();
     } catch {
-      toaster.create({
-        title: "Failed",
-        description: "Contract Feature Removal Failed",
-        type: "error",
-      });
+      LaunchpadErrorToaster("Contract Feature Removal Failed");
     }
     onCloseRemove();
   };
@@ -96,8 +70,13 @@ export default function () {
   const { onOpen: onOpenCreate, onClose: onCloseCreate, open: openCreate } = useDisclosure();
   const { onOpen: onOpenEdit, onClose: onCloseEdit, open: openEdit } = useDisclosure();
   const { onOpen: onOpenRemove, onClose: onCloseRemove, open: openRemove } = useDisclosure();
+
+  useEffect(() => {
+    refetch();
+  }, []);
+
   return <Box minW="100%" minH="100%">
-    <PageWrapper w="100%" h="100%" title="Contract Feature (Settings)" description="Manage your contract features" icon={FaPalette}>
+    <PageWrapper w="100%" h="100%" title="Contract Feature (Settings)" description="Manage your contract features" icon={FaQuestion}>
       <TableWrapper newButtonOnClick={onOpenCreate}>
         <LaunchpadNameTable items={paginatedItems} pageCount={pageCount} page={page} setPage={setPage} editButtonOnClick={(item => { setSelectedItem(item); onOpenEdit(); })} removeButtonOnClick={(item => { setSelectedItem(item); onOpenRemove(); })} />
       </TableWrapper>

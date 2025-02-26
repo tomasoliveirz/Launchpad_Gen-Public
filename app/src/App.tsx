@@ -6,12 +6,16 @@ import AppGeneratorPage from "./pages/AppGeneratorPage/AppGeneratorPage"
 import ContractManagerPage from "./pages/ContractManagerPage/ContractManagerPage"
 import ContractPublisherPage from "./pages/ContractPublisherPage/ContractPublisherPage"
 import HomePage from "./pages/HomePage/HomePage"
-import ContractCharacteristicsPage from "./pages/ContractCharacteristicsPage/ContractCharacteristicsPage"
-import ContractTypesPage from "./pages/ContractTypesPage/ContractTypesPage"
-import SettingsMenuPage from "./pages/SettingsMenuPage/SettingsMenuPage"
-import ContractVariantsPage from "./pages/ContractVariantsPage/ContractVariantsPage"
-import BlockchainNetworksPage from "./pages/BlockchainNetworksPage/BlockchainNetworksPage"
-import ContractFeaturesPage from "./pages/ContractFeaturesPage/ContractFeaturesPage"
+import ContractCharacteristicsPage from "./pages/SettingsPages/ContractCharacteristicsPage/ContractCharacteristicsPage"
+import ContractTypesPage from "./pages/SettingsPages/ContractTypesPage/ContractTypesPage"
+import SettingsMenuPage from "./pages/SettingsPages/SettingsMenuPage/SettingsMenuPage"
+import ContractVariantsPage from "./pages/SettingsPages/ContractVariantsPage/ContractVariantsPage"
+import BlockchainNetworksPage from "./pages/SettingsPages/BlockchainNetworksPage/BlockchainNetworksPage"
+import ContractFeaturesPage from "./pages/SettingsPages/ContractFeaturesPage/ContractFeaturesPage"
+import ContractTypeDetailsPage from "./pages/SettingsPages/DetailsPages/ContractTypeDetailsPage"
+import ContractCharacteristicDetailsPage from "./pages/SettingsPages/DetailsPages/ContractCharacteristicDetailsPage"
+import ContractVariantDetailsPage from "./pages/SettingsPages/DetailsPages/ContractVariantDetailsPage"
+import BlockchainNetworkDetailsPage from "./pages/SettingsPages/DetailsPages/BlockchainNetworkDetailsPage"
 
 function App() {
 
@@ -30,8 +34,14 @@ function App() {
               <Route element={<ContractTypesPage/>} path="/settings/contract/types"/>
               <Route element={<ContractCharacteristicsPage/>} path="/settings/contract/characteristics"/>
               <Route element={<ContractVariantsPage/>} path="/settings/contract/variants"/>
-              <Route element={<BlockchainNetworksPage/>} path="/settings/blockchain/networks"/>
               <Route element={<ContractFeaturesPage/>} path="/settings/contract/features"/>
+              <Route element={<BlockchainNetworksPage/>} path="/settings/blockchain/networks"/>
+
+              <Route element={<ContractTypeDetailsPage/>} path="/settings/contract/types/:uuid"/>
+              <Route element={<ContractCharacteristicDetailsPage/>} path="/settings/contract/characteristics/:uuid"/>
+              <Route element={<ContractVariantDetailsPage/>} path="/settings/contract/variants/:uuid"/>
+              <Route element={<BlockchainNetworkDetailsPage/>} path="/settings/blockchain/networks/:uuid"/>
+
               <Route path="/" element={<HomePage/>}/>
             </Routes>
           </Box>

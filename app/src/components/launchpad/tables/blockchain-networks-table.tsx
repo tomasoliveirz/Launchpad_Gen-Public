@@ -4,6 +4,7 @@ import { Image } from '@chakra-ui/react';
 import { LaunchpadButton } from "../buttons/button";
 import { FaPencilAlt, FaQuestion, FaTrashAlt } from "react-icons/fa";
 import { LaunchpadPagination } from "../pagination/pagination";
+import { Link } from "react-router-dom";
 
 export interface BlockchainNetworkTableProps extends Omit<TableRootProps, "page"> {
     items: BlockchainNetwork[],
@@ -12,8 +13,9 @@ export interface BlockchainNetworkTableProps extends Omit<TableRootProps, "page"
     setPage: (page: number) => void;
     editButtonOnClick?: (item: BlockchainNetwork) => void;
     removeButtonOnClick?: (item: BlockchainNetwork) => void;
+    detailsLink: (item: BlockchainNetwork) => string;
 }
-export function BlockchainNetworksTable({ items, pageCount, page, setPage, editButtonOnClick, removeButtonOnClick, ...props }: BlockchainNetworkTableProps) {
+export function BlockchainNetworksTable({ items, pageCount, page, setPage, editButtonOnClick, removeButtonOnClick, detailsLink, ...props }: BlockchainNetworkTableProps) {
     return <>
         <Table.Root zIndex="0" size="sm" w="90%" striped {...props}>
             <Table.Header>
@@ -38,7 +40,7 @@ export function BlockchainNetworksTable({ items, pageCount, page, setPage, editB
                                     </Box>
                             )}
                         </Table.Cell>
-                        <Table.Cell ps="1em">{item.name}</Table.Cell>
+                        <Table.Cell ps="1em"><Link style={{ color: "white" }} to={detailsLink(item)}>{item.name}</Link></Table.Cell>
                         <Table.Cell w="10em">
                             <LaunchpadButton onClick={() => editButtonOnClick?.(item)} icon={FaPencilAlt} color="white" bg="none" />
                             <LaunchpadButton onClick={() => removeButtonOnClick?.(item)} icon={FaTrashAlt} color="white" bg="none" />

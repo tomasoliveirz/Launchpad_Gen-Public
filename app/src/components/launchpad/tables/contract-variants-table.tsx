@@ -1,19 +1,21 @@
-import { ContractVariant, ContractVariantWithTypeName } from "@/models/ContractVariant";
+import { ContractVariant} from "@/models/ContractVariant";
 import { Box, Table, TableRootProps } from "@chakra-ui/react";
 import { LaunchpadButton } from "../buttons/button";
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 import { LaunchpadPagination } from "../pagination/pagination";
+import { Link } from "react-router-dom";
 
 export interface LaunchpadContractVariantTableProps extends Omit<TableRootProps, "page"> {
-    items: ContractVariantWithTypeName[],
+    items: ContractVariant[],
     pageCount: number,
     page: number,
     setPage: (page: number) => void;
     editButtonOnClick?: (item: ContractVariant) => void;
+    variantDetailsLink: (item: ContractVariant) => string;
+    typeDetailsLink: (item: ContractVariant) => string;
     removeButtonOnClick?: (item: ContractVariant) => void;
 }
-export function LaunchpadContractVariantTable({ items, pageCount, page, setPage, editButtonOnClick, removeButtonOnClick, ...props }: LaunchpadContractVariantTableProps) {
-    console.log("items", items);
+export function LaunchpadContractVariantTable({ items, pageCount, page, setPage, editButtonOnClick, removeButtonOnClick, variantDetailsLink, typeDetailsLink, ...props }: LaunchpadContractVariantTableProps) {
     return <>
         <Table.Root zIndex="0" size="sm" w="90%" striped {...props}>
             <Table.Header>
@@ -25,12 +27,12 @@ export function LaunchpadContractVariantTable({ items, pageCount, page, setPage,
             </Table.Header>
             <Table.Body>
                 {items.map((item) => (
-                    <Table.Row key={item.contractVariant.uuid}>
-                    <Table.Cell ps="1em">{item.contractVariant.name}</Table.Cell>
-                    <Table.Cell ps="1em">{item.contractTypeName}</Table.Cell>
+                    <Table.Row key={item.uuid}>
+                    <Table.Cell ps="1em"><Link style={{ color: "white" }} to={variantDetailsLink(item)}>{item.name}</Link></Table.Cell>
+                    <Table.Cell ps="1em"><Link style={{ color: "white" }} to={typeDetailsLink(item)}>{item.contractType.name}</Link></Table.Cell>
                     <Table.Cell w="10em">
-                        <LaunchpadButton onClick={() => editButtonOnClick?.(item.contractVariant)} icon={FaPencilAlt} color="white" bg="none" />
-                        <LaunchpadButton onClick={() => removeButtonOnClick?.(item.contractVariant)} icon={FaTrashAlt} color="white" bg="none" />
+                        <LaunchpadButton onClick={() => editButtonOnClick?.(item)} icon={FaPencilAlt} color="white" bg="none" />
+                        <LaunchpadButton onClick={() => removeButtonOnClick?.(item)} icon={FaTrashAlt} color="white" bg="none" />
                     </Table.Cell>
                 </Table.Row>
                 ))}

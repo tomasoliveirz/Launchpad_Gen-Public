@@ -1,15 +1,15 @@
-import { PageWrapper } from "@/components/launchpad/wrappers/page-wrapper"
-import { Box, HStack, useDisclosure, VStack } from "@chakra-ui/react"
-import { FaNetworkWired} from "react-icons/fa"
-import { LaunchpadNewButton } from "@/components/launchpad/buttons/button";
-import { Toaster, toaster } from "@/components/ui/toaster"
-import { useState } from "react";
-import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-diaolg";
-import { useEntity } from "@/services/launchpad/testService";
+import { PageWrapper } from "@/components/launchpad/wrappers/page-wrapper";
+import { Box, useDisclosure } from "@chakra-ui/react";
+import { FaNetworkWired } from "react-icons/fa";
+import { Toaster, toaster } from "@/components/ui/toaster";
+import { useEffect, useState } from "react";
+import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-dialog";
+import { useEntity } from "@/services/launchpad/entityService";
 import { BlockchainNetwork } from "@/models/BlockchainNetwork";
 import { BlockchainNetworksTable } from "@/components/launchpad/tables/blockchain-networks-table";
 import { BlockchainNetworksDialog } from "@/components/launchpad/dialogs/blockchain-network-dialog";
 import { TableWrapper } from "@/components/launchpad/wrappers/table-wrapper";
+import { LaunchpadErrorToaster, LaunchpadSuccessToaster } from "@/components/reUIsables/Toaster/toaster";
 
 export default function () {
     const URL_SLUG = "BlockchainNetworks";
@@ -33,18 +33,10 @@ export default function () {
     const onSubmitCreate = async (data: BlockchainNetwork) => {
         try {
             await createBlockchainNetwork(data).unwrap();
-            toaster.create({
-                title: "Success",
-                description: "Blockchain Network Created Successfully",
-                type: "success",
-            })
+            LaunchpadSuccessToaster("Blockchain Network Created Successfully");
             refetch();
         } catch {
-            toaster.create({
-                title: "Failed",
-                description: "Blockchain Network Created Failed",
-                type: "error",
-            })
+            LaunchpadErrorToaster("Blockchain Network Created Failed");
         }
         onCloseCreate();
     }
@@ -54,18 +46,10 @@ export default function () {
 
         try {
             await updateBlockchainNetwork({ uuid: selectedItem.uuid, data })
-            toaster.create({
-                title: "Success",
-                description: "Blockchain Network Updated Successfully",
-                type: "success",
-            })
+            LaunchpadSuccessToaster("Blockchain Network Updated Successfully");
             refetch();
         } catch {
-            toaster.create({
-                title: "Failed",
-                description: "Blockchain Network Updated Failed",
-                type: "error",
-            })
+            LaunchpadErrorToaster("Blockchain Network Updated Failed");
         }
         onCloseEdit();
     }
@@ -75,21 +59,17 @@ export default function () {
 
         try {
             await removeBlockchainNetwork(selectedItem.uuid);
-            toaster.create({
-                title: "Success",
-                description: "Blockchain Network Removed Successfully",
-                type: "success",
-            });
+            LaunchpadSuccessToaster("Blockchain Network Removed Successfully");
             refetch();
         } catch {
-            toaster.create({
-                title: "Failed",
-                description: "Blockchain Network Removal Failed",
-                type: "error",
-            });
+            LaunchpadErrorToaster("Blockchain Network Removal Failed");
         }
         onCloseRemove();
     };
+
+    useEffect(() => {
+        refetch();
+    }, []);
 
     const { onOpen: onOpenCreate, onClose: onCloseCreate, open: openCreate } = useDisclosure();
     const { onOpen: onOpenEdit, onClose: onCloseEdit, open: openEdit } = useDisclosure();
@@ -97,7 +77,15 @@ export default function () {
     return <Box minW="100%" minH="100%">
         <PageWrapper w="100%" h="100%" title="Blockchain Network (Settings)" description="Manage your blockchain networks" icon={FaNetworkWired}>
             <TableWrapper newButtonOnClick={onOpenCreate}>
-                <BlockchainNetworksTable items={paginatedItems} pageCount={pageCount} page={page} setPage={setPage} editButtonOnClick={(item => { setSelectedItem(item); onOpenEdit(); })} removeButtonOnClick={(item => { setSelectedItem(item); onOpenRemove(); })} />
+                <BlockchainNetworksTable
+                    items={paginatedItems}
+                    pageCount={pageCount}
+                    page={page}
+                    setPage={setPage}
+                    editButtonOnClick={(item => { setSelectedItem(item); onOpenEdit(); })}
+                    removeButtonOnClick={(item => { setSelectedItem(item); onOpenRemove(); })}
+                    detailsLink={(item) => `/settings/blockchain/networks/${item.uuid}`}
+                />
             </TableWrapper>
         </PageWrapper>
         <BlockchainNetworksDialog open={openCreate} onClose={onCloseCreate} onSubmit={onSubmitCreate} title="New Blockchain Network" />

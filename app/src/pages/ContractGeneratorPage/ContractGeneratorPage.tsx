@@ -1,16 +1,15 @@
+import ContractResult from "@/components/launchpad/contract-generator-components/contract-results";
+import { ContractSettings } from "@/components/launchpad/contract-generator-components/contract-settings";
+import { LaunchpadSelect } from "@/components/launchpad/select/select";
 import { PageWrapper } from "@/components/launchpad/wrappers/page-wrapper";
-import { BigIntegerInput } from "@/components/reUIsables/ControlledInput/big-int-input";
 import { EmailInput } from "@/components/reUIsables/ControlledInput/email-input";
 import { FieldWrapper } from "@/components/reUIsables/ControlledInput/field-wrapper";
-import { IntegerInput } from "@/components/reUIsables/ControlledInput/int-input";
-import { ContractType } from "@/models/ContractType";
 import { ContractVariant } from "@/models/ContractVariant";
-import { useEntity } from "@/services/launchpad/testService";
 import { namedEntityToListCollection, previousGenerationToListCollection } from "@/support/adapters";
 import { contractTypesData } from "@/test-data/contract-types";
 import { contractVariantsData } from "@/test-data/contract-variants";
 import { previousGenerationsData } from "@/test-data/previous-generations";
-import { FieldErrorText, FieldLabel, FieldRoot, Flex, HStack, ListCollection, Show, Spacer, VStack } from "@chakra-ui/react";
+import { Flex, HStack, ListCollection, Show, Spacer, VStack} from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { FaCode } from "react-icons/fa";
@@ -107,10 +106,10 @@ export default function () {
     console.log(error)
     //VIEW
     return <PageWrapper title="Contract Generator" icon={FaCode}>
-        <FieldWrapper defaultError = {defaultError} label="number" error={error}>
+        {/* <FieldWrapper defaultError = {defaultError} label="number" error={error}>
             <EmailInput value={val} onChange={setVal} setError={setError}/>
-        </FieldWrapper>
-        {/* <HStack mt="2em" w="100%">
+        </FieldWrapper> */}
+        <HStack mt="2em" w="100%">
             <Show when={previousGeneratedList.size > 0}>
                 <LaunchpadSelect w="20%" collection={previousGeneratedList} title="Previous contracts" value={previousGeneration} onValueChange={setPreviousGeneration} />
             </Show>
@@ -129,7 +128,7 @@ export default function () {
                 <ContractSettings />
                 <ContractResult contractFeatureGroup={contractFeatureGroup} />
             </Flex>
-        </Show> */}
+        </Show>
     </PageWrapper>
 }
 
