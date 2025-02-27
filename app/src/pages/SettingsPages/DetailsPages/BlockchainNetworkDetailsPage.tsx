@@ -13,6 +13,7 @@ import { Toaster } from "@/components/ui/toaster"
 import { BlockchainNetworksDialog } from "@/components/launchpad/dialogs/blockchain-network-dialog";
 import { DetailWrapper } from "@/components/reUIsables/DetailWrapper/detail-wrapper";
 import { FaNetworkWired } from "react-icons/fa";
+import { DeleteButton, EditButton } from "@/components/launchpad/buttons/button";
 
 export default function () {
     const URL_SLUG = "BlockchainNetworks";
@@ -66,11 +67,7 @@ export default function () {
     if (isLoading) return <Spinner />;
     if (isError || !BlockchainNetworkData) return <Text>Error loading Blockchain Network</Text>;
 
-    return <DetailWrapper title={BlockchainNetworkData.name??""} icon={BlockchainNetworkData.image??FaNetworkWired} rightSideElement={<VStack>
-<Button>Edit</Button>
-<Button>Remove</Button>
-
-    </VStack>}>
+    return <DetailWrapper title={BlockchainNetworkData.name??""} icon={BlockchainNetworkData.image??FaNetworkWired} rightSideElement={<EditDeleteStack/>}>
         <EntityDetails
             columns={[
                 ["Name", BlockchainNetworkData.name as string],
@@ -85,4 +82,12 @@ export default function () {
         <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Blockchain Network (${BlockchainNetworkData?.name})`} onSubmit={onSubmitRemove} />
         <Toaster />
     </DetailWrapper>
+}
+
+function EditDeleteStack()
+{
+    return <VStack>
+                <EditButton/>
+                <DeleteButton/>
+    </VStack>
 }

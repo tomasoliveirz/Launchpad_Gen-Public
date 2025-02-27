@@ -1,8 +1,7 @@
-import { Box, BoxProps, Heading, HStack, StackProps, VStack } from "@chakra-ui/react";
+import { Box, Heading, HStack, StackProps, VStack } from "@chakra-ui/react";
 import { IconType } from "react-icons";
 import { BreadcrumbProps } from "../Breadcrumbs/breadcrumbs";
 import { ImageOrIcon } from "../ImageOrIcon/image-or-icon";
-import { FaPlus } from "react-icons/fa";
 import { JSX } from "react";
 
 

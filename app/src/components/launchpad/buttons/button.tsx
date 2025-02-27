@@ -1,6 +1,6 @@
 import { Button, ButtonProps, HStack, Text } from "@chakra-ui/react";
 import { IconType } from "react-icons";
-import { FaPlus } from "react-icons/fa";
+import { FaPencilAlt, FaPlus, FaTrashAlt } from "react-icons/fa";
 
 
 export interface LaunchpadButtonProps extends ButtonProps {
@@ -20,5 +20,15 @@ export function LaunchpadButton({ icon, text, ...props }: LaunchpadButtonProps) 
 
 export function LaunchpadNewButton({...props}:LaunchpadButtonProps)
 {
-    return <LaunchpadButton icon={FaPlus} text="New" color="white" bg="#5CB338" {...props}/>
+    return <LaunchpadButton size="sm" icon={FaPlus} text="New" color="white" bg="#5CB338" {...props}/>
+}
+
+export function EditButton(props:LaunchpadButtonProps)
+{
+    return <LaunchpadButton size="sm" icon={FaPencilAlt} text="Edit" {...props} bg="#FF7518" />
+}
+
+export function DeleteButton(props:LaunchpadButtonProps)
+{
+    return <LaunchpadButton size="sm" icon={FaTrashAlt} text="Delete" {...props} bg="#FF7518" />
 }
