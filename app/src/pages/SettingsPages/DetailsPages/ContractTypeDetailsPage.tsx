@@ -65,6 +65,7 @@ export default function () {
 
     const contractTypeColumns: [string, string][] = [
         ["Name", contractTypeData.name as string],
+        ["Description", contractTypeData.description as string],
         ["Description", contractTypeData.description as string]
     ]
 

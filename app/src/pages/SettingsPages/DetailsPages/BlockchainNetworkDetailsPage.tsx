@@ -1,5 +1,5 @@
 import { PageWrapper } from "@/components/launchpad/wrappers/page-wrapper";
-import { Spinner, useDisclosure } from "@chakra-ui/react";
+import { Button, Spinner, useDisclosure, VStack } from "@chakra-ui/react";
 import { RiFilePaper2Fill } from "react-icons/ri";
 import { Text } from "@chakra-ui/react";
 import { BlockchainNetwork } from "@/models/BlockchainNetwork";
@@ -11,6 +11,8 @@ import { LaunchpadErrorToaster, LaunchpadSuccessToaster } from "@/components/reU
 import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster"
 import { BlockchainNetworksDialog } from "@/components/launchpad/dialogs/blockchain-network-dialog";
+import { DetailWrapper } from "@/components/reUIsables/DetailWrapper/detail-wrapper";
+import { FaNetworkWired } from "react-icons/fa";
 
 export default function () {
     const URL_SLUG = "BlockchainNetworks";
@@ -64,7 +66,11 @@ export default function () {
     if (isLoading) return <Spinner />;
     if (isError || !BlockchainNetworkData) return <Text>Error loading Blockchain Network</Text>;
 
-    return <PageWrapper title="Blockchain Network (Details)" icon={RiFilePaper2Fill}>
+    return <DetailWrapper title={BlockchainNetworkData.name??""} icon={BlockchainNetworkData.image??FaNetworkWired} rightSideElement={<VStack>
+<Button>Edit</Button>
+<Button>Remove</Button>
+
+    </VStack>}>
         <EntityDetails
             columns={[
                 ["Name", BlockchainNetworkData.name as string],
@@ -78,5 +84,5 @@ export default function () {
         <BlockchainNetworksDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={BlockchainNetworkData} title="Edit Blockchain Network" />
         <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Blockchain Network (${BlockchainNetworkData?.name})`} onSubmit={onSubmitRemove} />
         <Toaster />
-    </PageWrapper>
+    </DetailWrapper>
 }
