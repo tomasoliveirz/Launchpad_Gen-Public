@@ -1,4 +1,3 @@
-import { PageWrapper } from "@/components/launchpad/wrappers/page-wrapper";
 import { createListCollection, Spinner, useDisclosure } from "@chakra-ui/react";
 import { RiFilePaper2Fill } from "react-icons/ri";
 import { Text } from "@chakra-ui/react";
@@ -12,6 +11,9 @@ import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster"
 import { ContractVariantDialog } from "@/components/launchpad/dialogs/contract-variants-dialog";
 import { ContractType } from "@/models/ContractType";
+import { getBreadcrumbs } from "@/components/reUIsables/Breadcrumbs/breadcrumbs";
+import { pages } from "@/constants/pages";
+import { PageWrapper } from "@/components/reUIsables/PageWrapper/page-wrapper";
 
 export default function () {
 
@@ -70,8 +72,9 @@ export default function () {
 
     if (isLoading) return <Spinner />;
     if (isError || !contractVariantData) return <Text>Error loading contract variant</Text>;
-
-    return <PageWrapper title="Contract Variant (Details)" icon={RiFilePaper2Fill}>
+    const breadcrumbs = getBreadcrumbs(pages, location.pathname);
+    
+    return <PageWrapper title="Contract Variant (Details)" icon={RiFilePaper2Fill} breadcrumbsProps={{items:breadcrumbs}}>
         <EntityDetails
             columns={[
                 ["Name", contractVariantData.name as string],

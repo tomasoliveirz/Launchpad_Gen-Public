@@ -1,4 +1,3 @@
-import { PageWrapper } from "@/components/launchpad/wrappers/page-wrapper";
 import { Button, Spinner, useDisclosure, VStack } from "@chakra-ui/react";
 import { RiFilePaper2Fill } from "react-icons/ri";
 import { Text } from "@chakra-ui/react";
@@ -11,7 +10,7 @@ import { LaunchpadErrorToaster, LaunchpadSuccessToaster } from "@/components/reU
 import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster"
 import { BlockchainNetworksDialog } from "@/components/launchpad/dialogs/blockchain-network-dialog";
-import { DetailWrapper } from "@/components/reUIsables/DetailWrapper/detail-wrapper";
+import { PageWrapper } from "@/components/reUIsables/PageWrapper/page-wrapper";
 import { FaNetworkWired } from "react-icons/fa";
 import { DeleteButton, EditButton } from "@/components/launchpad/buttons/button";
 import { BlockchainNetworkDetailNavigationItem, pages } from "@/constants/pages";
@@ -79,7 +78,7 @@ export default function () {
                                                                     label:BlockchainNetworkData.name??"",
                                                                     icon:BlockchainNetworkData.image??FaNetworkWired}]);
 
-    return <DetailWrapper title={BlockchainNetworkData.name??""} breadcrumbsProps={{items:breadcrumbs}} icon={BlockchainNetworkData.image??FaNetworkWired} rightSideElement={rightElement}>
+    return <PageWrapper title={BlockchainNetworkData.name??""} breadcrumbsProps={{items:breadcrumbs}} icon={BlockchainNetworkData.image??FaNetworkWired} rightSideElement={rightElement}>
         {/* <EntityDetails
             columns={[
                 ["Name", BlockchainNetworkData.name as string],
@@ -93,6 +92,6 @@ export default function () {
         <BlockchainNetworksDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={BlockchainNetworkData} title="Edit Blockchain Network" />
         <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Blockchain Network (${BlockchainNetworkData?.name})`} onSubmit={onSubmitRemove} />
         <Toaster />
-    </DetailWrapper>
+    </PageWrapper>
 }
 

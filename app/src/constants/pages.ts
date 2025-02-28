@@ -5,7 +5,7 @@ import { FaCog, FaHome, FaNetworkWired } from "react-icons/fa";
 export const HomeNavigationItem = {
     label:"",
     icon:FaHome,
-    url:"/",
+    url:"",
 }
 
 export const SettingsNavigationItem = {
