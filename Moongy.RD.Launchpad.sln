@@ -35,6 +35,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moongy.RD.Launchpad.Contrac
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tokenomics", "Tokenomics", "{0072779D-9DB9-4BE1-B427-792887B67AFA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moongy.RD.Launchpad.Decorators.Tokenomics.BuyBack", "Moongy.RD.Launchpad.Decorators.Tokenomics.BuyBack\Moongy.RD.Launchpad.Decorators.Tokenomics.BuyBack\Moongy.RD.Launchpad.Decorators.Tokenomics.BuyBack.csproj", "{7B3BE358-F532-4D3F-AE17-1FF509A894A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moongy.RD.Launchpad.Decorators.Tokenomics.Tax", "Moongy.RD.Launchpad.Decorators.Tokenomics.Tax\Moongy.RD.Launchpad.Decorators.Tokenomics.Tax.csproj", "{72FF6CB8-D7D0-4183-84DE-83F4EA64BD78}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moongy.RD.Launchpad.Decorators.Core", "Moongy.RD.Launchpad.Decorators.Core\Moongy.RD.Launchpad.Decorators.Core.csproj", "{6ECD4576-FF25-4B1C-A94C-6563F12CAEBC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +79,18 @@ Global
 		{C019747B-5BEA-4281-92AF-2D6C1A983E0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C019747B-5BEA-4281-92AF-2D6C1A983E0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C019747B-5BEA-4281-92AF-2D6C1A983E0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B3BE358-F532-4D3F-AE17-1FF509A894A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B3BE358-F532-4D3F-AE17-1FF509A894A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B3BE358-F532-4D3F-AE17-1FF509A894A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B3BE358-F532-4D3F-AE17-1FF509A894A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72FF6CB8-D7D0-4183-84DE-83F4EA64BD78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72FF6CB8-D7D0-4183-84DE-83F4EA64BD78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72FF6CB8-D7D0-4183-84DE-83F4EA64BD78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72FF6CB8-D7D0-4183-84DE-83F4EA64BD78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6ECD4576-FF25-4B1C-A94C-6563F12CAEBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6ECD4576-FF25-4B1C-A94C-6563F12CAEBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6ECD4576-FF25-4B1C-A94C-6563F12CAEBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6ECD4576-FF25-4B1C-A94C-6563F12CAEBC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -86,5 +104,11 @@ Global
 		{C8097397-9E84-4F3C-9D06-C47E06E16322} = {C28FE675-CD61-4FE5-91AB-952DAD525F97}
 		{C019747B-5BEA-4281-92AF-2D6C1A983E0C} = {C28FE675-CD61-4FE5-91AB-952DAD525F97}
 		{0072779D-9DB9-4BE1-B427-792887B67AFA} = {FF8CA739-BF13-4B26-8AF8-C1DC92901BDB}
+		{7B3BE358-F532-4D3F-AE17-1FF509A894A0} = {0072779D-9DB9-4BE1-B427-792887B67AFA}
+		{72FF6CB8-D7D0-4183-84DE-83F4EA64BD78} = {0072779D-9DB9-4BE1-B427-792887B67AFA}
+		{6ECD4576-FF25-4B1C-A94C-6563F12CAEBC} = {FF8CA739-BF13-4B26-8AF8-C1DC92901BDB}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EE10EDD2-11B2-420F-96C3-AB17510C4CE6}
 	EndGlobalSection
 EndGlobal
