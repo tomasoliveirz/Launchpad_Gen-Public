@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moongy.RD.Launchpad.Contrac
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moongy.RD.Launchpad.ContractGenerator.CodeEmitters.Rust", "Moongy.RD.Launchpad.ContractGenerator.CodeEmitters.Rust\Moongy.RD.Launchpad.ContractGenerator.CodeEmitters.Rust.csproj", "{C019747B-5BEA-4281-92AF-2D6C1A983E0C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tokenomics", "Tokenomics", "{0072779D-9DB9-4BE1-B427-792887B67AFA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,5 +85,6 @@ Global
 		{67A7B911-9B43-4F7B-ADC8-649C32E2A44B} = {C28FE675-CD61-4FE5-91AB-952DAD525F97}
 		{C8097397-9E84-4F3C-9D06-C47E06E16322} = {C28FE675-CD61-4FE5-91AB-952DAD525F97}
 		{C019747B-5BEA-4281-92AF-2D6C1A983E0C} = {C28FE675-CD61-4FE5-91AB-952DAD525F97}
+		{0072779D-9DB9-4BE1-B427-792887B67AFA} = {FF8CA739-BF13-4B26-8AF8-C1DC92901BDB}
 	EndGlobalSection
 EndGlobal
