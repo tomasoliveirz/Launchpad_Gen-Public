@@ -3,7 +3,7 @@ import { IconBaseProps, IconType } from "react-icons";
 
 export interface ImageOrIconProps extends BoxProps
 {
-    value:string|IconType
+    value?:string|IconType
     imageProps?:ImageProps
     iconTypeProps?:IconBaseProps
 }
@@ -16,7 +16,8 @@ export function IconFromValue(value:IconType, props?:IconBaseProps){
 export function ImageOrIcon({value, imageProps, iconTypeProps, ...props}:ImageOrIconProps)
 {
     return <Box {...props}>
-        {typeof(value) === "string" ? <Image w="100%" h="auto" {...imageProps} src={value}/> : 
+        {value === undefined ? <></> : 
+         typeof(value) === "string" ? <Image w="100%" h="auto" {...imageProps} src={value}/> : 
                                         IconFromValue(value as IconType, iconTypeProps)
         }
     </Box>

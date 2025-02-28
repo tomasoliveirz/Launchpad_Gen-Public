@@ -25,10 +25,10 @@ export function LaunchpadNewButton({...props}:LaunchpadButtonProps)
 
 export function EditButton(props:LaunchpadButtonProps)
 {
-    return <LaunchpadButton size="sm" icon={FaPencilAlt} text="Edit" {...props} bg="#FF7518" />
+    return <LaunchpadButton size="sm" icon={FaPencilAlt} text="Edit" {...props} bg="warning" color="text.primary"/>
 }
 
 export function DeleteButton(props:LaunchpadButtonProps)
 {
-    return <LaunchpadButton size="sm" icon={FaTrashAlt} text="Delete" {...props} bg="#FF7518" />
+    return <LaunchpadButton size="sm" icon={FaTrashAlt} text="Delete" {...props} bg="error" color="text.primary"/>
 }

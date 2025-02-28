@@ -3,7 +3,7 @@ import { Button, Spinner, useDisclosure, VStack } from "@chakra-ui/react";
 import { RiFilePaper2Fill } from "react-icons/ri";
 import { Text } from "@chakra-ui/react";
 import { BlockchainNetwork } from "@/models/BlockchainNetwork";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEntity } from "@/services/launchpad/entityService";
 import { EntityDetails } from "@/components/launchpad/details-component/entity-details";
 import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-dialog";
@@ -14,12 +14,15 @@ import { BlockchainNetworksDialog } from "@/components/launchpad/dialogs/blockch
 import { DetailWrapper } from "@/components/reUIsables/DetailWrapper/detail-wrapper";
 import { FaNetworkWired } from "react-icons/fa";
 import { DeleteButton, EditButton } from "@/components/launchpad/buttons/button";
+import { BlockchainNetworkDetailNavigationItem, pages } from "@/constants/pages";
+import { getBreadcrumbs } from "@/components/reUIsables/Breadcrumbs/breadcrumbs";
 
 export default function () {
     const URL_SLUG = "BlockchainNetworks";
     const entityApi = useEntity<BlockchainNetwork>(URL_SLUG);
     const { uuid } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const { onOpen: onOpenEdit, onClose: onCloseEdit, open: openEdit } = useDisclosure();
     const { onOpen: onOpenRemove, onClose: onCloseRemove, open: openRemove } = useDisclosure();
@@ -67,8 +70,17 @@ export default function () {
     if (isLoading) return <Spinner />;
     if (isError || !BlockchainNetworkData) return <Text>Error loading Blockchain Network</Text>;
 
-    return <DetailWrapper title={BlockchainNetworkData.name??""} icon={BlockchainNetworkData.image??FaNetworkWired} rightSideElement={<EditDeleteStack/>}>
-        <EntityDetails
+    const rightElement = <VStack>
+                            <EditButton w="100%" onClick={onOpenEdit}/>
+                            <DeleteButton w="100%" onClick={onOpenRemove}/>
+                         </VStack>
+
+    const breadcrumbs = getBreadcrumbs(pages, location.pathname, [{...BlockchainNetworkDetailNavigationItem, 
+                                                                    label:BlockchainNetworkData.name??"",
+                                                                    icon:BlockchainNetworkData.image??FaNetworkWired}]);
+
+    return <DetailWrapper title={BlockchainNetworkData.name??""} breadcrumbsProps={{items:breadcrumbs}} icon={BlockchainNetworkData.image??FaNetworkWired} rightSideElement={rightElement}>
+        {/* <EntityDetails
             columns={[
                 ["Name", BlockchainNetworkData.name as string],
                 ["Description", BlockchainNetworkData.description as string],
@@ -77,17 +89,10 @@ export default function () {
             item={BlockchainNetworkData}
             editButtonOnClick={(BlockchainNetworkData => { setSelectedItem(BlockchainNetworkData); onOpenEdit(); })}
             removeButtonOnClick={(BlockchainNetworkData => { setSelectedItem(BlockchainNetworkData); onOpenRemove(); })}
-        />
+        /> */}
         <BlockchainNetworksDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={BlockchainNetworkData} title="Edit Blockchain Network" />
         <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Blockchain Network (${BlockchainNetworkData?.name})`} onSubmit={onSubmitRemove} />
         <Toaster />
     </DetailWrapper>
 }
 
-function EditDeleteStack()
-{
-    return <VStack>
-                <EditButton/>
-                <DeleteButton/>
-    </VStack>
-}

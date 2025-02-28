@@ -1,4 +1,5 @@
-import { createSystem, defaultConfig, defineConfig, mergeConfigs } from "@chakra-ui/react"
+import { createSystem, defaultConfig, defineConfig, defineTextStyles, mergeConfigs } from "@chakra-ui/react"
+
 
 const theme = defineConfig({
   theme: {
@@ -12,7 +13,8 @@ const theme = defineConfig({
             }
         },
         nav:{
-          active:{value: "#ffffff"}
+          active:{value: "#ffffff"},
+          _hover:{value:"#000000"}
         },
         text:{
           primary:{ value: "#ffffff" }
@@ -21,7 +23,7 @@ const theme = defineConfig({
         secondary: { value: "#fff" },
         confirm: { value: "#33673B" },
         error: { value: "#D0273B" },
-        warning: { value: "#ECFEAA" },
+        warning: { value: "#f0ad4e" },
         info: { value: "#43BCCD" },
         cancel: { value: "#4A4A4A" },
         input: { 
