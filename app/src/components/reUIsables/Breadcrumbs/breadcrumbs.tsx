@@ -60,7 +60,6 @@ export function getBreadcrumbs(pages:NavigationItem[], path:string, idSubstitute
     {
 
       basePath+=pathTokens[i];
-      console.log(basePath);
       const page = pages.find(x => x.url === basePath);
       if(page) crumbPath.push(page);
     }

@@ -1,4 +1,4 @@
-import { HStack, Spacer, useDisclosure } from "@chakra-ui/react"
+import { HStack, Spacer, useDisclosure, Text } from "@chakra-ui/react"
 import { useEffect, useState } from "react";
 import { ContractType } from "@/models/ContractType";
 import { useEntity } from "@/services/launchpad/entityService";
@@ -9,6 +9,7 @@ import { getBreadcrumbs } from "@/components/reUIsables/Breadcrumbs/breadcrumbs"
 import { pages } from "@/constants/pages";
 import EntityTable, { EntityColumnHeaderProps } from "@/components/reUIsables/EntityTable/entity-table";
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
+import { TextModal } from "@/components/reUIsables/Modals/text-modal";
 
 
 export default function () {
@@ -76,30 +77,37 @@ export default function () {
   const { onOpen: onOpenRemove, onClose: onCloseRemove, open: openRemove } = useDisclosure();
 
   const breadcrumbs = getBreadcrumbs(pages, location.pathname);
+  const formatDescription = (s?:string)=> s ? <TextModal text={s} maxCharacters={20}/>:<></>
+
   const columns:EntityColumnHeaderProps<ContractType>[] =[{
     dataKey: "name", 
     label:"Name",
     orderable:true,
-  }];
+    searchable:true,
+    displayable:true
+  },
+  {
+    dataKey: "description", 
+    label:"Description",
+    searchable:true,
+    formatCell:formatDescription,
+    displayable:true,
+  },
+];
 
 
-  const sideMenu= ()=><HStack>
+  const sideMenu= (t:ContractType)=><HStack>
                     <Spacer/>
                     <FaPencilAlt title="Edit" cursor="pointer"/>
                     <FaTrashAlt title="Delete" cursor="pointer"/>
                   </HStack>
 
 
+
   return <PageWrapper title={"Contract Types"} icon={RiFilePaper2Fill} breadcrumbsProps={{items:breadcrumbs}}>
-            <EntityTable itemsPerPage={4} searchable columnDescriptions={columns} rightSideElement={sideMenu} items={data as ContractType[]}/>
+            <EntityTable itemsPerPage={6} searchable columnDescriptions={columns} rightSideElement={sideMenu} items={data as ContractType[]}/>
         </PageWrapper>
 }
 
-//currentOrder={} onOrder={()=>{onHeaderSort(d.dataKey)}}
 
 
-interface DataListItem<T>
-{
-  dataKey:keyof T
-  label?:string
-}

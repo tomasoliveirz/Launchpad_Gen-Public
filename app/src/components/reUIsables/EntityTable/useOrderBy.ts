@@ -5,8 +5,8 @@ function useOrderBy<T>() {
       const aVal = a[newSortKey];
       const bVal = b[newSortKey];
 
-      if (aVal < bVal) return order === "desc" ? -1 : 1;
-      if (aVal > bVal) return order === "desc" ? 1 : -1;
+      if (aVal < bVal) return order === "asc" ? -1 : 1;
+      if (aVal > bVal) return order === "asc" ? 1 : -1;
       return 0;
     });
   };
