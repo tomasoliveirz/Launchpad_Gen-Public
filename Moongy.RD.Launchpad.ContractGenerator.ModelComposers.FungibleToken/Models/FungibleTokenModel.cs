@@ -16,6 +16,4 @@ public class FungibleTokenModel : TokenModel
     public bool HasReflection { get; set; }
     public bool HasTax { get; set; }
     public decimal? TaxFee { get; set; }
-    public bool IsUpgradable { get; set; }
-    public bool Voting { get; set; }
 }

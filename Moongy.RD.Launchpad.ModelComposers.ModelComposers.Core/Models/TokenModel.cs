@@ -14,6 +14,7 @@ namespace Moongy.RD.Launchpad.ModelComposers.ModelComposers.Core.Models
         public string Name { get; set; }
         public bool IsPausable { get; set; }
         public bool HasPermission { get; set; }
-
+        public bool IsUpgradable { get; set; }
+        public bool Voting { get; set; }
     }
 }
