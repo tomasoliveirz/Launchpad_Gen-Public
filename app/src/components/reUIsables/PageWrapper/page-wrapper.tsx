@@ -10,10 +10,10 @@ export interface DetailWrapperProps extends StackProps
     icon?: IconType | string
     title: string
     breadcrumbsProps?:BreadcrumbsProps
-    rightSideElement:JSX.Element
+    rightSideElement?:JSX.Element
 }
 
-export function DetailWrapper({icon, title, breadcrumbsProps, rightSideElement, children, ...props}:DetailWrapperProps)
+export function PageWrapper({icon, title, breadcrumbsProps, rightSideElement, children, ...props}:DetailWrapperProps)
 {
     return <VStack {...props} pt="2em" px="3em" maxW="100%" w="100%" maxH="100%" h="100%" overflowY="hidden">
                 <HStack w="100%">

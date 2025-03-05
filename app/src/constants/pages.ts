@@ -7,7 +7,7 @@ import { RiFilePaper2Fill } from "react-icons/ri";
 export const HomeNavigationItem = {
     label:"",
     icon:FaHome,
-    url:"/",
+    url:"",
 }
 
 export const SettingsNavigationItem = {

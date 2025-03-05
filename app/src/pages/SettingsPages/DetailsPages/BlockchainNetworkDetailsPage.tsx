@@ -8,7 +8,7 @@ import { LaunchpadErrorToaster, LaunchpadSuccessToaster } from "@/components/reU
 import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster"
 import { BlockchainNetworksDialog } from "@/components/launchpad/dialogs/blockchain-network-dialog";
-import { DetailWrapper } from "@/components/reUIsables/DetailWrapper/detail-wrapper";
+import { PageWrapper } from "@/components/reUIsables/PageWrapper/page-wrapper";
 import { FaNetworkWired } from "react-icons/fa";
 import { DeleteButton, EditButton } from "@/components/launchpad/buttons/button";
 import { BlockchainNetworkDetailNavigationItem, pages } from "@/constants/pages";
@@ -76,11 +76,11 @@ export default function () {
         icon: BlockchainNetworkData.image ?? FaNetworkWired
     }]);
 
-    return <DetailWrapper title={BlockchainNetworkData.name ?? ""} breadcrumbsProps={{ items: breadcrumbs }} icon={BlockchainNetworkData.image ?? FaNetworkWired} rightSideElement={rightElement}>
+    return <PageWrapper title={BlockchainNetworkData.name ?? ""} breadcrumbsProps={{ items: breadcrumbs }} icon={BlockchainNetworkData.image ?? FaNetworkWired} rightSideElement={rightElement}>
         <DataList columns={[["Description", BlockchainNetworkData.description as string]]} item={BlockchainNetworkData} />
         <BlockchainNetworksDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={BlockchainNetworkData} title="Edit Blockchain Network" />
         <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Blockchain Network (${BlockchainNetworkData?.name})`} onSubmit={onSubmitRemove} />
         <Toaster />
-    </DetailWrapper>
+    </PageWrapper>
 }
 

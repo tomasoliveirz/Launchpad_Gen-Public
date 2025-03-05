@@ -7,7 +7,6 @@ import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-
 import { LaunchpadErrorToaster, LaunchpadSuccessToaster } from "@/components/reUIsables/Toaster/toaster";
 import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster"
-import { DetailWrapper } from "@/components/reUIsables/DetailWrapper/detail-wrapper";
 import { DeleteButton, EditButton } from "@/components/launchpad/buttons/button";
 import { ContractVariantDetailNavigationItem, pages } from "@/constants/pages";
 import { getBreadcrumbs } from "@/components/reUIsables/Breadcrumbs/breadcrumbs";
@@ -15,6 +14,7 @@ import { DataList } from "@/components/reUIsables/DataList/data-list";
 import { ContractVariantDialog } from "@/components/launchpad/dialogs/contract-variants-dialog";
 import { ContractType } from "@/models/ContractType";
 import { IoGitBranchOutline } from "react-icons/io5";
+import { PageWrapper } from "@/components/reUIsables/PageWrapper/page-wrapper";
 
 export default function () {
     const URL_SLUG = "ContractVariants";
@@ -84,12 +84,12 @@ export default function () {
         icon: IoGitBranchOutline
     }]);
 
-    return <DetailWrapper title={ContractVariantData.name ?? ""} breadcrumbsProps={{ items: breadcrumbs }} icon={IoGitBranchOutline} rightSideElement={rightElement}>
+    return <PageWrapper title={ContractVariantData.name ?? ""} breadcrumbsProps={{ items: breadcrumbs }} icon={IoGitBranchOutline} rightSideElement={rightElement}>
         <DataList columns={[
             ["Contract Type", ContractVariantData.contractType.name as string, `/settings/contract/types/${ContractVariantData.contractType.uuid}`],
             ["Description", ContractVariantData.description as string]]} item={ContractVariantData} />
         <ContractVariantDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={ContractVariantData} title="Edit Contract Variant" collection={ContractTypesCollection} selectValue={ContractTypeUuid} selectOnValueChange={setContractTypeUuid} />
         <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Contract Variant (${ContractVariantData?.name})`} onSubmit={onSubmitRemove} />
         <Toaster />
-    </DetailWrapper>
+    </PageWrapper>
 }

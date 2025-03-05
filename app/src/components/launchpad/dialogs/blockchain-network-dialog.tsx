@@ -2,11 +2,12 @@ import { DialogActionTrigger, DialogBody, DialogContent, DialogFooter, DialogHea
 import { Field } from "@/components/ui/field";
 import { BlockchainNetwork } from "@/models/BlockchainNetwork";
 import { Input, Textarea } from "@chakra-ui/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { LaunchpadButton } from "../buttons/button";
 import { FaSave } from "react-icons/fa";
 import { ImageUpload } from "@/components/reUIsables/ImageInput/image-input";
+import { Image } from "@chakra-ui/react";
 
 export interface BlockchainNetworksDialogProps {
     open: boolean,
@@ -21,10 +22,13 @@ export function BlockchainNetworksDialog({ open, onClose, title, onSubmit, defau
         register,
         handleSubmit,
         setValue,
+        watch,
         formState: { errors },
     } = useForm<BlockchainNetwork>({
         defaultValues: defaultValues,
     });
+
+    const [previewImage, setPreviewImage] = useState<string | null>(defaultValues?.image || null);
 
     useEffect(() => {
         if (open) {
@@ -39,6 +43,14 @@ export function BlockchainNetworksDialog({ open, onClose, title, onSubmit, defau
             }
         }
     }, [open, defaultValues, setValue]);
+
+    const imageValue = watch("image");
+
+    useEffect(() => {
+        if (typeof imageValue === "string") {
+            setPreviewImage(imageValue);
+        }
+    }, [imageValue]);
 
     return <DialogRoot lazyMount open={open} placement="center">
         <DialogContent>
@@ -78,6 +90,14 @@ export function BlockchainNetworksDialog({ open, onClose, title, onSubmit, defau
                         formField="image"
                     />
                     </Field>
+                    {previewImage && (
+                            <Image
+                                src={previewImage}
+                                alt="Preview"
+                                boxSize="100px"
+                                borderRadius="md"
+                            />
+                        )}
                 </DialogBody>
                 <DialogFooter>
                     <LaunchpadButton type="submit" icon={FaSave} text="Save" color="white" bg="#5CB338" />

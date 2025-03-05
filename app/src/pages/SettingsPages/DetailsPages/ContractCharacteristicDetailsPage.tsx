@@ -7,13 +7,13 @@ import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-
 import { LaunchpadErrorToaster, LaunchpadSuccessToaster } from "@/components/reUIsables/Toaster/toaster";
 import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster"
-import { DetailWrapper } from "@/components/reUIsables/DetailWrapper/detail-wrapper";
 import { FaPalette } from "react-icons/fa";
 import { DeleteButton, EditButton } from "@/components/launchpad/buttons/button";
 import { ContractCharacteristicDetailNavigationItem, pages } from "@/constants/pages";
 import { getBreadcrumbs } from "@/components/reUIsables/Breadcrumbs/breadcrumbs";
 import { DataList } from "@/components/reUIsables/DataList/data-list";
 import { EntityWithNameAndDescriptionDialog } from "@/components/launchpad/dialogs/entity-with-name-and-description-dialog";
+import { PageWrapper } from "@/components/reUIsables/PageWrapper/page-wrapper";
 
 export default function () {
     const URL_SLUG = "ContractCharacteristics";
@@ -76,10 +76,10 @@ export default function () {
         icon: FaPalette
     }]);
 
-    return <DetailWrapper title={ContractCharacteristicData.name ?? ""} breadcrumbsProps={{ items: breadcrumbs }} icon={FaPalette} rightSideElement={rightElement}>
+    return <PageWrapper title={ContractCharacteristicData.name ?? ""} breadcrumbsProps={{ items: breadcrumbs }} icon={FaPalette} rightSideElement={rightElement}>
         <DataList columns={[["Description", ContractCharacteristicData.description as string]]} item={ContractCharacteristicData} />
         <EntityWithNameAndDescriptionDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={ContractCharacteristicData} title="Edit Contract Characteristic" />
         <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Contract Characteristic (${ContractCharacteristicData?.name})`} onSubmit={onSubmitRemove} />
         <Toaster />
-    </DetailWrapper>
+    </PageWrapper>
 }

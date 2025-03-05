@@ -11,7 +11,7 @@ export interface BreadcrumbsProps
 function BreadcrumbNavigationItem(item:NavigationItem)
 {
   return <>
-          <ImageOrIcon mr="5px" w="1rem" value={item.icon}/>
+          <ImageOrIcon mr={item.label ? "5px":"0px"} w="1rem" value={item.icon}/>
           <Text>{item.label}</Text>
         </>
 }
