@@ -1,3 +1,4 @@
+import { Toaster } from "@/components/ui/toaster";
 import { Box, BoxProps, Heading, HStack, VStack } from "@chakra-ui/react";
 import { IconType } from "react-icons";
 
@@ -22,5 +23,6 @@ export function PageWrapper({title, icon, description, children, ...props}:PageW
             </HStack>
         </VStack>
         {children}
+        <Toaster />
     </Box>
 }

@@ -1,51 +1,53 @@
-import { PageWrapper } from "@/components/launchpad/wrappers/page-wrapper";
-import { createListCollection, Spinner, useDisclosure } from "@chakra-ui/react";
-import { RiFilePaper2Fill } from "react-icons/ri";
+import { createListCollection, Spinner, useDisclosure, VStack } from "@chakra-ui/react";
 import { Text } from "@chakra-ui/react";
 import { ContractVariant } from "@/models/ContractVariant";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEntity } from "@/services/launchpad/entityService";
-import { EntityDetails } from "@/components/launchpad/details-component/entity-details";
 import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-dialog";
 import { LaunchpadErrorToaster, LaunchpadSuccessToaster } from "@/components/reUIsables/Toaster/toaster";
 import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster"
+import { DetailWrapper } from "@/components/reUIsables/DetailWrapper/detail-wrapper";
+import { DeleteButton, EditButton } from "@/components/launchpad/buttons/button";
+import { ContractVariantDetailNavigationItem, pages } from "@/constants/pages";
+import { getBreadcrumbs } from "@/components/reUIsables/Breadcrumbs/breadcrumbs";
+import { DataList } from "@/components/reUIsables/DataList/data-list";
 import { ContractVariantDialog } from "@/components/launchpad/dialogs/contract-variants-dialog";
 import { ContractType } from "@/models/ContractType";
+import { IoGitBranchOutline } from "react-icons/io5";
 
 export default function () {
-
     const URL_SLUG = "ContractVariants";
     const entityApi = useEntity<ContractVariant>(URL_SLUG);
     const entityApiContractType = useEntity<ContractType>("ContractTypes");
-    const { data: contractTypesData = [] } = entityApiContractType.list();
-    const contractTypesCollection = createListCollection({
-        items: contractTypesData as ContractType[],
+    const { data: ContractTypesData = [] } = entityApiContractType.list();
+    const ContractTypesCollection = createListCollection({
+        items: ContractTypesData as ContractType[],
     })
-    const { uuid } = useParams();
 
+    const { uuid } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const { onOpen: onOpenEdit, onClose: onCloseEdit, open: openEdit } = useDisclosure();
     const { onOpen: onOpenRemove, onClose: onCloseRemove, open: openRemove } = useDisclosure();
-    const [selectedItem, setSelectedItem] = useState<ContractVariant | null>(null);
-    const [contractTypeUuid, setContractTypeUuid] = useState<string>();
 
     const { data, isLoading, isError, refetch } = entityApi.get(uuid!);
     const [updateContractVariant] = entityApi.update();
     const [removeContractVariant] = entityApi.remove();
 
+    const ContractVariantData = data as ContractVariant;
+    const [ContractTypeUuid, setContractTypeUuid] = useState<string>();
+
     useEffect(() => {
-            refetch();
-        }, []);
+        refetch();
+    }, []);
 
-    const contractVariantData = data as ContractVariant;
-
-    const onSubmitEdit = async (contractVariantData: ContractVariant) => {
-        if (!contractVariantData) return;
+    const onSubmitEdit = async (ContractVariantData: ContractVariant) => {
+        if (!ContractVariantData) return;
 
         try {
-            await updateContractVariant({ uuid: contractVariantData.uuid, data: contractVariantData })
+            await updateContractVariant({ uuid: ContractVariantData.uuid, data: ContractVariantData })
             LaunchpadSuccessToaster("Contract Variant Updated Successfully");
             refetch();
         } catch {
@@ -55,10 +57,10 @@ export default function () {
     }
 
     const onSubmitRemove = async () => {
-        if (!contractVariantData) return;
+        if (!ContractVariantData) return;
 
         try {
-            await removeContractVariant(contractVariantData.uuid);
+            await removeContractVariant(ContractVariantData.uuid);
             navigate(-1);
             LaunchpadSuccessToaster("Contract Variant Removed Successfully");
 
@@ -69,23 +71,25 @@ export default function () {
     };
 
     if (isLoading) return <Spinner />;
-    if (isError || !contractVariantData) return <Text>Error loading contract variant</Text>;
+    if (isError || !ContractVariantData) return <Text>Error loading Contract Variant</Text>;
 
-    return <PageWrapper title="Contract Variant (Details)" icon={RiFilePaper2Fill}>
-        <EntityDetails
-            columns={[
-                ["Name", contractVariantData.name as string],
-                ["Description", contractVariantData.description as string],
-                ["Contract Type", contractVariantData.contractType.name as string, `/settings/contract/types/${contractVariantData.contractType.uuid}`]
-            ]}
-            item={contractVariantData}
-            editButtonOnClick={(contractVariantData => { setSelectedItem(contractVariantData); onOpenEdit(); })}
-            removeButtonOnClick={(contractVariantData => { setSelectedItem(contractVariantData); onOpenRemove(); })}
-        />
-        <ContractVariantDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={contractVariantData} title="Edit Contract Variant" collection={contractTypesCollection} selectValue={contractTypeUuid} selectOnValueChange={setContractTypeUuid} />
-        <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Contract Variant (${contractVariantData?.name})`} onSubmit={onSubmitRemove} />
+    const rightElement = <VStack>
+        <EditButton w="100%" onClick={onOpenEdit} />
+        <DeleteButton w="100%" onClick={onOpenRemove} />
+    </VStack>
+
+    const breadcrumbs = getBreadcrumbs(pages, location.pathname, [{
+        ...ContractVariantDetailNavigationItem,
+        label: ContractVariantData.name ?? "",
+        icon: IoGitBranchOutline
+    }]);
+
+    return <DetailWrapper title={ContractVariantData.name ?? ""} breadcrumbsProps={{ items: breadcrumbs }} icon={IoGitBranchOutline} rightSideElement={rightElement}>
+        <DataList columns={[
+            ["Contract Type", ContractVariantData.contractType.name as string, `/settings/contract/types/${ContractVariantData.contractType.uuid}`],
+            ["Description", ContractVariantData.description as string]]} item={ContractVariantData} />
+        <ContractVariantDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={ContractVariantData} title="Edit Contract Variant" collection={ContractTypesCollection} selectValue={ContractTypeUuid} selectOnValueChange={setContractTypeUuid} />
+        <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Contract Variant (${ContractVariantData?.name})`} onSubmit={onSubmitRemove} />
         <Toaster />
-    </PageWrapper>
+    </DetailWrapper>
 }
-
-

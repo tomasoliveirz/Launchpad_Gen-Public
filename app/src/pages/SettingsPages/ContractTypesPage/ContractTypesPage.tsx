@@ -2,7 +2,6 @@ import { PageWrapper } from "@/components/launchpad/wrappers/page-wrapper"
 import { Box, useDisclosure } from "@chakra-ui/react"
 import { LaunchpadNameTable } from "@/components/launchpad/tables/name-table";
 import { EntityWithNameAndDescriptionDialog } from "@/components/launchpad/dialogs/entity-with-name-and-description-dialog";
-import { Toaster} from "@/components/ui/toaster"
 import { useEffect, useState } from "react";
 import { ContractType } from "@/models/ContractType";
 import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-dialog";
@@ -91,6 +90,5 @@ export default function () {
     <EntityWithNameAndDescriptionDialog open={openCreate} onClose={onCloseCreate} onSubmit={onSubmitCreate} title="New Contract Type" />
     <EntityWithNameAndDescriptionDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={selectedItem || undefined} title="Edit Contract Type" />
     <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Contract Type (${selectedItem?.name})`} onSubmit={onSubmitRemove} />
-    <Toaster />
   </Box>
 }

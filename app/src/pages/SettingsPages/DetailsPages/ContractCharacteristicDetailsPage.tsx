@@ -1,42 +1,45 @@
-import { PageWrapper } from "@/components/launchpad/wrappers/page-wrapper";
-import { Spinner, useDisclosure } from "@chakra-ui/react";
-import { RiFilePaper2Fill } from "react-icons/ri";
+import { Spinner, useDisclosure, VStack } from "@chakra-ui/react";
 import { Text } from "@chakra-ui/react";
 import { ContractCharacteristic } from "@/models/ContractCharacteristic";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEntity } from "@/services/launchpad/entityService";
-import { EntityDetails } from "@/components/launchpad/details-component/entity-details";
-import { EntityWithNameAndDescriptionDialog } from "@/components/launchpad/dialogs/entity-with-name-and-description-dialog";
 import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-dialog";
 import { LaunchpadErrorToaster, LaunchpadSuccessToaster } from "@/components/reUIsables/Toaster/toaster";
-import { useEffect, useState } from "react";
-import { Toaster} from "@/components/ui/toaster"
+import { useEffect } from "react";
+import { Toaster } from "@/components/ui/toaster"
+import { DetailWrapper } from "@/components/reUIsables/DetailWrapper/detail-wrapper";
+import { FaPalette } from "react-icons/fa";
+import { DeleteButton, EditButton } from "@/components/launchpad/buttons/button";
+import { ContractCharacteristicDetailNavigationItem, pages } from "@/constants/pages";
+import { getBreadcrumbs } from "@/components/reUIsables/Breadcrumbs/breadcrumbs";
+import { DataList } from "@/components/reUIsables/DataList/data-list";
+import { EntityWithNameAndDescriptionDialog } from "@/components/launchpad/dialogs/entity-with-name-and-description-dialog";
 
 export default function () {
     const URL_SLUG = "ContractCharacteristics";
     const entityApi = useEntity<ContractCharacteristic>(URL_SLUG);
     const { uuid } = useParams();
-
     const navigate = useNavigate();
+    const location = useLocation();
 
     const { onOpen: onOpenEdit, onClose: onCloseEdit, open: openEdit } = useDisclosure();
     const { onOpen: onOpenRemove, onClose: onCloseRemove, open: openRemove } = useDisclosure();
-    const [selectedItem, setSelectedItem] = useState<ContractCharacteristic | null>(null);
 
     const { data, isLoading, isError, refetch } = entityApi.get(uuid!);
     const [updateContractCharacteristic] = entityApi.update();
     const [removeContractCharacteristic] = entityApi.remove();
 
-    useEffect(() => {
-            refetch();
-        }, []);
+    const ContractCharacteristicData = data as ContractCharacteristic;
 
-    const contractCharacteristicData = data as ContractCharacteristic;
-    const onSubmitEdit = async (contractCharacteristicData: ContractCharacteristic) => {
-        if (!contractCharacteristicData) return;
+    useEffect(() => {
+        refetch();
+    }, []);
+
+    const onSubmitEdit = async (ContractCharacteristicData: ContractCharacteristic) => {
+        if (!ContractCharacteristicData) return;
 
         try {
-            await updateContractCharacteristic({ uuid: contractCharacteristicData.uuid, data: contractCharacteristicData })
+            await updateContractCharacteristic({ uuid: ContractCharacteristicData.uuid, data: ContractCharacteristicData })
             LaunchpadSuccessToaster("Contract Characteristic Updated Successfully");
             refetch();
         } catch {
@@ -46,13 +49,13 @@ export default function () {
     }
 
     const onSubmitRemove = async () => {
-        if (!contractCharacteristicData) return;
+        if (!ContractCharacteristicData) return;
 
         try {
-            await removeContractCharacteristic(contractCharacteristicData.uuid);
+            await removeContractCharacteristic(ContractCharacteristicData.uuid);
             navigate(-1);
             LaunchpadSuccessToaster("Contract Characteristic Removed Successfully");
-            
+
         } catch {
             LaunchpadErrorToaster("Contract Characteristic Removal Failed");
         }
@@ -60,24 +63,23 @@ export default function () {
     };
 
     if (isLoading) return <Spinner />;
-    if (isError || !contractCharacteristicData) return <Text>Error loading contract characteristic</Text>;
+    if (isError || !ContractCharacteristicData) return <Text>Error loading Contract Characteristic</Text>;
 
-    const contractCharacteristicColumns: [string, string][] = [
-        ["Name", contractCharacteristicData.name as string],
-        ["Description", contractCharacteristicData.description as string]
-    ]
+    const rightElement = <VStack>
+        <EditButton w="100%" onClick={onOpenEdit} />
+        <DeleteButton w="100%" onClick={onOpenRemove} />
+    </VStack>
 
-    return <PageWrapper title="Contract Characteristic (Details)" icon={RiFilePaper2Fill}>
-        <EntityDetails
-            columns={contractCharacteristicColumns}
-            item={contractCharacteristicData}
-            editButtonOnClick={(contractCharacteristicData => { setSelectedItem(contractCharacteristicData); onOpenEdit(); })}
-            removeButtonOnClick={(contractCharacteristicData => { setSelectedItem(contractCharacteristicData); onOpenRemove(); })} 
-            />
-        <EntityWithNameAndDescriptionDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={contractCharacteristicData} title="Edit Contract Characteristic" />
-        <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Contract Characteristic (${contractCharacteristicData?.name})`} onSubmit={onSubmitRemove} />
+    const breadcrumbs = getBreadcrumbs(pages, location.pathname, [{
+        ...ContractCharacteristicDetailNavigationItem,
+        label: ContractCharacteristicData.name ?? "",
+        icon: FaPalette
+    }]);
+
+    return <DetailWrapper title={ContractCharacteristicData.name ?? ""} breadcrumbsProps={{ items: breadcrumbs }} icon={FaPalette} rightSideElement={rightElement}>
+        <DataList columns={[["Description", ContractCharacteristicData.description as string]]} item={ContractCharacteristicData} />
+        <EntityWithNameAndDescriptionDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={ContractCharacteristicData} title="Edit Contract Characteristic" />
+        <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Contract Characteristic (${ContractCharacteristicData?.name})`} onSubmit={onSubmitRemove} />
         <Toaster />
-    </PageWrapper>
+    </DetailWrapper>
 }
-
-

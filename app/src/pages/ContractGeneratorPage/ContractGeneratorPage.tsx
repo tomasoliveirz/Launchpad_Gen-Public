@@ -2,6 +2,7 @@ import ContractResult from "@/components/launchpad/contract-generator-components
 import { ContractSettings } from "@/components/launchpad/contract-generator-components/contract-settings";
 import { LaunchpadSelect } from "@/components/launchpad/select/select";
 import { PageWrapper } from "@/components/launchpad/wrappers/page-wrapper";
+import { TypeField } from "@/components/reUIsables/ControlledInput/controlled-input";
 import { EmailInput } from "@/components/reUIsables/ControlledInput/email-input";
 import { FieldWrapper } from "@/components/reUIsables/ControlledInput/field-wrapper";
 import { ContractVariant } from "@/models/ContractVariant";
