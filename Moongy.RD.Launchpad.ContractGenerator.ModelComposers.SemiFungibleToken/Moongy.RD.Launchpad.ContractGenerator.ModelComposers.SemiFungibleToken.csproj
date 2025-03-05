@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Moongy.RD.Launchpad.ModelComposers.ModelComposers.Core\Moongy.RD.Launchpad.ModelComposers.ModelComposers.Core.csproj" />
+  </ItemGroup>
+
 </Project>
