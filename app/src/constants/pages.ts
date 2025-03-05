@@ -1,5 +1,7 @@
 import { NavigationItem } from "@/components/reUIsables/NavigationItem/navigation-item";
-import { FaCog, FaHome, FaNetworkWired, FaScroll } from "react-icons/fa";
+import { BsStars } from "react-icons/bs";
+import { FaCog, FaHome, FaNetworkWired, FaPalette, FaScroll } from "react-icons/fa";
+import { IoGitBranchOutline } from "react-icons/io5";
 
 
 export const HomeNavigationItem = {
@@ -20,31 +22,73 @@ export const BlockchainNetworkNavigationItem = {
     url:"/settings/blockchain/networks",
 }
 
+export const ContractCharacteristicNavigationItem = {
+    label:"Contract Characteristics",
+    icon:FaPalette,
+    url:"/settings/contract/characteristics",
+}
+
+export const ContractFeatureNavigationItem = {
+    label:"Contract Features",
+    icon:BsStars,
+    url:"/settings/contract/features",
+}
+
+export const ContractTypeNavigationItem = {
+    label:"Contract Types",
+    icon:FaScroll,
+    url:"/settings/contract/types",
+}
+
+export const ContractVariantNavigationItem = {
+    label:"Contract Variants",
+    icon:IoGitBranchOutline,
+    url:"/settings/contract/variants",
+}
+
+
 export const BlockchainNetworkDetailNavigationItem = {
     label:"",
     icon:FaNetworkWired,
     url:"/settings/blockchain/networks/uuid",
 }
 
-export const ContractTypesNavigationItem = {
-    label:"Contract Types",
-    icon:FaScroll,
-    url:"/settings/contract/types",
+export const ContractCharacteristicDetailNavigationItem = {
+    label:"",
+    icon:FaPalette,
+    url:"/settings/contract/characteristics/uuid",
 }
 
-export const ContractTypesDetailNavigationItem = {
+export const ContractFeatureDetailNavigationItem = {
+    label:"",
+    icon:BsStars,
+    url:"/settings/contract/features/uuid",
+}
+
+export const ContractTypeDetailNavigationItem = {
     label:"",
     icon:FaScroll,
     url:"/settings/contract/types/uuid",
+}
+
+export const ContractVariantDetailNavigationItem = {
+    label:"",
+    icon:IoGitBranchOutline,
+    url:"/settings/contract/variants/uuid",
 }
 
 export const pages:NavigationItem[] = [
     HomeNavigationItem,
     SettingsNavigationItem,
     BlockchainNetworkNavigationItem,
+    ContractCharacteristicNavigationItem,
+    ContractFeatureNavigationItem,
+    ContractTypeNavigationItem,
+    ContractVariantNavigationItem,
     BlockchainNetworkDetailNavigationItem,
-    ContractTypesNavigationItem,
-    ContractTypesDetailNavigationItem,
-
+    ContractCharacteristicDetailNavigationItem,
+    ContractFeatureDetailNavigationItem,
+    ContractTypeDetailNavigationItem,
+    ContractVariantDetailNavigationItem
 ]
 

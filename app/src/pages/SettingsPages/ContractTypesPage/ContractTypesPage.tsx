@@ -4,7 +4,6 @@ import { ContractType } from "@/models/ContractType";
 import { useEntity } from "@/services/launchpad/entityService";
 import { LaunchpadErrorToaster, LaunchpadSuccessToaster } from "@/components/reUIsables/Toaster/toaster";
 import { PageWrapper } from "@/components/reUIsables/PageWrapper/page-wrapper";
-import { RiFilePaper2Fill } from "react-icons/ri";
 import { getBreadcrumbs } from "@/components/reUIsables/Breadcrumbs/breadcrumbs";
 import { pages } from "@/constants/pages";
 import EntityTable, { EntityColumnHeaderProps } from "@/components/reUIsables/EntityTable/entity-table";
@@ -75,6 +74,25 @@ export default function () {
   const { onOpen: onOpenCreate, onClose: onCloseCreate, open: openCreate } = useDisclosure();
   const { onOpen: onOpenEdit, onClose: onCloseEdit, open: openEdit } = useDisclosure();
   const { onOpen: onOpenRemove, onClose: onCloseRemove, open: openRemove } = useDisclosure();
+  return <Box minW="100%" minH="100%">
+    <PageWrapper w="100%" h="100%" title="Contract Type (Settings)" icon={FaScroll}>
+      <TableWrapper newButtonOnClick={onOpenCreate}>
+        <LaunchpadNameTable 
+          items={paginatedItems} 
+          pageCount={pageCount} 
+          page={page} 
+          setPage={setPage} 
+          editButtonOnClick={(item => { setSelectedItem(item); onOpenEdit(); })}
+          detailsLink={(item) => `/settings/contract/types/${item.uuid}`}
+          removeButtonOnClick={(item => { setSelectedItem(item); onOpenRemove(); })} />
+      </TableWrapper>
+    </PageWrapper>
+    <EntityWithNameAndDescriptionDialog open={openCreate} onClose={onCloseCreate} onSubmit={onSubmitCreate} title="New Contract Type" />
+    <EntityWithNameAndDescriptionDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={selectedItem || undefined} title="Edit Contract Type" />
+    <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Contract Type (${selectedItem?.name})`} onSubmit={onSubmitRemove} />
+  </Box>
+}
+
 
   const breadcrumbs = getBreadcrumbs(pages, location.pathname);
   const formatDescription = (s?:string)=> s ? <TextModal text={s} maxCharacters={20}/>:<></>

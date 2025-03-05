@@ -1,7 +1,6 @@
 import { PageWrapper } from "@/components/launchpad/wrappers/page-wrapper";
 import { Box, useDisclosure } from "@chakra-ui/react";
 import { FaNetworkWired } from "react-icons/fa";
-import { Toaster, toaster } from "@/components/ui/toaster";
 import { useEffect, useState } from "react";
 import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-dialog";
 import { useEntity } from "@/services/launchpad/entityService";
@@ -91,7 +90,6 @@ export default function () {
         <BlockchainNetworksDialog open={openCreate} onClose={onCloseCreate} onSubmit={onSubmitCreate} title="New Blockchain Network" />
         <BlockchainNetworksDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} title="New Blockchain Network" defaultValues={selectedItem || undefined} />
         <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Blockchain Network (${selectedItem?.name})`} onSubmit={onSubmitRemove} />
-        <Toaster />
     </Box>
 }
 

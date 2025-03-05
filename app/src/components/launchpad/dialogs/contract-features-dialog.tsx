@@ -1,56 +1,48 @@
-import { DialogActionTrigger, DialogBody, DialogContent, DialogFooter, DialogHeader, DialogRoot, DialogTitle } from "@/components/ui/dialog";
-import { Field } from "@/components/ui/field";
-import { BlockchainNetwork } from "@/models/BlockchainNetwork";
-import { Input, Textarea } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { LaunchpadButton } from "../buttons/button";
-import { FaSave } from "react-icons/fa";
-import { ImageUpload } from "@/components/reUIsables/ImageInput/image-input";
-import { Image } from "@chakra-ui/react";
+import { Field } from "@/components/ui/field"
+import { DialogActionTrigger, DialogBody, DialogContent, DialogFooter, DialogHeader, DialogRoot, DialogTitle } from "@/components/ui/dialog"
+import { useForm } from "react-hook-form"
+import { LaunchpadButton } from "../buttons/button"
+import { FaSave } from "react-icons/fa"
+import { Input, Textarea } from "@chakra-ui/react"
+import { useEffect } from "react"
+import { ContractFeature } from "@/models/ContractFeature"
 
-export interface BlockchainNetworksDialogProps {
+
+export interface ContractFeaturesDialogProps {
     open: boolean,
     onClose: () => void,
     title: string,
-    onSubmit: (data: BlockchainNetwork) => void
-    defaultValues?: BlockchainNetwork;
+    onSubmit: (data: ContractFeature) => void
+    defaultValues?: ContractFeature;
 }
 
-export function BlockchainNetworksDialog({ open, onClose, title, onSubmit, defaultValues }: BlockchainNetworksDialogProps) {
+export function ContractFeaturesDialog({ open, onClose, title, onSubmit, defaultValues }: ContractFeaturesDialogProps) {
     const {
         register,
         handleSubmit,
         setValue,
-        watch,
         formState: { errors },
-    } = useForm<BlockchainNetwork>({
+    } = useForm<ContractFeature>({
         defaultValues: defaultValues,
     });
-
-    const [previewImage, setPreviewImage] = useState<string | null>(defaultValues?.image || null);
 
     useEffect(() => {
         if (open) {
             if (defaultValues) {
                 setValue("name", defaultValues.name);
                 setValue("description", defaultValues.description);
-                setValue("image", defaultValues.image);
+                setValue("dataType", defaultValues.dataType);
+                setValue("defaultValue", defaultValues.defaultValue);
+                setValue("normalizedName", defaultValues.normalizedName);
             } else {
                 setValue("name", "");
                 setValue("description", "");
-                setValue("image", "");
+                setValue("dataType", "");
+                setValue("defaultValue", "");
+                setValue("normalizedName", "");
             }
         }
     }, [open, defaultValues, setValue]);
-
-    const imageValue = watch("image");
-
-    useEffect(() => {
-        if (typeof imageValue === "string") {
-            setPreviewImage(imageValue);
-        }
-    }, [imageValue]);
 
     return <DialogRoot lazyMount open={open} placement="center">
         <DialogContent>
@@ -81,24 +73,34 @@ export function BlockchainNetworksDialog({ open, onClose, title, onSubmit, defau
                     </Field>
                     <Field
                         mt="2em"
-                        label="Image"
-                        invalid={!!errors.image}
-                        errorText={errors.image?.message}
+                        label="Data Type"
+                        invalid={!!errors.dataType}
+                        errorText={errors.dataType?.message}
                     >
-                    <ImageUpload
-                        setValue={setValue}
-                        formField="image"
-                    />
+                        <Input
+                            {...register("dataType", { required: "DataType is required" })}
+                        />
                     </Field>
-                    {previewImage && (
-                            <Image
-                                src={previewImage}
-                                alt="Preview"
-                                boxSize="100px"
-                                borderRadius="md"
-                                mt="1em"
-                            />
-                        )}
+                    <Field
+                        mt="2em"
+                        label="Normalized Name"
+                        invalid={!!errors.normalizedName}
+                        errorText={errors.normalizedName?.message}
+                    >
+                        <Input
+                            {...register("normalizedName")}
+                        />
+                    </Field>
+                    <Field
+                        mt="2em"
+                        label="Default Value"
+                        invalid={!!errors.defaultValue}
+                        errorText={errors.defaultValue?.message}
+                    >
+                        <Input
+                            {...register("defaultValue")}
+                        />
+                    </Field>
                 </DialogBody>
                 <DialogFooter>
                     <LaunchpadButton type="submit" icon={FaSave} text="Save" color="white" bg="#5CB338" />

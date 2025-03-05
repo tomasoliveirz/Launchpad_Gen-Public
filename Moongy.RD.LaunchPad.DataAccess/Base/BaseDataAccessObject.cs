@@ -8,22 +8,22 @@ namespace Moongy.RD.LaunchPad.DataAccess.Base;
 public class BaseDataAccessObject<T>(LaunchpadContext context) : IBaseDataAccessObject<T> where T : Entity
 {
 
-    public async Task<Guid> CreateAsync(T contractType)
+    public async Task<Guid> CreateAsync(T entity)
     {
-        var result = await context.AddAsync(contractType);
+        var result = await context.AddAsync(entity);
         await context.SaveChangesAsync();
         return result.Entity.Uuid ?? Guid.Empty;
     }
 
-    public async Task DeleteAsync(T contractType)
+    public async Task DeleteAsync(T entity)
     {
-        context.Remove(contractType);
+        context.Remove(entity);
         await context.SaveChangesAsync();
     }
 
-    public async Task<T?> GetAsync(Guid contractId)
+    public async Task<T?> GetAsync(Guid entity)
     {
-        var result = await context.Set<T>().Where(x => x.Uuid == contractId).SingleOrDefaultAsync();
+        var result = await context.Set<T>().Where(x => x.Uuid == entity).SingleOrDefaultAsync();
         return result;
     }
 
@@ -40,9 +40,9 @@ public class BaseDataAccessObject<T>(LaunchpadContext context) : IBaseDataAccess
         return (total, result);
     }
 
-    public async Task UpdateAsync(T contractType)
+    public async Task UpdateAsync(T entity)
     {
-        context.Update(contractType);
+        context.Update(entity);
         await context.SaveChangesAsync();
     }
 }

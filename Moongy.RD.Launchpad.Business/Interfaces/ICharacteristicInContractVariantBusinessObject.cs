@@ -8,4 +8,8 @@ public interface ICharacteristicInContractVariantBusinessObject : IEntityBusines
     public Task<OperationResult<Guid>> CreateAsync(CharacteristicInContractVariant characteristicInContractVariant, Guid contractVariantUuid, Guid contractCharacteristicUuid);
 
     public Task<OperationResult> UpdateAsync(Guid uuid, CharacteristicInContractVariant characteristicInContractVariant, Guid? contractVariantUuid, Guid? contractCharacteristicUuid);
+
+    public Task<OperationResult<IEnumerable<CharacteristicInContractVariant>>> GetCharacteristicsInContractVariants();
+
+    public Task<OperationResult<CharacteristicInContractVariant>> GetCharacteristicInContractVariant(Guid contractCharacteristicUuid);
 }
