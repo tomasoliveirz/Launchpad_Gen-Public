@@ -1,5 +1,5 @@
 import { NavigationItem } from "@/components/reUIsables/NavigationItem/navigation-item";
-import { FaCog, FaHome, FaNetworkWired } from "react-icons/fa";
+import { FaCog, FaHome, FaNetworkWired, FaScroll } from "react-icons/fa";
 
 
 export const HomeNavigationItem = {
@@ -26,10 +26,25 @@ export const BlockchainNetworkDetailNavigationItem = {
     url:"/settings/blockchain/networks/uuid",
 }
 
+export const ContractTypesNavigationItem = {
+    label:"Contract Types",
+    icon:FaScroll,
+    url:"/settings/contract/types",
+}
+
+export const ContractTypesDetailNavigationItem = {
+    label:"",
+    icon:FaScroll,
+    url:"/settings/contract/types/uuid",
+}
+
 export const pages:NavigationItem[] = [
     HomeNavigationItem,
     SettingsNavigationItem,
     BlockchainNetworkNavigationItem,
-    BlockchainNetworkDetailNavigationItem
+    BlockchainNetworkDetailNavigationItem,
+    ContractTypesNavigationItem,
+    ContractTypesDetailNavigationItem,
+
 ]
 

@@ -16,6 +16,7 @@ import ContractTypeDetailsPage from "./pages/SettingsPages/DetailsPages/Contract
 import ContractCharacteristicDetailsPage from "./pages/SettingsPages/DetailsPages/ContractCharacteristicDetailsPage"
 import ContractVariantDetailsPage from "./pages/SettingsPages/DetailsPages/ContractVariantDetailsPage"
 import BlockchainNetworkDetailsPage from "./pages/SettingsPages/DetailsPages/BlockchainNetworkDetailsPage"
+import { Toaster } from "./components/ui/toaster"
 
 function App() {
 
@@ -48,7 +49,7 @@ function App() {
         </HStack>
         
       </BrowserRouter>
-      
+      <Toaster/>
     </Box>
   )
 }
