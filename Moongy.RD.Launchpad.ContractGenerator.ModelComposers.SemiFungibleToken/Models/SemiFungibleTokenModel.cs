@@ -4,17 +4,13 @@ namespace Moongy.RD.Launchpad.ContractGenerator.ModelComposers.SemiFungibleToken
 {
     public class SemiFungibleTokenModel : TokenModel
     {
-        public string Name { get; set; }
         public string Symbol { get; set; }
         public decimal AntiWhale { get; set; }
         public bool HasAntiWhaleCap => AntiWhale != 0;
-        public bool IsBurnable { get; set; }
         public bool HasAutoSwap { get; set; }
         public int Decimals { get; set; }
         public bool LiquidityManagement { get; set; }
-        public bool IsMintable { get; set; }
         public bool IsPausable { get; set; }
-        public bool HasPermission { get; set; }
         public bool HasSupplyControl { get; set; }
         public bool HasTokenRecovery { get; set; }
         public bool HasReflection { get; set; }
