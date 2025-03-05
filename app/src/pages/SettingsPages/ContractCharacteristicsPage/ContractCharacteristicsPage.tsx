@@ -3,7 +3,6 @@ import { Box, useDisclosure } from "@chakra-ui/react"
 import { FaPalette } from "react-icons/fa"
 import { LaunchpadNameTable } from "@/components/launchpad/tables/name-table";
 import { EntityWithNameAndDescriptionDialog } from "@/components/launchpad/dialogs/entity-with-name-and-description-dialog";
-import { Toaster, toaster } from "@/components/ui/toaster";
 import { useEffect, useState } from "react";
 import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-dialog";
 import { ContractCharacteristic } from "@/models/ContractCharacteristic";
@@ -93,6 +92,5 @@ export default function () {
     <EntityWithNameAndDescriptionDialog open={openCreate} onClose={onCloseCreate} onSubmit={onSubmitCreate} title="New Contract Characteristic" />
     <EntityWithNameAndDescriptionDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={selectedItem || undefined} title="Edit Contract Characteristic" />
     <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Contract Characteristic (${selectedItem?.name})`} onSubmit={onSubmitRemove} />
-    <Toaster />
   </Box>
 }

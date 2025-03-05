@@ -3,7 +3,8 @@ import { getBreadcrumbs } from "@/components/reUIsables/Breadcrumbs/breadcrumbs"
 import { PageWrapper } from "@/components/reUIsables/PageWrapper/page-wrapper";
 import { pages } from "@/constants/pages";
 import { SimpleGrid, VStack} from "@chakra-ui/react";
-import { FaNetworkWired, FaPalette, FaQuestion } from "react-icons/fa";
+import { BsStars } from "react-icons/bs";
+import { FaNetworkWired, FaPalette } from "react-icons/fa";
 import { IoIosSettings } from "react-icons/io";
 import { IoGitBranchOutline } from "react-icons/io5";
 import { RiFilePaper2Fill } from "react-icons/ri";
@@ -18,7 +19,7 @@ const breadcrumbs = getBreadcrumbs(pages, location.pathname);
                             <LauchpadHomeCard to="/settings/contract/types" icon={RiFilePaper2Fill} title="Contract Type" description="Manage your contract types"/>
                             <LauchpadHomeCard to="/settings/contract/characteristics" icon={FaPalette} title="Contract Characteristics" description="Manage your contract characteristics"/>
                             <LauchpadHomeCard to="/settings/contract/variants" icon={IoGitBranchOutline} title="Contract Variants" description="Manage your contract variants"/>
-                            <LauchpadHomeCard to="/settings/contract/features" icon={FaQuestion} title="Contract Features" description="Manage your contract features"/>
+                            <LauchpadHomeCard to="/settings/contract/features" icon={BsStars} title="Contract Features" description="Manage your contract features"/>
                             <LauchpadHomeCard to="/settings/blockchain/networks" icon={FaNetworkWired} title="Blockchain Networks" description="Manage your blockchain networks"/>
                     </SimpleGrid>
                 </VStack>

@@ -1,5 +1,7 @@
 import { EntityWithNameAndDescription } from "./EntityWithNameAndDescription";
 
 export type ContractFeature = EntityWithNameAndDescription & {
-    dataType: string
+    dataType: string,
+    normalizedName: string,
+    defaultValue: string
 };

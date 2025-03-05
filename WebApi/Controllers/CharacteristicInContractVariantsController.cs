@@ -12,7 +12,7 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CharacteristicInContractVariant>>> ListAsync()
         {
-            var result = await bo.ListAsync();
+            var result = await bo.GetCharacteristicsInContractVariants();
             if (result.IsSuccessful) return Ok(result.Result);
             return Problem(result.Exception?.Message ?? "");
         }
@@ -40,7 +40,7 @@ namespace WebApi.Controllers
         [HttpGet("{uuid}")]
         public async Task<ActionResult<CharacteristicInContractVariant>> GetAsync(Guid uuid)
         {
-            var result = await bo.GetAsync(uuid);
+            var result = await bo.GetCharacteristicInContractVariant(uuid);
             if (result.IsSuccessful) return Ok(result.Result);
             if (result.Exception is NotFoundException nfe) return NotFound(nfe.Id);
             return Problem(result.Exception?.Message ?? "");

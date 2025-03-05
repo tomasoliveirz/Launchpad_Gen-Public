@@ -1,43 +1,45 @@
-import { PageWrapper } from "@/components/launchpad/wrappers/page-wrapper";
-import { Spinner, useDisclosure } from "@chakra-ui/react";
-import { RiFilePaper2Fill } from "react-icons/ri";
+import { Spinner, useDisclosure, VStack } from "@chakra-ui/react";
 import { Text } from "@chakra-ui/react";
 import { ContractType } from "@/models/ContractType";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEntity } from "@/services/launchpad/entityService";
-import { EntityDetails } from "@/components/launchpad/details-component/entity-details";
-import { EntityWithNameAndDescriptionDialog } from "@/components/launchpad/dialogs/entity-with-name-and-description-dialog";
 import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-dialog";
 import { LaunchpadErrorToaster, LaunchpadSuccessToaster } from "@/components/reUIsables/Toaster/toaster";
-import { useEffect, useState } from "react";
-import { Toaster} from "@/components/ui/toaster"
+import { useEffect } from "react";
+import { Toaster } from "@/components/ui/toaster"
+import { DeleteButton, EditButton } from "@/components/launchpad/buttons/button";
+import { ContractTypeDetailNavigationItem, pages } from "@/constants/pages";
+import { getBreadcrumbs } from "@/components/reUIsables/Breadcrumbs/breadcrumbs";
+import { DataList } from "@/components/reUIsables/DataList/data-list";
+import { EntityWithNameAndDescriptionDialog } from "@/components/launchpad/dialogs/entity-with-name-and-description-dialog";
+import { PageWrapper } from "@/components/reUIsables/PageWrapper/page-wrapper";
+import { FaScroll } from "react-icons/fa";
 
 export default function () {
     const URL_SLUG = "ContractTypes";
     const entityApi = useEntity<ContractType>(URL_SLUG);
     const { uuid } = useParams();
-
     const navigate = useNavigate();
+    const location = useLocation();
 
     const { onOpen: onOpenEdit, onClose: onCloseEdit, open: openEdit } = useDisclosure();
     const { onOpen: onOpenRemove, onClose: onCloseRemove, open: openRemove } = useDisclosure();
-    const [selectedItem, setSelectedItem] = useState<ContractType | null>(null);
 
     const { data, isLoading, isError, refetch } = entityApi.get(uuid!);
     const [updateContractType] = entityApi.update();
     const [removeContractType] = entityApi.remove();
 
+    const ContractTypeData = data as ContractType;
+
     useEffect(() => {
-            refetch();
-        }, []);
+        refetch();
+    }, []);
 
-    const contractTypeData = data as ContractType;
-
-    const onSubmitEdit = async (contractTypeData: ContractType) => {
-        if (!contractTypeData) return;
+    const onSubmitEdit = async (ContractTypeData: ContractType) => {
+        if (!ContractTypeData) return;
 
         try {
-            await updateContractType({ uuid: contractTypeData.uuid, data: contractTypeData })
+            await updateContractType({ uuid: ContractTypeData.uuid, data: ContractTypeData })
             LaunchpadSuccessToaster("Contract Type Updated Successfully");
             refetch();
         } catch {
@@ -47,13 +49,13 @@ export default function () {
     }
 
     const onSubmitRemove = async () => {
-        if (!contractTypeData) return;
+        if (!ContractTypeData) return;
 
         try {
-            await removeContractType(contractTypeData.uuid);
+            await removeContractType(ContractTypeData.uuid);
             navigate(-1);
             LaunchpadSuccessToaster("Contract Type Removed Successfully");
-            
+
         } catch {
             LaunchpadErrorToaster("Contract Type Removal Failed");
         }
@@ -61,25 +63,23 @@ export default function () {
     };
 
     if (isLoading) return <Spinner />;
-    if (isError || !contractTypeData) return <Text>Error loading contract type</Text>;
+    if (isError || !ContractTypeData) return <Text>Error loading Contract Type</Text>;
 
-    const contractTypeColumns: [string, string][] = [
-        ["Name", contractTypeData.name as string],
-        ["Description", contractTypeData.description as string],
-        ["Description", contractTypeData.description as string]
-    ]
+    const rightElement = <VStack>
+        <EditButton w="100%" onClick={onOpenEdit} />
+        <DeleteButton w="100%" onClick={onOpenRemove} />
+    </VStack>
 
-    return <PageWrapper title="Contract Type (Details)" icon={RiFilePaper2Fill}>
-        <EntityDetails
-            columns={contractTypeColumns}
-            item={contractTypeData}
-            editButtonOnClick={(contractTypeData => { setSelectedItem(contractTypeData); onOpenEdit(); })}
-            removeButtonOnClick={(contractTypeData => { setSelectedItem(contractTypeData); onOpenRemove(); })} 
-            />
-        <EntityWithNameAndDescriptionDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={contractTypeData} title="Edit Contract Type" />
-        <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Contract Type (${contractTypeData?.name})`} onSubmit={onSubmitRemove} />
+    const breadcrumbs = getBreadcrumbs(pages, location.pathname, [{
+        ...ContractTypeDetailNavigationItem,
+        label: ContractTypeData.name ?? "",
+        icon: FaScroll
+    }]);
+
+    return <PageWrapper title={ContractTypeData.name ?? ""} breadcrumbsProps={{ items: breadcrumbs }} icon={FaScroll} rightSideElement={rightElement}>
+        <DataList columns={[["Description", ContractTypeData.description as string]]} item={ContractTypeData} />
+        <EntityWithNameAndDescriptionDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={ContractTypeData} title="Edit Contract Type" />
+        <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Contract Type (${ContractTypeData?.name})`} onSubmit={onSubmitRemove} />
         <Toaster />
     </PageWrapper>
 }
-
-

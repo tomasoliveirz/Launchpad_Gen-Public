@@ -13,10 +13,12 @@ public class CharacteristicInContractVariantBusinessObject(ICharacteristicInCont
     {
         return await ExecuteOperation(async () =>
         {
-            var contractVariant = await genericDao.GetAsync<ContractVariant>(contractVariantUuid) ?? throw new Exception("Contract Variant not found");
-            var contractCharacteristic = await genericDao.GetAsync<ContractCharacteristic>(contractCharacteristicUuid) ?? throw new Exception("Contract Characteristic not found");
-            characteristicInContractVariant.ContractVariantId = contractVariant.Id;
-            characteristicInContractVariant.ContractCharacteristicId = contractCharacteristic.Id;
+            //var contractVariant = await genericDao.GetAsync<ContractVariant>(contractVariantUuid) ?? throw new Exception("Contract Variant not found");
+            //var contractCharacteristic = await genericDao.GetAsync<ContractCharacteristic>(contractCharacteristicUuid) ?? throw new Exception("Contract Characteristic not found");
+            //characteristicInContractVariant.ContractVariantId = contractVariant.Id;
+            //characteristicInContractVariant.ContractCharacteristicId = contractCharacteristic.Id;
+            characteristicInContractVariant = await FindAndAttach(characteristicInContractVariant, contractVariantUuid, x => x.ContractVariant, x => x.ContractVariantId);
+            characteristicInContractVariant = await FindAndAttach(characteristicInContractVariant, contractCharacteristicUuid, x => x.ContractCharacteristic, x => x.ContractCharacteristicId);
 
             var result = await dao.CreateAsync(characteristicInContractVariant);
             return result;
@@ -40,6 +42,24 @@ public class CharacteristicInContractVariantBusinessObject(ICharacteristicInCont
                 oldRecord.ContractCharacteristicId = contractCharacteristic.Id;
             }
             await dao.UpdateAsync(oldRecord);
+        });
+    }
+
+    public async Task<OperationResult<IEnumerable<CharacteristicInContractVariant>>> GetCharacteristicsInContractVariants()
+    {
+        return await ExecuteOperation(async () =>
+        {
+            var records = await dao.GetCharacteristicsInContractVariants();
+            return records;
+        });
+    }
+
+    public async Task<OperationResult<CharacteristicInContractVariant>> GetCharacteristicInContractVariant(Guid contractCharacteristicUuid)
+    {
+        return await ExecuteOperation(async () =>
+        {
+            var records = await dao.GetCharacteristicInContractVariant(contractCharacteristicUuid);
+            return records;
         });
     }
 }
