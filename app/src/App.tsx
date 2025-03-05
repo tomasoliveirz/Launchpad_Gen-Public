@@ -17,6 +17,7 @@ import ContractCharacteristicDetailsPage from "./pages/SettingsPages/DetailsPage
 import ContractVariantDetailsPage from "./pages/SettingsPages/DetailsPages/ContractVariantDetailsPage"
 import BlockchainNetworkDetailsPage from "./pages/SettingsPages/DetailsPages/BlockchainNetworkDetailsPage"
 import { Toaster } from "./components/ui/toaster"
+import ContractFeatureDetailsPage from "./pages/SettingsPages/DetailsPages/ContractFeatureDetailsPage"
 
 function App() {
 
@@ -41,6 +42,7 @@ function App() {
               <Route element={<ContractTypeDetailsPage/>} path="/settings/contract/types/:uuid"/>
               <Route element={<ContractCharacteristicDetailsPage/>} path="/settings/contract/characteristics/:uuid"/>
               <Route element={<ContractVariantDetailsPage/>} path="/settings/contract/variants/:uuid"/>
+              <Route element={<ContractFeatureDetailsPage/>} path="/settings/contract/features/:uuid"/>
               <Route element={<BlockchainNetworkDetailsPage/>} path="/settings/blockchain/networks/:uuid"/>
 
               <Route path="/" element={<HomePage/>}/>

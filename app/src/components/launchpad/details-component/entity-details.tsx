@@ -36,10 +36,10 @@ export function EntityDetails({ columns, editButtonOnClick, removeButtonOnClick,
                     ) : (
                         link ? (
                             <Link style={{ color: "white" }} to={link}>
-                                <Text fontSize="xl">{label}: {value || "None"}</Text>
+                                <Text fontSize="xl">{label}: {value !== "" ? value : "None"}</Text>
                             </Link>
                         ) : (
-                            <Text fontSize="xl">{label}: {value || "None"}</Text>
+                            <Text fontSize="xl">{label}: {value !== "" ? value : "None"}</Text>
                         )
                     )}
                 </Box>
