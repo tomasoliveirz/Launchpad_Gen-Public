@@ -4,7 +4,6 @@ namespace Moongy.RD.Launchpad.ContractGenerator.ModelComposers.NonFungibleToken.
 public class NonFungibleTokenModel : TokenModel
 {
     public string Name { get; set; }
-
     public bool IsAccessible { get; set; }
     public bool IsBurnable { get; set; }
     public bool IsMintable { get; set; }
