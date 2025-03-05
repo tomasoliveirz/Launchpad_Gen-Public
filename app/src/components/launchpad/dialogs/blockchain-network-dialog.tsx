@@ -96,6 +96,7 @@ export function BlockchainNetworksDialog({ open, onClose, title, onSubmit, defau
                                 alt="Preview"
                                 boxSize="100px"
                                 borderRadius="md"
+                                mt="1em"
                             />
                         )}
                 </DialogBody>

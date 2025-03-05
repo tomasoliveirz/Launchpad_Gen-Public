@@ -1,6 +1,5 @@
 import { PageWrapper } from "@/components/launchpad/wrappers/page-wrapper"
 import { Box, useDisclosure } from "@chakra-ui/react"
-import { FaQuestion } from "react-icons/fa"
 import { useEffect, useState } from "react";
 import { ContractFeature } from "@/models/ContractFeature";
 import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-dialog";
@@ -9,6 +8,7 @@ import { TableWrapper } from "@/components/launchpad/wrappers/table-wrapper";
 import { LaunchpadErrorToaster, LaunchpadSuccessToaster } from "@/components/reUIsables/Toaster/toaster";
 import { ContractFeaturesTable } from "@/components/launchpad/tables/contract-features-table";
 import { ContractFeaturesDialog } from "@/components/launchpad/dialogs/contract-features-dialog";
+import { BsStars } from "react-icons/bs";
 
 
 export default function () {
@@ -75,7 +75,7 @@ export default function () {
   }, []);
 
   return <Box minW="100%" minH="100%">
-    <PageWrapper w="100%" h="100%" title="Contract Feature (Settings)" description="Manage your contract features" icon={FaQuestion}>
+    <PageWrapper w="100%" h="100%" title="Contract Feature (Settings)" description="Manage your contract features" icon={BsStars}>
       <TableWrapper newButtonOnClick={onOpenCreate}>
         <ContractFeaturesTable
           items={paginatedItems}

@@ -1,14 +1,17 @@
-import { PageWrapper } from "@/components/launchpad/wrappers/page-wrapper"
-import { Box, useDisclosure } from "@chakra-ui/react"
-import { LaunchpadNameTable } from "@/components/launchpad/tables/name-table";
-import { EntityWithNameAndDescriptionDialog } from "@/components/launchpad/dialogs/entity-with-name-and-description-dialog";
+import { Box, HStack, Spacer, useDisclosure } from "@chakra-ui/react"
 import { useEffect, useState } from "react";
 import { ContractType } from "@/models/ContractType";
-import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-dialog";
 import { useEntity } from "@/services/launchpad/entityService";
-import { TableWrapper } from "@/components/launchpad/wrappers/table-wrapper";
 import { LaunchpadErrorToaster, LaunchpadSuccessToaster } from "@/components/reUIsables/Toaster/toaster";
-import { RiFilePaper2Fill } from "react-icons/ri";
+import { PageWrapper } from "@/components/reUIsables/PageWrapper/page-wrapper";
+import { getBreadcrumbs } from "@/components/reUIsables/Breadcrumbs/breadcrumbs";
+import { pages } from "@/constants/pages";
+import EntityTable, { EntityColumnHeaderProps } from "@/components/reUIsables/EntityTable/entity-table";
+import { FaPencilAlt, FaScroll, FaTrashAlt } from "react-icons/fa";
+import { TableWrapper } from "@/components/launchpad/wrappers/table-wrapper";
+import { LaunchpadNameTable } from "@/components/launchpad/tables/name-table";
+import { EntityWithNameAndDescriptionDialog } from "@/components/launchpad/dialogs/entity-with-name-and-description-dialog";
+import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-dialog";
 
 
 export default function () {
@@ -75,7 +78,7 @@ export default function () {
   const { onOpen: onOpenEdit, onClose: onCloseEdit, open: openEdit } = useDisclosure();
   const { onOpen: onOpenRemove, onClose: onCloseRemove, open: openRemove } = useDisclosure();
   return <Box minW="100%" minH="100%">
-    <PageWrapper w="100%" h="100%" title="Contract Type (Settings)" description="Manage your contract types" icon={RiFilePaper2Fill}>
+    <PageWrapper w="100%" h="100%" title="Contract Type (Settings)" icon={FaScroll}>
       <TableWrapper newButtonOnClick={onOpenCreate}>
         <LaunchpadNameTable 
           items={paginatedItems} 
@@ -91,4 +94,33 @@ export default function () {
     <EntityWithNameAndDescriptionDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={selectedItem || undefined} title="Edit Contract Type" />
     <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Contract Type (${selectedItem?.name})`} onSubmit={onSubmitRemove} />
   </Box>
+}
+
+
+/*   const breadcrumbs = getBreadcrumbs(pages, location.pathname);
+  const columns:EntityColumnHeaderProps<ContractType>[] =[{
+    dataKey: "name", 
+    label:"Name",
+    orderable:true,
+  }];
+
+
+  const sideMenu= ()=><HStack>
+                    <Spacer/>
+                    <FaPencilAlt title="Edit" cursor="pointer"/>
+                    <FaTrashAlt title="Delete" cursor="pointer"/>
+                  </HStack>
+
+
+  return <PageWrapper title={"Contract Types"} icon={RiFilePaper2Fill} breadcrumbsProps={{items:breadcrumbs}}>
+            <EntityTable itemsPerPage={4} searchable columnDescriptions={columns} rightSideElement={sideMenu} items={data as ContractType[]}/>
+        </PageWrapper> */
+
+//currentOrder={} onOrder={()=>{onHeaderSort(d.dataKey)}}
+
+
+interface DataListItem<T>
+{
+  dataKey:keyof T
+  label?:string
 }

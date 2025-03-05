@@ -12,8 +12,8 @@ import { ContractTypeDetailNavigationItem, pages } from "@/constants/pages";
 import { getBreadcrumbs } from "@/components/reUIsables/Breadcrumbs/breadcrumbs";
 import { DataList } from "@/components/reUIsables/DataList/data-list";
 import { EntityWithNameAndDescriptionDialog } from "@/components/launchpad/dialogs/entity-with-name-and-description-dialog";
-import { RiFilePaper2Fill } from "react-icons/ri";
 import { PageWrapper } from "@/components/reUIsables/PageWrapper/page-wrapper";
+import { FaScroll } from "react-icons/fa";
 
 export default function () {
     const URL_SLUG = "ContractTypes";
@@ -73,10 +73,10 @@ export default function () {
     const breadcrumbs = getBreadcrumbs(pages, location.pathname, [{
         ...ContractTypeDetailNavigationItem,
         label: ContractTypeData.name ?? "",
-        icon: RiFilePaper2Fill
+        icon: FaScroll
     }]);
 
-    return <PageWrapper title={ContractTypeData.name ?? ""} breadcrumbsProps={{ items: breadcrumbs }} icon={RiFilePaper2Fill} rightSideElement={rightElement}>
+    return <PageWrapper title={ContractTypeData.name ?? ""} breadcrumbsProps={{ items: breadcrumbs }} icon={FaScroll} rightSideElement={rightElement}>
         <DataList columns={[["Description", ContractTypeData.description as string]]} item={ContractTypeData} />
         <EntityWithNameAndDescriptionDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={ContractTypeData} title="Edit Contract Type" />
         <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Contract Type (${ContractTypeData?.name})`} onSubmit={onSubmitRemove} />

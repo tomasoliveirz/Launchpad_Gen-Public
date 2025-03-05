@@ -7,13 +7,13 @@ import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-
 import { LaunchpadErrorToaster, LaunchpadSuccessToaster } from "@/components/reUIsables/Toaster/toaster";
 import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster"
-import { FaQuestion } from "react-icons/fa";
 import { DeleteButton, EditButton } from "@/components/launchpad/buttons/button";
 import { ContractFeatureDetailNavigationItem, pages } from "@/constants/pages";
 import { getBreadcrumbs } from "@/components/reUIsables/Breadcrumbs/breadcrumbs";
 import { DataList } from "@/components/reUIsables/DataList/data-list";
 import { ContractFeaturesDialog } from "@/components/launchpad/dialogs/contract-features-dialog";
 import { PageWrapper } from "@/components/reUIsables/PageWrapper/page-wrapper";
+import { BsStars } from "react-icons/bs";
 
 export default function () {
     const URL_SLUG = "ContractFeatures";
@@ -73,10 +73,10 @@ export default function () {
     const breadcrumbs = getBreadcrumbs(pages, location.pathname, [{
         ...ContractFeatureDetailNavigationItem,
         label: ContractFeatureData.name ?? "",
-        icon: FaQuestion
+        icon: BsStars
     }]);
 
-    return <PageWrapper title={ContractFeatureData.name ?? ""} breadcrumbsProps={{ items: breadcrumbs }} icon={FaQuestion} rightSideElement={rightElement}>
+    return <PageWrapper title={ContractFeatureData.name ?? ""} breadcrumbsProps={{ items: breadcrumbs }} icon={BsStars} rightSideElement={rightElement}>
         <DataList columns={[
             ["DataType", ContractFeatureData.dataType as string],
             ["Normalized Name", ContractFeatureData.normalizedName as string],

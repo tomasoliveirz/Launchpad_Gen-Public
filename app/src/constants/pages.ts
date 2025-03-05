@@ -1,7 +1,7 @@
 import { NavigationItem } from "@/components/reUIsables/NavigationItem/navigation-item";
-import { FaCog, FaHome, FaNetworkWired, FaPalette, FaQuestion } from "react-icons/fa";
+import { BsStars } from "react-icons/bs";
+import { FaCog, FaHome, FaNetworkWired, FaPalette, FaScroll } from "react-icons/fa";
 import { IoGitBranchOutline } from "react-icons/io5";
-import { RiFilePaper2Fill } from "react-icons/ri";
 
 
 export const HomeNavigationItem = {
@@ -30,13 +30,13 @@ export const ContractCharacteristicNavigationItem = {
 
 export const ContractFeatureNavigationItem = {
     label:"Contract Features",
-    icon:FaQuestion,
+    icon:BsStars,
     url:"/settings/contract/features",
 }
 
 export const ContractTypeNavigationItem = {
     label:"Contract Types",
-    icon:RiFilePaper2Fill,
+    icon:FaScroll,
     url:"/settings/contract/types",
 }
 
@@ -61,13 +61,13 @@ export const ContractCharacteristicDetailNavigationItem = {
 
 export const ContractFeatureDetailNavigationItem = {
     label:"",
-    icon:FaQuestion,
+    icon:BsStars,
     url:"/settings/contract/features/uuid",
 }
 
 export const ContractTypeDetailNavigationItem = {
     label:"",
-    icon:RiFilePaper2Fill,
+    icon:FaScroll,
     url:"/settings/contract/types/uuid",
 }
 
