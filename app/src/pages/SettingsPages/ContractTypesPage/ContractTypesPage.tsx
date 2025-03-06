@@ -27,10 +27,6 @@ export default function () {
 
   const [selectedItem, setSelectedItem] = useState<ContractType | null>(null);
 
-  const [page, setPage] = useState(1);
-  const pageSize = 6;
-  const paginatedItems = contractTypeData.slice((page - 1) * pageSize, page * pageSize);
-  const pageCount = Math.ceil(data.length / pageSize);
 
   const onSubmitCreate = async (data: ContractType) => {
 
@@ -102,8 +98,14 @@ export default function () {
 
   const sideMenu= (t:ContractType)=><HStack>
                     <Spacer/>
-                    <FaPencilAlt title="Edit" cursor="pointer"/>
-                    <FaTrashAlt title="Delete" cursor="pointer"/>
+                    <FaPencilAlt title="Edit" cursor="pointer" onClick={()=>{
+                      setSelectedItem(t);
+                      onOpenEdit();
+                    }}/>
+                    <FaTrashAlt title="Delete" cursor="pointer" onClick={()=>{
+                      setSelectedItem(t);
+                      onOpenRemove();
+                    }}/>
                   </HStack>
 
 
