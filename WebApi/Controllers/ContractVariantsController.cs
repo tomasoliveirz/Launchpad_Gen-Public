@@ -54,5 +54,13 @@ namespace WebApi.Controllers
             return Problem(result.Exception?.Message ?? "");
         }
 
+        [HttpGet("{uuid}/characteristics")]
+        public async Task<ActionResult<CharacteristicInContractVariant>> GetCharacteristicsInVariantAsync(Guid uuid)
+        {
+            var result = await bo.GetCharacteristicsInContractVariant(uuid);
+            if (result.IsSuccessful) return Ok(result.Result);
+            if (result.Exception is NotFoundException nfe) return NotFound(nfe.Id);
+            return Problem(result.Exception?.Message ?? "");
+        }
     }
 }

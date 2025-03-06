@@ -80,7 +80,6 @@ export default function () {
         <DataList columns={[["Description", BlockchainNetworkData.description as string]]} item={BlockchainNetworkData} />
         <BlockchainNetworksDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={BlockchainNetworkData} title="Edit Blockchain Network" />
         <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Blockchain Network (${BlockchainNetworkData?.name})`} onSubmit={onSubmitRemove} />
-        <Toaster />
     </PageWrapper>
 }
 

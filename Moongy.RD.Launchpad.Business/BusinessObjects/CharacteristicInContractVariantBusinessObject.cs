@@ -19,7 +19,7 @@ public class CharacteristicInContractVariantBusinessObject(ICharacteristicInCont
             //characteristicInContractVariant.ContractCharacteristicId = contractCharacteristic.Id;
             characteristicInContractVariant = await FindAndAttach(characteristicInContractVariant, contractVariantUuid, x => x.ContractVariant, x => x.ContractVariantId);
             characteristicInContractVariant = await FindAndAttach(characteristicInContractVariant, contractCharacteristicUuid, x => x.ContractCharacteristic, x => x.ContractCharacteristicId);
-
+            characteristicInContractVariant.Uuid = null;
             var result = await dao.CreateAsync(characteristicInContractVariant);
             return result;
         });

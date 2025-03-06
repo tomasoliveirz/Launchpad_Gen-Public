@@ -11,4 +11,6 @@ public interface IContractVariantBusinessObject : IEntityBusinessObject<Contract
     public Task<OperationResult<IEnumerable<ContractVariant>>> GetVariantsWithTypes();
 
     public Task<OperationResult<ContractVariant>> GetVariantWithType(Guid contractVariantUuid);
+
+    public Task<OperationResult<IEnumerable<CharacteristicInContractVariant>>> GetCharacteristicsInContractVariant(Guid contractVariantUuid);
 }
