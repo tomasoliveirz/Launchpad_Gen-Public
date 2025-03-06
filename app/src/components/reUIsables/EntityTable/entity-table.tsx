@@ -6,6 +6,7 @@ import useSearch from "./useSearch"
 import useOrderBy from "./useOrderBy"
 import usePagination from "./usePagination"
 import { FaAngleDoubleLeft, FaAngleDoubleRight, FaAngleLeft, FaAngleRight, FaSortAlphaDown, FaSortAlphaUp, FaSortAmountDown, FaSortAmountUp, FaSortNumericDown, FaSortNumericUp } from "react-icons/fa"
+import { Link } from "react-router-dom"
 
 export interface EntityTableProps<T> extends TableRootProps
 {
@@ -64,11 +65,12 @@ export function EntityHeaderCell<T>({label,orderable, dataKey, currentSortKey, c
 }
 
 
-export function EntityRowCell<T>({record, format, formatCell,dataKey, ...props}:EntityColumnCellProps<T>)
+export function EntityRowCell<T>({record, link, format, formatCell,dataKey, ...props}:EntityColumnCellProps<T>)
 {
     const content= record[dataKey] as string;
+    const cellContent = formatCell ? formatCell(content) : <Text>{format ? format(content) : content}</Text>;
     return <Table.Cell {...props}>
-                {formatCell ? formatCell(content) : <Text>{format ? format(content) : content}</Text> }
+                {link ? <Link to={link(record)}>{cellContent}</Link> : cellContent}
             </Table.Cell>
 }
 

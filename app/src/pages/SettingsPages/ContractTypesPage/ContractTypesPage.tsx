@@ -9,6 +9,9 @@ import { pages } from "@/constants/pages";
 import EntityTable, { EntityColumnHeaderProps } from "@/components/reUIsables/EntityTable/entity-table";
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 import { TextModal } from "@/components/reUIsables/Modals/text-modal";
+import { RiFilePaper2Fill } from "react-icons/ri";
+import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-dialog";
+import { EntityWithNameAndDescriptionDialog } from "@/components/launchpad/dialogs/entity-with-name-and-description-dialog";
 
 
 export default function () {
@@ -74,25 +77,7 @@ export default function () {
   const { onOpen: onOpenCreate, onClose: onCloseCreate, open: openCreate } = useDisclosure();
   const { onOpen: onOpenEdit, onClose: onCloseEdit, open: openEdit } = useDisclosure();
   const { onOpen: onOpenRemove, onClose: onCloseRemove, open: openRemove } = useDisclosure();
-  return <Box minW="100%" minH="100%">
-    <PageWrapper w="100%" h="100%" title="Contract Type (Settings)" icon={FaScroll}>
-      <TableWrapper newButtonOnClick={onOpenCreate}>
-        <LaunchpadNameTable 
-          items={paginatedItems} 
-          pageCount={pageCount} 
-          page={page} 
-          setPage={setPage} 
-          editButtonOnClick={(item => { setSelectedItem(item); onOpenEdit(); })}
-          detailsLink={(item) => `/settings/contract/types/${item.uuid}`}
-          removeButtonOnClick={(item => { setSelectedItem(item); onOpenRemove(); })} />
-      </TableWrapper>
-    </PageWrapper>
-    <EntityWithNameAndDescriptionDialog open={openCreate} onClose={onCloseCreate} onSubmit={onSubmitCreate} title="New Contract Type" />
-    <EntityWithNameAndDescriptionDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={selectedItem || undefined} title="Edit Contract Type" />
-    <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Contract Type (${selectedItem?.name})`} onSubmit={onSubmitRemove} />
-  </Box>
-}
-
+ 
 
   const breadcrumbs = getBreadcrumbs(pages, location.pathname);
   const formatDescription = (s?:string)=> s ? <TextModal text={s} maxCharacters={20}/>:<></>
@@ -102,6 +87,7 @@ export default function () {
     label:"Name",
     orderable:true,
     searchable:true,
+    link:(t:ContractType) => t.uuid,
     displayable:true
   },
   {
@@ -124,6 +110,9 @@ export default function () {
 
   return <PageWrapper title={"Contract Types"} icon={RiFilePaper2Fill} breadcrumbsProps={{items:breadcrumbs}}>
             <EntityTable itemsPerPage={6} searchable columnDescriptions={columns} rightSideElement={sideMenu} items={data as ContractType[]}/>
+            <EntityWithNameAndDescriptionDialog open={openCreate} onClose={onCloseCreate} onSubmit={onSubmitCreate} title="New Contract Type" />
+            <EntityWithNameAndDescriptionDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={selectedItem || undefined} title="Edit Contract Type" />
+            <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Contract Type (${selectedItem?.name})`} onSubmit={onSubmitRemove} />
         </PageWrapper>
 }
 
