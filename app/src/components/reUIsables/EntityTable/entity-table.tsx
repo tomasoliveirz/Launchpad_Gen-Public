@@ -25,7 +25,7 @@ export interface EntityColumnHeaderProps<T>  extends TableColumnHeaderProps
     orderable?:boolean
     searchable?:boolean
     displayable?:boolean
-    formatCell?:(s:string)=>JSX.Element
+    formatCell?:(s:T[keyof T])=>JSX.Element
     format?:(s:string)=>string
     dataType?:"text"|"number"|"amount"
     onSort?:(k:keyof T)=>void
@@ -69,7 +69,7 @@ export function EntityHeaderCell<T>({label,orderable, dataKey, currentSortKey, c
 export function EntityRowCell<T>({record, link, format, formatCell,dataKey, ...props}:EntityColumnCellProps<T>)
 {
     const content= record[dataKey] as string;
-    const cellContent = formatCell ? formatCell(content) : <Text>{format ? format(content) : content}</Text>;
+    const cellContent = formatCell ? formatCell(record[dataKey]) : <Text>{format ? format(content) : content}</Text>;
     return <Table.Cell {...props}>
                 {link ? <Link to={link(record)}>{cellContent}</Link> : cellContent}
             </Table.Cell>

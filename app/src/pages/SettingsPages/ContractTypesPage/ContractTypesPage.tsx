@@ -77,7 +77,7 @@ export default function () {
  
 
   const breadcrumbs = getBreadcrumbs(pages, location.pathname);
-  const formatDescription = (s?:string)=> s ? <TextModal text={s} maxCharacters={20}/>:<></>
+  const formatDescription = (s?:ContractType[keyof ContractType])=> s ? <TextModal text={s as string} maxCharacters={20}/>:<></>
 
   const columns:EntityColumnHeaderProps<ContractType>[] =[{
     dataKey: "name", 
@@ -86,7 +86,7 @@ export default function () {
     searchable:true,
     link:(t:ContractType) => t.uuid,
     displayable:true
-  },
+  }, 
   {
     dataKey: "description", 
     label:"Description",
