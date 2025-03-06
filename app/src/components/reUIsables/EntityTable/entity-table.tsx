@@ -15,7 +15,8 @@ export interface EntityTableProps<T> extends TableRootProps
     pageable?:boolean
     itemsPerPage?:number
     items:T[]
-    rightSideElement?:(t:T)=>JSX.Element
+    rowLastColumn?:(t:T)=>JSX.Element
+    topLeftElement?:JSX.Element
 }
 
 export interface EntityColumnHeaderProps<T>  extends TableColumnHeaderProps
@@ -74,9 +75,9 @@ export function EntityRowCell<T>({record, link, format, formatCell,dataKey, ...p
             </Table.Cell>
 }
 
-export default function EntityTable<T>({columnDescriptions, pageable, itemsPerPage, searchable, key, rightSideElement, items, ...props}:EntityTableProps<T>)
+export default function EntityTable<T>({columnDescriptions, topLeftElement, pageable, itemsPerPage, searchable, key, rowLastColumn, items, ...props}:EntityTableProps<T>)
 {
-    const RightSideElement = rightSideElement;
+    const RightSideElement = rowLastColumn;
     const [query, setQuery] = useState<string|undefined>("");
     const [sortKey, setSortKey] = useState<keyof T | undefined>(columnDescriptions[0].dataKey);
     const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
@@ -117,7 +118,7 @@ export default function EntityTable<T>({columnDescriptions, pageable, itemsPerPa
 
     const leftovers = (itemsPerPage ?? 10)- paginatedItems.length;
     return <>
-        {searchable && <SearchSection setQuery={setQuery} query={query}/>}
+        {searchable && <SearchSection topLeftElement={topLeftElement} setQuery={setQuery} query={query}/>}
         <Table.Root size="sm" striped {...props}>
                 <Table.Header>
                     <Table.Row>
@@ -160,11 +161,14 @@ interface SearchSectionProps<T> extends StackProps
 {
     query:string|undefined
     setQuery:((a:string|undefined) => void)
+    topLeftElement?:JSX.Element
 }
 
-function SearchSection<T>({query, setQuery, ...props}:SearchSectionProps<T>)
+function SearchSection<T>({query, topLeftElement, setQuery, ...props}:SearchSectionProps<T>)
 {
+    const TopLeftElement = topLeftElement;
     return <HStack mb="0.5em" {...props} >
+                {TopLeftElement??<></>}
                 <Spacer/>
                 <SearchInput bg="#00000088" w="20em" value={query} size="sm" onChange={setQuery}/>
             </HStack>

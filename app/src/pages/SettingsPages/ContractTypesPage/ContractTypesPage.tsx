@@ -1,4 +1,4 @@
-import { HStack, Spacer, useDisclosure, Text } from "@chakra-ui/react"
+import { HStack, Spacer, useDisclosure, Text, Box } from "@chakra-ui/react"
 import { useEffect, useState } from "react";
 import { ContractType } from "@/models/ContractType";
 import { useEntity } from "@/services/launchpad/entityService";
@@ -12,6 +12,7 @@ import { TextModal } from "@/components/reUIsables/Modals/text-modal";
 import { RiFilePaper2Fill } from "react-icons/ri";
 import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-dialog";
 import { EntityWithNameAndDescriptionDialog } from "@/components/launchpad/dialogs/entity-with-name-and-description-dialog";
+import { LaunchpadNewButton } from "@/components/launchpad/buttons/button";
 
 
 export default function () {
@@ -111,7 +112,9 @@ export default function () {
 
 
   return <PageWrapper title={"Contract Types"} icon={RiFilePaper2Fill} breadcrumbsProps={{items:breadcrumbs}}>
-            <EntityTable itemsPerPage={6} searchable columnDescriptions={columns} rightSideElement={sideMenu} items={data as ContractType[]}/>
+            <Box w="96%" mt="3em" mx="auto">
+              <EntityTable topLeftElement={<LaunchpadNewButton onClick={onOpenCreate}/>} itemsPerPage={6} searchable columnDescriptions={columns} rowLastColumn={sideMenu} items={data as ContractType[]}/>
+            </Box>
             <EntityWithNameAndDescriptionDialog open={openCreate} onClose={onCloseCreate} onSubmit={onSubmitCreate} title="New Contract Type" />
             <EntityWithNameAndDescriptionDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={selectedItem || undefined} title="Edit Contract Type" />
             <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Contract Type (${selectedItem?.name})`} onSubmit={onSubmitRemove} />
