@@ -3,6 +3,7 @@ import { useState, useCallback } from 'react';
 function usePagination<T>(itemsPerPage: number) {
   const [currentPage, setCurrentPage] = useState(1);
 
+
   const paginate = useCallback((items: T[]): T[] => {
     const numberOfItems = items.length;
     const numberOfPages = Math.ceil(numberOfItems / itemsPerPage);

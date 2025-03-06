@@ -1,4 +1,4 @@
-import { Box, HStack, Spacer, useDisclosure } from "@chakra-ui/react"
+import { HStack, Spacer, useDisclosure, Text, Box } from "@chakra-ui/react"
 import { useEffect, useState } from "react";
 import { ContractType } from "@/models/ContractType";
 import { useEntity } from "@/services/launchpad/entityService";
@@ -7,11 +7,12 @@ import { PageWrapper } from "@/components/reUIsables/PageWrapper/page-wrapper";
 import { getBreadcrumbs } from "@/components/reUIsables/Breadcrumbs/breadcrumbs";
 import { pages } from "@/constants/pages";
 import EntityTable, { EntityColumnHeaderProps } from "@/components/reUIsables/EntityTable/entity-table";
-import { FaPencilAlt, FaScroll, FaTrashAlt } from "react-icons/fa";
-import { TableWrapper } from "@/components/launchpad/wrappers/table-wrapper";
-import { LaunchpadNameTable } from "@/components/launchpad/tables/name-table";
-import { EntityWithNameAndDescriptionDialog } from "@/components/launchpad/dialogs/entity-with-name-and-description-dialog";
+import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
+import { TextModal } from "@/components/reUIsables/Modals/text-modal";
+import { RiFilePaper2Fill } from "react-icons/ri";
 import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-dialog";
+import { EntityWithNameAndDescriptionDialog } from "@/components/launchpad/dialogs/entity-with-name-and-description-dialog";
+import { LaunchpadNewButton } from "@/components/launchpad/buttons/button";
 
 
 export default function () {
@@ -27,10 +28,6 @@ export default function () {
 
   const [selectedItem, setSelectedItem] = useState<ContractType | null>(null);
 
-  const [page, setPage] = useState(1);
-  const pageSize = 6;
-  const paginatedItems = contractTypeData.slice((page - 1) * pageSize, page * pageSize);
-  const pageCount = Math.ceil(data.length / pageSize);
 
   const onSubmitCreate = async (data: ContractType) => {
 
@@ -77,50 +74,52 @@ export default function () {
   const { onOpen: onOpenCreate, onClose: onCloseCreate, open: openCreate } = useDisclosure();
   const { onOpen: onOpenEdit, onClose: onCloseEdit, open: openEdit } = useDisclosure();
   const { onOpen: onOpenRemove, onClose: onCloseRemove, open: openRemove } = useDisclosure();
-  return <Box minW="100%" minH="100%">
-    <PageWrapper w="100%" h="100%" title="Contract Type (Settings)" icon={FaScroll}>
-      <TableWrapper newButtonOnClick={onOpenCreate}>
-        <LaunchpadNameTable 
-          items={paginatedItems} 
-          pageCount={pageCount} 
-          page={page} 
-          setPage={setPage} 
-          editButtonOnClick={(item => { setSelectedItem(item); onOpenEdit(); })}
-          detailsLink={(item) => `/settings/contract/types/${item.uuid}`}
-          removeButtonOnClick={(item => { setSelectedItem(item); onOpenRemove(); })} />
-      </TableWrapper>
-    </PageWrapper>
-    <EntityWithNameAndDescriptionDialog open={openCreate} onClose={onCloseCreate} onSubmit={onSubmitCreate} title="New Contract Type" />
-    <EntityWithNameAndDescriptionDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={selectedItem || undefined} title="Edit Contract Type" />
-    <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Contract Type (${selectedItem?.name})`} onSubmit={onSubmitRemove} />
-  </Box>
-}
+ 
 
+  const breadcrumbs = getBreadcrumbs(pages, location.pathname);
+  const formatDescription = (s?:ContractType[keyof ContractType])=> s ? <TextModal text={s as string} maxCharacters={20}/>:<></>
 
-/*   const breadcrumbs = getBreadcrumbs(pages, location.pathname);
   const columns:EntityColumnHeaderProps<ContractType>[] =[{
     dataKey: "name", 
     label:"Name",
     orderable:true,
-  }];
+    searchable:true,
+    link:(t:ContractType) => t.uuid,
+    displayable:true
+  }, 
+  {
+    dataKey: "description", 
+    label:"Description",
+    searchable:true,
+    formatCell:formatDescription,
+    displayable:true,
+  },
+];
 
 
-  const sideMenu= ()=><HStack>
+  const sideMenu= (t:ContractType)=><HStack>
                     <Spacer/>
-                    <FaPencilAlt title="Edit" cursor="pointer"/>
-                    <FaTrashAlt title="Delete" cursor="pointer"/>
+                    <FaPencilAlt title="Edit" cursor="pointer" onClick={()=>{
+                      setSelectedItem(t);
+                      onOpenEdit();
+                    }}/>
+                    <FaTrashAlt title="Delete" cursor="pointer" onClick={()=>{
+                      setSelectedItem(t);
+                      onOpenRemove();
+                    }}/>
                   </HStack>
 
 
+
   return <PageWrapper title={"Contract Types"} icon={RiFilePaper2Fill} breadcrumbsProps={{items:breadcrumbs}}>
-            <EntityTable itemsPerPage={4} searchable columnDescriptions={columns} rightSideElement={sideMenu} items={data as ContractType[]}/>
-        </PageWrapper> */
-
-//currentOrder={} onOrder={()=>{onHeaderSort(d.dataKey)}}
-
-
-interface DataListItem<T>
-{
-  dataKey:keyof T
-  label?:string
+            <Box w="96%" mt="3em" mx="auto">
+              <EntityTable topLeftElement={<LaunchpadNewButton onClick={onOpenCreate}/>} itemsPerPage={6} searchable columnDescriptions={columns} rowLastColumn={sideMenu} items={data as ContractType[]}/>
+            </Box>
+            <EntityWithNameAndDescriptionDialog open={openCreate} onClose={onCloseCreate} onSubmit={onSubmitCreate} title="New Contract Type" />
+            <EntityWithNameAndDescriptionDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={selectedItem || undefined} title="Edit Contract Type" />
+            <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Contract Type (${selectedItem?.name})`} onSubmit={onSubmitRemove} />
+        </PageWrapper>
 }
+
+
+
