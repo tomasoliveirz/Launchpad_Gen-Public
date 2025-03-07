@@ -17,4 +17,9 @@ public class ContractVariantDataAccessObject(LaunchpadContext context) : BaseDat
     {
         return await context.ContractsVariants.Include(x => x.ContractType).FirstOrDefaultAsync(x => x.Uuid == contractVariantUuid);
     }
+
+    public async Task<IEnumerable<CharacteristicInContractVariant>> GetCharacteristicsInContractVariant(Guid contractVariantUuid)
+    {
+        return await context.CharacteristicInContractVariants.Include(x => x.ContractCharacteristic).Include(x => x.ContractVariant).Where(x => x.ContractVariant.Uuid == contractVariantUuid).ToListAsync();
+    }
 }

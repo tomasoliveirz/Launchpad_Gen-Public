@@ -8,4 +8,6 @@ public interface IContractVariantDataAccessObject : IBaseDataAccessObject<Contra
 
     Task<ContractVariant> GetContractVariantWithType(Guid contractVariantUuid);
 
+    Task<IEnumerable<CharacteristicInContractVariant>> GetCharacteristicsInContractVariant(Guid contractVariantUuid);
+
 }

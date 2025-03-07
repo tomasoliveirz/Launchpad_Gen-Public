@@ -15,6 +15,7 @@ public class LaunchpadContext(DbContextOptions options) : DbContext(options)
         modelBuilder.Entity<GenerationFeatureValue>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
         modelBuilder.Entity<PublishResult>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
         modelBuilder.Entity<BlockchainNetwork>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
+        modelBuilder.Entity<CharacteristicInContractVariant>().HasIndex(x => x.Uuid).IsUnique();
         modelBuilder.Entity<CharacteristicInContractVariant>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
         modelBuilder.Entity<ContractCharacteristic>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
         modelBuilder.Entity<ContractFeature>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");

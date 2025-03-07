@@ -6,7 +6,6 @@ import { useEntity } from "@/services/launchpad/entityService";
 import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-dialog";
 import { LaunchpadErrorToaster, LaunchpadSuccessToaster } from "@/components/reUIsables/Toaster/toaster";
 import { useEffect } from "react";
-import { Toaster } from "@/components/ui/toaster"
 import { DeleteButton, EditButton } from "@/components/launchpad/buttons/button";
 import { ContractFeatureDetailNavigationItem, pages } from "@/constants/pages";
 import { getBreadcrumbs } from "@/components/reUIsables/Breadcrumbs/breadcrumbs";
@@ -84,7 +83,6 @@ export default function () {
             item={ContractFeatureData} />
         <ContractFeaturesDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={ContractFeatureData} title="Edit Contract Feature" />
         <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Contract Feature (${ContractFeatureData?.name})`} onSubmit={onSubmitRemove} />
-        <Toaster />
     </PageWrapper>
 }
 

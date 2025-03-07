@@ -57,6 +57,5 @@ namespace WebApi.Controllers
             if (result.Exception is InvalidModelException ime) return BadRequest(ime.Message);
             return Problem(result.Exception?.Message ?? "");
         }
-
     }
 }

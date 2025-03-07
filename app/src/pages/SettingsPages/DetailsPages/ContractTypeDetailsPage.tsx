@@ -6,7 +6,6 @@ import { useEntity } from "@/services/launchpad/entityService";
 import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-dialog";
 import { LaunchpadErrorToaster, LaunchpadSuccessToaster } from "@/components/reUIsables/Toaster/toaster";
 import { useEffect } from "react";
-import { Toaster } from "@/components/ui/toaster"
 import { DeleteButton, EditButton } from "@/components/launchpad/buttons/button";
 import { ContractTypeDetailNavigationItem, pages } from "@/constants/pages";
 import { getBreadcrumbs } from "@/components/reUIsables/Breadcrumbs/breadcrumbs";
@@ -80,6 +79,5 @@ export default function () {
         <DataList columns={[["Description", ContractTypeData.description as string]]} item={ContractTypeData} />
         <EntityWithNameAndDescriptionDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={ContractTypeData} title="Edit Contract Type" />
         <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Contract Type (${ContractTypeData?.name})`} onSubmit={onSubmitRemove} />
-        <Toaster />
     </PageWrapper>
 }

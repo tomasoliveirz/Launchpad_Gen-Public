@@ -12,16 +12,17 @@ export function DataList({ columns }: DataListProps) {
         {columns?.map(([label, value, link]) => (
             <Box key={label}>
                 {link ? (
-                    <Flex fontSize="xl">
-                        <Text mr="0.5em" fontWeight="bold">{label}: </Text>
+                    <Box fontSize="xl">
+                        <Text mr="0.5em" fontWeight="bold">{label}</Text>
                         <Link style={{ color: "white" }} to={link ?? ""}>
                             <Text fontWeight="thin"> {value !== "" ? value : "None"} </Text>
                         </Link>
-                    </Flex>
-                ) : (<Flex fontSize="xl">
-                    <Text mr="0.5em" fontWeight="bold">{label}: </Text>
-                    <Text fontWeight="thin"> {value !== "" ? value : "None"} </Text>
-                </Flex>
+                    </Box>
+                ) : (
+                    <Box fontSize="xl">
+                        <Text mr="0.5em" fontWeight="bold">{label}</Text>
+                        <Text fontWeight="thin"> {value !== "" ? value : "None"} </Text>
+                    </Box>
                 )}
             </Box>
         ))}

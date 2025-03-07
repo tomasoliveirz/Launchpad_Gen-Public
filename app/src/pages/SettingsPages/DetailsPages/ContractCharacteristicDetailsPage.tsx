@@ -6,7 +6,6 @@ import { useEntity } from "@/services/launchpad/entityService";
 import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-dialog";
 import { LaunchpadErrorToaster, LaunchpadSuccessToaster } from "@/components/reUIsables/Toaster/toaster";
 import { useEffect } from "react";
-import { Toaster } from "@/components/ui/toaster"
 import { FaPalette } from "react-icons/fa";
 import { DeleteButton, EditButton } from "@/components/launchpad/buttons/button";
 import { ContractCharacteristicDetailNavigationItem, pages } from "@/constants/pages";
@@ -80,6 +79,5 @@ export default function () {
         <DataList columns={[["Description", ContractCharacteristicData.description as string]]} item={ContractCharacteristicData} />
         <EntityWithNameAndDescriptionDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={ContractCharacteristicData} title="Edit Contract Characteristic" />
         <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Contract Characteristic (${ContractCharacteristicData?.name})`} onSubmit={onSubmitRemove} />
-        <Toaster />
     </PageWrapper>
 }

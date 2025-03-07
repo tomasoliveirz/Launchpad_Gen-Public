@@ -55,4 +55,13 @@ public class ContractVariantBusinessObject(IContractVariantDataAccessObject dao,
             return records;
         });
     }
+
+    public async Task<OperationResult<IEnumerable<CharacteristicInContractVariant>>> GetCharacteristicsInContractVariant(Guid contractVariantUuid)
+    {
+        return await ExecuteOperation(async () =>
+        {
+            var records = await dao.GetCharacteristicsInContractVariant(contractVariantUuid);
+            return records;
+        });
+    }
 }
