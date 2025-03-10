@@ -1,0 +1,99 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+
+// SPDX-License-Identifier: {model.License ?? "UNLICENSED"}
+pragma solidity {model.MaximumVersion.AllowCompileInLatestVersion}{model.MaximumVersion.Major}.{model.MaximumVersion.Minor}.{model.MaximumVersion.Revision};
+
+
+import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import {ERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
+import {ERC20Burnable} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+
+contract MyToken is ERC20, Ownable, ERC20Permit, ERC20Burnable {
+    address public feeCollector;
+    uint256 fee;
+    uint256 reflectionFee;
+
+    uint256 public claimableFees;
+    uint256 public reflectionFees;
+
+    event FeeCollected(uint256 amount, address to);
+
+    constructor(string name, string symbol, address owner, address _feeCollector, uint256 _fee, uint256 _reflectionFee)
+        ERC20(name, symbol)
+        Ownable(owner)
+        ERC20Permit(name)
+        
+    {
+        feeCollector = _feeCollector;
+        fee = _fee;
+        reflectionFee = _reflectionFee;
+        _mint(msg.sender, 100 * 10 ** decimals());
+    }
+
+    function mint(address to, uint256 amount) public onlyOwner {
+        _mint(to, amount);
+    }
+
+    function transfer(address to, uint256 value) public override returns (bool) {
+        address owner = _msgSender();
+        uint256 amountAfterFee = sendTax(owner, value);
+        _transfer(owner, to, amountAfterFee);
+        notifyTax(value-amountAfterFee);
+        return true;
+    }
+
+    function sendTax(address owner, uint256 value) internal virtual returns (uint256)
+    {
+        uint256 feeAmount = calculateFeeAndUpdateClaimable(value);
+        uint256 reflectionFeeAmount = calculateReflectionFeeAndUpdatedDistributionals(value);
+        uint256 amountToTax = feeAmount + reflectionFeeAmount;
+        _transfer(owner, address(this), amountToTax);
+        return value-amountToTax;
+    }
+
+    function notifyTax(uint256 amount) internal
+    {
+        emit FeeCollected(amount, feeCollector);
+    }
+
+    function calculateFeeAndUpdateClaimable(uint256 amount) internal  returns (uint256) {
+
+        uint256 feeAmount = (amount * fee) / 1000; // 2.5% fee
+        claimableFees += feeAmount;
+        return feeAmount;
+    }
+
+    function calculateReflectionFeeAndUpdatedDistributionals(uint256 amount) internal returns (uint256)
+    {
+        uint256 feeAmount = (amount * reflectionFee) / 1000; // 2.5% fee
+        reflectionFees += feeAmount;
+        return feeAmount;
+    }
+
+    function setFee(uint256 newFee) public 
+    {
+        fee = newFee;
+    }
+    
+    function setReflectionFee(uint256 newFee) public 
+    {
+        reflectionFee = newFee;
+    }
+
+    function claimFees() public
+    {
+        address owner = msg.sender;
+        require(owner == feeCollector, "not collector");
+        _transfer(address(this), owner, claimableFees);
+    }
+
+    function distributeReflections() public
+    {
+        reflectionFees=0;
+    }
+}
