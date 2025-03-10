@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Moongy.RD.Launchpad.Business.BusinessObjects;
 using Moongy.RD.Launchpad.Business.Interfaces;
 using Moongy.RD.Launchpad.Data.Contexts;
+using Moongy.RD.LaunchPad.DataAccess;
 using Moongy.RD.LaunchPad.DataAccess.Base;
 using Moongy.RD.LaunchPad.DataAccess.Base.Interfaces;
 using Moongy.RD.LaunchPad.DataAccess.DataAccessObjects;
@@ -70,6 +71,8 @@ if (app.Environment.IsDevelopment())
     using var scope = app.Services.CreateScope();
     var context = scope.ServiceProvider.GetRequiredService<LaunchpadContext>();
     context.Database.EnsureCreated();
+    LaunchpadSeeder.Seed(context);
+
     app.MapOpenApi();
     app.MapScalarApiReference(o =>
     {

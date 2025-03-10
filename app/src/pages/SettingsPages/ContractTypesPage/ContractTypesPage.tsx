@@ -1,4 +1,4 @@
-import { HStack, Spacer, useDisclosure, Text, Box } from "@chakra-ui/react"
+import { HStack, Spacer, useDisclosure, Box } from "@chakra-ui/react"
 import { useEffect, useState } from "react";
 import { ContractType } from "@/models/ContractType";
 import { useEntity } from "@/services/launchpad/entityService";
@@ -7,9 +7,8 @@ import { PageWrapper } from "@/components/reUIsables/PageWrapper/page-wrapper";
 import { getBreadcrumbs } from "@/components/reUIsables/Breadcrumbs/breadcrumbs";
 import { pages } from "@/constants/pages";
 import EntityTable, { EntityColumnHeaderProps } from "@/components/reUIsables/EntityTable/entity-table";
-import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
+import { FaPencilAlt, FaScroll, FaTrashAlt } from "react-icons/fa";
 import { TextModal } from "@/components/reUIsables/Modals/text-modal";
-import { RiFilePaper2Fill } from "react-icons/ri";
 import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-dialog";
 import { EntityWithNameAndDescriptionDialog } from "@/components/launchpad/dialogs/entity-with-name-and-description-dialog";
 import { LaunchpadNewButton } from "@/components/launchpad/buttons/button";
@@ -19,15 +18,12 @@ export default function () {
   const URL_SLUG = "ContractTypes";
   const entityApi = useEntity<ContractType>(URL_SLUG);
 
-  const { data = [], error, isLoading, refetch } = entityApi.list();
+  const { data = [], refetch } = entityApi.list();
   const [createContractType] = entityApi.create();
   const [updateContractType] = entityApi.update();
   const [removeContractType] = entityApi.remove();
 
-  const contractTypeData = data as ContractType[];
-
   const [selectedItem, setSelectedItem] = useState<ContractType | null>(null);
-
 
   const onSubmitCreate = async (data: ContractType) => {
 
@@ -111,7 +107,7 @@ export default function () {
 
 
 
-  return <PageWrapper title={"Contract Types"} icon={RiFilePaper2Fill} breadcrumbsProps={{items:breadcrumbs}}>
+  return <PageWrapper title={"Contract Types"} icon={FaScroll} breadcrumbsProps={{items:breadcrumbs}}>
             <Box w="96%" mt="3em" mx="auto">
               <EntityTable topLeftElement={<LaunchpadNewButton onClick={onOpenCreate}/>} itemsPerPage={6} searchable columnDescriptions={columns} rowLastColumn={sideMenu} items={data as ContractType[]}/>
             </Box>
@@ -120,6 +116,3 @@ export default function () {
             <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Contract Type (${selectedItem?.name})`} onSubmit={onSubmitRemove} />
         </PageWrapper>
 }
-
-
-

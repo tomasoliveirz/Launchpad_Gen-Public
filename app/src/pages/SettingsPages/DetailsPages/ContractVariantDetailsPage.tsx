@@ -1,4 +1,4 @@
-import { Box, BoxProps, createListCollection, Flex, Spinner, Theme, useDisclosure, VStack } from "@chakra-ui/react";
+import { Box, BoxProps, createListCollection, Flex, Spinner, useDisclosure, VStack } from "@chakra-ui/react";
 import { Text } from "@chakra-ui/react";
 import { ContractVariant } from "@/models/ContractVariant";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -137,7 +137,7 @@ export default function () {
             ["Contract Type", ContractVariantData.contractType.name as string, `/settings/contract/types/${ContractVariantData.contractType.uuid}`]]}
             item={ContractVariantData}
         />
-        <CharacteristicsInContractVariant contractVariant={ContractVariantData} data={CharacteristicsInVariantData} addCharacteristic={() => onOpenAddCharacteristic()} open={openRemoveCharacteristicInVariant} onClose={onCloseRemoveCharacteristicInVariant} onSubmit={onSubmitRemoveCharacteristicInVariant} removeButtonOnClick={(characteristic) => {
+        <CharacteristicsInContractVariant contractVariant={ContractVariantData} data={CharacteristicsInVariantData} selectedItem={selectedCharacteristicInVariant} addCharacteristic={() => onOpenAddCharacteristic()} open={openRemoveCharacteristicInVariant} onClose={onCloseRemoveCharacteristicInVariant} onSubmit={onSubmitRemoveCharacteristicInVariant} removeButtonOnClick={(characteristic) => {
             setSelectedCharacteristicInVariant(characteristic);
             onOpenRemoveCharacteristicInVariant();
         }} />
@@ -151,13 +151,14 @@ export default function () {
 export interface CharacteristicsInContractVariantProps extends BoxProps {
     contractVariant: ContractVariant;
     data: CharacteristicInContractVariant[];
+    selectedItem: CharacteristicInContractVariant | null;
     addCharacteristic?: (item: ContractVariant) => void;
     removeButtonOnClick?: (item: CharacteristicInContractVariant) => void;
     open: boolean;
     onClose: () => void;
     onSubmit: () => void;
 }
-export function CharacteristicsInContractVariant({ contractVariant, addCharacteristic, removeButtonOnClick, open, onClose, onSubmit, data, ...props }: CharacteristicsInContractVariantProps) {
+export function CharacteristicsInContractVariant({ contractVariant, selectedItem, addCharacteristic, removeButtonOnClick, open, onClose, onSubmit, data, ...props }: CharacteristicsInContractVariantProps) {
     return <Box p="1em" {...props}>
         <Text fontSize="xl" mr="0.5em" fontWeight="bold">Characteristics</Text>
         <LaunchpadButton onClick={() => addCharacteristic?.(contractVariant)} icon={FaPlus} text="Add Characteristic" color="white" bg="none" p="0" fontSize="sm"
@@ -177,7 +178,7 @@ export function CharacteristicsInContractVariant({ contractVariant, addCharacter
                                 _active={{ border: "none" }}
                                 _focus={{ boxShadow: "none", outline: "none" }} />
                         </Flex>
-                        <DeleteConfirmationDialog open={open} onClose={onClose} title={`Delete Contract Variant (${characteristic.contractCharacteristic.name})`} onSubmit={onSubmit} />
+                        <DeleteConfirmationDialog open={open} onClose={onClose} title={`Delete Characteristic In Variant (${selectedItem?.contractCharacteristic.name})`} onSubmit={onSubmit} />
                     </Box>
                 ))}
             </Flex>
