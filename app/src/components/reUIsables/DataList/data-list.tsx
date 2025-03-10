@@ -1,6 +1,17 @@
 import { Box, Flex } from "@chakra-ui/react"
 import { Link } from "react-router-dom";
 import { Text } from "@chakra-ui/react";
+import { JSX } from "react";
+
+export interface DataListItemProps<T>
+{
+    dataKey:keyof(T)
+    label?:string
+    dataType?:"text"|"number"|"amount",
+    url?:string
+    formatCell?:(s:T[keyof T])=>JSX.Element
+    format?:(s:string)=>string
+}
 
 export interface DataListProps {
     columns?: [label: string, value: string, link?: string][]

@@ -31,7 +31,6 @@
             "Image": "iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAIAAAD/gAIDAAAA5klEQVR4nO3QQQkAIADAQDW50a3gXiLcJRibYw8urdcBPzErMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCs4MosBSL/dChIAAAAASUVORK5CYII="
         }
     ],
-    "ContractCharacteristics": null,
     "contractCharacteristics": [
         {
             "id": 1,
@@ -263,6 +262,127 @@
             "contractTypeId": 14
         }
     ],
+    "ContractFeatures": [
+        {
+            "name": "Access",
+            "dataType": "boolean",
+            "description": "Defines whether the token has access control mechanisms."
+        },
+        {
+            "name": "Anti-Whale",
+            "dataType": "boolean",
+            "description": "Limits large transactions to prevent market manipulation."
+        },
+        {
+            "name": "Auto-Swap",
+            "dataType": "boolean",
+            "description": "Allows automatic token swapping upon transaction execution."
+        },
+        {
+            "name": "Burn",
+            "dataType": "boolean",
+            "description": "Allows token burning to reduce supply."
+        },
+        {
+            "name": "Circulation",
+            "dataType": "boolean",
+            "description": "Indicates whether the token has circulation controls."
+        },
+        {
+            "name": "Decimals",
+            "dataType": "integer",
+            "description": "Defines the decimal precision of the token."
+        },
+        {
+            "name": "Enumerable",
+            "dataType": "boolean",
+            "description": "Provides enumeration capabilities for NFTs."
+        },
+        {
+            "name": "Flash Mint",
+            "dataType": "boolean",
+            "description": "Enables the ability to mint tokens within a single transaction, provided they are returned."
+        },
+        {
+            "name": "Transfer Hooks",
+            "dataType": "boolean",
+            "description": "Allows execution of logic before or after a transfer operation."
+        },
+        {
+            "name": "Liquidity Management",
+            "dataType": "boolean",
+            "description": "Provides built-in liquidity management mechanisms."
+        },
+        {
+            "name": "Mint",
+            "dataType": "boolean",
+            "description": "Allows new tokens to be minted."
+        },
+        {
+            "name": "Name",
+            "dataType": "string",
+            "description": "The human-readable name of the token."
+        },
+        {
+            "name": "Pausable",
+            "dataType": "boolean",
+            "description": "Allows pausing of token transfers."
+        },
+        {
+            "name": "Permission",
+            "dataType": "boolean",
+            "description": "Indicates whether the token has permission-based access controls."
+        },
+        {
+            "name": "Premint",
+            "dataType": "boolean",
+            "description": "Allows a predefined number of tokens to be minted at deployment."
+        },
+        {
+            "name": "Supply Control",
+            "dataType": "boolean",
+            "description": "Allows for adjusting the supply of the token."
+        },
+        {
+            "name": "Token Recovery",
+            "dataType": "boolean",
+            "description": "Enables recovering lost tokens under specific conditions."
+        },
+        {
+            "name": "Reflections",
+            "dataType": "boolean",
+            "description": "Enables passive income distribution to holders based on transaction volume."
+        },
+        {
+            "name": "Symbol",
+            "dataType": "string",
+            "description": "The short symbol representing the token (e.g., ETH, BTC)."
+        },
+        {
+            "name": "Tax",
+            "dataType": "boolean",
+            "description": "Applies a transaction tax that may be distributed, burned, or allocated."
+        },
+        {
+            "name": "Upgradeability",
+            "dataType": "boolean",
+            "description": "Indicates whether the token contract can be upgraded."
+        },
+        {
+            "name": "URI",
+            "dataType": "string",
+            "description": "Defines a unique resource identifier for metadata storage."
+        },
+        {
+            "name": "URI Storage",
+            "dataType": "boolean",
+            "description": "Allows storage and management of URIs for metadata."
+        },
+        {
+            "name": "Votes",
+            "dataType": "boolean",
+            "description": "Enables governance voting mechanisms for token holders."
+        }
+    ]
 
-    "ContractFeatures": []
 }
