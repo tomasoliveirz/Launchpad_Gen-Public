@@ -8,6 +8,7 @@ using Moongy.RD.LaunchPad.DataAccess.Base.Interfaces;
 using Moongy.RD.LaunchPad.DataAccess.DataAccessObjects;
 using Moongy.RD.LaunchPad.DataAccess.Interfaces;
 using Scalar.AspNetCore;
+using WebApi.DataSeed;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING") ??
@@ -70,8 +71,7 @@ if (app.Environment.IsDevelopment())
 {
     using var scope = app.Services.CreateScope();
     var context = scope.ServiceProvider.GetRequiredService<LaunchpadContext>();
-    context.Database.EnsureCreated();
-    LaunchpadSeeder.Seed(context);
+    await DataSeeder.Seed(context);
 
     app.MapOpenApi();
     app.MapScalarApiReference(o =>

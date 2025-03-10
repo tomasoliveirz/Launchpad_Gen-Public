@@ -1,0 +1,268 @@
+{
+    "Networks": [
+        {
+            "Id": 1,
+            "Name": "Ethereum",
+            "Description": "Uma blockchain descentralizada de código aberto com contratos inteligentes.",
+            "Image": "data:image/webp;base64,UklGRu4EAABXRUJQVlA4TOEEAAAvP8APEBWHgrQNmNa/7R0LETEBgOTio2RNHJKybXJs5brBAwY4p8g55zDfzfeuwAeWbzpVK3YlAAOFlUyRdu2E9W/gSkAAltBwdmiA53HUSJIj7Z7jz+2g+I7sB6RIkhxJC2A56C3P7uxT/P+HC5Ik26atd/Ft27bR/xE2JmDbZtu2/x+Abdu2bXNNANzatlUrZZI6XNzd3eWtCx3QIhU8gZDwInXY7oCU8A7K4IU/J9MCKIAGaIGQjEo8PUW4aSNJkPgzOJAX3v+4OoLUSJIkOT0zy6PSoq6s78Khbdu0M75j27btzrbt1LbR27bZpbNt27azJyBfdY63qc8NHWzv/SPMtSJ3jXmwnSu1JTnaoPtp4Q+1tdB7apYF6zPfUwkIBc7wUq4B2AS1QMAPY4ByOQEopDCHoRAgEf5ScA+WYUATjhOQAkAvQzAIVwzQqIyGHwgNgrjCqyklwTZohEAJwqS4QlYLSmlYAiRfCJAK/6YsCR7BNgCi/aF0Rgv6piLkLimM0CIroIZfiHSHeMKbqYgEu4iWM4oQTGkfLSifWiyu1oUImRVTMTU8gYMrf6UHZ8otIBhCRBxxxQRtspwVwfoM9lJ/guiTz3/CD/jChyl7QzDaxkPBM7CXBAeg6wYRhTmZEoGkNcFEC127qN3D2TYutXFX8BTs0YIaYHOCIvmTLTPJXu86Oojx7HTFvMIqLrRxW/AESFLDMzg5QYzgwqQtsNjEUBttXcQY78+Oq2qcq7jRwqOClgRjIOYiaTJDl7QJ5lro7+A/xnh/nxqjqv5ca+EhaMEfxD+8/BEePAHXG2C6hZ4OmteI8T4zY4yqOtPGFQv3Ba/hcBV9BxsiuSrLE210dXAf431uzhhVdXzJwo8n0vQUjsUNt007uwf3Md4XPMAYo8rq/8X28A1bdnFVe6TGPXW3rvu6jwdSNayeWU2bdaROvA6xMG4SroKr6V/e3frnPh6uhtVXq43WMZrtD5XPjhILC0kEQIbfIAa3x+3WUW/33QerYfXX6rhVV9vDnquGBbSmDffigA3J8yfa/4s7NF0T3FrBrYv/AvoA8y1qWN23GmNVNDc+HwJUkEzwfbboxQWvVJE1GEbskiZdcLtUsIAu+FbvVcPqo9UKq9qn9pAJAhAA29D8Nj2Czwk8Qx2obxViInz/YE29h9Ufq71WbWwPa2JYwBp64fc36K8cF4bLJHSQL8ERJL/83cTz7uNKgBJkwrUeCo7nHVjdtBo83wrm6gz5E8rgQfAGbukUhGFMgr8b8PBXjMGtKW5t4vZ6a/Y+z9Q7q7lWVc5+70SCCMTAvlpQsjph8xIopnApE7xBG+hjkEPrmrV6z+2cms1s5gR2cIXRT2rBNJFLt/4GEeLhx1AwwQXkUkTd808IuQpFDKERXgGthhvEKh0DO/TIZFaBRQhmk3VCCtLhVM0M1PALKdMf5Sn4ow7bMskEn6sytDYzB//dUgtaQTB9I/6ft5JOVS5bEgZ6A4bpHOihVCYpp+EDvNM9RwwmZXktqHi2YfcXwBJu8lowB4oZ0BskSIVfyxLcgX2GBE4YlKX6P2QwoWMEog37Sgk6QTijQgi8p36BaYZ9hkqVS/gE/wwMkv7MlktGLYYzUtjGZqn5sM7SNJQz9O6KMt+M352PSwafaNNezIeOdggOAA=="
+        },
+        {
+            "Id": 2,
+            "Name": "Bitcoin",
+            "Description": "A primeira criptomoeda descentralizada baseada em blockchain.",
+            "Image": "https://assets.coingecko.com/coins/images/1/standard/bitcoin.png?1696501400"
+        },
+        {
+            "Id": 3,
+            "Name": "Solana",
+            "Description": "Uma blockchain de alto desempenho projetada para escalabilidade e baixa latência.",
+            "Image": "iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAIAAAD/gAIDAAAA6ElEQVR4nO3QwQ3AIBDAsIP9d25XIC+EZE8QZc18w5l9O+AlZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBWYFZgVmBT+IYAHHLHkdEgAAAABJRU5ErkJggg=="
+        },
+        {
+            "Id": 4,
+            "Name": "Polygon",
+            "Description": "Uma solução de escalabilidade para Ethereum, focada em redes secundárias.",
+            "Image": "iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAIAAAD/gAIDAAAA60lEQVR4nO3QQQ3AIADAQMC/qP0RxSysL7LkTkHTeZ49+GbdDvgTswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzghf8dANSaSr5swAAAABJRU5ErkJggg=="
+        },
+        {
+            "Id": 5,
+            "Name": "Cardano",
+            "Description": "Uma blockchain proof-of-stake com foco em sustentabilidade e interoperabilidade.",
+            "Image": "iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAIAAAD/gAIDAAAA5klEQVR4nO3QQQkAIADAQDW50a3gXiLcJRibYw8urdcBPzErMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCswKzArMCs4MosBSL/dChIAAAAASUVORK5CYII="
+        }
+    ],
+    "ContractCharacteristics": null,
+    "contractCharacteristics": [
+        {
+            "id": 1,
+            "name": "Burn",
+            "description": ""
+        },
+        {
+            "id": 2,
+            "name": "Mint",
+            "description": ""
+        },
+        {
+            "id": 3,
+            "name": "Decimals",
+            "description": ""
+        },
+        {
+            "id": 4,
+            "name": "Tax",
+            "description": ""
+        },
+        {
+            "id": 5,
+            "name": "Permit",
+            "description": ""
+        },
+        {
+            "id": 6,
+            "name": "Token Recovery",
+            "description": ""
+        },
+        {
+            "id": 7,
+            "name": "Reflection",
+            "description": ""
+        },
+        {
+            "id": 8,
+            "name": "Liquidity Management",
+            "description": ""
+        },
+        {
+            "id": 9,
+            "name": "Auto-swap",
+            "description": ""
+        },
+        {
+            "id": 10,
+            "name": "Access",
+            "description": ""
+        },
+        {
+            "id": 11,
+            "name": "Supply",
+            "description": ""
+        }
+    ],
+    "contractTypes": [
+        {
+            "id": 11,
+            "name": "Fungible Token",
+            "description": "Um token fungível que pode ser trocado por outro do mesmo tipo, como ERC-20."
+        },
+        {
+            "id": 12,
+            "name": "Advanced Fungible Token",
+            "description": "Um token fungível avançado, como ERC-777, que permite funcionalidades adicionais, como hooks em transações."
+        },
+        {
+            "id": 13,
+            "name": "Non-Fungible Token",
+            "description": "Um token não fungível que representa um ativo único, como ERC-721."
+        },
+        {
+            "id": 14,
+            "name": "Semi-Fungible Token",
+            "description": "Um token semi-fungível que pode atuar como fungível ou não fungível, como ERC-1155."
+        }
+    ],
+    "contractVariants": [
+        {
+            "id": 1,
+            "name": "Basic Fungible Token",
+            "description": "Contrato simples sem funcionalidades acrescentadas.",
+            "contractTypeId": 11
+        },
+        {
+            "id": 2,
+            "name": "Basic Advanced Fungible Token",
+            "description": "Contrato simples sem funcionalidades acrescentadas.",
+            "contractTypeId": 12
+        },
+        {
+            "id": 3,
+            "name": "Basic Non-Fungible Token",
+            "description": "Contrato simples sem funcionalidades acrescentadas.",
+            "contractTypeId": 13
+        },
+        {
+            "id": 4,
+            "name": "Basic Semi-Fungible Token",
+            "description": "Contrato simples sem funcionalidades acrescentadas.",
+            "contractTypeId": 14
+        },
+        {
+            "id": 5,
+            "name": "Common Fungible Token",
+            "description": "Tem funcionalidades de controlo de supply e de recuperação de tokens. Tem um limite máximo de tokens.",
+            "contractTypeId": 11
+        },
+        {
+            "id": 6,
+            "name": "Common Advanced Fungible Token",
+            "description": "Tem funcionalidades de controlo de supply e de recuperação de tokens. Tem um limite máximo de tokens.",
+            "contractTypeId": 12
+        },
+        {
+            "id": 7,
+            "name": "Common Semi-Fungible Token",
+            "description": "Tem funcionalidades de controlo de supply e de recuperação de tokens. Tem um limite máximo de tokens.",
+            "contractTypeId": 14
+        },
+        {
+            "id": 8,
+            "name": "Tax Fungible Token",
+            "description": "Aplica uma taxa a cada transação.",
+            "contractTypeId": 11
+        },
+        {
+            "id": 9,
+            "name": "Tax Advanced Fungible Token",
+            "description": "Aplica uma taxa a cada transação.",
+            "contractTypeId": 12
+        },
+        {
+            "id": 10,
+            "name": "Deflation Fungible Token",
+            "description": "Reduz a quantidade de tokens disponíveis.",
+            "contractTypeId": 11
+        },
+        {
+            "id": 11,
+            "name": "Deflation Advanced Fungible Token",
+            "description": "Reduz a quantidade de tokens disponíveis.",
+            "contractTypeId": 12
+        },
+        {
+            "id": 12,
+            "name": "Deflation Non-Fungible Token",
+            "description": "Reduz a quantidade de tokens disponíveis.",
+            "contractTypeId": 13
+        },
+        {
+            "id": 13,
+            "name": "Deflation Semi-Fungible Token",
+            "description": "Reduz a quantidade de tokens disponíveis.",
+            "contractTypeId": 14
+        },
+        {
+            "id": 14,
+            "name": "Liquidity Fungible Token",
+            "description": "Aplica uma taxa a cada transação e utiliza o valor taxado para adicionar liquidez ao token.",
+            "contractTypeId": 11
+        },
+        {
+            "id": 15,
+            "name": "Liquidity Advanced Fungible Token",
+            "description": "Aplica uma taxa a cada transação e utiliza o valor taxado para adicionar liquidez ao token.",
+            "contractTypeId": 12
+        },
+        {
+            "id": 16,
+            "name": "Buyback Fungible Token",
+            "description": "Aplica uma taxa a cada transação e utiliza o valor taxado para comprar e queimar o token.",
+            "contractTypeId": 11
+        },
+        {
+            "id": 17,
+            "name": "Buyback Advanced Fungible Token",
+            "description": "Aplica uma taxa a cada transação e utiliza o valor taxado para comprar e queimar o token.",
+            "contractTypeId": 12
+        },
+        {
+            "id": 18,
+            "name": "Reflection Fungible Token",
+            "description": "Aplica uma taxa a cada transação e utiliza o valor para distribuir entre outros detentores do token.",
+            "contractTypeId": 11
+        },
+        {
+            "id": 19,
+            "name": "Reflection Advanced Fungible Token",
+            "description": "Aplica uma taxa a cada transação e utiliza o valor para distribuir entre outros detentores do token.",
+            "contractTypeId": 12
+        },
+        {
+            "id": 20,
+            "name": "Unlimited Fungible Token",
+            "description": "Semelhante ao common, mas é controlado através de categorias de utilizadores em vez de um utilizador específico e permite alterar o saldo de uma conta que não tenha allowance.",
+            "contractTypeId": 11
+        },
+        {
+            "id": 21,
+            "name": "Unlimited Advanced Fungible Token",
+            "description": "Semelhante ao common, mas é controlado através de categorias de utilizadores em vez de um utilizador específico e permite alterar o saldo de uma conta que não tenha allowance.",
+            "contractTypeId": 12
+        },
+        {
+            "id": 22,
+            "name": "Custom Fungible Token",
+            "description": "Variante personalizada para Fungible Token.",
+            "contractTypeId": 11
+        },
+        {
+            "id": 23,
+            "name": "Custom Advanced Fungible Token",
+            "description": "Variante personalizada para Advanced Fungible Token.",
+            "contractTypeId": 12
+        },
+        {
+            "id": 24,
+            "name": "Custom Non-Fungible Token",
+            "description": "Variante personalizada para Non-Fungible Token.",
+            "contractTypeId": 13
+        },
+        {
+            "id": 25,
+            "name": "Custom Semi-Fungible Token",
+            "description": "Variante personalizada para Semi-Fungible Token.",
+            "contractTypeId": 14
+        }
+    ],
+
+    "ContractFeatures": []
+}

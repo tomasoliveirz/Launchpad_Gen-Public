@@ -73,11 +73,11 @@ export default function () {
 
     const breadcrumbs = getBreadcrumbs(pages, location.pathname);
     const formatDescription = (s?: BlockchainNetwork[keyof BlockchainNetwork]) => s ? <TextModal text={s as string} maxCharacters={20} /> : <></>
-    const formatImage = (s?: BlockchainNetwork[keyof BlockchainNetwork]) => s ? <Image height="60px" src={s as string} alt={s as string} /> : <Box fontSize="50px"><FaQuestion /></Box>
+    const formatImage = (s?: BlockchainNetwork[keyof BlockchainNetwork]) => s ? <Image w="2em" h="auto" src={s as string} alt={s as string} /> : <Box fontSize="2em"><FaQuestion /></Box>
 
     const columns: EntityColumnHeaderProps<BlockchainNetwork>[] = [{
         dataKey: "image",
-        label: "",
+        label: "Image",
         searchable: false,
         formatCell: formatImage,
         displayable: true,

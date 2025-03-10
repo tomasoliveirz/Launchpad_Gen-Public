@@ -16,4 +16,5 @@ public class CharacteristicInContractVariant : Entity
     public virtual ContractVariant? ContractVariant { get; set; }
 
     public virtual ContractCharacteristic? ContractCharacteristic { get; set; }
+    public string Value { get; set; }
 }
