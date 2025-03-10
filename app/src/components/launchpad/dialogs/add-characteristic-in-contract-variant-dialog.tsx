@@ -38,7 +38,6 @@ export function CharacteristicInContractVariantDialog({ open, onClose, title, on
     }, [defaultValues, setValue]);
 
     const contentRef = useRef<HTMLDivElement>(null)
-    console.log(defaultValues);
 
     return <DialogRoot lazyMount open={open} placement="center">
         <DialogBackdrop />
@@ -65,6 +64,16 @@ export function CharacteristicInContractVariantDialog({ open, onClose, title, on
                             selectOnValueChange(value);
                             setValue("contractCharacteristic.uuid", value);
                         }} />
+                    </Field>
+                    <Field
+                        mt="2em"
+                        label="Value"
+                        invalid={!!errors.Value}
+                        errorText={errors.Value?.message}
+                    >
+                        <Input
+                            {...register("Value")}
+                        />
                     </Field>
                 </DialogBody>
                 <DialogFooter>

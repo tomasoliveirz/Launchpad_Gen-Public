@@ -20,6 +20,7 @@ import { CharacteristicInContractVariant } from "@/models/CharacteristicInContra
 import { ContractCharacteristic } from "@/models/ContractCharacteristic";
 import { characteristicInVariantApi } from "@/services/launchpad/characteristicsInContractVariantService";
 import { FaXmark } from "react-icons/fa6";
+import { TextModal } from "@/components/reUIsables/Modals/text-modal";
 
 export default function () {
     const URL_SLUG = "ContractVariants";
@@ -97,10 +98,12 @@ export default function () {
 
     const onSubmitAddCharacteristic = async (data: CharacteristicInContractVariant) => {
         try {
+            console.log("data", data)
             await createCharacteristicInContractVariant(data).unwrap();
             LaunchpadSuccessToaster("Contract Characteristic Added Successfully");
             refetchCharacteristics();
         } catch (error) {
+            console.log(error)
             LaunchpadErrorToaster("Contract Characteristic Added Failed");
         }
         onCloseAddCharacteristic();
@@ -139,7 +142,8 @@ export default function () {
         {
             dataKey: "contractType",
             label: "Contract Type",
-            url: `/settings/contract/types/${ContractVariantData.contractType.uuid}`
+            url: `/settings/contract/types/${ContractVariantData.contractType.uuid}`,
+            formatCell: (t: string | ContractType | undefined) => typeof (t) === "object" ? <Text>{(t as ContractType).name}</Text> : <></>,
         }
     ];
 
@@ -169,29 +173,64 @@ export interface CharacteristicsInContractVariantProps extends BoxProps {
     onSubmit: () => void;
 }
 export function CharacteristicsInContractVariant({ contractVariant, selectedItem, addCharacteristic, removeButtonOnClick, open, onClose, onSubmit, data, ...props }: CharacteristicsInContractVariantProps) {
-    return <Box p="1em" {...props}>
-        <Text fontSize="xl" mr="0.5em" fontWeight="bold">Characteristics</Text>
-        <LaunchpadButton onClick={() => addCharacteristic?.(contractVariant)} icon={FaPlus} text="Add Characteristic" color="white" bg="none" p="0" fontSize="sm"
-            border="none"
-            _hover={{ border: "none" }}
-            _active={{ border: "none" }}
-            _focus={{ boxShadow: "none", outline: "none" }}
-        />
-        <Box {...props}>
-            <Flex>
-                {data.map((characteristic) => (
-                    <Box me="1em" w="6em" key={characteristic.uuid} bg="bg.secondary">
-                        <Flex justifyContent="space-between">
-                            <Text title={characteristic.contractCharacteristic.description} fontSize="md" ps="0.5em">{characteristic.contractCharacteristic.name}</Text>
-                            <LaunchpadButton onClick={() => removeButtonOnClick?.(characteristic)} icon={FaXmark} color="white" bg="none" p="0" h="2em" fontSize="xs" border="none"
+    return (
+        <Box p="1em" {...props}>
+            <Text fontSize="md" mr="0.5em" fontWeight="bold">Characteristics</Text>
+            <LaunchpadButton
+                onClick={() => addCharacteristic?.(contractVariant)}
+                icon={FaPlus}
+                text="Add Characteristic"
+                color="white"
+                bg="none"
+                p="0"
+                fontSize="sm"
+                border="none"
+                _hover={{ border: "none" }}
+                _active={{ border: "none" }}
+                _focus={{ boxShadow: "none", outline: "none" }}
+            />
+            <Box {...props}>
+                <Flex wrap="wrap" gap="0.5em">
+                    {data.map((characteristic) => (
+                        <Box
+                            key={characteristic.uuid}
+                            bg="bg.secondary"
+                            display="inline-flex"
+                            alignItems="center"
+                            minWidth="fit-content"
+                            maxWidth="100%"
+                            p="0.2em"
+                        >
+                            <TextModal
+                                text={`${characteristic.contractCharacteristic.name} - ${characteristic.contractCharacteristic.description}`}
+                                maxCharacters={(characteristic.contractCharacteristic.name!.length + 3)} 
+                                fontSize="sm"
+                                ps="0.5em"
+                                whiteSpace="nowrap"
+                            />
+                            <LaunchpadButton
+                                onClick={() => removeButtonOnClick?.(characteristic)}
+                                icon={FaXmark}
+                                color="white"
+                                bg="none"
+                                p="0"
+                                h="2em"
+                                fontSize="xs"
+                                border="none"
                                 _hover={{ border: "none" }}
                                 _active={{ border: "none" }}
-                                _focus={{ boxShadow: "none", outline: "none" }} />
-                        </Flex>
-                        <DeleteConfirmationDialog open={open} onClose={onClose} title={`Delete Characteristic In Variant (${selectedItem?.contractCharacteristic.name})`} onSubmit={onSubmit} />
-                    </Box>
-                ))}
-            </Flex>
+                                _focus={{ boxShadow: "none", outline: "none" }}
+                            />
+                        </Box>
+                    ))}
+                </Flex>
+                <DeleteConfirmationDialog
+                    open={open}
+                    onClose={onClose}
+                    title={`Delete Characteristic In Variant (${selectedItem?.contractCharacteristic.name})`}
+                    onSubmit={onSubmit}
+                />
+            </Box>
         </Box>
-    </Box>
+    );
 }

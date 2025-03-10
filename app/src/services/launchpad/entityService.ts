@@ -101,7 +101,4 @@ export function useEntity<T>(slug:string)
 
 }
 
-
-
-
 export const EntityApi = createApi(basePath);
