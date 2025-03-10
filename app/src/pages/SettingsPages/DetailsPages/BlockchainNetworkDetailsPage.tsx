@@ -6,14 +6,13 @@ import { useEntity } from "@/services/launchpad/entityService";
 import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-dialog";
 import { LaunchpadErrorToaster, LaunchpadSuccessToaster } from "@/components/reUIsables/Toaster/toaster";
 import { useEffect } from "react";
-import { Toaster } from "@/components/ui/toaster"
 import { BlockchainNetworksDialog } from "@/components/launchpad/dialogs/blockchain-network-dialog";
 import { PageWrapper } from "@/components/reUIsables/PageWrapper/page-wrapper";
 import { FaNetworkWired } from "react-icons/fa";
 import { DeleteButton, EditButton } from "@/components/launchpad/buttons/button";
 import { BlockchainNetworkDetailNavigationItem, pages } from "@/constants/pages";
 import { getBreadcrumbs } from "@/components/reUIsables/Breadcrumbs/breadcrumbs";
-import { DataList } from "@/components/reUIsables/DataList/data-list";
+import { DataList, DataListItemProps } from "@/components/reUIsables/DataList/data-list";
 
 export default function () {
     const URL_SLUG = "BlockchainNetworks";
@@ -76,8 +75,13 @@ export default function () {
         icon: BlockchainNetworkData.image ?? FaNetworkWired
     }]);
 
+    const columns: DataListItemProps<BlockchainNetwork>[] = [{
+            dataKey: "description",
+            label: "Description"
+        }];
+
     return <PageWrapper title={BlockchainNetworkData.name ?? ""} breadcrumbsProps={{ items: breadcrumbs }} icon={BlockchainNetworkData.image ?? FaNetworkWired} rightSideElement={rightElement}>
-        <DataList columns={[["Description", BlockchainNetworkData.description as string]]} item={BlockchainNetworkData} />
+        <DataList columns={columns} item={BlockchainNetworkData} />
         <BlockchainNetworksDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={BlockchainNetworkData} title="Edit Blockchain Network" />
         <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Blockchain Network (${BlockchainNetworkData?.name})`} onSubmit={onSubmitRemove} />
     </PageWrapper>

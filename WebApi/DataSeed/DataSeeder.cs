@@ -41,6 +41,7 @@ public static class DataSeeder
         await SeedEntitiesAsync(context, data.Networks);
         await SeedEntitiesAsync(context, data.ContractTypes);
         await SeedEntitiesAsync(context, data.ContractVariants);
+        await SeedEntitiesAsync(context, data.ContractCharacteristics);
 
 
     }

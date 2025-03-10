@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import { DeleteButton, EditButton } from "@/components/launchpad/buttons/button";
 import { ContractTypeDetailNavigationItem, pages } from "@/constants/pages";
 import { getBreadcrumbs } from "@/components/reUIsables/Breadcrumbs/breadcrumbs";
-import { DataList } from "@/components/reUIsables/DataList/data-list";
+import { DataList, DataListItemProps } from "@/components/reUIsables/DataList/data-list";
 import { EntityWithNameAndDescriptionDialog } from "@/components/launchpad/dialogs/entity-with-name-and-description-dialog";
 import { PageWrapper } from "@/components/reUIsables/PageWrapper/page-wrapper";
 import { FaScroll } from "react-icons/fa";
@@ -69,14 +69,20 @@ export default function () {
         <DeleteButton w="100%" onClick={onOpenRemove} />
     </VStack>
 
+
     const breadcrumbs = getBreadcrumbs(pages, location.pathname, [{
         ...ContractTypeDetailNavigationItem,
         label: ContractTypeData.name ?? "",
         icon: FaScroll
     }]);
 
+    const columns: DataListItemProps<ContractType>[] = [{
+        dataKey: "description",
+        label: "Description",
+    }];
+    
     return <PageWrapper title={ContractTypeData.name ?? ""} breadcrumbsProps={{ items: breadcrumbs }} icon={FaScroll} rightSideElement={rightElement}>
-        <DataList columns={[["Description", ContractTypeData.description as string]]} item={ContractTypeData} />
+        <DataList columns={columns} item={ContractTypeData} />
         <EntityWithNameAndDescriptionDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={ContractTypeData} title="Edit Contract Type" />
         <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Contract Type (${ContractTypeData?.name})`} onSubmit={onSubmitRemove} />
     </PageWrapper>

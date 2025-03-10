@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { DeleteButton, EditButton, LaunchpadButton } from "@/components/launchpad/buttons/button";
 import { ContractVariantDetailNavigationItem, pages } from "@/constants/pages";
 import { getBreadcrumbs } from "@/components/reUIsables/Breadcrumbs/breadcrumbs";
-import { DataList } from "@/components/reUIsables/DataList/data-list";
+import { DataList, DataListItemProps } from "@/components/reUIsables/DataList/data-list";
 import { ContractVariantDialog } from "@/components/launchpad/dialogs/contract-variants-dialog";
 import { ContractType } from "@/models/ContractType";
 import { IoGitBranchOutline } from "react-icons/io5";
@@ -131,10 +131,20 @@ export default function () {
         icon: IoGitBranchOutline
     }]);
 
+    const columns: DataListItemProps<ContractVariant>[] = [
+        {
+            dataKey: "description",
+            label: "Description",
+        },
+        {
+            dataKey: "contractType",
+            label: "Contract Type",
+            url: `/settings/contract/types/${ContractVariantData.contractType.uuid}`
+        }
+    ];
+
     return <PageWrapper title={ContractVariantData.name ?? ""} breadcrumbsProps={{ items: breadcrumbs }} icon={IoGitBranchOutline} rightSideElement={rightElement}>
-        <DataList columns={[
-            ["Description", ContractVariantData.description as string],
-            ["Contract Type", ContractVariantData.contractType.name as string, `/settings/contract/types/${ContractVariantData.contractType.uuid}`]]}
+        <DataList columns={columns}
             item={ContractVariantData}
         />
         <CharacteristicsInContractVariant contractVariant={ContractVariantData} data={CharacteristicsInVariantData} selectedItem={selectedCharacteristicInVariant} addCharacteristic={() => onOpenAddCharacteristic()} open={openRemoveCharacteristicInVariant} onClose={onCloseRemoveCharacteristicInVariant} onSubmit={onSubmitRemoveCharacteristicInVariant} removeButtonOnClick={(characteristic) => {

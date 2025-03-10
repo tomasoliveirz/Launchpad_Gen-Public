@@ -4,5 +4,6 @@ import { Entity } from "./Entity";
 
 export type CharacteristicInContractVariant = Entity & {
     contractCharacteristic: ContractCharacteristic,
-    contractVariant: ContractVariant
+    contractVariant: ContractVariant,
+    Value: string
 }
