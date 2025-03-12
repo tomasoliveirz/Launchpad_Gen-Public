@@ -55,12 +55,12 @@ export function EntityHeaderCell<T>({label,orderable, dataKey, currentSortKey, c
     
     return <Table.ColumnHeader {...props}>
                 {orderable ? 
-                <HStack onClick={sortOperation}>
+                <HStack onClick={sortOperation}  whiteSpace="nowrap">
                     {headerLabel}
                     <Spacer/>
                     {orderIcon}
                 </HStack>:
-                <HStack>{headerLabel}</HStack>    
+                <HStack whiteSpace="nowrap">{headerLabel}</HStack>    
             }
             </Table.ColumnHeader>
 }
@@ -69,8 +69,8 @@ export function EntityHeaderCell<T>({label,orderable, dataKey, currentSortKey, c
 export function EntityRowCell<T>({record, link, format, formatCell,dataKey, ...props}:EntityColumnCellProps<T>)
 {
     const content= record[dataKey] as string;
-    const cellContent = formatCell ? formatCell(record[dataKey]) : <Text>{format ? format(content) : content}</Text>;
-    return <Table.Cell {...props}>
+    const cellContent = formatCell ? formatCell(record[dataKey]) : <Text whiteSpace="nowrap">{format ? format(content) : content}</Text>;
+    return <Table.Cell  {...props}>
                 {link ? <Link to={link(record)}>{cellContent}</Link> : cellContent}
             </Table.Cell>
 }
