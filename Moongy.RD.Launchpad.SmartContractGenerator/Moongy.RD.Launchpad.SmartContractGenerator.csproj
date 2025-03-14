@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ContractGenerator\Contracts\Moongy.RD.Launchpad.ContractGenerator.Contracts.AdvancedFungibleToken\Moongy.RD.Launchpad.ContractGenerator.Contracts.AdvancedFungibleToken.csproj" />
+    <ProjectReference Include="..\ContractGenerator\Contracts\Moongy.RD.Launchpad.ContractGenerator.Contracts.Core\Moongy.RD.Launchpad.ContractGenerator.Contracts.Core.csproj" />
+    <ProjectReference Include="..\ContractGenerator\Contracts\Moongy.RD.Launchpad.ContractGenerator.Contracts.FungibleToken\Moongy.RD.Launchpad.ContractGenerator.Contracts.FungibleToken.csproj" />
+    <ProjectReference Include="..\ContractGenerator\Contracts\Moongy.RD.Launchpad.ContractGenerator.Contracts.NonFungibleToken\Moongy.RD.Launchpad.ContractGenerator.Contracts.NonFungibleToken.csproj" />
+    <ProjectReference Include="..\ContractGenerator\Contracts\Moongy.RD.Launchpad.ContractGenerator.Contracts.SemiFungibleToken\Moongy.RD.Launchpad.ContractGenerator.Contracts.SemiFungibleToken.csproj" />
+    <ProjectReference Include="..\ContractGenerator\Tokenomics\Moongy.RD.Launchpad.ContractGenerator.Tokenomics.AntiWhale\Moongy.RD.Launchpad.ContractGenerator.Tokenomics.AntiWhale.csproj" />
+    <ProjectReference Include="..\ContractGenerator\Tokenomics\Moongy.RD.Launchpad.ContractGenerator.Tokenomics.Buyback\Moongy.RD.Launchpad.ContractGenerator.Tokenomics.Buyback.csproj" />
+    <ProjectReference Include="..\ContractGenerator\Tokenomics\Moongy.RD.Launchpad.ContractGenerator.Tokenomics.Core\Moongy.RD.Launchpad.ContractGenerator.Tokenomics.Core.csproj" />
+    <ProjectReference Include="..\ContractGenerator\Tokenomics\Moongy.RD.Launchpad.ContractGenerator.Tokenomics.Deflation\Moongy.RD.Launchpad.ContractGenerator.Tokenomics.Deflation.csproj" />
+    <ProjectReference Include="..\ContractGenerator\Tokenomics\Moongy.RD.Launchpad.ContractGenerator.Tokenomics.LiquidityGeneration\Moongy.RD.Launchpad.ContractGenerator.Tokenomics.LiquidityGeneration.csproj" />
+    <ProjectReference Include="..\ContractGenerator\Tokenomics\Moongy.RD.Launchpad.ContractGenerator.Tokenomics.Reflections\Moongy.RD.Launchpad.ContractGenerator.Tokenomics.Reflections.csproj" />
+    <ProjectReference Include="..\ContractGenerator\Tokenomics\Moongy.RD.Launchpad.ContractGenerator.Tokenomics.Tax\Moongy.RD.Launchpad.ContractGenerator.Tokenomics.Tax.csproj" />
+  </ItemGroup>
+
+</Project>
