@@ -5,7 +5,7 @@ using Moongy.RD.LaunchPad.DataAccess.Interfaces;
 
 namespace Moongy.RD.LaunchPad.DataAccess.DataAccessObjects
 {
-    public class GenerationFeatureValueDataAccessObject(LaunchpadContext context) : BaseDataAccessObject<GenerationFeatureValue>(context), IGenerationFeatureValueDataAccessObject
+    public class GenerationResultFeatureValueDataAccessObject(LaunchpadContext context) : BaseDataAccessObject<GenerationResultFeatureValue>(context), IGenerationResultFeatureValueDataAccessObject
     {
     }
 }

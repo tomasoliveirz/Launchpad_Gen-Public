@@ -27,24 +27,22 @@ builder.Services.AddScoped<IBlockchainNetworkDataAccessObject, BlockchainNetwork
 builder.Services.AddScoped<ICharacteristicInContractVariantDataAccessObject, CharacteristicInContractVariantDataAccessObject>();
 builder.Services.AddScoped<IContractCharacteristicDataAccessObject, ContractCharacteristicDataAccessObject>();
 builder.Services.AddScoped<IContractFeatureDataAccessObject, ContractFeatureDataAccessObject>();
-builder.Services.AddScoped<IContractFeatureGroupDataAccessObject, ContractFeatureGroupDataAccessObject>();
 builder.Services.AddScoped<IContractGenerationResultDataAccessObject, ContractGenerationResultDataAccessObject>();
 builder.Services.AddScoped<IContractVariantDataAccessObject, ContractVariantDataAccessObject>();
 builder.Services.AddScoped<IPublishResultDataAccessObject, PublishResultDataAccessObject>();
-builder.Services.AddScoped<IFeatureOnContractFeatureGroupDataAccessObject, FeatureOnContractFeatureGroupDataAccessObject>();
-builder.Services.AddScoped<IGenerationFeatureValueDataAccessObject, GenerationFeatureValueDataAccessObject>();
+builder.Services.AddScoped<IFeatureInContractTypeDataAccessObject, FeatureInContractTypeDataAccessObject>();
+builder.Services.AddScoped<IGenerationResultFeatureValueDataAccessObject, GenerationResultFeatureValueDataAccessObject>();
 
 builder.Services.AddScoped<IContractTypeBusinessObject, ContractTypeBusinessObject>();
 builder.Services.AddScoped<IBlockchainNetworkBusinessObject, BlockchainNetworkBusinessObject>();
 builder.Services.AddScoped<ICharacteristicInContractVariantBusinessObject, CharacteristicInContractVariantBusinessObject>();
 builder.Services.AddScoped<IContractCharacteristicBusinessObject, ContractCharacteristicBusinessObject>();
 builder.Services.AddScoped<IContractFeatureBusinessObject, ContractFeatureBusinessObject>();
-builder.Services.AddScoped<IContractFeatureGroupBusinessObject, ContractFeatureGroupBusinessObject>();
 builder.Services.AddScoped<IContractGenerationResultBusinessObject, ContractGenerationResultBusinessObject>();
 builder.Services.AddScoped<IContractVariantBusinessObject, ContractVariantBusinessObject>();
 builder.Services.AddScoped<IPublishResultBusinessObject, PublishResultBusinessObject>();
-builder.Services.AddScoped<IFeatureOnContractFeatureGroupBusinessObject, FeatureOnContractFeatureGroupBusinessObject>();
-builder.Services.AddScoped<IGenerationFeatureValueBusinessObject, GenerationFeatureValueBusinessObject>();
+builder.Services.AddScoped<IFeatureInContractTypeBusinessObject, FeatureInContractTypeBusinessObject>();
+builder.Services.AddScoped<IGenerationResultFeatureValueBusinessObject, GenerationResultFeatureValueBusinessObject>();
 
 
 

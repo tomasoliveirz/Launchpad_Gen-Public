@@ -6,6 +6,7 @@ namespace Moongy.RD.Launchpad.Data.Entities;
 
 public class PublishResult : Entity
 {
+    public DateOnly CreateAt { get; set; }
 
     public string? Address { get; set; }
 
@@ -17,8 +18,6 @@ public class PublishResult : Entity
     public int ContractGenerationResultId { get; set; }
     public virtual ContractGenerationResult? ContractGenerationResult { get; set; }
     
-
-
     [ForeignKey(nameof(BlockchainNetwork))]
     public int BlockchainNetworkId { get; set; }
     public virtual BlockchainNetwork? BlockchainNetwork { get; set; }

@@ -12,6 +12,8 @@ public class ContractGenerationResult : EntityWithNameAndDescription
 
     public DateOnly CreateAt { get; set; }
 
+    public string? WalletAddress { get; set; }
+
     [ForeignKey(nameof(ContractVariant))]
     public int ContractVariantId { get; set; }
 
@@ -21,6 +23,6 @@ public class ContractGenerationResult : EntityWithNameAndDescription
     public virtual ICollection<PublishResult> PublishResults { get; set; } = [];
 
     [JsonIgnore]
-    public virtual ICollection<GenerationFeatureValue> ContractGenerationFeatureValues { get; set; } = [];
+    public virtual ICollection<GenerationResultFeatureValue> GenerationResultFeatureValue { get; set; } = [];
 
 }

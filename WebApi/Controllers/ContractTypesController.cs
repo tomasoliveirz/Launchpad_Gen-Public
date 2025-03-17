@@ -56,5 +56,14 @@ namespace WebApi.Controllers
             if (result.Exception is InvalidModelException ime) return BadRequest(ime.Message);
             return Problem(result.Exception?.Message ?? "");
         }
+
+        [HttpGet("{uuid}/features")]
+        public async Task<ActionResult<FeatureInContractType>> GetFeaturesInTypeAsync(Guid uuid)
+        {
+            var result = await bo.GetFeaturesInContractType(uuid);
+            if (result.IsSuccessful) return Ok(result.Result);
+            if (result.Exception is NotFoundException nfe) return NotFound(nfe.Id);
+            return Problem(result.Exception?.Message ?? "");
+        }
     }
 }

@@ -21,12 +21,11 @@ public static class DataSeeder
         public List<ContractFeature> ContractFeatures { get; set; }
         public List<ContractCharacteristic> ContractCharacteristics { get; set; }
         public List<ContractVariant> ContractVariants { get; set; }
-        public List<CharacteristicInContractVariant> CharacteristicInContractVariant { get; set; }
+        public List<CharacteristicInContractVariant> CharacteristicInContractVariants { get; set; }
         public List<ContractGenerationResult> GenerationResults { get; set; }
         public List<PublishResult> PublishResults { get; set; }
-        public List<FeatureOnContractFeatureGroup> FeatureOnContractFeatureGroups { get; set; }
-        public List<ContractFeatureGroup> ContractFeatureGroups { get; set; }
-        public List<GenerationFeatureValue> GenerationFeatureValues { get; set; }
+        public List<GenerationResultFeatureValue> GenerationResultFeatureValues { get; set; }
+        public List<FeatureInContractType> FeatureInContractTypes { get; set; }
 
 
     }
@@ -42,6 +41,8 @@ public static class DataSeeder
         await SeedEntitiesAsync(context, data.ContractTypes);
         await SeedEntitiesAsync(context, data.ContractVariants);
         await SeedEntitiesAsync(context, data.ContractCharacteristics);
+        await SeedEntitiesAsync(context, data.ContractFeatures);
+        //await SeedEntitiesAsync(context, data.FeatureInContractTypes);
 
 
     }

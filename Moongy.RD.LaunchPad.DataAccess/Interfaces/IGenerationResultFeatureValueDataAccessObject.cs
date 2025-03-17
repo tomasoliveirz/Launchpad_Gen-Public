@@ -8,7 +8,7 @@ using Moongy.RD.LaunchPad.DataAccess.Base.Interfaces;
 
 namespace Moongy.RD.LaunchPad.DataAccess.Interfaces
 {
-    public interface IGenerationFeatureValueDataAccessObject : IBaseDataAccessObject<GenerationFeatureValue>
+    public interface IGenerationResultFeatureValueDataAccessObject : IBaseDataAccessObject<GenerationResultFeatureValue>
     {
     }
 }

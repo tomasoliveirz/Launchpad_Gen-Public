@@ -1,16 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Moongy.RD.Launchpad.Data.Entities;
-using Moongy.RD.Launchpad.Business.Interfaces;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Moongy.RD.Launchpad.Business.Exceptions;
+using Moongy.RD.Launchpad.Business.Interfaces;
+using Moongy.RD.Launchpad.Data.Entities;
 
 namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FeatureOnContractFeatureGroupsController(IFeatureOnContractFeatureGroupBusinessObject bo) : ControllerBase
+    public class GenerationResultFeatureValuesController(IGenerationResultFeatureValueBusinessObject bo) : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<FeatureOnContractFeatureGroup>>> ListAsync()
+        public async Task<ActionResult<IEnumerable<GenerationResultFeatureValue>>> ListAsync()
         {
             var result = await bo.ListAsync();
             if (result.IsSuccessful) return Ok(result.Result);
@@ -18,11 +19,11 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("new")]
-        public async Task<ActionResult<Guid>> CreateAsync([FromBody] FeatureOnContractFeatureGroup featureOnContractFeatureGroup)
+        public async Task<ActionResult<Guid>> CreateAsync([FromBody] GenerationResultFeatureValue value)
         {
-            var result = await bo.CreateAsync(featureOnContractFeatureGroup, 
-                featureOnContractFeatureGroup.ContractFeature?.Uuid ?? Guid.Empty,
-                featureOnContractFeatureGroup.ContractFeatureGroup?.Uuid ?? Guid.Empty);
+            var result = await bo.CreateAsync(value,
+                value.FeatureInContractType?.Uuid ?? Guid.Empty,
+                value.ContractGenerationResult?.Uuid ?? Guid.Empty);
             if (result.IsSuccessful) return StatusCode(201, result.Result);
             if (result.Exception is InvalidModelException ime) return BadRequest(ime.Message);
             return Problem(result.Exception?.Message ?? "");
@@ -38,7 +39,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("{uuid}")]
-        public async Task<ActionResult<FeatureOnContractFeatureGroup>> GetAsync(Guid uuid)
+        public async Task<ActionResult<GenerationResultFeatureValue>> GetAsync(Guid uuid)
         {
             var result = await bo.GetAsync(uuid);
             if (result.IsSuccessful) return Ok(result.Result);
@@ -47,11 +48,11 @@ namespace WebApi.Controllers
         }
 
         [HttpPut("{uuid}")]
-        public async Task<ActionResult> UpdateAsync(Guid uuid, FeatureOnContractFeatureGroup featureOnContractFeatureGroup)
+        public async Task<ActionResult> UpdateAsync(Guid uuid, GenerationResultFeatureValue value)
         {
-            var result = await bo.UpdateAsync(uuid, featureOnContractFeatureGroup, 
-                featureOnContractFeatureGroup.ContractFeature?.Uuid,
-                featureOnContractFeatureGroup.ContractFeatureGroup?.Uuid);
+            var result = await bo.UpdateAsync(uuid, value,
+                value.FeatureInContractType?.Uuid,
+                value.ContractGenerationResult?.Uuid);
             if (result.IsSuccessful) return Ok();
             if (result.Exception is NotFoundException nfe) return NotFound(nfe.Id);
             if (result.Exception is InvalidModelException ime) return BadRequest(ime.Message);

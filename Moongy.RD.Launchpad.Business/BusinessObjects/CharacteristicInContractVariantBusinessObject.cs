@@ -13,10 +13,6 @@ public class CharacteristicInContractVariantBusinessObject(ICharacteristicInCont
     {
         return await ExecuteOperation(async () =>
         {
-            //var contractVariant = await genericDao.GetAsync<ContractVariant>(contractVariantUuid) ?? throw new Exception("Contract Variant not found");
-            //var contractCharacteristic = await genericDao.GetAsync<ContractCharacteristic>(contractCharacteristicUuid) ?? throw new Exception("Contract Characteristic not found");
-            //characteristicInContractVariant.ContractVariantId = contractVariant.Id;
-            //characteristicInContractVariant.ContractCharacteristicId = contractCharacteristic.Id;
             characteristicInContractVariant = await FindAndAttach(characteristicInContractVariant, contractVariantUuid, x => x.ContractVariant, x => x.ContractVariantId);
             characteristicInContractVariant = await FindAndAttach(characteristicInContractVariant, contractCharacteristicUuid, x => x.ContractCharacteristic, x => x.ContractCharacteristicId);
             characteristicInContractVariant.Uuid = null;

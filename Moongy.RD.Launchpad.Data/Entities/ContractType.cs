@@ -8,4 +8,7 @@ public class ContractType : EntityWithNameAndDescription
 {
     [JsonIgnore]
     public virtual ICollection<ContractVariant> ContractVariants { get; set; } = [];
+
+    [JsonIgnore]
+    public virtual ICollection<FeatureInContractType> FeatureInContractType { get; set; } = [];
 }

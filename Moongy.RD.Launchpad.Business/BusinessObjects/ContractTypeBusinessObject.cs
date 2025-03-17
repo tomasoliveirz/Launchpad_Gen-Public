@@ -28,5 +28,14 @@ namespace Moongy.RD.Launchpad.Business.BusinessObjects
                 await dao.UpdateAsync(oldRecord);
             });
         }
+
+        public async Task<OperationResult<IEnumerable<FeatureInContractType>>> GetFeaturesInContractType(Guid contractTypeUuid)
+        {
+            return await ExecuteOperation(async () =>
+            {
+                var records = await dao.GetFeaturesInContractType(contractTypeUuid);
+                return records;
+            });
+        }
     }
 }

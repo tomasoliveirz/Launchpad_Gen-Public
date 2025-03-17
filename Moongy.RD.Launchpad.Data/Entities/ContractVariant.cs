@@ -18,7 +18,4 @@ public class ContractVariant : EntityWithNameAndDescription
     [JsonIgnore]
     public virtual ICollection<ContractGenerationResult> ContractGenerationResults { get; set; } = [];
 
-
-    [JsonIgnore]
-    public virtual ICollection<ContractFeatureGroup> FeatureGroupsInContractVariant { get; set; } = [];
 }

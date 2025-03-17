@@ -27,5 +27,10 @@ namespace Moongy.RD.LaunchPad.DataAccess.DataAccessObjects
             }
             return result;
         }
+
+        public async Task<IEnumerable<FeatureInContractType>> GetFeaturesInContractType(Guid contractTypeUuid)
+        {
+            return await context.FeatureInContractTypes.Include(x => x.ContractFeature).Include(x => x.ContractType).Where(x => x.ContractType.Uuid == contractTypeUuid).ToListAsync();
+        }
     }
 }

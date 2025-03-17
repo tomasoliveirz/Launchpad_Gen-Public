@@ -15,8 +15,6 @@ public class ContractVariantBusinessObject(IContractVariantDataAccessObject dao,
             if (string.IsNullOrEmpty(contractVariant.Name)) throw new InvalidModelException("name is missing");
             contractVariant = await FindAndAttach(contractVariant, contractTypeUuid, x => x.ContractType, x => x.ContractTypeId);
             var result = await dao.CreateAsync(contractVariant);
-            var defaultFeatureGroup = new ContractFeatureGroup() { ContractVariantId = contractVariant.Id, Name = "Main" };
-            await genericDao.CreateAsync(defaultFeatureGroup);
             return result;
         });
     }

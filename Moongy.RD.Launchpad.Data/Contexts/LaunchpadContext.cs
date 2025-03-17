@@ -11,21 +11,24 @@ public class LaunchpadContext(DbContextOptions options) : DbContext(options)
         modelBuilder.Entity<ContractType>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
         modelBuilder.Entity<ContractVariant>().HasIndex(x => x.Uuid).IsUnique();
         modelBuilder.Entity<ContractVariant>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
-        modelBuilder.Entity<FeatureOnContractFeatureGroup>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
-        modelBuilder.Entity<GenerationFeatureValue>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
         modelBuilder.Entity<PublishResult>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
         modelBuilder.Entity<BlockchainNetwork>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
         modelBuilder.Entity<CharacteristicInContractVariant>().HasIndex(x => x.Uuid).IsUnique();
         modelBuilder.Entity<CharacteristicInContractVariant>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
         modelBuilder.Entity<ContractCharacteristic>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
         modelBuilder.Entity<ContractFeature>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
-        modelBuilder.Entity<ContractFeatureGroup>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
         modelBuilder.Entity<ContractGenerationResult>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
-        modelBuilder.Entity<GenerationFeatureValue>().HasOne(x => x.ContractGenerationResult).WithMany(x => x.ContractGenerationFeatureValues).OnDelete(DeleteBehavior.NoAction);
+        modelBuilder.Entity<FeatureInContractType>().HasIndex(x => x.Uuid).IsUnique();
+        modelBuilder.Entity<FeatureInContractType>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
+        modelBuilder.Entity<GenerationResultFeatureValue>().Property(x => x.Uuid).HasDefaultValueSql("NEWID()");
+        modelBuilder.Entity<GenerationResultFeatureValue>()
+        .HasOne(g => g.FeatureInContractType)
+        .WithMany()
+        .HasForeignKey(g => g.FeatureInContractTypeId)
+        .OnDelete(DeleteBehavior.NoAction);
     }
 
     public DbSet<ContractType> ContractTypes { get; set; }
-    public DbSet<GenerationFeatureValue> GenerationFeatureValues { get; set; }
 
     public DbSet<ContractVariant> ContractsVariants { get; set; }
 
@@ -39,9 +42,8 @@ public class LaunchpadContext(DbContextOptions options) : DbContext(options)
 
     public DbSet<BlockchainNetwork> BlockchainNetworks { get; set; }
 
-    public DbSet<ContractFeatureGroup> ContractFeatureGroups { get; set; }
-
-    public DbSet<FeatureOnContractFeatureGroup> FeatureOnContractsFeatures { get; set; }
-
     public DbSet<ContractFeature> ContractFeatures { get; set; }
+
+    public DbSet<FeatureInContractType> FeatureInContractTypes { get; set; }
+    public DbSet<GenerationResultFeatureValue> GenerationResultFeatureValues { get; set; }
 }
