@@ -408,7 +408,7 @@
       "description": "Enables governance voting mechanisms for token holders."
     }
   ],
-  "FeatureInContractType": [
+  "FeatureInContractTypes": [
     {"id": 1, "contractFeatureId": 1, "contractTypeId": 11, "defaultValue": 1},
     {"id": 2, "contractFeatureId": 1, "contractTypeId": 12, "defaultValue": 1},
     {"id": 3, "contractFeatureId": 1, "contractTypeId": 13, "defaultValue": 1},

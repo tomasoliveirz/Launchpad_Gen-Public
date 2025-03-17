@@ -43,6 +43,7 @@ builder.Services.AddScoped<IContractVariantBusinessObject, ContractVariantBusine
 builder.Services.AddScoped<IPublishResultBusinessObject, PublishResultBusinessObject>();
 builder.Services.AddScoped<IFeatureInContractTypeBusinessObject, FeatureInContractTypeBusinessObject>();
 builder.Services.AddScoped<IGenerationResultFeatureValueBusinessObject, GenerationResultFeatureValueBusinessObject>();
+builder.Services.AddScoped<IFormsBusinessObject, FormsBusinessObject>();
 
 
 
