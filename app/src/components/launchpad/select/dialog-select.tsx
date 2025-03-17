@@ -10,7 +10,6 @@ export interface DialogSelectProps extends Omit<Omit<SelectRootProps, "onValueCh
 }
 export function DialogSelect({ collection, ref, onValueChange, value, label, ...props }: DialogSelectProps) {
     const selected = collection.items.find(item => item.uuid === value);
-    console.log(collection.items);
     return (
         <SelectRoot collection={collection} size="sm" width="320px" onValueChange={(e) => onValueChange(e.value[0])} value={value ? [value] : []} {...props}>
             <SelectTrigger>

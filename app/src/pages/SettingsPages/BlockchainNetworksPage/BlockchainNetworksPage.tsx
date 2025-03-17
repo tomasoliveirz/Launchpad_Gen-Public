@@ -11,7 +11,7 @@ import EntityTable, { EntityColumnHeaderProps } from "@/components/reUIsables/En
 import { TextModal } from "@/components/reUIsables/Modals/text-modal";
 import { PageWrapper } from "@/components/reUIsables/PageWrapper/page-wrapper";
 import { LaunchpadNewButton } from "@/components/launchpad/buttons/button";
-import { BlockchainNetworksDialog } from "@/components/launchpad/dialogs/blockchain-network-dialog";
+import { EntityDialog, EntityDialogItemProps } from "@/components/launchpad/dialogs/entity-dialog";
 
 export default function () {
     const URL_SLUG = "BlockchainNetworks";
@@ -99,6 +99,24 @@ export default function () {
     }
     ];
 
+    const dialogColumns: EntityDialogItemProps<BlockchainNetwork>[] = [
+        {
+            dataKey: "name",
+            label: "Name",
+            dataType: "text"
+        },
+        {
+            dataKey: "description",
+            label: "Description",
+            dataType: "longText"
+        },
+        {
+            dataKey: "image",
+            label: "Image",
+            dataType: "image"
+        }
+    ]
+
     const sideMenu = (t: BlockchainNetwork) => <HStack>
         <Spacer />
         <FaPencilAlt title="Edit" cursor="pointer" onClick={() => {
@@ -115,8 +133,21 @@ export default function () {
         <Box w="96%" mt="3em" mx="auto">
             <EntityTable topLeftElement={<LaunchpadNewButton onClick={onOpenCreate} />} itemsPerPage={6} searchable columnDescriptions={columns} rowLastColumn={sideMenu} items={data as BlockchainNetwork[]} />
         </Box>
-        <BlockchainNetworksDialog open={openCreate} onClose={onCloseCreate} onSubmit={onSubmitCreate} title="New Blockchain Network" />
-        <BlockchainNetworksDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} title="New Blockchain Network" defaultValues={selectedItem || undefined} />
+        <EntityDialog
+            columns={dialogColumns}
+            open={openCreate}
+            onClose={onCloseCreate}
+            onSubmit={onSubmitCreate}
+            title="New Blockchain Network"
+        />
+        <EntityDialog
+            columns={dialogColumns}
+            open={openEdit}
+            onClose={onCloseEdit}
+            onSubmit={onSubmitEdit}
+            title="Edit Blockchain Network"
+            defaultValues={selectedItem || undefined}
+        />
         <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Blockchain Network (${selectedItem?.name})`} onSubmit={onSubmitRemove} />
     </PageWrapper>
 }

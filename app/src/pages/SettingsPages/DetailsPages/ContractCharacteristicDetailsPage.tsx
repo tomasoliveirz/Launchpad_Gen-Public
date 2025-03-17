@@ -11,8 +11,8 @@ import { DeleteButton, EditButton } from "@/components/launchpad/buttons/button"
 import { ContractCharacteristicDetailNavigationItem, pages } from "@/constants/pages";
 import { getBreadcrumbs } from "@/components/reUIsables/Breadcrumbs/breadcrumbs";
 import { DataList, DataListItemProps } from "@/components/reUIsables/DataList/data-list";
-import { EntityWithNameAndDescriptionDialog } from "@/components/launchpad/dialogs/entity-with-name-and-description-dialog";
 import { PageWrapper } from "@/components/reUIsables/PageWrapper/page-wrapper";
+import { EntityDialog, EntityDialogItemProps } from "@/components/launchpad/dialogs/entity-dialog";
 
 export default function () {
     const URL_SLUG = "ContractCharacteristics";
@@ -80,9 +80,22 @@ export default function () {
         label: "Description"
     }];
 
+    const dialogColumns: EntityDialogItemProps<ContractCharacteristic>[] = [
+        {
+            dataKey: "name",
+            label: "Name",
+            dataType: "text"
+        },
+        {
+            dataKey: "description",
+            label: "Description",
+            dataType: "longText"
+        }
+    ];
+
     return <PageWrapper title={ContractCharacteristicData.name ?? ""} breadcrumbsProps={{ items: breadcrumbs }} icon={FaPalette} rightSideElement={rightElement}>
         <DataList columns={columns} item={ContractCharacteristicData} />
-        <EntityWithNameAndDescriptionDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={ContractCharacteristicData} title="Edit Contract Characteristic" />
+        <EntityDialog columns={dialogColumns} open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} title="Edit Contract Characteristic" defaultValues={ContractCharacteristicData} />
         <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Contract Characteristic (${ContractCharacteristicData?.name})`} onSubmit={onSubmitRemove} />
     </PageWrapper>
 }

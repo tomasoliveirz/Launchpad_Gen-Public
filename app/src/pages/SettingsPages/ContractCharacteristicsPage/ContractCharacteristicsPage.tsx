@@ -1,6 +1,5 @@
 import { Box, HStack, Spacer, useDisclosure } from "@chakra-ui/react"
 import { FaPalette, FaPencilAlt, FaTrashAlt } from "react-icons/fa"
-import { EntityWithNameAndDescriptionDialog } from "@/components/launchpad/dialogs/entity-with-name-and-description-dialog";
 import { useEffect, useState } from "react";
 import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-dialog";
 import { ContractCharacteristic } from "@/models/ContractCharacteristic";
@@ -12,6 +11,7 @@ import { getBreadcrumbs } from "@/components/reUIsables/Breadcrumbs/breadcrumbs"
 import { pages } from "@/constants/pages";
 import { TextModal } from "@/components/reUIsables/Modals/text-modal";
 import { PageWrapper } from "@/components/reUIsables/PageWrapper/page-wrapper";
+import { EntityDialog, EntityDialogItemProps } from "@/components/launchpad/dialogs/entity-dialog";
 
 export default function () {
   const URL_SLUG = "ContractCharacteristics";
@@ -69,49 +69,77 @@ export default function () {
   const { onOpen: onOpenCreate, onClose: onCloseCreate, open: openCreate } = useDisclosure();
   const { onOpen: onOpenEdit, onClose: onCloseEdit, open: openEdit } = useDisclosure();
   const { onOpen: onOpenRemove, onClose: onCloseRemove, open: openRemove } = useDisclosure();
- 
+
 
   const breadcrumbs = getBreadcrumbs(pages, location.pathname);
-  const formatDescription = (s?:ContractCharacteristic[keyof ContractCharacteristic])=> s ? <TextModal text={s as string} maxCharacters={20}/>:<></>
+  const formatDescription = (s?: ContractCharacteristic[keyof ContractCharacteristic]) => s ? <TextModal text={s as string} maxCharacters={20} /> : <></>
 
-  const columns:EntityColumnHeaderProps<ContractCharacteristic>[] =[{
-    dataKey: "name", 
-    label:"Name",
-    orderable:true,
-    searchable:true,
-    link:(t:ContractCharacteristic) => t.uuid,
-    displayable:true
-  }, 
-  {
-    dataKey: "description", 
-    label:"Description",
-    searchable:true,
-    formatCell:formatDescription,
-    displayable:true,
+  const columns: EntityColumnHeaderProps<ContractCharacteristic>[] = [{
+    dataKey: "name",
+    label: "Name",
+    orderable: true,
+    searchable: true,
+    link: (t: ContractCharacteristic) => t.uuid,
+    displayable: true
   },
-];
+  {
+    dataKey: "description",
+    label: "Description",
+    searchable: true,
+    formatCell: formatDescription,
+    displayable: true,
+  },
+  ];
+
+  const dialogColumns: EntityDialogItemProps<ContractCharacteristic>[] = [
+    {
+      dataKey: "name",
+      label: "Name",
+      dataType: "text"
+    },
+    {
+      dataKey: "description",
+      label: "Description",
+      dataType: "longText"
+    }
+  ];
 
 
-  const sideMenu= (t:ContractCharacteristic)=><HStack>
-                    <Spacer/>
-                    <FaPencilAlt title="Edit" cursor="pointer" onClick={()=>{
-                      setSelectedItem(t);
-                      onOpenEdit();
-                    }}/>
-                    <FaTrashAlt title="Delete" cursor="pointer" onClick={()=>{
-                      setSelectedItem(t);
-                      onOpenRemove();
-                    }}/>
-                  </HStack>
+  const sideMenu = (t: ContractCharacteristic) => <HStack>
+    <Spacer />
+    <FaPencilAlt title="Edit" cursor="pointer" onClick={() => {
+      setSelectedItem(t);
+      onOpenEdit();
+    }} />
+    <FaTrashAlt title="Delete" cursor="pointer" onClick={() => {
+      setSelectedItem(t);
+      onOpenRemove();
+    }} />
+  </HStack>
 
 
 
-  return <PageWrapper title={"Contract Characteristics"} icon={FaPalette} breadcrumbsProps={{items:breadcrumbs}}>
-            <Box w="96%" mt="3em" mx="auto">
-              <EntityTable topLeftElement={<LaunchpadNewButton onClick={onOpenCreate}/>} itemsPerPage={6} searchable columnDescriptions={columns} rowLastColumn={sideMenu} items={data as ContractCharacteristic[]}/>
-            </Box>
-            <EntityWithNameAndDescriptionDialog open={openCreate} onClose={onCloseCreate} onSubmit={onSubmitCreate} title="New Contract Characteristic" />
-            <EntityWithNameAndDescriptionDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={selectedItem || undefined} title="Edit Contract Characteristic" />
-            <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Contract Characteristic (${selectedItem?.name})`} onSubmit={onSubmitRemove} />
-        </PageWrapper>
+  return <PageWrapper title={"Contract Characteristics"} icon={FaPalette} breadcrumbsProps={{ items: breadcrumbs }}>
+    <Box w="96%" mt="3em" mx="auto">
+      <EntityTable topLeftElement={<LaunchpadNewButton onClick={onOpenCreate} />} itemsPerPage={6} searchable columnDescriptions={columns} rowLastColumn={sideMenu} items={data as ContractCharacteristic[]} />
+    </Box>
+    <EntityDialog
+      columns={dialogColumns}
+      open={openCreate}
+      onClose={onCloseCreate}
+      onSubmit={onSubmitCreate}
+      title="New Contract Characteristic"
+    />
+    <EntityDialog
+      columns={dialogColumns}
+      open={openEdit}
+      onClose={onCloseEdit}
+      onSubmit={onSubmitEdit}
+      defaultValues={selectedItem || undefined}
+      title="Edit Contract Characteristic"
+    />
+    {/* <EntityWithNameAndDescriptionDialog open={openCreate} onClose={onCloseCreate} onSubmit={onSubmitCreate} title="New Contract Characteristic" />
+    <EntityWithNameAndDescriptionDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={selectedItem || undefined} title="Edit Contract Characteristic" /> */}
+    <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Contract Characteristic (${selectedItem?.name})`} onSubmit={onSubmitRemove} />
+  </PageWrapper>
 }

@@ -11,8 +11,8 @@ import EntityTable, { EntityColumnHeaderProps } from "@/components/reUIsables/En
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 import { PageWrapper } from "@/components/reUIsables/PageWrapper/page-wrapper";
 import { LaunchpadNewButton } from "@/components/launchpad/buttons/button";
-import { ContractFeaturesDialog } from "@/components/launchpad/dialogs/contract-features-dialog";
 import { TextModal } from "@/components/reUIsables/Modals/text-modal";
+import { EntityDialog, EntityDialogItemProps } from "@/components/launchpad/dialogs/entity-dialog";
 
 export default function () {
   const URL_SLUG = "ContractFeatures";
@@ -104,8 +104,8 @@ export default function () {
     displayable: true,
   },
   {
-    dataKey: "normalizedName",
-    label: "Normalized Name",
+    dataKey: "options",
+    label: "Options",
     searchable: false,
     displayable: true,
   },
@@ -123,15 +123,42 @@ export default function () {
       onOpenRemove();
     }} />
   </HStack>
-
-
+  const dialogColumns: EntityDialogItemProps<ContractFeature>[] = [
+    {
+      dataKey: "name",
+      label: "Name",
+      dataType: "text"
+    },
+    {
+      dataKey: "description",
+      label: "Description",
+      dataType: "longText"
+    },
+    {
+      dataKey: "dataType",
+      label: "Data Type",
+      dataType: "text",
+    },
+    {
+      dataKey: "defaultValue",
+      label: "Default Value",
+      dataType: "text",
+    },
+    {
+      dataKey: "options",
+      label: "Options",
+      dataType: "text",
+    }
+  ]
 
   return <PageWrapper title={"Contract Features"} icon={BsStars} breadcrumbsProps={{ items: breadcrumbs }}>
     <Box w="96%" mt="3em" mx="auto">
       <EntityTable topLeftElement={<LaunchpadNewButton onClick={onOpenCreate} />} itemsPerPage={6} searchable columnDescriptions={columns} rowLastColumn={sideMenu} items={data as ContractFeature[]} />
     </Box>
-    <ContractFeaturesDialog open={openCreate} onClose={onCloseCreate} onSubmit={onSubmitCreate} title="New Contract Feature" />
-    <ContractFeaturesDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={selectedItem || undefined} title="Edit Contract Feature" />
+    <EntityDialog columns={dialogColumns} open={openCreate} onClose={onCloseCreate} onSubmit={onSubmitCreate} title="New Contract Feature" />
+    <EntityDialog columns={dialogColumns} open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={selectedItem || undefined} title="Edit Contract Feature" />
+{/*     <ContractFeaturesDialog open={openCreate} onClose={onCloseCreate} onSubmit={onSubmitCreate} title="New Contract Feature" />
+    <ContractFeaturesDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={selectedItem || undefined} title="Edit Contract Feature" /> */}
     <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Contract Feature (${selectedItem?.name})`} onSubmit={onSubmitRemove} />
   </PageWrapper>
 }

@@ -1,5 +1,4 @@
-import { Box, BoxProps, createListCollection, Flex, Spinner, useDisclosure, VStack } from "@chakra-ui/react";
-import { Text } from "@chakra-ui/react";
+import { Box, BoxProps, createListCollection, Flex, Spinner, useDisclosure, VStack, Text } from "@chakra-ui/react";
 import { ContractVariant } from "@/models/ContractVariant";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEntity } from "@/services/launchpad/entityService";
@@ -98,7 +97,6 @@ export default function () {
 
     const onSubmitAddCharacteristic = async (data: CharacteristicInContractVariant) => {
         try {
-            console.log("data", data)
             await createCharacteristicInContractVariant(data).unwrap();
             LaunchpadSuccessToaster("Contract Characteristic Added Successfully");
             refetchCharacteristics();
@@ -172,6 +170,7 @@ export interface CharacteristicsInContractVariantProps extends BoxProps {
     onClose: () => void;
     onSubmit: () => void;
 }
+
 export function CharacteristicsInContractVariant({ contractVariant, selectedItem, addCharacteristic, removeButtonOnClick, open, onClose, onSubmit, data, ...props }: CharacteristicsInContractVariantProps) {
     return (
         <Box p="1em" {...props}>

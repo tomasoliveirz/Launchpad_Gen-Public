@@ -6,13 +6,13 @@ import { useEntity } from "@/services/launchpad/entityService";
 import { DeleteConfirmationDialog } from "@/components/launchpad/dialogs/delete-confirmation-dialog";
 import { LaunchpadErrorToaster, LaunchpadSuccessToaster } from "@/components/reUIsables/Toaster/toaster";
 import { useEffect } from "react";
-import { BlockchainNetworksDialog } from "@/components/launchpad/dialogs/blockchain-network-dialog";
 import { PageWrapper } from "@/components/reUIsables/PageWrapper/page-wrapper";
 import { FaNetworkWired } from "react-icons/fa";
 import { DeleteButton, EditButton } from "@/components/launchpad/buttons/button";
 import { BlockchainNetworkDetailNavigationItem, pages } from "@/constants/pages";
 import { getBreadcrumbs } from "@/components/reUIsables/Breadcrumbs/breadcrumbs";
 import { DataList, DataListItemProps } from "@/components/reUIsables/DataList/data-list";
+import { EntityDialog, EntityDialogItemProps } from "@/components/launchpad/dialogs/entity-dialog";
 
 export default function () {
     const URL_SLUG = "BlockchainNetworks";
@@ -68,7 +68,7 @@ export default function () {
         <EditButton w="100%" onClick={onOpenEdit} />
         <DeleteButton w="100%" onClick={onOpenRemove} />
     </VStack>
- 
+
     const breadcrumbs = getBreadcrumbs(pages, location.pathname, [{
         ...BlockchainNetworkDetailNavigationItem,
         label: BlockchainNetworkData.name ?? "",
@@ -76,13 +76,31 @@ export default function () {
     }]);
 
     const columns: DataListItemProps<BlockchainNetwork>[] = [{
+        dataKey: "description",
+        label: "Description"
+    }];
+
+    const dialogColumns: EntityDialogItemProps<BlockchainNetwork>[] = [
+        {
+            dataKey: "name",
+            label: "Name",
+            dataType: "text"
+        },
+        {
             dataKey: "description",
-            label: "Description"
-        }];
+            label: "Description",
+            dataType: "longText"
+        },
+        {
+            dataKey: "image",
+            label: "Image",
+            dataType: "image"
+        }
+    ]
 
     return <PageWrapper title={BlockchainNetworkData.name ?? ""} breadcrumbsProps={{ items: breadcrumbs }} icon={BlockchainNetworkData.image ?? FaNetworkWired} rightSideElement={rightElement}>
         <DataList columns={columns} item={BlockchainNetworkData} />
-        <BlockchainNetworksDialog open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} defaultValues={BlockchainNetworkData} title="Edit Blockchain Network" />
+        <EntityDialog columns={dialogColumns} open={openEdit} onClose={onCloseEdit} onSubmit={onSubmitEdit} title="Edit Blockchain Network" defaultValues={BlockchainNetworkData} />
         <DeleteConfirmationDialog open={openRemove} onClose={onCloseRemove} title={`Delete Blockchain Network (${BlockchainNetworkData?.name})`} onSubmit={onSubmitRemove} />
     </PageWrapper>
 }

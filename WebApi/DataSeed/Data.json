@@ -264,124 +264,247 @@
   ],
   "ContractFeatures": [
     {
-        "name": "Access",
-        "dataType": "boolean",
-        "description": "Defines whether the token has access control mechanisms."
+      "id": 1,
+      "name": "Access",
+      "dataType": "boolean",
+      "description": "Defines whether the token has access control mechanisms."
     },
     {
+      "id": 2,
       "name": "Anti-Whale",
       "dataType": "boolean",
       "description": "Limits large transactions to prevent market manipulation."
     },
     {
+      "id": 3,
       "name": "Auto-Swap",
       "dataType": "boolean",
       "description": "Allows automatic token swapping upon transaction execution."
     },
     {
+      "id": 4,
       "name": "Burn",
       "dataType": "boolean",
       "description": "Allows token burning to reduce supply."
     },
     {
+      "id": 5,
       "name": "Circulation",
       "dataType": "boolean",
       "description": "Indicates whether the token has circulation controls."
     },
     {
+      "id": 6,
       "name": "Decimals",
       "dataType": "integer",
       "description": "Defines the decimal precision of the token."
     },
     {
+      "id": 7,
       "name": "Enumerable",
       "dataType": "boolean",
       "description": "Provides enumeration capabilities for NFTs."
     },
     {
+      "id": 8,
       "name": "Flash Mint",
       "dataType": "boolean",
       "description": "Enables the ability to mint tokens within a single transaction, provided they are returned."
     },
     {
+      "id": 9,
       "name": "Transfer Hooks",
       "dataType": "boolean",
       "description": "Allows execution of logic before or after a transfer operation."
     },
     {
+      "id": 10,
       "name": "Liquidity Management",
       "dataType": "boolean",
       "description": "Provides built-in liquidity management mechanisms."
     },
     {
+      "id": 11,
       "name": "Mint",
       "dataType": "boolean",
       "description": "Allows new tokens to be minted."
     },
     {
+      "id": 12,
       "name": "Name",
       "dataType": "string",
       "description": "The human-readable name of the token."
     },
     {
+      "id": 13,
       "name": "Pausable",
       "dataType": "boolean",
       "description": "Allows pausing of token transfers."
     },
     {
+      "id": 14,
       "name": "Permission",
       "dataType": "boolean",
       "description": "Indicates whether the token has permission-based access controls."
     },
     {
+      "id": 15,
       "name": "Premint",
       "dataType": "boolean",
       "description": "Allows a predefined number of tokens to be minted at deployment."
     },
     {
+      "id": 16,
       "name": "Supply Control",
       "dataType": "boolean",
       "description": "Allows for adjusting the supply of the token."
     },
     {
+      "id": 17,
       "name": "Token Recovery",
       "dataType": "boolean",
       "description": "Enables recovering lost tokens under specific conditions."
     },
     {
+      "id": 18,
       "name": "Reflections",
       "dataType": "boolean",
       "description": "Enables passive income distribution to holders based on transaction volume."
     },
     {
+      "id": 19,
       "name": "Symbol",
       "dataType": "string",
       "description": "The short symbol representing the token (e.g., ETH, BTC)."
     },
     {
+      "id": 20,
       "name": "Tax",
       "dataType": "boolean",
       "description": "Applies a transaction tax that may be distributed, burned, or allocated."
     },
     {
+      "id": 21,
       "name": "Upgradeability",
       "dataType": "boolean",
       "description": "Indicates whether the token contract can be upgraded."
     },
     {
+      "id": 22,
       "name": "URI",
       "dataType": "string",
       "description": "Defines a unique resource identifier for metadata storage."
     },
     {
+      "id": 23,
       "name": "URI Storage",
       "dataType": "boolean",
       "description": "Allows storage and management of URIs for metadata."
     },
     {
+      "id": 24,
       "name": "Votes",
       "dataType": "boolean",
       "description": "Enables governance voting mechanisms for token holders."
     }
+  ],
+  "FeatureInContractType": [
+    {"id": 1, "contractFeatureId": 1, "contractTypeId": 11, "defaultValue": 1},
+    {"id": 2, "contractFeatureId": 1, "contractTypeId": 12, "defaultValue": 1},
+    {"id": 3, "contractFeatureId": 1, "contractTypeId": 13, "defaultValue": 1},
+    {"id": 4, "contractFeatureId": 1, "contractTypeId": 14, "defaultValue": 1},
+    {"id": 5, "contractFeatureId": 2, "contractTypeId": 11, "defaultValue": 1},
+    {"id": 6, "contractFeatureId": 2, "contractTypeId": 12, "defaultValue": 1},
+    {"id": 7, "contractFeatureId": 2, "contractTypeId": 13, "defaultValue": -1},
+    {"id": 8, "contractFeatureId": 2, "contractTypeId": 14, "defaultValue": 1},
+    {"id": 9, "contractFeatureId": 3, "contractTypeId": 11, "defaultValue": 1},
+    {"id": 10, "contractFeatureId": 3, "contractTypeId": 12, "defaultValue": 1},
+    {"id": 11, "contractFeatureId": 3, "contractTypeId": 13, "defaultValue": -1},
+    {"id": 12, "contractFeatureId": 3, "contractTypeId": 14, "defaultValue": 1},
+    {"id": 13, "contractFeatureId": 4, "contractTypeId": 11, "defaultValue": 1},
+    {"id": 14, "contractFeatureId": 4, "contractTypeId": 12, "defaultValue": 1},
+    {"id": 15, "contractFeatureId": 4, "contractTypeId": 13, "defaultValue": 1},
+    {"id": 16, "contractFeatureId": 4, "contractTypeId": 14, "defaultValue": 1},
+    {"id": 17, "contractFeatureId": 5, "contractTypeId": 11, "defaultValue": 1},
+    {"id": 18, "contractFeatureId": 5, "contractTypeId": 12, "defaultValue": 1},
+    {"id": 19, "contractFeatureId": 5, "contractTypeId": 13, "defaultValue": -1},
+    {"id": 20, "contractFeatureId": 5, "contractTypeId": 14, "defaultValue": -1},
+    {"id": 21, "contractFeatureId": 6, "contractTypeId": 11, "defaultValue": 1},
+    {"id": 22, "contractFeatureId": 6, "contractTypeId": 12, "defaultValue": 1},
+    {"id": 23, "contractFeatureId": 6, "contractTypeId": 13, "defaultValue": -1},
+    {"id": 24, "contractFeatureId": 6, "contractTypeId": 14, "defaultValue": 1},
+    {"id": 25, "contractFeatureId": 7, "contractTypeId": 11, "defaultValue": -1},
+    {"id": 26, "contractFeatureId": 7, "contractTypeId": 12, "defaultValue": -1},
+    {"id": 27, "contractFeatureId": 7, "contractTypeId": 13, "defaultValue": 1},
+    {"id": 28, "contractFeatureId": 7, "contractTypeId": 14, "defaultValue": -1},
+    {"id": 29, "contractFeatureId": 8, "contractTypeId": 11, "defaultValue": 1},
+    {"id": 30, "contractFeatureId": 8, "contractTypeId": 12, "defaultValue": 1},
+    {"id": 31, "contractFeatureId": 8, "contractTypeId": 13, "defaultValue": -1},
+    {"id": 32, "contractFeatureId": 8, "contractTypeId": 14, "defaultValue": -1},
+    {"id": 33, "contractFeatureId": 9, "contractTypeId": 11, "defaultValue": 1},
+    {"id": 34, "contractFeatureId": 9, "contractTypeId": 12, "defaultValue": 1},
+    {"id": 35, "contractFeatureId": 9, "contractTypeId": 13, "defaultValue": 1},
+    {"id": 36, "contractFeatureId": 9, "contractTypeId": 14, "defaultValue": 1},
+    {"id": 37, "contractFeatureId": 10, "contractTypeId": 11, "defaultValue": 1},
+    {"id": 38, "contractFeatureId": 10, "contractTypeId": 12, "defaultValue": 1},
+    {"id": 39, "contractFeatureId": 10, "contractTypeId": 13, "defaultValue": -1},
+    {"id": 40, "contractFeatureId": 10, "contractTypeId": 14, "defaultValue": 1},
+    {"id": 41, "contractFeatureId": 11, "contractTypeId": 11, "defaultValue": 1},
+    {"id": 42, "contractFeatureId": 11, "contractTypeId": 12, "defaultValue": 1},
+    {"id": 43, "contractFeatureId": 11, "contractTypeId": 13, "defaultValue": 1},
+    {"id": 44, "contractFeatureId": 11, "contractTypeId": 14, "defaultValue": 1},
+    {"id": 45, "contractFeatureId": 12, "contractTypeId": 11, "defaultValue": 1},
+    {"id": 46, "contractFeatureId": 12, "contractTypeId": 12, "defaultValue": 1},
+    {"id": 47, "contractFeatureId": 12, "contractTypeId": 13, "defaultValue": 1},
+    {"id": 48, "contractFeatureId": 12, "contractTypeId": 14, "defaultValue": 1},
+    {"id": 49, "contractFeatureId": 13, "contractTypeId": 11, "defaultValue": 1},
+    {"id": 50, "contractFeatureId": 13, "contractTypeId": 12, "defaultValue": 1},
+    {"id": 51, "contractFeatureId": 13, "contractTypeId": 13, "defaultValue": 1},
+    {"id": 52, "contractFeatureId": 13, "contractTypeId": 14, "defaultValue": 1},
+    {"id": 53, "contractFeatureId": 14, "contractTypeId": 11, "defaultValue": 1},
+    {"id": 54, "contractFeatureId": 14, "contractTypeId": 12, "defaultValue": 1},
+    {"id": 55, "contractFeatureId": 14, "contractTypeId": 13, "defaultValue": 1},
+    {"id": 56, "contractFeatureId": 14, "contractTypeId": 14, "defaultValue": 1},
+    {"id": 57, "contractFeatureId": 15, "contractTypeId": 11, "defaultValue": 1},
+    {"id": 58, "contractFeatureId": 15, "contractTypeId": 12, "defaultValue": 1},
+    {"id": 59, "contractFeatureId": 15, "contractTypeId": 13, "defaultValue": -1},
+    {"id": 60, "contractFeatureId": 15, "contractTypeId": 14, "defaultValue": -1},
+    {"id": 61, "contractFeatureId": 16, "contractTypeId": 11, "defaultValue": -1},
+    {"id": 62, "contractFeatureId": 16, "contractTypeId": 12, "defaultValue": -1},
+    {"id": 63, "contractFeatureId": 16, "contractTypeId": 13, "defaultValue": 1},
+    {"id": 64, "contractFeatureId": 16, "contractTypeId": 14, "defaultValue": -1},
+    {"id": 65, "contractFeatureId": 17, "contractTypeId": 11, "defaultValue": 1},
+    {"id": 66, "contractFeatureId": 17, "contractTypeId": 12, "defaultValue": 1},
+    {"id": 67, "contractFeatureId": 17, "contractTypeId": 13, "defaultValue": -1},
+    {"id": 68, "contractFeatureId": 17, "contractTypeId": 14, "defaultValue": 1},
+    {"id": 69, "contractFeatureId": 18, "contractTypeId": 11, "defaultValue": 1},
+    {"id": 70, "contractFeatureId": 18, "contractTypeId": 12, "defaultValue": 1},
+    {"id": 71, "contractFeatureId": 18, "contractTypeId": 13, "defaultValue": -1},
+    {"id": 72, "contractFeatureId": 18, "contractTypeId": 14, "defaultValue": 1},
+    {"id": 73, "contractFeatureId": 19, "contractTypeId": 11, "defaultValue": 1},
+    {"id": 74, "contractFeatureId": 19, "contractTypeId": 12, "defaultValue": 1},
+    {"id": 75, "contractFeatureId": 19, "contractTypeId": 13, "defaultValue": -1},
+    {"id": 76, "contractFeatureId": 19, "contractTypeId": 14, "defaultValue": 1},
+    {"id": 77, "contractFeatureId": 20, "contractTypeId": 11, "defaultValue": 1},
+    {"id": 78, "contractFeatureId": 20, "contractTypeId": 12, "defaultValue": 1},
+    {"id": 79, "contractFeatureId": 20, "contractTypeId": 13, "defaultValue": 1},
+    {"id": 80, "contractFeatureId": 20, "contractTypeId": 14, "defaultValue": 1},
+    {"id": 81, "contractFeatureId": 21, "contractTypeId": 11, "defaultValue": 1},
+    {"id": 82, "contractFeatureId": 21, "contractTypeId": 12, "defaultValue": -1},
+    {"id": 83, "contractFeatureId": 21, "contractTypeId": 13, "defaultValue": 1},
+    {"id": 84, "contractFeatureId": 21, "contractTypeId": 14, "defaultValue": 1},
+    {"id": 85, "contractFeatureId": 22, "contractTypeId": 11, "defaultValue": -1},
+    {"id": 86, "contractFeatureId": 22, "contractTypeId": 12, "defaultValue": -1},
+    {"id": 87, "contractFeatureId": 22, "contractTypeId": 13, "defaultValue": 1},
+    {"id": 88, "contractFeatureId": 22, "contractTypeId": 14, "defaultValue": -1},
+    {"id": 89, "contractFeatureId": 23, "contractTypeId": 11, "defaultValue": -1},
+    {"id": 90, "contractFeatureId": 23, "contractTypeId": 12, "defaultValue": 1},
+    {"id": 91, "contractFeatureId": 23, "contractTypeId": 13, "defaultValue": 1},
+    {"id": 92, "contractFeatureId": 23, "contractTypeId": 14, "defaultValue": 1},
+    {"id": 93, "contractFeatureId": 24, "contractTypeId": 11, "defaultValue": 1},
+    {"id": 94, "contractFeatureId": 24, "contractTypeId": 12, "defaultValue": -1},
+    {"id": 95, "contractFeatureId": 24, "contractTypeId": 13, "defaultValue": -1},
+    {"id": 96, "contractFeatureId": 24, "contractTypeId": 14, "defaultValue": -1}
   ]
+
 }
