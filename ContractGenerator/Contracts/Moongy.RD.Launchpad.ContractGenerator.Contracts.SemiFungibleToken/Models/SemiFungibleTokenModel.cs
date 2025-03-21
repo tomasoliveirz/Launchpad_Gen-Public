@@ -1,5 +1,4 @@
-﻿using Moongy.RD.Launchpad.ContractGenerator.Contracts.Core.Interfaces;
-using Moongy.RD.Launchpad.ContractGenerator.Contracts.Core.Models;
+﻿using Moongy.RD.Launchpad.ContractGenerator.Contracts.Core.Models;
 
 namespace Moongy.RD.Launchpad.ContractGenerator.Contracts.SemiFungibleToken.Models
 {
