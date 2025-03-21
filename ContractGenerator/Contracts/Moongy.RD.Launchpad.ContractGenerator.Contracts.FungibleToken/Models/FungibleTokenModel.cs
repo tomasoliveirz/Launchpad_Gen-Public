@@ -4,11 +4,11 @@ using Moongy.RD.Launchpad.ContractGenerator.Contracts.Core.Models;
 namespace Moongy.RD.Launchpad.ContractGenerator.Contracts.FungibleToken.Models;
 public class FungibleTokenModel : BaseTokenModel
 {
-    String? Symbol { get; set; }
-    Byte Decimals { get; set; }
-    ulong Circulation { get; set; }
-    bool HasAutoSwap { get; set; }
-    bool HasFlashMint { get; set; }
-    ulong PremintAmmount { get; set; }
-    bool HasTokenRecovery { get; set; }
+    public String? Symbol { get; set; }
+    public Byte Decimals { get; set; }
+    public ulong Circulation { get; set; }
+    public bool HasAutoSwap { get; set; }
+    public bool HasFlashMint { get; set; }
+    public ulong PremintAmmount { get; set; }
+    public bool HasTokenRecovery { get; set; }
 }
