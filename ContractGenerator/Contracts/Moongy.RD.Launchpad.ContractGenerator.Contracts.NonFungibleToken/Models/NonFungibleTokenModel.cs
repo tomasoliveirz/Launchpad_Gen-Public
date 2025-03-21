@@ -1,8 +1,8 @@
-﻿using Moongy.RD.Launchpad.ContractGenerator.Contracts.Core.Interfaces;
+﻿using Moongy.RD.Launchpad.ContractGenerator.Contracts.Core.Models;
 
 namespace Moongy.RD.Launchpad.ContractGenerator.Contracts.NonFungibleToken.Models;
 
-public class NonFungibleTokenModel: IToken
+public class NonFungibleTokenModel: BaseTokenModel
 {
     public enum UriStorageType
     {
@@ -11,7 +11,7 @@ public class NonFungibleTokenModel: IToken
     }
 
     public bool IsEnumerable { get; set; }
-    public dictionary<ulong, string> TokenOwners { get; set; }
+    public Dictionary<ulong, string> TokenOwners { get; set; }
     public bool HasURI { get; set; }
     public string URI { get; set; }
     public UriStorageType URIStorageType { get; set; }

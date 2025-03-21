@@ -1,7 +1,8 @@
 ﻿using Moongy.RD.Launchpad.ContractGenerator.Contracts.Core.Interfaces;
+using Moongy.RD.Launchpad.ContractGenerator.Contracts.Core.Models;
 
 namespace Moongy.RD.Launchpad.ContractGenerator.Contracts.FungibleToken.Models;
-public class FungibleTokenModel : IToken
+public class FungibleTokenModel : BaseTokenModel
 {
     String? Symbol { get; set; }
     Byte Decimals { get; set; }

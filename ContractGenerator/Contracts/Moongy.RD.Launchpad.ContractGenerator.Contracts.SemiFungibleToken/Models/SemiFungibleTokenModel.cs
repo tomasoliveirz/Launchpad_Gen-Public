@@ -1,8 +1,9 @@
 ﻿using Moongy.RD.Launchpad.ContractGenerator.Contracts.Core.Interfaces;
+using Moongy.RD.Launchpad.ContractGenerator.Contracts.Core.Models;
 
 namespace Moongy.RD.Launchpad.ContractGenerator.Contracts.SemiFungibleToken.Models
 {
-    public class SemiFungibleTokenModel : IToken
+    public class SemiFungibleTokenModel : BaseTokenModel
     {
         public string Symbol { get; set; }
         public byte Decimals { get; set; }
