@@ -3,4 +3,5 @@
 namespace Moongy.RD.Launchpad.ContractGenerator.Tokenomics.LiquidityGeneration.Models;
 public class LiquidityGenerationTokenomicModel : ITokenomic
 {
+    decimal LiquidityPercentage { get; set; }
 }
