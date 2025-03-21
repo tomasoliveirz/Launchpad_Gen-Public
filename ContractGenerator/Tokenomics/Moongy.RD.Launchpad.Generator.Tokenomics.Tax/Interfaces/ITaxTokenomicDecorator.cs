@@ -1,7 +1,7 @@
-﻿using Moongy.RD.Launchpad.ContractGenerator.Tokenomics.Tax.Models;
-using Moongy.RD.Launchpad.ContractGenerator.Tokenomics.Core.Interfaces;
+﻿using Moongy.RD.Launchpad.Generator.Tokenomics.Core.Interfaces;
+using Moongy.RD.Launchpad.Generator.Tokenomics.Tax.Models;
 
-namespace Moongy.RD.Launchpad.ContractGenerator.Tokenomics.Tax.Interfaces
+namespace Moongy.RD.Launchpad.Generator.Tokenomics.Tax.Interfaces
 {
     public interface ITaxTokenomicDecorator : ITokenomicDecorator<TaxTokenomicModel>
     {

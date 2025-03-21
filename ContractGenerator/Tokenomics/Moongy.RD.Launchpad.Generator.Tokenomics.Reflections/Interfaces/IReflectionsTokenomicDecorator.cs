@@ -1,7 +1,7 @@
-﻿using Moongy.RD.Launchpad.ContractGenerator.Tokenomics.Reflections.Models;
-using Moongy.RD.Launchpad.ContractGenerator.Tokenomics.Core.Interfaces;
+﻿using Moongy.RD.Launchpad.Generator.Tokenomics.Core.Interfaces;
+using Moongy.RD.Launchpad.Generator.Tokenomics.Reflections.Models;
 
-namespace Moongy.RD.Launchpad.ContractGenerator.Tokenomics.Reflections.Interfaces
+namespace Moongy.RD.Launchpad.Generator.Tokenomics.Reflections.Interfaces
 {
     public interface IReflectionsTokenomicDecorator : ITokenomicDecorator<ReflectionsTokenomicModel>
     {

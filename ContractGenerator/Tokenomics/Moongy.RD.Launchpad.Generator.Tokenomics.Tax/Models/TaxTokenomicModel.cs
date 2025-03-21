@@ -1,8 +1,7 @@
-﻿using Moongy.RD.Launchpad.ContractGenerator.Tokenomics.Core.Interfaces;
+﻿using Moongy.RD.Launchpad.Generator.Tokenomics.Core.Interfaces;
 
-namespace Moongy.RD.Launchpad.ContractGenerator.Tokenomics.Tax.Models;
+namespace Moongy.RD.Launchpad.Generator.Tokenomics.Tax.Models;
 public class TaxTokenomicModel : ITokenomic
 {
     public decimal TaxPercentage { get; set; }
-    public ulong TaxAmount { get; set; }
 }

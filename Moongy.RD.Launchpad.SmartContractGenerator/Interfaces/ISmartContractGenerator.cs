@@ -1,8 +1,8 @@
-﻿using Moongy.RD.Launchpad.ContractGenerator.Contracts.AdvancedFungibleToken.Models;
-using Moongy.RD.Launchpad.ContractGenerator.Contracts.FungibleToken.Models;
-using Moongy.RD.Launchpad.ContractGenerator.Contracts.NonFungibleToken.Models;
-using Moongy.RD.Launchpad.ContractGenerator.Contracts.SemiFungibleToken.Models;
-using Moongy.RD.Launchpad.ContractGenerator.Tokenomics.Core.Interfaces;
+﻿using Moongy.RD.Launchpad.Generator.Contracts.AdvanceFungibleToken.Models;
+using Moongy.RD.Launchpad.Generator.Contracts.FungibleToken.Models;
+using Moongy.RD.Launchpad.Generator.Contracts.NonFungibleToken.Models;
+using Moongy.RD.Launchpad.Generator.Contracts.SemiFungibleToken.Models;
+using Moongy.RD.Launchpad.Generator.Tokenomics.Core.Interfaces;
 using Moongy.RD.Launchpad.SmartContractGenerator.Enums;
 using Moongy.RD.Launchpad.SmartContractGenerator.Models;
 

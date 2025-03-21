@@ -1,18 +1,24 @@
-﻿using Moongy.RD.Launchpad.ContractGenerator.Contracts.Core.Interfaces;
+﻿using Moongy.RD.Launchpad.Core.Models;
+using Moongy.RD.Launchpad.Generator.Contracts.Core.Enumerables;
+using Moongy.RD.Launchpad.Generator.Contracts.Core.Interfaces;
 
-namespace Moongy.RD.Launchpad.ContractGenerator.Contracts.Core.Models
+namespace Moongy.RD.Launchpad.Generator.Contracts.Core.Models
 {
-    public abstract class BaseTokenModel : IToken
+    public abstract class BaseTokenModel : IToken, IMintableToken, IBurnableToken
     {
-        public String? Name { get; set; }
-        public String? Symbol { get; set; }
-        public Dictionary<String,List<String>> Access { get; set; }
+        public string? Name { get; set; }
+        public string? Symbol { get; set; }
         public bool IsPausable { get; set; }
-        public bool HasPermission { get; set; }
-        public Dictionary<String, Dictionary<String,ulong>> Permisssion { get; set; }
-        public bool IsUpgradable { get; set; }
-        public bool HasVotes { get; set; }
+        public bool IsPermit { get; set; }
         public bool IsMintable { get; set; }
-        public bool HasAccess { get; set; }
+        public bool IsBurnable { get; set; }
+        public TokenAccess? Access { get; set; }
+
+
+
+        public VotingEnum Voting { get; set; }
+        public UpgradeabilityEnum Upgradeability { get; set; }
+
+
     }
 }

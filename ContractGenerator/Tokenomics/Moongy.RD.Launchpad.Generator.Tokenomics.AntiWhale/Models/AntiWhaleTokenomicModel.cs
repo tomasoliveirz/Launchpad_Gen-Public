@@ -1,8 +1,7 @@
-﻿using Moongy.RD.Launchpad.ContractGenerator.Tokenomics.Core.Interfaces;
+﻿using Moongy.RD.Launchpad.Generator.Tokenomics.Core.Interfaces;
 
-namespace Moongy.RD.Launchpad.ContractGenerator.Tokenomics.AntiWhale.Models;
+namespace Moongy.RD.Launchpad.Generator.Tokenomics.AntiWhale.Models;
 public class AntiWhaleTokenomicModel : ITokenomic
 {
-    public ulong MaxTransactionAmount { get; set; }
     public decimal MaxWalletPercentage { get; set; }
 }

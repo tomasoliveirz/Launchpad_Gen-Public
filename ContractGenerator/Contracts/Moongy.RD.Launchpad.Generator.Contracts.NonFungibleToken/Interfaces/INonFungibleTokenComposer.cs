@@ -1,7 +1,7 @@
-﻿using Moongy.RD.Launchpad.ContractGenerator.Contracts.Core.Interfaces;
-using Moongy.RD.Launchpad.ContractGenerator.Contracts.NonFungibleToken.Models;
+﻿using Moongy.RD.Launchpad.Generator.Contracts.Core.Interfaces;
+using Moongy.RD.Launchpad.Generator.Contracts.NonFungibleToken.Models;
 
-namespace Moongy.RD.Launchpad.ContractGenerator.Contracts.NonFungibleToken.Interfaces
+namespace Moongy.RD.Launchpad.Generator.Contracts.NonFungibleToken.Interfaces
 {
     public interface INonFungibleTokenComposer : ITokenComposer<NonFungibleTokenModel>
     {

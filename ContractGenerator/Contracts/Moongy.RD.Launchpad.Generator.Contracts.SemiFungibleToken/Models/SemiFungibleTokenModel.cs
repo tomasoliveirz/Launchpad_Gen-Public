@@ -1,6 +1,6 @@
-﻿using Moongy.RD.Launchpad.ContractGenerator.Contracts.Core.Models;
+﻿using Moongy.RD.Launchpad.Generator.Contracts.Core.Models;
 
-namespace Moongy.RD.Launchpad.ContractGenerator.Contracts.SemiFungibleToken.Models
+namespace Moongy.RD.Launchpad.Generator.Contracts.SemiFungibleToken.Models
 {
     public class SemiFungibleTokenModel : BaseTokenModel
     {

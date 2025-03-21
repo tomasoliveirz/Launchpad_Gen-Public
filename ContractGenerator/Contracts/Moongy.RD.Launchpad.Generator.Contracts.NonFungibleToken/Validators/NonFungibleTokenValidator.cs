@@ -1,7 +1,7 @@
-using Moongy.RD.Launchpad.ContractGenerator.Contracts.Core.Validators;
-using Moongy.RD.Launchpad.ContractGenerator.Contracts.NonFungibleToken.Models;
+using Moongy.RD.Launchpad.Generator.Contracts.Core.Validators;
+using Moongy.RD.Launchpad.Generator.Contracts.NonFungibleToken.Models;
 
-namespace Moongy.RD.Launchpad.ContractGenerator.Contracts.NonFungibleToken.Validators;
+namespace Moongy.RD.Launchpad.Generator.Contracts.NonFungibleToken.Validators;
 
 public class NonFungibleTokenValidator : BaseTokenValidator<NonFungibleTokenModel>
 {

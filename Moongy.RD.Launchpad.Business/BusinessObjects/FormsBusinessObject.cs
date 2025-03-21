@@ -1,8 +1,8 @@
 ﻿using Moongy.RD.Launchpad.Business.Base;
 using Moongy.RD.Launchpad.Business.Interfaces;
-using Moongy.RD.Launchpad.ContractGenerator.Contracts.Core.Enumerables;
 using Moongy.RD.Launchpad.Core.ExtensionMethods;
 using Moongy.RD.Launchpad.Core.Models;
+using Moongy.RD.Launchpad.Generator.Contracts.Core.Enumerables;
 
 namespace Moongy.RD.Launchpad.Business.BusinessObjects;
 public class FormsBusinessObject : BaseBusinessObject, IFormsBusinessObject

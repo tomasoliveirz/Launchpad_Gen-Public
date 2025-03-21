@@ -1,7 +1,7 @@
-﻿using Moongy.RD.Launchpad.ContractGenerator.Contracts.AdvancedFungibleToken.Models;
-using Moongy.RD.Launchpad.ContractGenerator.Contracts.Core.Interfaces;
+﻿using Moongy.RD.Launchpad.Generator.Contracts.AdvanceFungibleToken.Models;
+using Moongy.RD.Launchpad.Generator.Contracts.Core.Interfaces;
 
-namespace Moongy.RD.Launchpad.ContractGenerator.Contracts.AdvancedFungibleToken.Interfaces
+namespace Moongy.RD.Launchpad.Generator.Contracts.AdvanceFungibleToken.Interfaces
 {
     public interface IFungibleTokenValidator : ITokenValidator<AdvancedFungibleTokenModel>
     {

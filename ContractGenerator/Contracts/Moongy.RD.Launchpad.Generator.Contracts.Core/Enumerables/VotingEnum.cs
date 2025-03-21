@@ -1,6 +1,6 @@
 ﻿using Moongy.RD.Launchpad.Core.Attributes;
 
-namespace Moongy.RD.Launchpad.ContractGenerator.Contracts.Core.Enumerables;
+namespace Moongy.RD.Launchpad.Generator.Contracts.Core.Enumerables;
 public enum VotingEnum
 {
     NONE,

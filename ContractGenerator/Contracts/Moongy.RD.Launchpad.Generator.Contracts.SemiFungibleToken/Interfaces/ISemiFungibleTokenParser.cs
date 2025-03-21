@@ -1,7 +1,7 @@
-﻿using Moongy.RD.Launchpad.ContractGenerator.Contracts.Core.Interfaces;
-using Moongy.RD.Launchpad.ContractGenerator.Contracts.SemiFungibleToken.Models;
+﻿using Moongy.RD.Launchpad.Generator.Contracts.Core.Interfaces;
+using Moongy.RD.Launchpad.Generator.Contracts.SemiFungibleToken.Models;
 
-namespace Moongy.RD.Launchpad.ContractGenerator.Contracts.SemiFungibleToken.Interfaces
+namespace Moongy.RD.Launchpad.Generator.Contracts.SemiFungibleToken.Interfaces
 {
     public interface ISemiFungibleTokenParser : ITokenParser<SemiFungibleTokenModel>
     {

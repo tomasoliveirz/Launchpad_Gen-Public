@@ -1,4 +1,4 @@
-﻿namespace Moongy.RD.Launchpad.ContractGenerator.Contracts.Core.Interfaces;
+﻿namespace Moongy.RD.Launchpad.Generator.Contracts.Core.Interfaces;
 public interface IToken
 {
 }

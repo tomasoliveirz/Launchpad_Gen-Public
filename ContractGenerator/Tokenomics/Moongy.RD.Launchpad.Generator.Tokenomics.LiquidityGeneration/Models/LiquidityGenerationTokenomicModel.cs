@@ -1,7 +1,7 @@
-﻿using Moongy.RD.Launchpad.ContractGenerator.Tokenomics.Core.Interfaces;
+﻿using Moongy.RD.Launchpad.Generator.Tokenomics.Core.Interfaces;
 
-namespace Moongy.RD.Launchpad.ContractGenerator.Tokenomics.LiquidityGeneration.Models;
+namespace Moongy.RD.Launchpad.Generator.Tokenomics.LiquidityGeneration.Models;
 public class LiquidityGenerationTokenomicModel : ITokenomic
 {
-    decimal LiquidityPercentage { get; set; }
+   public decimal LiquidityPercentage { get; set; }
 }

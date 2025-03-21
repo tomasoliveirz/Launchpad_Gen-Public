@@ -1,4 +1,4 @@
-﻿namespace Moongy.RD.Launchpad.ContractGenerator.Tokenomics.Core.Interfaces;
+﻿namespace Moongy.RD.Launchpad.Generator.Tokenomics.Core.Interfaces;
 public interface ITokenomic
 {
 }
