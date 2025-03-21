@@ -1,14 +1,9 @@
-﻿using Moongy.RD.Launchpad.Generator.Contracts.Core.Models;
+﻿using Moongy.RD.Launchpad.ContractGenerator.Contracts.Core.Interfaces;
+using Moongy.RD.Launchpad.ContractGenerator.Contracts.Core.Models;
+using Moongy.RD.Launchpad.ContractGenerator.Contracts.FungibleToken.Models;
 using System;
-namespace Moongy.RD.Launchpad.Generator.Contracts.AdvanceFungibleToken.Models;
-public class AdvancedFungibleTokenModel : BaseTokenModel
+namespace Moongy.RD.Launchpad.ContractGenerator.Contracts.AdvancedFungibleToken.Models;
+public class AdvancedFungibleTokenModel : FungibleTokenModel
 {
-    string? Symbol { get; set; }
-    byte Decimals { get; set; }
-    ulong Circulation { get; set; }
-    bool HasAutoSwap { get; set; }
-    bool HasFlashMint { get; set; }
-    ulong PreMintAmmount { get; set; }
-    bool HasTokenRecovery { get; set; }
-    public Action<string, string, ulong>? OnTransferHook { get; set; }
+    public Action<string, string, ulong>? OnTransferHook { get; set; } // Need to think about this
 }
