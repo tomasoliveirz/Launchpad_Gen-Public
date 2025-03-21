@@ -4,6 +4,11 @@ using Moongy.RD.Launchpad.Generator.Tokenomics.Core.Interfaces;
 namespace Moongy.RD.Launchpad.Generator.Tokenomics.Reflections.Models;
 public class ReflectionsTokenomicModel : ITokenomic
 {
+    public enum ReflectionsType
+    {
+        Static,
+        Dynamic
+    }
     public decimal ReflectionsPercentage { get; set; }
-    public Dictionary<Address, ulong> UserClaimableBalances { get; set; } = new Dictionary<Address, ulong>();
+    public ReflectionsType Type { get; set; }
 }
