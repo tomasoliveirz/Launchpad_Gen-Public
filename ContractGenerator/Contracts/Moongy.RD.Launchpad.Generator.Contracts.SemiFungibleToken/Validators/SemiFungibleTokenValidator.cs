@@ -1,5 +1,5 @@
-using Moongy.RD.Launchpad.Generator.Contracts.Core.Validators;
-using Moongy.RD.Launchpad.Generator.Contracts.SemiFungibleToken.Models;
+using Moongy.RD.Launchpad.ContractGenerator.Contracts.Core.Validators;
+using Moongy.RD.Launchpad.ContractGenerator.Contracts.SemiFungibleToken.Models;
 
 namespace Moongy.RD.Launchpad.Generator.Contracts.SemiFungibleToken.Validators;
 
