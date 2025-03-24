@@ -4,16 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Moongy.RD.Launchpad.ContractGenerator.Contracts.AdvancedFungibleToken.Interfaces;
-using Moongy.RD.Launchpad.ContractGenerator.Contracts.FungibleToken.Interfaces;
-using Moongy.RD.Launchpad.ContractGenerator.Contracts.NonFungibleToken.Interfaces;
-using Moongy.RD.Launchpad.ContractGenerator.Contracts.SemiFungibleToken.Interfaces;
-using Moongy.RD.Launchpad.ContractGenerator.Tokenomics.AntiWhale.Interfaces;
-using Moongy.RD.Launchpad.ContractGenerator.Tokenomics.Buyback.Interfaces;
-using Moongy.RD.Launchpad.ContractGenerator.Tokenomics.Deflation.Interfaces;
-using Moongy.RD.Launchpad.ContractGenerator.Tokenomics.LiquidityGeneration.Interfaces;
-using Moongy.RD.Launchpad.ContractGenerator.Tokenomics.Reflections.Interfaces;
-using Moongy.RD.Launchpad.ContractGenerator.Tokenomics.Tax.Interfaces;
 using Moongy.RD.Launchpad.SmartContractGenerator.Interfaces;
 using Moongy.RD.Launchpad.SmartContractGenerator.Utils;
 
