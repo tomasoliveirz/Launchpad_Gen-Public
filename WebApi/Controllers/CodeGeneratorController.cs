@@ -23,56 +23,18 @@ contract MyToken is ERC20, ERC20Permit {
     constructor() ERC20(""MyToken"", ""MTK"") ERC20Permit(""MyToken"") {}
 }";
 
-        #region FungibleToken
-        [HttpPost("FungibleToken")]
-        public async Task<ActionResult<CodeGenerationResult<FungibleTokenModel>>> Generate([FromBody]FungibleTokenModel model)
+        #region SimpleToken
+        [HttpPost("SimpleToken")]
+        public async Task<ActionResult<CodeGenerationResult<FungibleTokenForm>>> Generate([FromBody]FungibleTokenForm model)
         {
             //var result = await bo.Generate(model);
-            var result = new CodeGenerationResult<FungibleTokenModel>() { Model = model, Code = TestCode};
+            var result = new CodeGenerationResult<FungibleTokenForm>() { Model = model, Code = TestCode};
             return Ok(result);
             //if (result.IsSuccessful) return StatusCode(201, result.Result);
             //if (result.Exception is InvalidModelException ime) return BadRequest(ime.Message);
             //return Problem(result.Exception?.Message ?? "");
         }
-        #endregion
-
-        #region AdvancedFungibleToken
-        [HttpPost("AdvancedFungibleToken")]
-        public async Task<ActionResult<CodeGenerationResult<AdvancedFungibleTokenModel>>> Generate([FromBody] AdvancedFungibleTokenModel model)
-        {
-            //var result = await bo.Generate(model);
-            var result = new CodeGenerationResult<AdvancedFungibleTokenModel>() { Model = model, Code = TestCode };
-            return Ok(result);
-            //if (result.IsSuccessful) return StatusCode(201, result.Result);
-            //if (result.Exception is InvalidModelException ime) return BadRequest(ime.Message);
-            //return Problem(result.Exception?.Message ?? "");
-        }
-        #endregion
-
-        #region NonFungibleToken
-        [HttpPost("NonFungibleToken")]
-        public async Task<ActionResult<CodeGenerationResult<NonFungibleTokenModel>>> Generate([FromBody] NonFungibleTokenModel model)
-        {
-            //var result = await bo.Generate(model);
-            var result = new CodeGenerationResult<NonFungibleTokenModel>() { Model = model, Code = TestCode };
-            return Ok(result);
-            //if (result.IsSuccessful) return StatusCode(201, result.Result);
-            //if (result.Exception is InvalidModelException ime) return BadRequest(ime.Message);
-            //return Problem(result.Exception?.Message ?? "");
-        }
-        #endregion
-
-        #region SemiFungibleToken
-        [HttpPost("SemiFungibleToken")]
-        public async Task<ActionResult<CodeGenerationResult<SemiFungibleTokenModel>>> Generate([FromBody] SemiFungibleTokenModel model)
-        {
-            //var result = await bo.Generate(model);
-            var result = new CodeGenerationResult<SemiFungibleTokenModel>() { Model = model, Code = TestCode };
-            return Ok(result);
-            //if (result.IsSuccessful) return StatusCode(201, result.Result);
-            //if (result.Exception is InvalidModelException ime) return BadRequest(ime.Message);
-            //return Problem(result.Exception?.Message ?? "");
-        }
+        
         #endregion
 
 

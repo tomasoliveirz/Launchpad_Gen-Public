@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Moongy.RD.Launchpad.Data.ContractModels
 {
-    public class AdvancedFungibleTokenModel
+    public class SemiFungibleTokenForm
     {
         public string Name { get; set; }
     }
