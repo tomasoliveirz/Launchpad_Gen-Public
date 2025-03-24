@@ -26,5 +26,14 @@ namespace WebApi.Controllers
             return Problem(result.Exception?.Message ?? "");
 
         }
+
+        [HttpGet("access")]
+        public async Task<ActionResult<SelectOptions>> GetAccessOptions()
+        {
+            var result = await formsBusinessObject.GetAccessOptions();
+            if (result.IsSuccessful) return Ok(result.Result);
+            return Problem(result.Exception?.Message ?? "");
+
+        }
     }
 }

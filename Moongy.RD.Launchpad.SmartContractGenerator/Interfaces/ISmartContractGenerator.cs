@@ -1,5 +1,4 @@
-﻿using Moongy.RD.Launchpad.Generator.Contracts.AdvanceFungibleToken.Models;
-using Moongy.RD.Launchpad.Generator.Contracts.FungibleToken.Models;
+﻿using Moongy.RD.Launchpad.Generator.Contracts.FungibleToken.Models;
 using Moongy.RD.Launchpad.Generator.Contracts.NonFungibleToken.Models;
 using Moongy.RD.Launchpad.Generator.Contracts.SemiFungibleToken.Models;
 using Moongy.RD.Launchpad.Generator.Tokenomics.Core.Interfaces;
@@ -10,7 +9,7 @@ namespace Moongy.RD.Launchpad.SmartContractGenerator.Interfaces;
 public interface ISmartContractGenerator
 {
     public GenerationResult<FungibleTokenModel> Generate(FungibleTokenModel model, List<ITokenomic> tokenomics, SmartContractVirtualMachine vm);     
-    public GenerationResult<AdvancedFungibleTokenModel> Generate(AdvancedFungibleTokenModel model, List<ITokenomic> tokenomics, SmartContractVirtualMachine vm);     
+    public GenerationResult<AdvancedFungibleToken> Generate(AdvancedFungibleTokenModel model, List<ITokenomic> tokenomics, SmartContractVirtualMachine vm);     
     public GenerationResult<NonFungibleTokenModel> Generate(NonFungibleTokenModel model, List<ITokenomic> tokenomics, SmartContractVirtualMachine vm);
     public GenerationResult<SemiFungibleTokenModel> Generate(SemiFungibleTokenModel model, List<ITokenomic> tokenomics, SmartContractVirtualMachine vm);
 }
