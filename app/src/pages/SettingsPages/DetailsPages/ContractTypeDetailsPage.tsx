@@ -194,8 +194,9 @@ export function FeaturesInContractType({ contractType, selectedItem, addFeature,
                             p="0.2em"
                         >
                             <TextModal
+                                fullWord
                                 text={`${feature.contractFeature.name} - ${feature.contractFeature.description}`}
-                                maxCharacters={(feature.contractFeature.name!.length + 3)}
+                                maxCharacters={(feature.contractFeature.name!.length)}
                                 fontSize="sm"
                                 ps="0.5em"
                                 whiteSpace="nowrap"
