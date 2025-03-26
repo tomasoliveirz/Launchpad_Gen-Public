@@ -20,6 +20,7 @@ function updateValue(
   
     if (strValue === "") {
       if (setError) setError("Input cannot be empty");
+      onChange(0)
       return;
     }
   
