@@ -27,5 +27,14 @@ namespace WebApi.Controllers
 
         }
 
+        [HttpGet("upgradeability")]
+        public async Task<ActionResult<SelectOptions>> GetUpgradeabilityOptions()
+        {
+            var result = await formsBusinessObject.GetUpgradeabilityOptions();
+            if (result.IsSuccessful) return Ok(result.Result);
+            return Problem(result.Exception?.Message ?? "");
+
+        }
+
     }
 }

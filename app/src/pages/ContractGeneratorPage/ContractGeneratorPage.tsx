@@ -8,12 +8,14 @@ import { useEntity } from "@/services/launchpad/entityService";
 import { namedEntityToListCollection, previousGenerationToListCollection } from "@/support/adapters";
 import { contractVariantsData } from "@/test-data/contract-variants";
 import { previousGenerationsData } from "@/test-data/previous-generations";
-import { Flex, HStack, ListCollection, Show, Spacer, Stack, VStack, Button, Field, Input, NumberInput, Icon, Box } from "@chakra-ui/react";
+import { Flex, HStack, ListCollection, Show, Spacer, Text, Stack, VStack, Button, Field, Input, NumberInput, Icon, Box, FieldRoot, FieldLabel, FieldErrorText, BoxProps, RadioGroup, Checkbox, CheckboxGroup, For, Fieldset } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { FaCode } from "react-icons/fa";
 import { Controller, useForm } from "react-hook-form";
 import { CiCircleQuestion } from "react-icons/ci";
+import { BigIntegerInput } from "@/components/reUIsables/ControlledInput/big-int-input";
+import { IntegerInput } from "@/components/reUIsables/ControlledInput/int-input";
 
 export default function () {
     const url = import.meta.env.VITE_API_URL
@@ -101,36 +103,17 @@ export default function () {
         setContractVariants(variants);
     }, [contractType])
 
-    const [val, setVal] = useState<string | undefined>();
-    const [error, setError] = useState<boolean | string>(false);
-    const defaultError = "invalid number"
-
-
-
-    const testInputs: ContractInputItemProps[] = [
-        {
-            label: "Name",
-            value: "name",
-            description: "name",
-            type: "text"
-        },
-        {
-            label: "Number",
-            value: "number",
-            description: "number",
-            type: "number"
-        }
-    ]
-
 
 
     //VIEW
     return <PageWrapper title="Contract Generator" icon={FaCode}>
         <HStack mt="2em" w="100%">
-            <ContractInputs inputs={testInputs} />
+            <VStack>
+                <FungibleTokenContract />
+            </VStack>
             {/* <Show when={previousGeneratedList.size > 0}>
                 <LaunchpadSelect w="20%" collection={previousGeneratedList} title="Previous contracts" value={previousGeneration} onValueChange={setPreviousGeneration} />
-            </Show> */}
+                </Show> */}
             <Spacer maxW="100%" />
         </HStack>
         <VStack w="100%" mt="3em">
@@ -138,9 +121,9 @@ export default function () {
             {/* <Flex w="100%" gap="10em">
                 <LaunchpadSelect size="sm" w="20%" collection={contractTypesList} title="Contract Types" value={contractType} onValueChange={setContractType} />
                 <Show when={contractType}>
-                    <LaunchpadSelect size="sm" w="20%" collection={contracVariantsList} title="Contract variants" value={contractVariant} onValueChange={setContractVariant} />
+                <LaunchpadSelect size="sm" w="20%" collection={contracVariantsList} title="Contract variants" value={contractVariant} onValueChange={setContractVariant} />
                 </Show>
-            </Flex> */}
+                </Flex> */}
         </VStack>
         <Show when={contractVariant}>
             <Flex w="100%" gap="10em">
@@ -152,16 +135,22 @@ export default function () {
 }
 
 export interface ContractInputItemProps {
-    label: string;
+    label?: string;
     value: string;
     description?: string;
     type: "text" | "number" | "option" | "boolean";
+    options?: { label: string, value: string }[];
 }
 
-export interface ContractInputsProps {
+export interface ContractGroupProps {
+    groupLabel: string;
     inputs: ContractInputItemProps[];
 }
-export function ContractInputs({ inputs }: ContractInputsProps) {
+
+export interface ContractGroupsProps {
+    groups: ContractGroupProps[]
+}
+export function ContractGroups({ groups }: ContractGroupsProps) {
     const {
         register,
         handleSubmit,
@@ -172,56 +161,163 @@ export function ContractInputs({ inputs }: ContractInputsProps) {
     const onSubmit = handleSubmit((data) => console.log(data))
 
     return (
-        <Stack gap="4" align="flex-start" maxW="100%">
-            {inputs.map((input) => {
-                if (input.type === "text") {
-                    return (
-                        <Field.Root key={input.value} invalid={!!errors[input.value]}>
-                            <Flex justifyContent="space-between" w="100%">
-                                <Field.Label>{input.label}</Field.Label>
-                                <Box title={input.description}><Icon size="md"><CiCircleQuestion/></Icon></Box>
-                            </Flex>
-                            <Input {...register(input.value)} variant="subtle" />
-                            <Field.ErrorText>
-                                {typeof errors[input.value]?.message === "string"
-                                    ? errors[input.value]?.message?.toString()
-                                    : ""}
-                            </Field.ErrorText>
-                        </Field.Root>
-                    );
-                }
-                if (input.type === "number") {
-                    return (
-                        <Field.Root invalid={!!errors.number}>
-                            <Flex justifyContent="space-between" w="100%">
-                                <Field.Label>{input.label}</Field.Label>
-                                <Box title={input.description}><Icon size="md"><CiCircleQuestion/></Icon></Box>
-                            </Flex>
-                            <Controller
-                                name={input.label}
-                                control={control}
-                                render={({ field }) => (
-                                    <NumberInput.Root
-                                        variant={"subtle"}
-                                        name={input.label}
-                                        value={field.value}
-                                        onValueChange={({ value }) => {
-                                            field.onChange(value)
-                                        }}
-                                    >
-                                        <NumberInput.Input/>
-                                    </NumberInput.Root>
-                                )}
-                            />
-                            <Field.ErrorText>{errors[input.value]?.message?.toString()}</Field.ErrorText>
-                        </Field.Root>
-                    )
-                }
-            })}
-        </Stack>
+        groups.map((group) => (
+            <Box>
+                <Text>{group.groupLabel}</Text>
+                <Stack gap="4" align="flex-start" maxW="100%">
+                    {group.inputs.map((input) => {
+                        if (input.type === "text") {
+                            return (
+                                <InputFieldWrapper label={input.label!} description={input.description} defaultError={errors[input.value]?.message?.toString() || ""} error={errors[input.value]?.message?.toString() || false}>
+                                    <Input {...register(input.value)} variant="subtle" />
+                                </InputFieldWrapper>
+                            );
+                        }
+
+                        if (input.type === "number") {
+                            return (
+                                <InputFieldWrapper label={input.label!} description={input.description} defaultError={errors[input.value]?.message?.toString() || ""} error={errors[input.value]?.message?.toString() || false}>
+                                    <Controller
+                                        name={input.value}
+                                        control={control}
+                                        render={({ field }) => (
+                                            <IntegerInput
+                                                variant="subtle"
+                                                value={field.value}
+                                                onChange={field.onChange}
+                                            />
+                                        )} />
+                                </InputFieldWrapper>
+                            );
+                        }
+
+                        if (input.type === "option") {
+                            return (
+                                <InputFieldWrapper label={input.label!} description={input.description} defaultError={errors[input.value]?.message?.toString() || ""} error={errors[input.value]?.message?.toString() || false}>
+                                    <Controller
+                                        name={input.value}
+                                        control={control}
+                                        render={({ field }) => (
+                                            <RadioGroup.Root
+                                                variant="subtle"
+                                                value={field.value}
+                                                onValueChange={({ value }) => field.onChange(value)}
+                                            >
+                                                <VStack gap="6">
+                                                    {input.options?.map((option) => (
+                                                        <RadioGroup.Item key={option.value} value={option.value}>
+                                                            <RadioGroup.ItemHiddenInput />
+                                                            <RadioGroup.ItemIndicator />
+                                                            <RadioGroup.ItemText>{option.label}</RadioGroup.ItemText>
+                                                        </RadioGroup.Item>
+                                                    ))}
+                                                </VStack>
+                                            </RadioGroup.Root>
+                                        )}
+                                    />
+                                </InputFieldWrapper>
+                            );
+                        }
+
+                        if (input.type === "boolean") {
+                            return (
+                                <InputFieldWrapper
+                                    label={input.label!}
+                                    description={input.description}
+                                    defaultError={errors[input.value]?.message?.toString() || ""}
+                                    error={errors[input.value]?.message?.toString() || false}
+                                >
+                                    <Fieldset.Root>
+                                        <Fieldset.Content>
+                                            <For each={input.options}>
+                                                {(value) => (
+                                                    <Checkbox.Root key={value.value} value={value.value}>
+                                                        <Checkbox.HiddenInput />
+                                                        <Checkbox.Control />
+                                                        <Checkbox.Label>{value.label}</Checkbox.Label>
+                                                    </Checkbox.Root>
+                                                )}
+                                            </For>
+                                        </Fieldset.Content>
+                                    </Fieldset.Root>
+                                </InputFieldWrapper>
+                            );
+                        }
+                    })}
+                </Stack>
+            </Box>
+        ))
     );
+}
+
+export interface InputFieldWrapperProps extends BoxProps {
+    label: string
+    description?: string
+    defaultError: string
+    error: string | boolean
+}
+
+export function InputFieldWrapper({ label, description, defaultError, error, ...props }: InputFieldWrapperProps) {
+    return (
+        <FieldRoot invalid={(typeof (error) === "boolean" && error === true) || typeof (error) === "string" && error !== ""}>
+            <Flex justifyContent="space-between" w="100%">
+                <Field.Label>{label}</Field.Label>
+                <Box title={description}><Icon size="md"><CiCircleQuestion /></Icon></Box>
+            </Flex>
+            {props.children}
+            <FieldErrorText>
+                {typeof (error) === "boolean" ? defaultError : error}
+            </FieldErrorText>
+        </FieldRoot>
+
+    );
+}
 
 
+const fungibleTokenContractInputGroups: ContractGroupProps[] = [
+    {
+        groupLabel: "Settings",
+        inputs: [
+            {
+                label: "Name",
+                value: "MyToken",
+                type: "text"
+            },
+            {
+                label: "Symbol",
+                value: "MTK",
+                type: "text"
+            },
+            {
+                label: "Premint",
+                value: "number",
+                description: "Allows gasless approvals using off-chain signatures.",
+                type: "number"
+            }
+        ]
+    },
+    {
+        groupLabel: "Features",
+        inputs: [
+            {
+                value: "features",
+                type: "boolean",
+                options: [
+                    { label: "Mintable", value: "MINTABLE" },
+                    { label: "Burnable", value: "BURNABLE" },
+                    { label: "Pausable", value: "PAUSABLE" },
+                    { label: "Permit", value: "PERMIT" },
+                    { label: "Flash Minting", value: "FLASH_MINTING" },
+                ]
+            },
+        ]
+    },
+];
+
+export function FungibleTokenContract() {
+    return (
+        <ContractGroups groups={fungibleTokenContractInputGroups} />
+    );
 }
 
 
