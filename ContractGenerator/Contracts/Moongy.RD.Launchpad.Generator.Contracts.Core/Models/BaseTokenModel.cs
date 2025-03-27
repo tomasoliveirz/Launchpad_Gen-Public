@@ -1,5 +1,4 @@
-﻿using Moongy.RD.Launchpad.Core.Models;
-using Moongy.RD.Launchpad.Generator.Contracts.Core.Enumerables;
+﻿using Moongy.RD.Launchpad.Generator.Contracts.Core.Enumerables;
 using Moongy.RD.Launchpad.Generator.Contracts.Core.Interfaces;
 
 namespace Moongy.RD.Launchpad.Generator.Contracts.Core.Models

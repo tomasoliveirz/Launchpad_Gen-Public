@@ -1,4 +1,5 @@
 using Moongy.RD.Launchpad.Core.Exceptions;
+using Moongy.RD.Launchpad.Core.Models;
 using Moongy.RD.Launchpad.Core.Validators;
 using Moongy.RD.Launchpad.Generator.Contracts.Core.Validators;
 using Moongy.RD.Launchpad.Generator.Contracts.NonFungibleToken.Models;
@@ -19,7 +20,7 @@ public static class TokenOwnersValidator
             if (entry.Key <= 0)
                 throw new InvalidTokenIdException(entry.Key);
                     
-            EthereumAddressValidator.Validate(entry.Value, true, "token owner");
+            EthereumAddressValidator.Validate(new Address(entry.Value), true, "token owner");
         }
     }
 }

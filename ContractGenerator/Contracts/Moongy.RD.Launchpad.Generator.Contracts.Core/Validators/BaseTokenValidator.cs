@@ -30,4 +30,3 @@ public abstract class BaseTokenValidator<TToken> : ITokenValidator<TToken> where
     }
 }
 
-

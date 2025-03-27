@@ -3,3 +3,4 @@
     public class ContractRequiresAccessException()
         : AccessControlException("Contract requires access control settings.");
 }
+

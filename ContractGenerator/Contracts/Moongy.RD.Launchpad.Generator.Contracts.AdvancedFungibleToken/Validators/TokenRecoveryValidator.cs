@@ -1,5 +1,5 @@
 using Moongy.RD.Launchpad.Core.Exceptions;
-using Moongy.RD.Launchpad.Generator.Contracts.AdvanceFungibleToken.Models;
+using Moongy.RD.Launchpad.Generator.Contracts.AdvancedFungibleToken.Models;
 using Moongy.RD.Launchpad.Generator.Contracts.Core.Models;
 
 namespace Moongy.RD.Launchpad.Generator.Contracts.Core.Validators;

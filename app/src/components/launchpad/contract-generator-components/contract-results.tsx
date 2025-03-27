@@ -1,5 +1,5 @@
 import { Field } from "@/components/ui/field";
-import { Box, BoxProps, For, Text } from "@chakra-ui/react";
+import { Box, BoxProps, Text } from "@chakra-ui/react";
 
 export interface ContractResultProps extends BoxProps {
     contractFeatureGroup: { label: string; value: string | undefined }[];

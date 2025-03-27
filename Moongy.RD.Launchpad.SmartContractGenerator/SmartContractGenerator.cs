@@ -1,6 +1,6 @@
 ﻿using Moongy.RD.Launchpad.Core.Models;
-using Moongy.RD.Launchpad.Generator.Contracts.AdvanceFungibleToken.Interfaces;
-using Moongy.RD.Launchpad.Generator.Contracts.AdvanceFungibleToken.Models;
+using Moongy.RD.Launchpad.Generator.Contracts.AdvancedFungibleToken.Interfaces;
+using Moongy.RD.Launchpad.Generator.Contracts.AdvancedFungibleToken.Models;
 using Moongy.RD.Launchpad.Generator.Contracts.Core.Interfaces;
 using Moongy.RD.Launchpad.Generator.Contracts.FungibleToken.Interfaces;
 using Moongy.RD.Launchpad.Generator.Contracts.FungibleToken.Models;

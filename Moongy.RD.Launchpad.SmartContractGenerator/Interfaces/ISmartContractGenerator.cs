@@ -1,4 +1,4 @@
-﻿using Moongy.RD.Launchpad.Generator.Contracts.AdvanceFungibleToken.Models;
+﻿using Moongy.RD.Launchpad.Generator.Contracts.AdvancedFungibleToken.Models;
 using Moongy.RD.Launchpad.Generator.Contracts.FungibleToken.Models;
 using Moongy.RD.Launchpad.Generator.Contracts.NonFungibleToken.Models;
 using Moongy.RD.Launchpad.Generator.Contracts.SemiFungibleToken.Models;

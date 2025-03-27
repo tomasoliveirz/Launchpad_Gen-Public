@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Moongy.RD.Launchpad.Core.Attributes;
 
-namespace Moongy.RD.Launchpad.Generator.Contracts.Core.Enumerables
+namespace Moongy.RD.Launchpad.Generator.Contracts.Core.Enumerables;
+
+public enum UpgradeabilityEnum
 {
-    public enum UpgradeabilityEnum
-    {
-    }
+    NONE,
+    [OptionLabel(Label = "Transparent")]
+    TRANSPARENT,
+    [OptionLabel(Label = "UUPS")]
+    UUPS,
 }

@@ -7,6 +7,6 @@ namespace Moongy.RD.Launchpad.Business.Interfaces
     {
         public Task<OperationResult<SelectOptions>> GetVotingOptions();
         public Task<OperationResult<SelectOptions>> GetAccessOptions();
-
+        public Task<OperationResult<SelectOptions>> GetUpgradeabilityOptions();
     }
 }

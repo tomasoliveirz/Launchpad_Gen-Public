@@ -1,6 +1,6 @@
 ﻿namespace Moongy.RD.Launchpad.Data.ContractModels
 {
-    public class FungibleTokenModel
+    public class FungibleTokenForm
     {
         public string Name { get; set; }
     }

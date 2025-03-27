@@ -1,4 +1,5 @@
 using Moongy.RD.Launchpad.Core.Exceptions;
+
 using Moongy.RD.Launchpad.Generator.Contracts.Core.Validators;
 using Moongy.RD.Launchpad.Generator.Contracts.SemiFungibleToken.Models;
 
@@ -30,3 +31,4 @@ public class SemiFungibleTokenValidator : BaseTokenValidator<SemiFungibleTokenMo
         
     }
 }
+

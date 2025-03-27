@@ -201,8 +201,9 @@ export function CharacteristicsInContractVariant({ contractVariant, selectedItem
                             p="0.2em"
                         >
                             <TextModal
+                                fullWord
                                 text={`${characteristic.contractCharacteristic.name} - ${characteristic.contractCharacteristic.description}`}
-                                maxCharacters={(characteristic.contractCharacteristic.name!.length + 3)} 
+                                maxCharacters={(characteristic.contractCharacteristic.name!.length)} 
                                 fontSize="sm"
                                 ps="0.5em"
                                 whiteSpace="nowrap"

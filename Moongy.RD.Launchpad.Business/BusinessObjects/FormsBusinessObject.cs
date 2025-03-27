@@ -33,4 +33,18 @@ public class FormsBusinessObject : BaseBusinessObject, IFormsBusinessObject
             });
         });
     }
+
+    public async Task<OperationResult<SelectOptions>> GetUpgradeabilityOptions()
+    {
+        return await ExecuteOperation(async () =>
+        {
+            return await Task.Run(() => {
+                var result = new SelectOptions();
+                result.IsMandatory = false;
+                result.Options = EnumExtensionMethods.ToOptionLabelValue<UpgradeabilityEnum>();
+
+                return result;
+            });
+        });
+    }
 }
