@@ -11,5 +11,17 @@ namespace Moongy.RD.Launchpad.Generator.Contracts.SemiFungibleToken.Models
         public bool HasTokenRecovery { get; set; }
         public ulong MaxSupply { get; set; }
         public string URI { get; set; }
+        public bool HasURI { get; set; }
+        
+        public string URIStorageLocation { get; set; }
+        
+        public enum UriStorageType
+        {
+            Centralized,
+            Decentralized
+        }
+        
+        public UriStorageType URIStorageType { get; set; }
+
     }
 }

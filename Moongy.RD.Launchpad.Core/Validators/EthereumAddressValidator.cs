@@ -1,22 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Moongy.RD.Launchpad.Core.Models;
-using Moongy.RD.Launchpad.Generator.Contracts.Core.Interfaces;
+﻿using System.Text.RegularExpressions;
+using Moongy.RD.Launchpad.Core.Exceptions;
 
-namespace Moongy.RD.Launchpad.Generator.Contracts.Core.Validators
+namespace Moongy.RD.Launchpad.Core.Validators
 {
     public static class EthereumAddressValidator
     {
-        public static void Validate(Address? address, bool isRequired = false, string? addressName = "")
+        private static readonly Regex EthAddressRegex = new Regex("^0x[0-9a-fA-F]{40}$", RegexOptions.Compiled);
+        
+        public static void Validate(string? address, bool isRequired = false, string paramName = "address")
         {
-            var addressRegex = new Regex(@"^0x[a-fA-F0-9]{40}$", RegexOptions.Compiled);
-            if (!isRequired && Address.IsNullOrEmpty(address)) return;
-            if(Address.IsNullOrEmpty(address)) throw new AddressIsRequiredException(addressName);
-            if(!addressRegex.IsMatch(address!)) throw new InvalidAddressException(addressName, address.ToString()); 
+            if (string.IsNullOrWhiteSpace(address))
+            {
+                if (isRequired)
+                    throw new RequiredEthereumAddressException(paramName);
+                return;
+            }
+
+            if (!EthAddressRegex.IsMatch(address))
+                throw new InvalidEthereumAddressException(paramName, address);
         }
     }
 }
