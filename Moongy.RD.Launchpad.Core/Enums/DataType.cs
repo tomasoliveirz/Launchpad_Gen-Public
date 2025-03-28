@@ -9,5 +9,15 @@ namespace Moongy.RD.Launchpad.Core.Enums
     public enum DataType
     {
         None,
+        Address,
+        String,
+        SmallInteger,
+        Integer,
+        Long,
+        BigInteger,
+        Array,
+        Dictionary,
+        Tuple,
+        Custom
     }
 }

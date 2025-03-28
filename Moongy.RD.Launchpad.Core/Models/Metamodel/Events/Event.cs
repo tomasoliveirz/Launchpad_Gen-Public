@@ -3,6 +3,6 @@
     public class Event
     {
         public string Name { get; set; } = "";
-        public List<Argument> Arguments { get; set; }
+        public List<EventArgument> Arguments { get; set; }
     }
 }
