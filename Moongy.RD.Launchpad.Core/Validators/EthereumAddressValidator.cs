@@ -6,12 +6,21 @@ namespace Moongy.RD.Launchpad.Core.Validators
 {
     public static class EthereumAddressValidator
     {
-        public static void Validate(Address? address, bool isRequired = false, string? addressName = "")
+        // Definindo a regex uma única vez como campo estático
+        private static readonly Regex EthAddressRegex = new Regex("^0x[0-9a-fA-F]{40}$", RegexOptions.Compiled);
+        
+        public static void Validate(Address? address, bool isRequired = false, string paramName = "address")
         {
-            var addressRegex = new Regex(@"^0x[a-fA-F0-9]{40}$", RegexOptions.Compiled);
-            if (!isRequired && Address.IsNullOrEmpty(address)) return;
-            if (Address.IsNullOrEmpty(address)) throw new AddressIsRequiredException(addressName);
-            if (!addressRegex.IsMatch(address!)) throw new InvalidAddressException(addressName, address.ToString());
+            if (!isRequired && Address.IsNullOrEmpty(address)) 
+                return;
+                
+            if (isRequired && Address.IsNullOrEmpty(address)) 
+                throw new AddressIsRequiredException(paramName);
+                
+            string addressString = address!;
+            
+            if (!EthAddressRegex.IsMatch(addressString)) 
+                throw new InvalidAddressException(paramName);
         }
     }
 }

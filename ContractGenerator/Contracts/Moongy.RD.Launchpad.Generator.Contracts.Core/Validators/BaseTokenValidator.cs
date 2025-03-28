@@ -5,57 +5,28 @@ namespace Moongy.RD.Launchpad.Generator.Contracts.Core.Validators;
 
 public abstract class BaseTokenValidator<TToken> : ITokenValidator<TToken> where TToken : BaseTokenModel
 {
-    public virtual void Validate(TToken obj)
-    {
-        //Validate Name
-        MintValidator.Validate(obj);
+    public virtual void Validate(TToken token)
+    { 
+        /*
+        common validations
+         - access
+         - burn
+         - mint
+         - name
+         - pausable
+         - permit
+         - upgradeability
+         - voting 
+        
+        */
+        NameValidator.Validate(token.Name); // done
+        BurnValidator.Validate(token); // burn can be restricted or not ??? waiting for response - update: burn does not require access control
+        MintValidator.Validate(token); // mint has to be restricted - access control required
+        PausableValidator.Validate(token); // done
+        PermitValidator.Validate(token); // how do we validate permit? 
+        UpgradeabilityValidator.Validate(token); // we need to determine the enum values for upgradeability first and what types we will support
+        VotingValidator.Validate(token.Voting); // how do we validate voting?
 
-        if(!obj.IsMintable && !obj.IsBurnable)
-        {
-            AccessValidator.Validate(obj.Access);
-        }
-
-
-        //ValidateCommon(obj);
-        //ValidateTokenomics(obj);
-        //ValidateSpecific(obj);
     }
-
-    //protected virtual void ValidateCommon(TToken token)
-    //{
-    //    if (string.IsNullOrWhiteSpace(token.Name))
-    //    {
-    //        throw new ArgumentException("Token name cannot be empty");
-    //    }
-
-    //    if (token.IsMintable && !token.HasAccess)
-    //    {
-    //        throw new ArgumentException("Token must have access to be mintable");
-    //    }
-
-    //    if (token.HasAccess && (token.Access == null || token.Access.Count == 0))
-    //        throw new ArgumentException("HasAccess is true but the Access dictionary is null or empty");
-
-    //    if (token.HasPermission && (token.Permisssion == null || token.Permisssion.Count == 0))
-    //        throw new ArgumentException("HasPermission is true but the Permission dictionary is null or empty");
-
-    //    if (token.HasPermission)
-    //    {
-    //        foreach (var perm in token.Permisssion)
-    //        {
-    //            if (perm.Value == null || perm.Value.Count == 0)
-    //            {
-    //                throw new ArgumentException($"Permission key '{perm.Key}' está configurada, mas não possui valores.");
-    //            }
-    //        }
-    //    }
-    //}
-
-    //protected virtual void ValidateTokenomics(TToken token)
-    //{
-
-    //}
-
-    //protected abstract void ValidateSpecific(TToken token);
-
 }
+

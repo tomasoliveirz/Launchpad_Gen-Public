@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Moongy.RD.Launchpad.Core.Exceptions
 {
-    public class ContractRequiresRolesException() : Exception("Contract requires roles")
-    {
-    }
+    public class ContractRequiresRolesException()
+        : AccessControlException("Contract with ROLE access requires at least one role.");
+
 }

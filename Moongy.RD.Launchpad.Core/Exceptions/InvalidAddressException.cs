@@ -1,12 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Moongy.RD.Launchpad.Core.Exceptions
 {
-    public class InvalidAddressException(string @for, string address) : Exception($"Address {address} is not valid for {@for}")
+    public class InvalidAddressException : Exception
     {
+        public string ParamName { get; }
+        
+        public string Address { get; }
+
+        public InvalidAddressException(string paramName) 
+            : base($"Invalid address provided for '{paramName}'")
+        {
+            ParamName = paramName;
+            Address = string.Empty;
+        }
     }
 }
