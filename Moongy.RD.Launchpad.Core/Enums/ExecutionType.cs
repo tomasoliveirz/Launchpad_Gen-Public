@@ -4,5 +4,6 @@ public enum ExecutionType
 {
     None,
     Assign,
-    Emit
+    Emit,
+    Revert
 }
