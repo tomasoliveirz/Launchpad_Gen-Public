@@ -13,6 +13,7 @@ using Moongy.RD.Launchpad.Generator.Tokenomics.AntiWhale.Models;
 using Moongy.RD.Launchpad.Generator.Tokenomics.Buyback.Interfaces;
 using Moongy.RD.Launchpad.Generator.Tokenomics.Buyback.Models;
 using Moongy.RD.Launchpad.Generator.Tokenomics.Core.Interfaces;
+using Moongy.RD.Launchpad.Generator.Tokenomics.Core.Validators;
 using Moongy.RD.Launchpad.Generator.Tokenomics.Deflation.Interfaces;
 using Moongy.RD.Launchpad.Generator.Tokenomics.Deflation.Models;
 using Moongy.RD.Launchpad.Generator.Tokenomics.LiquidityGeneration.Interfaces;
@@ -72,6 +73,7 @@ namespace Moongy.RD.Launchpad.SmartContractGenerator
 
         public GenerationResult<FungibleTokenModel> Generate(FungibleTokenModel model, List<ITokenomic> tokenomics, SmartContractVirtualMachine vm)
         {
+            TokenomicsValidator.Validate(tokenomics, 20);
             var contractModel = _fungibleTokenComposer.Compose(model);
             contractModel = Decorate<FungibleTokenModel>(tokenomics, contractModel);
             //Generate code
@@ -80,6 +82,7 @@ namespace Moongy.RD.Launchpad.SmartContractGenerator
 
         public GenerationResult<AdvancedFungibleTokenModel> Generate(AdvancedFungibleTokenModel model, List<ITokenomic> tokenomics, SmartContractVirtualMachine vm)
         {
+            TokenomicsValidator.Validate(tokenomics, 20);
             var contractModel = _advancedFungibleTokenComposer.Compose(model);
             contractModel = Decorate<AdvancedFungibleTokenModel>(tokenomics, contractModel);
             //Generate code
@@ -88,6 +91,7 @@ namespace Moongy.RD.Launchpad.SmartContractGenerator
 
         public GenerationResult<NonFungibleTokenModel> Generate(NonFungibleTokenModel model, List<ITokenomic> tokenomics, SmartContractVirtualMachine vm)
         {
+            TokenomicsValidator.Validate(tokenomics, 20);
             var contractModel = _nonFungibleTokenComposer.Compose(model);
             contractModel = Decorate<NonFungibleTokenModel>(tokenomics, contractModel);
             //Generate code
@@ -96,6 +100,7 @@ namespace Moongy.RD.Launchpad.SmartContractGenerator
 
         public GenerationResult<SemiFungibleTokenModel> Generate(SemiFungibleTokenModel model, List<ITokenomic> tokenomics, SmartContractVirtualMachine vm)
         {
+            TokenomicsValidator.Validate(tokenomics, 20);
             var contractModel = _semiFungibleTokenComposer.Compose(model);
             contractModel = Decorate<SemiFungibleTokenModel>(tokenomics, contractModel);
             //Generate code
