@@ -1,4 +1,4 @@
-﻿using Moongy.RD.Launchpad.Core.Models;
+﻿using Moongy.RD.Launchpad.Core.Models.Metamodel;
 
 namespace Moongy.RD.Launchpad.ContractGenerator.Publishing.Core.Interfaces
 {

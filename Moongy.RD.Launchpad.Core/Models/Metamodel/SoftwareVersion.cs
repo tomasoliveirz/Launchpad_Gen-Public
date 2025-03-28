@@ -1,4 +1,4 @@
-﻿namespace Moongy.RD.Launchpad.Core.Models
+﻿namespace Moongy.RD.Launchpad.Core.Models.Metamodel
 {
     public class SoftwareVersion
     {

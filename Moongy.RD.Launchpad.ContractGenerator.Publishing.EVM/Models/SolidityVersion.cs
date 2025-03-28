@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Moongy.RD.Launchpad.Core.Models;
+using Moongy.RD.Launchpad.Core.Models.Metamodel;
 
 namespace Moongy.RD.Launchpad.ContractGenerator.Publishing.EVM.Models
 {

@@ -1,7 +1,7 @@
-﻿namespace Moongy.RD.Launchpad.Core.Models;
+﻿namespace Moongy.RD.Launchpad.Core.Models.Metamodel;
 public class SmartContractModel
 {
-    String? Licence { get; set; }
+    SoftwareLicense Licence { get; set; }
     SoftwareVersion? Version { get; set; }
     List<Import> Imports { get; set; } = [];
 }

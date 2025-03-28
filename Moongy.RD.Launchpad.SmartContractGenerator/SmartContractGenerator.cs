@@ -1,4 +1,4 @@
-﻿using Moongy.RD.Launchpad.Core.Models;
+﻿using Moongy.RD.Launchpad.Core.Models.Metamodel;
 using Moongy.RD.Launchpad.Generator.Contracts.AdvancedFungibleToken.Interfaces;
 using Moongy.RD.Launchpad.Generator.Contracts.AdvancedFungibleToken.Models;
 using Moongy.RD.Launchpad.Generator.Contracts.Core.Interfaces;
@@ -28,6 +28,20 @@ using Moongy.RD.Launchpad.SmartContractGenerator.Models;
 
 namespace Moongy.RD.Launchpad.SmartContractGenerator
 {
+    public class A
+    {
+        public void B()
+        {
+            var at = new AdvancedFungibleTokenModel()
+            {
+                PostTransferHooks = {}
+            }
+            var r = new SmartContractGenerator();
+            r.Generate(at);
+        }
+    }
+
+
     public class SmartContractGenerator : ISmartContractGenerator
     {
         private readonly ITokenomicCompatibilityRegistry _tokenomicRegistry;

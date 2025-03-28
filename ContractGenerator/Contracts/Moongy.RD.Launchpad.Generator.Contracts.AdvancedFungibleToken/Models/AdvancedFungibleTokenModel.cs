@@ -1,8 +1,11 @@
-﻿using Moongy.RD.Launchpad.Generator.Contracts.FungibleToken.Models;
+﻿using Moongy.RD.Launchpad.Core.Models.Metamodel.Executions;
+using Moongy.RD.Launchpad.Generator.Contracts.FungibleToken.Models;
 
 namespace Moongy.RD.Launchpad.Generator.Contracts.AdvancedFungibleToken.Models;
 public class AdvancedFungibleTokenModel : FungibleTokenModel
 {
-    public List<Func<string, string, ulong, bool>> PreTransferHooks { get; set; } = new List<Func<string, string, ulong, bool>>();
-    public List<Action<string, string, ulong>> PostTransferHooks { get; set; } = new List<Action<string, string, ulong>>();
+
+    public List<Execution> PreTransferHooks { get; set; } = [];
+    public List<Execution> PostTransferHooks { get; set; } = [];
+
 }
