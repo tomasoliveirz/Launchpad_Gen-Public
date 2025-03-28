@@ -9,7 +9,7 @@ namespace Moongy.RD.Launchpad.Generator.Contracts.AdvancedFungibleToken.Validato
         {
             if (token.PostTransferHooks == null)
             {
-                throw new ValidationException("PostTransferHooks collection cannot be null for advanced fungible token");
+                throw new ValidationException("PostTransferHooks cannot be null for advanced fungible token");
             }
 
             for (int i = 0; i < token.PostTransferHooks.Count; i++)
