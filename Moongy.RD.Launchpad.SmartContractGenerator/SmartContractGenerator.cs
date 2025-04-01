@@ -28,19 +28,6 @@ using Moongy.RD.Launchpad.SmartContractGenerator.Models;
 
 namespace Moongy.RD.Launchpad.SmartContractGenerator
 {
-    public class A
-    {
-        public void B()
-        {
-            var at = new AdvancedFungibleTokenModel()
-            {
-                PostTransferHooks = {}
-            }
-            var r = new SmartContractGenerator();
-            r.Generate(at);
-        }
-    }
-
 
     public class SmartContractGenerator : ISmartContractGenerator
     {
