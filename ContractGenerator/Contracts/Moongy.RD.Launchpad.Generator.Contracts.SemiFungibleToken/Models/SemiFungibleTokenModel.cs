@@ -6,7 +6,6 @@ namespace Moongy.RD.Launchpad.Generator.Contracts.SemiFungibleToken.Models
 {
     public class SemiFungibleTokenModel : BaseTokenModel, IUriStorable, IAutoSwappableToken
     {
-        public string Symbol { get; set; }
         public byte Decimals { get; set; }
         public bool HasAutoSwap { get; set; }
         public bool HasSupplyControl { get; set; }
