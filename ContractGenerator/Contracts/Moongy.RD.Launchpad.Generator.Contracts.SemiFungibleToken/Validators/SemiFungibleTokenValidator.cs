@@ -26,7 +26,7 @@ public class SemiFungibleTokenValidator : BaseTokenValidator<SemiFungibleTokenMo
         TokenRecoveryValidator.Validate(token);
         SymbolValidator.Validate(token.Symbol, true, "semi-fungible token");
         if (token.HasURI)
-            UriValidator.Validate(token.URI, true);
+            URIValidator.Validate(token.URI, true);
         UriStorageValidator.Validate(token);
         
     }

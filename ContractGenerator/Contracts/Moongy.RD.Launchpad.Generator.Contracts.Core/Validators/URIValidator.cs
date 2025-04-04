@@ -1,6 +1,6 @@
 using Moongy.RD.Launchpad.Core.Exceptions;
 
-namespace Moongy.RD.Launchpad.Generator.Contracts.NonFungibleToken.Validators;
+namespace Moongy.RD.Launchpad.Generator.Contracts.Core.Validators;
 
 public static class URIValidator
 {
