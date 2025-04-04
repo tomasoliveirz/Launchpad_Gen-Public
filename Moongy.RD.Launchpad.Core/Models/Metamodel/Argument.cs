@@ -2,9 +2,10 @@
 
 namespace Moongy.RD.Launchpad.Core.Models.Metamodel;
 
-public class Argument (string name, VariableDataType type, string value)
+public class Argument (string name, DataType type, DataLocation location, string value)
 {
     public string Name { get; set; } = name;
-    public VariableDataType Type { get; set; } = type;
+    DataType Type { get; set; } = type;
+    DataLocation Location { get; set; } = location;
     public string Value { get; set; } = value;
 }

@@ -9,6 +9,8 @@ namespace Moongy.RD.Launchpad.Core.Models.Metamodel
     public enum SoftwareLicense
     {
         None,
-        Licensed
+        MIT_Licensed,
+        GPL_Licensed,
+        Apache_Licensed,
     }
 }

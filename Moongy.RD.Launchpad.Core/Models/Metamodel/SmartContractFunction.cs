@@ -1,4 +1,5 @@
 ﻿using Moongy.RD.Launchpad.Core.Enums;
+using Moongy.RD.Launchpad.Core.Models.Metamodel.Base;
 using System.ComponentModel.DataAnnotations;
 
 namespace Moongy.RD.Launchpad.Core.Models.Metamodel
@@ -9,7 +10,7 @@ namespace Moongy.RD.Launchpad.Core.Models.Metamodel
         public List<Argument> SmartContractArguments { get; set; } = [];
         public VisibilityModifier SmartContractVisibility { get; set; }
         public bool IsOverrideble { get; set; }
-        public VariableDataType ReturnType { get; set; }
-        //Methods missing
+        public ValueArgument? ReturnType { get; set; }
+        public List<ContractOperation> Operations { get; set; } = [];
     }
 }
