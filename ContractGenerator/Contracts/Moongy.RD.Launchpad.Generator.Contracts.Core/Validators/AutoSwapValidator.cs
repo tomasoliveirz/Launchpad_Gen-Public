@@ -1,12 +1,11 @@
 using Moongy.RD.Launchpad.Core.Exceptions;
-using Moongy.RD.Launchpad.Generator.Contracts.Core.Validators;
-using Moongy.RD.Launchpad.Generator.Contracts.FungibleToken.Models;
+using Moongy.RD.Launchpad.Generator.Contracts.Core.Interfaces;
 
-namespace Moongy.RD.Launchpad.Generator.Contracts.FungibleToken.Validators;
+namespace Moongy.RD.Launchpad.Generator.Contracts.Core.Validators;
 
 public static class AutoSwapValidator
 {
-    public static void Validate(FungibleTokenModel token)
+    public static void Validate(IAutoSwappableToken token)
     {
         if (!token.HasAutoSwap) return;
             

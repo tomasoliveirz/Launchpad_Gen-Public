@@ -1,9 +1,9 @@
-﻿using Moongy.RD.Launchpad.Generator.Contracts.Core.Models;
+﻿using Moongy.RD.Launchpad.Generator.Contracts.Core.Interfaces;
+using Moongy.RD.Launchpad.Generator.Contracts.Core.Models;
 
 namespace Moongy.RD.Launchpad.Generator.Contracts.FungibleToken.Models;
-public class FungibleTokenModel : BaseTokenModel
+public class FungibleTokenModel : BaseTokenModel, IAutoSwappableToken
 {
-    public string? Symbol { get; set; }
     public byte Decimals { get; set; }
     public ulong Circulation { get; set; }
     public bool HasAutoSwap { get; set; }
