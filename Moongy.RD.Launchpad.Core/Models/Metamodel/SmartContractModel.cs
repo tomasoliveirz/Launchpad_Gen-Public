@@ -1,5 +1,4 @@
 ﻿using Moongy.RD.Launchpad.Core.Models.Metamodel.Base;
-using Moongy.RD.Launchpad.Core.Models.Metamodel.Events;
 using Moongy.RD.Launchpad.Core.Models.Metamodel.Executions;
 
 namespace Moongy.RD.Launchpad.Core.Models.Metamodel;

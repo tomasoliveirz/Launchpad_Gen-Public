@@ -12,10 +12,7 @@ namespace Moongy.RD.Launchpad.Generator.Tokenomics.AntiWhale.Validators
 
             if (model.MaxWalletPercentage <= 0 || model.MaxWalletPercentage >= 100)
                 throw new InvalidTokenomicException("Anti-Whale: MaxWalletPercentage must be between 0 and 100.");
-            
-            // não é necessario isto ser obrigatório (?)
-            // if (model.NotAplicableAddresses == null)
-            //     throw new InvalidTokenomicException("Anti-Whale: NotAplicableAddresses cannot be null.");
+
         }
     }
 }
