@@ -127,5 +127,67 @@ namespace Moongy.RD.Launchpad.Generator.Tokenomics.Core.Validators
             
             return false;
         }
+
+        public static void ValidateIndividualTokenomic(ITokenomic tokenomic)
+        {
+            if (tokenomic == null)
+                throw new ArgumentNullException(nameof(tokenomic));
+                    
+            if (tokenomic.TaxPercentage < 0 || tokenomic.TaxPercentage > 100)
+                throw new InvalidTokenomicException(
+                    $"{tokenomic.GetType().Name}: TaxPercentage must be between 0 and 100.");
+            
+            string typeName = tokenomic.GetType().Name;
+            
+            try
+            {
+                switch (typeName)
+                {
+                    case "TaxTokenomicModel":
+                        dynamic taxModel = tokenomic;
+                        dynamic taxValidator = Type.GetType("Moongy.RD.Launchpad.Generator.Tokenomics.Tax.Validators.TaxTokenomicValidator, Moongy.RD.Launchpad.Generator.Tokenomics.Tax");
+                        taxValidator.Validate(taxModel);
+                        break;
+                        
+                    case "DeflationTokenomicModel":
+                        dynamic deflationModel = tokenomic;
+                        dynamic deflationValidator = Type.GetType("Moongy.RD.Launchpad.Generator.Tokenomics.Deflation.Validators.DeflationTokenomicValidator, Moongy.RD.Launchpad.Generator.Tokenomics.Deflation");
+                        deflationValidator.Validate(deflationModel);
+                        break;
+                        
+                    case "LiquidityGenerationTokenomicModel":
+                        dynamic liquidityModel = tokenomic;
+                        dynamic liquidityValidator = Type.GetType("Moongy.RD.Launchpad.Generator.Tokenomics.LiquidityGeneration.Validators.LiquidityGenerationTokenomicValidator, Moongy.RD.Launchpad.Generator.Tokenomics.LiquidityGeneration");
+                        liquidityValidator.Validate(liquidityModel);
+                        break;
+                        
+                    case "BuybackTokenomicModel":
+                        dynamic buybackModel = tokenomic;
+                        dynamic buybackValidator = Type.GetType("Moongy.RD.Launchpad.Generator.Tokenomics.Buyback.Validators.BuybackTokenomicValidator, Moongy.RD.Launchpad.Generator.Tokenomics.Buyback");
+                        buybackValidator.Validate(buybackModel);
+                        break;
+                        
+                    case "ReflectionsTokenomicModel":
+                        dynamic reflectionsModel = tokenomic;
+                        dynamic reflectionsValidator = Type.GetType("Moongy.RD.Launchpad.Generator.Tokenomics.Reflections.Validators.ReflectionsTokenomicValidator, Moongy.RD.Launchpad.Generator.Tokenomics.Reflections");
+                        reflectionsValidator.Validate(reflectionsModel);
+                        break;
+                        
+                    case "AntiWhaleTokenomicModel":
+                        dynamic antiWhaleModel = tokenomic;
+                        dynamic antiWhaleValidator = Type.GetType("Moongy.RD.Launchpad.Generator.Tokenomics.AntiWhale.Validators.AntiWhaleTokenomicValidator, Moongy.RD.Launchpad.Generator.Tokenomics.AntiWhale");
+                        antiWhaleValidator.Validate(antiWhaleModel);
+                        break;
+                        
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex) when (!(ex is InvalidTokenomicException))
+            {
+                throw new InvalidTokenomicException($"Failed to validate {typeName}: {ex.Message}. Ensure appropriate validator is available.", ex);
+            }
+            
+        }
     }
 }
