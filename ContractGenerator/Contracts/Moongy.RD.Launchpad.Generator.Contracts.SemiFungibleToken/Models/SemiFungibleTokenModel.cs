@@ -6,6 +6,7 @@ namespace Moongy.RD.Launchpad.Generator.Contracts.SemiFungibleToken.Models
 {
     public class SemiFungibleTokenModel : BaseTokenModel, IUriStorable, IAutoSwappableToken, IDecimalToken, ITokenRecoverable
     {
+        public string? Symbol { get; set; }
         public byte Decimals { get; set; }
         public bool HasAutoSwap { get; set; }
         public bool HasSupplyControl { get; set; }
@@ -13,8 +14,6 @@ namespace Moongy.RD.Launchpad.Generator.Contracts.SemiFungibleToken.Models
         public ulong MaxSupply { get; set; }
         public string? URI { get; set; }
         public bool HasURI { get; set; }
-        public string? URIStorageLocation { get; set; }
-        public UriStorageType URIStorageType { get; set; }
 
     }
 }
