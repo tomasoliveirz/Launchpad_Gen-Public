@@ -4,7 +4,7 @@ using Moongy.RD.Launchpad.Generator.Contracts.Core.Models;
 
 namespace Moongy.RD.Launchpad.Generator.Contracts.SemiFungibleToken.Models
 {
-    public class SemiFungibleTokenModel : BaseTokenModel, IUriStorable, IAutoSwappableToken, IDecimalToken, ITokenRecoverable
+    public class SemiFungibleTokenModel : BaseTokenModel, IAutoSwappableToken, IDecimalToken, ITokenRecoverable
     {
         public string? Symbol { get; set; }
         public byte Decimals { get; set; }
