@@ -51,6 +51,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moongy.RD.Launchpad.Generat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moongy.RD.Launchpad.Generator.Tokenomics.AntiWhale", "ContractGenerator\Tokenomics\Moongy.RD.Launchpad.Generator.Tokenomics.AntiWhale\Moongy.RD.Launchpad.Generator.Tokenomics.AntiWhale.csproj", "{5DFCD73D-FC5C-4E10-ABAE-B28410ED3C3C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moongy.RD.Launchpad.Tests", "Moongy.RD.Launchpad.Tests\Moongy.RD.Launchpad.Tests.csproj", "{B4A52EF4-31D9-49FE-B612-CEF6459C0E2B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -137,6 +139,10 @@ Global
 		{5DFCD73D-FC5C-4E10-ABAE-B28410ED3C3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5DFCD73D-FC5C-4E10-ABAE-B28410ED3C3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5DFCD73D-FC5C-4E10-ABAE-B28410ED3C3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4A52EF4-31D9-49FE-B612-CEF6459C0E2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4A52EF4-31D9-49FE-B612-CEF6459C0E2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4A52EF4-31D9-49FE-B612-CEF6459C0E2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4A52EF4-31D9-49FE-B612-CEF6459C0E2B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
