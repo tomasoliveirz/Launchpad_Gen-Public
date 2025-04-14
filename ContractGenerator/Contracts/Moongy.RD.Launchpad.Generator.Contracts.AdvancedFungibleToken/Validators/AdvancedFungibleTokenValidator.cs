@@ -1,14 +1,17 @@
-﻿using Moongy.RD.Launchpad.Generator.Contracts.AdvancedFungibleToken.Models;
-using Moongy.RD.Launchpad.Generator.Contracts.Core.Validators;
+﻿using Moongy.RD.Launchpad.Core.Exceptions;
+using Moongy.RD.Launchpad.Generator.Contracts.AdvancedFungibleToken.Models;
+using Moongy.RD.Launchpad.Generator.Contracts.FungibleToken.Validators;
 
-namespace Moongy.RD.Launchpad.Generator.Contracts.AdvancedFungibleToken.Validators
+
+namespace Moongy.RD.Launchpad.Generator.Contracts.AdvancedFungibleToken.Validators;
+
+public class AdvancedFungibleTokenValidator : FungibleTokenValidator
 {
-    public class AdvancedFungibleTokenValidator : BaseTokenValidator<AdvancedFungibleTokenModel>
+    public void Validate(AdvancedFungibleTokenModel token)
     {
-        public override void Validate(AdvancedFungibleTokenModel token)
-        {
-            base.Validate(token);
-
-        }
+        base.Validate(token);
+        
+        PreTransferHooksValidator.Validate(token);
+        PostTransferHooksValidator.Validate(token);
     }
 }

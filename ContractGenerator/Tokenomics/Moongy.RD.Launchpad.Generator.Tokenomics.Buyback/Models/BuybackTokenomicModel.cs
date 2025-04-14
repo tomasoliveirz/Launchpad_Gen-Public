@@ -1,15 +1,9 @@
-﻿using Moongy.RD.Launchpad.Core.Models;
-using Moongy.RD.Launchpad.Generator.Tokenomics.Core.Interfaces;
+﻿using Moongy.RD.Launchpad.Generator.Tokenomics.Core.Attributes;
 using Moongy.RD.Launchpad.Generator.Tokenomics.Core.Models;
 
 namespace Moongy.RD.Launchpad.Generator.Tokenomics.Buyback.Models;
-public class BuybackTokenomicModel : ITokenomic
+
+[Tokenomic(Weight=60)]
+public class BuybackTokenomicModel : BaseTokenomicModel
 {
-    public enum BuybackType
-    {
-        Static,
-        Dynamic
-    }
-    public decimal BuybackPercentage { get; set; }
-    public BuybackType Type { get; set; }
 }

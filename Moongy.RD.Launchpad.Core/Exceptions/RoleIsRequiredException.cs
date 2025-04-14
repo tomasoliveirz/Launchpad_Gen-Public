@@ -1,6 +1,5 @@
 ﻿namespace Moongy.RD.Launchpad.Core.Exceptions
 {
-    public class RoleIsRequiredException(string name) : Exception($"Role for {name} is required.")
-    {
-    }
+    public class RoleIsRequiredException(string roleName)
+        : RoleException($"Role {roleName} is required but was not provided.");
 }

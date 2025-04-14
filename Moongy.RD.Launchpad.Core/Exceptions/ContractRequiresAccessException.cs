@@ -1,6 +1,6 @@
 ﻿namespace Moongy.RD.Launchpad.Core.Exceptions
 {
-    public class ContractRequiresAccessException(): Exception("Contract requires access modifier")
-    {
-    }
+    public class ContractRequiresAccessException()
+        : AccessControlException("Contract requires access control settings.");
 }
+
