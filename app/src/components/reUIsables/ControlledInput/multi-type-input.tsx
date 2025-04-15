@@ -6,6 +6,8 @@ import { EmailInput } from "./email-input"
 import { UrlInput } from "./url-input"
 import { RadioInput, Option } from "./radio-input"
 import { MultiSelectOption } from "./multi-option-input"
+import CheckboxWithDescription from "@/components/launchpad/buttons/checkbox-with-description"
+import { RadioInputWithDescription } from "@/components/launchpad/buttons/radio-with-description"
 
 
 export interface MultitypeInputProps extends Omit<Omit<InputProps, "type">,"value">
@@ -17,19 +19,20 @@ export interface MultitypeInputProps extends Omit<Omit<InputProps, "type">,"valu
     value?:string
     setValue:(s:string)=>void
     label?:string
+    description?:string
 }
 
-export function MultitypeInput({type,value,setValue,options,multiSelect, ...props}:MultitypeInputProps)
+export function MultitypeInput({type,value,setValue,options,multiSelect,description,label, ...props}:MultitypeInputProps)
 {
     const numberValue:(s:string|undefined)=>number = (s:string|undefined)=> s && parseInt(s) || 0;
 
     return <>
         
-        {type === "boolean" ? <CheckBox checked={value=="true"} setCheck={()=>setValue(value === "true" ? "false" : "true")} /> :
+        {type === "boolean" ? <CheckboxWithDescription checked={value == "true"} setCheck={() => setValue(value === "true" ? "false" : "true")} label={label} description={description} /> :
          type === "integer" ? <IntegerInput value={numberValue(value)} onChange={(n:number|undefined)=>setValue((n??0).toString())}></IntegerInput>:
          type === "email" ? <EmailInput value={value} onChange={(e:string|undefined)=>setValue(e??"")}/>:
          type === "url" ? <UrlInput value={value||""} onChange={(e:string|undefined)=>setValue(e??"")}/>:
-         type === "option" ? (multiSelect ? <MultiSelectOption options={options??[]} value={value??""} setValue={setValue}/> : <RadioInput options={options??[]} value={value??""} setValue={setValue} />):
+         type === "option" ? (multiSelect ? <MultiSelectOption options={options??[]} value={value??""} setValue={setValue}/> : <RadioInputWithDescription options={options??[]} value={value??""} setValue={setValue}/>):
          <GenericInput value={value??""} onChange={(e)=>setValue(e??"")}/>
         }
     </>
