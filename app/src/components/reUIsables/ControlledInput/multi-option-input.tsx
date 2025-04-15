@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import CheckBox from "./checkbox";
-import { Stack } from "@chakra-ui/react";
+import { HStack, Stack } from "@chakra-ui/react";
+import { CiCircleQuestion } from "react-icons/ci";
 
 export interface MultiSelectionOptionProps {
-  options: { value: string; label: string }[];
+  options: { value: string; label: string, description?: string }[];
   setValue: (value: string) => void;
   value: string;
   direction?: "row" | "column";
@@ -47,7 +48,12 @@ export function MultiSelectOption({
           checked={checks[idx] || false}
           setCheck={(checked: boolean) => setCheck(idx, checked)}
         >
-          {option.label}
+          <HStack>
+            {option.label}
+            {option.description && (
+              <CiCircleQuestion title={option.description} />
+            )}
+          </HStack>
         </CheckBox>
       ))}
     </Stack>

@@ -7,13 +7,16 @@ import { useEntity } from "@/services/launchpad/entityService";
 import { namedEntityToListCollection, previousGenerationToListCollection } from "@/support/adapters";
 import { contractVariantsData } from "@/test-data/contract-variants";
 import { previousGenerationsData } from "@/test-data/previous-generations";
-import { Flex, HStack, ListCollection, Show, Spacer, VStack } from "@chakra-ui/react";
+import { Flex, HStack, ListCollection, Show, Spacer, useDisclosure, VStack } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { FaCode } from "react-icons/fa";
 import { Option } from "../../components/reUIsables/ControlledInput/./radio-input"
 import { FungibleTokenContract } from "@/components/launchpad/contract-template/fungible-token-contract";
 import { CodeEditor } from "@/components/launchpad/contract-editor/contract-editor";
+import { LaunchpadGaugeComponent } from "@/components/launchpad/gauge-chart/gauge-chart";
+import { TokenWizardModal } from "@/components/launchpad/dialogs/token-wizard-modal";
+import { TokenWizardResponse } from "@/models/TokenWizardResponse";
 
 export default function () {
     const url = import.meta.env.VITE_API_URL
@@ -45,6 +48,26 @@ export default function () {
     const previousGeneratedList: ListCollection = previousGenerationToListCollection(contractsGenerated);
 
     const [contractFeatureGroup, setContractFeatureGroup] = useState<{ label: string; value: string | undefined }[]>([]);
+
+    const {
+        open: isTokenWizardModalOpen,
+        onOpen: onTokenWizardModalOpen,
+        onClose: onTokenWizardModalClose,
+    } = useDisclosure();
+
+    const handleTokenWizardModalOpenChange = (open: boolean) =>
+        open ? onTokenWizardModalOpen() : onTokenWizardModalClose();
+
+    const [tokenWizardResponseTest, setTokenWizardResponseTest] = useState<TokenWizardResponse>();
+
+    useEffect(() => {
+        setTokenWizardResponseTest({
+            token: "token",
+            question: "question ?",
+            possibleAnswers: ["awnser a", "answer b", "answer c"],
+            previousResponses: []
+        })
+    }, [tokenWizardResponseTest]);
 
     useEffect(() => {
         if (contractType) {
@@ -170,38 +193,38 @@ export default function () {
     };
 
     const featuresList: Option[] = [
-        { label: "Mintable", value: "MINTABLE" },
-        { label: "Burnable", value: "BURNABLE" },
-        { label: "Pausable", value: "PAUSABLE" },
-        { label: "Permit", value: "PERMIT" },
-        { label: "Flash Minting", value: "FLASH_MINTING" },
+        { label: "Mintable", value: "MINTABLE", description: "Privileged accounts will be able to create more supply." },
+        { label: "Burnable", value: "BURNABLE", description: "Token holders will be able to destroy their tokens." },
+        { label: "Pausable", value: "PAUSABLE", description: "Privileged accounts will be able to pause the functionality marked as whenNotPaused. Useful for emergency response." },
+        { label: "Permit", value: "PERMIT", description: "Without paying gas, token holders will be able to allow third parties to transfer from their account." },
+        { label: "Flash Minting", value: "FLASH_MINTING", description: "Built-in flash loans. Lend tokens without requiring collateral as long as they're returned in the same transaction." },
     ];
 
     const votesList: Option[] = [
-        { label: "Block Number", value: "BLOCK_NUMBER" },
-        { label: "Timestamp", value: "TIMESTAMP" }
+        { label: "Block Number", value: "BLOCK_NUMBER", description: "Uses voting durations expressed as block numbers." },
+        { label: "Timestamp", value: "TIMESTAMP", description: "Uses voting durations expressed as timestamps." }
     ];
 
     const accessList: Option[] = [
-        { label: "Ownable", value: "OWNABLE" },
-        { label: "Roles", value: "ROLES" },
-        { label: "Managed", value: "MANAGED" }
+        { label: "Ownable", value: "OWNABLE", description: "Simple mechanism with a single account authorized for all privileged actions." },
+        { label: "Roles", value: "ROLES", description: "Flexible mechanism with a separate role for each privileged action. A role can have many authorized accounts." },
+        { label: "Managed", value: "MANAGED", description: "Enables a central contract to define a policy that allows certain callers to access certain functions." }
     ];
 
     const upgradeabilityList: Option[] = [
-        { label: "Transparent", value: "TRANSPARENT" },
-        { label: "UUPS", value: "UUPS" }
+        { label: "Transparent", value: "TRANSPARENT", description: "Uses more complex proxy with higher overhead, requires less changes in your contract. Can also be used with beacons." },
+        { label: "UUPS", value: "UUPS", description: "Uses simpler proxy with less overhead, requires including extra code in your contract. Allows flexibility for authorizing upgrades." }
     ];
 
-    const generateSolidityCode = (): string => {
+    /* const generateSolidityCode = (): string => {
         const erc20Import = (upgradeability.includes("TRANSPARENT") || upgradeability.includes("UUPS")) ? 'import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";' : 'import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";';
         const burnableImport = features.includes("BURNABLE") ? 'import {ERC20Burnable} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";' : "";
         const pausableImport = features.includes("PAUSABLE") ? 'import {ERC20Pausable} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol";' : "";
         const permitImport = features.includes("PERMIT") ? 'import {ERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";' : "";
         const flashMintingImport = features.includes("FLASH_MINTING") ? 'import {ERC20FlashMint} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20FlashMint.sol";' : "";
-        const voteImport = vote ? (features.includes("PERMIT") ? "" : 'import {ERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";\n') + 
-        'import {ERC20Votes} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";' + 
-        '\nimport {Nonces} from "@openzeppelin/contracts/utils/Nonces.sol";' : "";
+        const voteImport = vote ? (features.includes("PERMIT") ? "" : 'import {ERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";\n') +
+            'import {ERC20Votes} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";' +
+            '\nimport {Nonces} from "@openzeppelin/contracts/utils/Nonces.sol";' : "";
         const ownableImport = access.includes("OWNABLE") ? 'import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";' : "";
         const rolesImport = access.includes("ROLES") ? 'import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";' : "";
         const managedImport = access.includes("MANAGED") ? 'import {AccessManaged} from "@openzeppelin/contracts/access/manager/AccessManaged.sol";' : "";
@@ -290,27 +313,27 @@ export default function () {
     useEffect(() => {
         const newCode = generateSolidityCode();
         setGeneratedCode(newCode);
-    }, [name, symbol, premint, features, vote, access, upgradeability, securityContact, license]);
+    }, [name, symbol, premint, features, vote, access, upgradeability, securityContact, license]); */
 
     //VIEW
     return <PageWrapper title="Contract Generator" icon={FaCode}>
         <HStack mt="2em" w="100%">
-            <VStack>
-
-            </VStack>
             <Show when={previousGeneratedList.size > 0}>
                 <LaunchpadSelect w="20%" collection={previousGeneratedList} title="Previous contracts" value={previousGeneration} onValueChange={setPreviousGeneration} />
             </Show>
             <Spacer maxW="100%" />
         </HStack>
-        <VStack w="100%" mt="3em">
-            <Flex w="100%" gap="10em">
-                <LaunchpadSelect size="sm" w="20%" collection={contractTypesList} title="Contract Types" value={contractType} onValueChange={setContractType} />
-                <Show when={contractType}>
-                    <LaunchpadSelect size="sm" w="20%" collection={contracVariantsList} title="Contract variants" value={contractVariant} onValueChange={setContractVariant} />
-                </Show>
-            </Flex>
-        </VStack>
+        <HStack w="100%" mt="3em">
+{/*             <LaunchpadSelect size="sm" w="20%" collection={contractTypesList} title="Contract Types" value={contractType} onValueChange={setContractType} />
+ */}            <Show when={contractType}>
+                <LaunchpadSelect size="sm" w="20%" collection={contracVariantsList} title="Contract variants" value={contractVariant} onValueChange={setContractVariant} />
+            </Show>
+            <Spacer />
+            <VStack>
+                <LaunchpadGaugeComponent width="15em" value={70} arrowType="arrow" />
+                <TokenWizardModal isOpen={isTokenWizardModalOpen} onOpenChange={handleTokenWizardModalOpenChange} tokenWizardResponse={tokenWizardResponseTest} />
+            </VStack>
+        </HStack>
 
         <HStack gap="8em" m="2rem">
             <FungibleTokenContract

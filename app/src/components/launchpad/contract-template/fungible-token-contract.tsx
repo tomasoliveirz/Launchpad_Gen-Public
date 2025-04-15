@@ -2,8 +2,9 @@ import { Flex, VStack } from "@chakra-ui/react";
 import { Option } from "../../reUIsables/ControlledInput/radio-input";
 import { Field } from "@/components/ui/field";
 import { MultitypeInput } from "@/components/reUIsables/ControlledInput/multi-type-input";
-import { AccordionItemWrapper } from "@/components/reUIsables/Accordion/accordion-item-wrapper";
 import { GroupInputWrapper } from "../wrappers/group-input-wrapper";
+import { AccordionItemWithDescriptionWrapper } from "../wrappers/accordion-item-with-description";
+import { FieldWithDescription } from "../fields/field-with-description";
 
 
 export interface FungibleTokenContractProps {
@@ -71,33 +72,34 @@ export function FungibleTokenContract({
 }: FungibleTokenContractProps) {
 
     return <>
-        <VStack alignItems="start">
-            <GroupInputWrapper label="Settings" w="12rem">
+        <VStack alignItems="start" w="13rem">
+            <GroupInputWrapper label="Settings" w="100%">
                 <Flex justifyContent="space-between">
-                    <Field label="Name" w="8rem">
+                    <FieldWithDescription label="Name" w="8rem">
                         <MultitypeInput
                             type="string"
                             value={name}
                             setValue={onNameChange}
                         />
-                    </Field>
-                    <Field label="Symbol" w="3rem">
+                    </FieldWithDescription>
+                    <FieldWithDescription label="Symbol" w="3rem">
                         <MultitypeInput
                             type="string"
                             value={symbol}
                             setValue={onSymbolChange}
                         />
-                    </Field>
+                    </FieldWithDescription>
                 </Flex>
-                <Field label="Premint">
+                <FieldWithDescription label="Premint" description="Number of tokens to pre-mint">
                     <MultitypeInput
                         type="integer"
                         value={premint}
                         setValue={onPremintChange}
+                        
                     />
-                </Field>
+                </FieldWithDescription>
             </GroupInputWrapper>
-            <GroupInputWrapper label="Features" w="12rem">
+            <GroupInputWrapper label="Features" w="100%">
                 <MultitypeInput
                     multiSelect
                     type="option"
@@ -106,11 +108,11 @@ export function FungibleTokenContract({
                     setValue={onFeaturesChange}
                 />
             </GroupInputWrapper>
-            <AccordionItemWrapper
+            <AccordionItemWithDescriptionWrapper
                 onChecked={() => onVoteCheck(!voteChecked)}
                 checked={voteChecked}
                 label="Votes"
-                w="12rem"
+                description="Keeps track of historical balances for voting in on-chain governance, with a way to delegate one's voting power to a trusted account."
             >
                 <MultitypeInput
                     type="option"
@@ -118,11 +120,12 @@ export function FungibleTokenContract({
                     value={vote}
                     setValue={onVoteChange}
                 />
-            </AccordionItemWrapper>
-            <AccordionItemWrapper
+            </AccordionItemWithDescriptionWrapper>
+            <AccordionItemWithDescriptionWrapper
                 onChecked={() => onAccessCheck(!accessChecked)}
                 checked={accessChecked}
                 label="Access Control"
+                description="Allows the contract to be upgraded"
             >
                 <MultitypeInput
                     type="option"
@@ -130,11 +133,12 @@ export function FungibleTokenContract({
                     value={access}
                     setValue={onAccessChange}
                 />
-            </AccordionItemWrapper>
-            <AccordionItemWrapper
+            </AccordionItemWithDescriptionWrapper>
+            <AccordionItemWithDescriptionWrapper
                 onChecked={() => onUpgradeabilityCheck(!upgradeabilityChecked)}
                 checked={upgradeabilityChecked}
                 label="Upgradeability"
+                description="Allows the contract to be upgraded"
             >
                 <MultitypeInput
                     type="option"
@@ -142,22 +146,22 @@ export function FungibleTokenContract({
                     value={upgradeability}
                     setValue={onUpgradeabilityChange}
                 />
-            </AccordionItemWrapper>
+            </AccordionItemWithDescriptionWrapper>
             <GroupInputWrapper label="Info" w="12rem">
-                <Field label="Security Contact">
+                <FieldWithDescription label="Security Contact" description="Where people can contact you to report security issues. Will only be visible if contract metadata is verified.">
                     <MultitypeInput
                         type="email"
                         value={securityContact}
                         setValue={onSecurityContactChange}
                     />
-                </Field>
-                <Field label="License">
+                </FieldWithDescription>
+                <FieldWithDescription label="License">
                     <MultitypeInput
                         type="string"
                         value={license}
                         setValue={onLicenseChange}
                     />
-                </Field>
+                </FieldWithDescription>
             </GroupInputWrapper>
         </VStack>
     </>

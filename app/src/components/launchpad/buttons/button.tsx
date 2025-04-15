@@ -1,6 +1,7 @@
 import { Button, ButtonProps, HStack, Text } from "@chakra-ui/react";
 import { IconType } from "react-icons";
 import { FaPencilAlt, FaPlus, FaTrashAlt } from "react-icons/fa";
+import { IoMdClose } from "react-icons/io";
 
 
 export interface LaunchpadButtonProps extends ButtonProps {
@@ -31,4 +32,9 @@ export function EditButton(props:LaunchpadButtonProps)
 export function DeleteButton(props:LaunchpadButtonProps)
 {
     return <LaunchpadButton size="sm" icon={FaTrashAlt} text="Delete" {...props} bg="error" color="text.primary"/>
+}
+
+export function CancelButton(props:LaunchpadButtonProps)
+{
+    return <LaunchpadButton icon={IoMdClose} bg="none" color="text.primary" {...props} />
 }
