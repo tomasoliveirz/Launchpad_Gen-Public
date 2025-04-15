@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Moongy.RD.Launchpad.Core\Moongy.RD.Launchpad.Core.csproj" />
     <ProjectReference Include="..\Moongy.RD.Launchpad.Generator.Tokenomics.Core\Moongy.RD.Launchpad.Generator.Tokenomics.Core.csproj" />
   </ItemGroup>
 

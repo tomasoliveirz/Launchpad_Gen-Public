@@ -3,7 +3,6 @@
 namespace Moongy.RD.Launchpad.Generator.Contracts.FungibleToken.Models;
 public class FungibleTokenModel : BaseTokenModel
 {
-    public string? Symbol { get; set; }
     public byte Decimals { get; set; }
     public ulong Circulation { get; set; }
     public bool HasAutoSwap { get; set; }
