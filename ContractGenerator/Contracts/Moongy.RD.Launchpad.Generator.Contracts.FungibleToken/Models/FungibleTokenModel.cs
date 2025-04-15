@@ -1,4 +1,6 @@
-﻿using Moongy.RD.Launchpad.Core.Models.Metamodel;
+﻿using Moongy.RD.Launchpad.Core.Attributes;
+using Moongy.RD.Launchpad.Core.Enums;
+using Moongy.RD.Launchpad.Core.Models.Metamodel;
 using Moongy.RD.Launchpad.Generator.Contracts.Core.Interfaces;
 using Moongy.RD.Launchpad.Generator.Contracts.Core.Models;
 
@@ -9,6 +11,7 @@ public class MetaModelPropertyAttribute : Attribute
     public string? Name { get; set; }
 }
 
+[Token(Name = "Fungible Token", Tags = [TokenClassification.FungibleToken])]
 public class FungibleTokenModel : BaseTokenModel, IAutoSwappableToken, IDecimalToken, ITokenRecoverable
 {
     [MetaModelProperty(Name = nameof(SmartContractModel.Name))]
