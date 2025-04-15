@@ -35,7 +35,6 @@ export default function () {
     const contractTypesApi = useEntity<ContractType>("ContractTypes");
     const contractTypesData = contractTypesApi.list().data as ContractType[] || [];
 
-
     //CONTROL
     const [contractType, setContractType] = useState<string>();
     const [contractVariant, setContractVariant] = useState<string>();
@@ -48,6 +47,8 @@ export default function () {
     const previousGeneratedList: ListCollection = previousGenerationToListCollection(contractsGenerated);
 
     const [contractFeatureGroup, setContractFeatureGroup] = useState<{ label: string; value: string | undefined }[]>([]);
+
+    const [weightValue, setWeightValue] = useState(0);
 
     const {
         open: isTokenWizardModalOpen,
@@ -330,7 +331,7 @@ export default function () {
             </Show>
             <Spacer />
             <VStack>
-                <LaunchpadGaugeComponent width="15em" value={70} arrowType="arrow" />
+                <LaunchpadGaugeComponent width="15em" value={weightValue} arrowType="arrow" />
                 <TokenWizardModal isOpen={isTokenWizardModalOpen} onOpenChange={handleTokenWizardModalOpenChange} tokenWizardResponse={tokenWizardResponseTest} />
             </VStack>
         </HStack>

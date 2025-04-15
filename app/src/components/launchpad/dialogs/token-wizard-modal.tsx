@@ -40,12 +40,12 @@ export function TokenWizardModal({ isOpen, onOpenChange, tokenWizardResponse }: 
             ) : (
                 <>
                     <VStack gap="2em">
-                        <Text color="text.primary" fontSize="xl">{tokenWizardResponse?.question}</Text>
-                        <VStack>
+                        <Text alignSelf="start" color="text.primary" fontSize="xl">{tokenWizardResponse?.question}</Text>
+                        <HStack>
                             {tokenWizardResponse?.possibleAnswers.map((answer) => (
                                 <LaunchpadButton color="text.primary" key={answer} text={answer} w="fit-content" />
                             ))}
-                        </VStack>
+                        </HStack>
                     </VStack>
                 </>
             )}
