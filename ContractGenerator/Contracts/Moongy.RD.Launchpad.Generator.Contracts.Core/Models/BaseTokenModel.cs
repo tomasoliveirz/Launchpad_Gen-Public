@@ -3,9 +3,8 @@ using Moongy.RD.Launchpad.Generator.Contracts.Core.Interfaces;
 
 namespace Moongy.RD.Launchpad.Generator.Contracts.Core.Models
 {
-    public abstract class BaseTokenModel : IToken, IMintableToken, IBurnableToken
+    public abstract class BaseTokenModel : BaseContractModel, IToken, IMintableToken, IBurnableToken
     {
-        public string? Name { get; set; }
         public bool IsPausable { get; set; }
         public bool IsPermit { get; set; }
         public bool IsMintable { get; set; }
@@ -16,7 +15,5 @@ namespace Moongy.RD.Launchpad.Generator.Contracts.Core.Models
 
         public VotingEnum Voting { get; set; }
         public UpgradeabilityEnum Upgradeability { get; set; }
-
-
     }
 }

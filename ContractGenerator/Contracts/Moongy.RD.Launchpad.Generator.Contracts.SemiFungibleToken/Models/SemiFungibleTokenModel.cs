@@ -1,9 +1,11 @@
-﻿using Moongy.RD.Launchpad.Generator.Contracts.Core.Enumerables;
+﻿using Moongy.RD.Launchpad.Core.Attributes;
+using Moongy.RD.Launchpad.Core.Enums;
 using Moongy.RD.Launchpad.Generator.Contracts.Core.Interfaces;
 using Moongy.RD.Launchpad.Generator.Contracts.Core.Models;
 
 namespace Moongy.RD.Launchpad.Generator.Contracts.SemiFungibleToken.Models
 {
+    [Token(Name = "Semi-Fungible Token", Tags = [TokenClassification.FungibleToken, TokenClassification.NonFugibleToken, TokenClassification.Multiple])]
     public class SemiFungibleTokenModel : BaseTokenModel, IAutoSwappableToken, IDecimalToken, ITokenRecoverable
     {
         public string? Symbol { get; set; }
