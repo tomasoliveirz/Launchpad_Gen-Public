@@ -155,6 +155,7 @@ namespace Moongy.RD.Launchpad.SmartContractGenerator
         {
             if(tokenomic is TTokenomic tTokenomic && _tokenomicRegistry.IsCompatible<TToken, TTokenomic>())
             {
+                TokenomicsValidator.ValidateIndividualTokenomic(tokenomic);
                 return decorator.Decorate(tTokenomic, model);
             }
             return model;

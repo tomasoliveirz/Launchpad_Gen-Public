@@ -2,7 +2,7 @@
 
 namespace Moongy.RD.Launchpad.Core.Models.Metamodel.Base
 {
-    public class NameTypeArgument(string name, VariableDataType type) : Argument(name, type, "")
+    public class NameTypeArgument(string name, DataType type, DataLocation location) : Argument(name, type, location, "")
     {
     }
 }

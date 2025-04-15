@@ -1,12 +1,11 @@
 using Moongy.RD.Launchpad.Core.Exceptions;
-using Moongy.RD.Launchpad.Generator.Contracts.Core.Validators;
-using Moongy.RD.Launchpad.Generator.Contracts.SemiFungibleToken.Models;
+using Moongy.RD.Launchpad.Generator.Contracts.Core.Interfaces;
 
-namespace Moongy.RD.Launchpad.Generator.Contracts.SemiFungibleToken.Validators;
+namespace Moongy.RD.Launchpad.Generator.Contracts.Core.Validators;
 
 public static class TokenRecoveryValidator
 {
-    public static void Validate(SemiFungibleTokenModel token)
+    public static void Validate(ITokenRecoverable token)
     {
         if (!token.HasTokenRecovery) return;
         if (!token.IsPausable)

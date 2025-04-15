@@ -16,7 +16,6 @@ public class NonFungibleTokenValidator : BaseTokenValidator<NonFungibleTokenMode
         */
         base.Validate(token);
 
-        TokenOwnersValidator.Validate(token); // enumerable
         if (token.HasURI)
         {
             URIValidator.Validate(token.URI, true);

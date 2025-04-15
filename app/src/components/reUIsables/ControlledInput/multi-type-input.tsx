@@ -32,6 +32,5 @@ export function MultitypeInput({type,value,setValue,options,multiSelect, ...prop
          type === "option" ? (multiSelect ? <MultiSelectOption options={options??[]} value={value??""} setValue={setValue}/> : <RadioInput options={options??[]} value={value??""} setValue={setValue} />):
          <GenericInput value={value??""} onChange={(e)=>setValue(e??"")}/>
         }
-        
     </>
 }

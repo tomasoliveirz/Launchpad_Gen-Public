@@ -1,8 +1,11 @@
-﻿namespace Moongy.RD.Launchpad.Core.Models.Metamodel.Base
+﻿using Moongy.RD.Launchpad.Core.Enums;
+
+namespace Moongy.RD.Launchpad.Core.Models.Metamodel.Base
 {
-    public abstract class ContractProperty<T>
+    public abstract class ContractProperty
     {
         public string Name { get; set; } = "";
-        public List<T> Arguments { get; set; }
+        public List<Argument> Arguments { get; set; }
+        public PropertyType PropertyType { get; set; }
     }
 }

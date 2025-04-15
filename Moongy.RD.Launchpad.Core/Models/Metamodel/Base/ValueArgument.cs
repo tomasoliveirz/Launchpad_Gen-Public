@@ -7,7 +7,7 @@ using Moongy.RD.Launchpad.Core.Enums;
 
 namespace Moongy.RD.Launchpad.Core.Models.Metamodel.Base
 {
-    public class ValueArgument(string value) : Argument("", new VariableDataType(DataType.None, DataLocation.None), value)
+    public class ValueArgument(string value) : Argument("",DataType.None, DataLocation.None, value)
     {
     }
 }

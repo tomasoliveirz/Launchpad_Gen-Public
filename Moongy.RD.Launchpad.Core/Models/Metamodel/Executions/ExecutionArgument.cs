@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Moongy.RD.Launchpad.Core.Enums;
+﻿
+using Moongy.RD.Launchpad.Core.Models.Metamodel.Base;
 
 namespace Moongy.RD.Launchpad.Core.Models.Metamodel.Executions
 {
-    public class ExecutionArgument(string value) : Argument("", new VariableDataType(DataType.None,DataLocation.None), value)
+    public class ExecutionArgument(string value) : ValueArgument(value)
     {
-
     }
 }

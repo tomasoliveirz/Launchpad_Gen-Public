@@ -1,5 +1,4 @@
 import { CodePreview } from "@/components/launchpad/code-preview/code-preview";
-import { ContractSettings } from "@/components/launchpad/contract-generator-components/contract-settings";
 import { LaunchpadSelect } from "@/components/launchpad/select/select";
 import { PageWrapper } from "@/components/reUIsables/PageWrapper/page-wrapper";
 import { ContractType } from "@/models/ContractType";
@@ -8,14 +7,13 @@ import { useEntity } from "@/services/launchpad/entityService";
 import { namedEntityToListCollection, previousGenerationToListCollection } from "@/support/adapters";
 import { contractVariantsData } from "@/test-data/contract-variants";
 import { previousGenerationsData } from "@/test-data/previous-generations";
-import { Flex, HStack, ListCollection, Show, Spacer, Text, Stack, VStack, Button, Field, Input, NumberInput, Icon, Box, FieldRoot, FieldLabel, FieldErrorText, BoxProps, RadioGroup, Checkbox, CheckboxGroup, For, Fieldset } from "@chakra-ui/react";
+import { Flex, HStack, ListCollection, Show, Spacer, VStack } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { FaCode } from "react-icons/fa";
-import { Controller, useForm } from "react-hook-form";
-import { CiCircleQuestion } from "react-icons/ci";
-import { BigIntegerInput } from "@/components/reUIsables/ControlledInput/big-int-input";
-import { IntegerInput } from "@/components/reUIsables/ControlledInput/int-input";
+import { Option } from "../../components/reUIsables/ControlledInput/./radio-input"
+import { FungibleTokenContract } from "@/components/launchpad/contract-template/fungible-token-contract";
+import { CodeEditor } from "@/components/launchpad/contract-editor/contract-editor";
 
 export default function () {
     const url = import.meta.env.VITE_API_URL
@@ -32,7 +30,7 @@ export default function () {
     }, []);
 
     const contractTypesApi = useEntity<ContractType>("ContractTypes");
-    const contractTypesData = contractTypesApi.list().data as ContractType[];
+    const contractTypesData = contractTypesApi.list().data as ContractType[] || [];
 
 
     //CONTROL
@@ -42,9 +40,9 @@ export default function () {
 
     const [contractVariants, setContractVariants] = useState<ContractVariant[]>(contractVariantsData);
 
-    /* const contractTypesList: ListCollection = namedEntityToListCollection(contractTypesData)
+    const contractTypesList: ListCollection = namedEntityToListCollection(contractTypesData)
     const contracVariantsList: ListCollection = namedEntityToListCollection(contractVariants);
-    const previousGeneratedList: ListCollection = previousGenerationToListCollection(contractsGenerated); */
+    const previousGeneratedList: ListCollection = previousGenerationToListCollection(contractsGenerated);
 
     const [contractFeatureGroup, setContractFeatureGroup] = useState<{ label: string; value: string | undefined }[]>([]);
 
@@ -104,220 +102,254 @@ export default function () {
     }, [contractType])
 
 
+    const [name, setName] = useState<string>("")
+    const [symbol, setSymbol] = useState<string>("")
+    const [premint, setPremint] = useState<string>("")
+    const [features, setFeatures] = useState<string>("")
+    const [vote, setVote] = useState<string>("")
+    const [access, setAccess] = useState<string>("")
+    const [upgradeability, setUpgradeability] = useState<string>("")
+    const [securityContact, setSecurityContact] = useState<string>("")
+    const [license, setLicense] = useState<string>("")
+
+
+    const [voteChecked, setVoteChecked] = useState(false);
+    const [accessChecked, setAccessChecked] = useState(false);
+    const [upgradeabilityChecked, setUpgradeabilityChecked] = useState(false);
+
+    const [generatedCode, setGeneratedCode] = useState("");
+
+    function onVoteCheck() {
+        const newVal = !voteChecked;
+        if (newVal) {
+            setVote("BLOCK_NUMBER")
+        }
+        setVoteChecked(newVal);
+    }
+
+    function onAccessCheck() {
+        const newValAccess = !accessChecked;
+        if (newValAccess) {
+            setAccess("OWNABLE")
+        }
+        setAccessChecked(newValAccess);
+    }
+
+    function onUpgradeabilityCheck() {
+        const newValUpgradeability = !upgradeabilityChecked;
+        if (newValUpgradeability) {
+            setUpgradeability("TRANSPARENT")
+        }
+        setUpgradeabilityChecked(newValUpgradeability);
+    }
+
+    function onMintableCheck() {
+        const isMintable = !features.includes("MINTABLE");
+        if (isMintable && !accessChecked) {
+            setAccess("OWNABLE");
+            setAccessChecked(true);
+        }
+    }
+
+    function onUupsCheck() {
+        const isUups = !upgradeability.includes("UUPS");
+        if (isUups && !accessChecked) {
+            setAccess("OWNABLE");
+            setAccessChecked(true);
+        }
+    }
+
+    const handleUpgradeabilityChange = (value: string) => {
+        setUpgradeability(value);
+        onUupsCheck();
+    }
+
+    const handleFeaturesChange = (value: string) => {
+        setFeatures(value);
+        onMintableCheck();
+    };
+
+    const featuresList: Option[] = [
+        { label: "Mintable", value: "MINTABLE" },
+        { label: "Burnable", value: "BURNABLE" },
+        { label: "Pausable", value: "PAUSABLE" },
+        { label: "Permit", value: "PERMIT" },
+        { label: "Flash Minting", value: "FLASH_MINTING" },
+    ];
+
+    const votesList: Option[] = [
+        { label: "Block Number", value: "BLOCK_NUMBER" },
+        { label: "Timestamp", value: "TIMESTAMP" }
+    ];
+
+    const accessList: Option[] = [
+        { label: "Ownable", value: "OWNABLE" },
+        { label: "Roles", value: "ROLES" },
+        { label: "Managed", value: "MANAGED" }
+    ];
+
+    const upgradeabilityList: Option[] = [
+        { label: "Transparent", value: "TRANSPARENT" },
+        { label: "UUPS", value: "UUPS" }
+    ];
+
+    const generateSolidityCode = (): string => {
+        const erc20Import = (upgradeability.includes("TRANSPARENT") || upgradeability.includes("UUPS")) ? 'import {ERC20Upgradeable} from "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";' : 'import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";';
+        const burnableImport = features.includes("BURNABLE") ? 'import {ERC20Burnable} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";' : "";
+        const pausableImport = features.includes("PAUSABLE") ? 'import {ERC20Pausable} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol";' : "";
+        const permitImport = features.includes("PERMIT") ? 'import {ERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";' : "";
+        const flashMintingImport = features.includes("FLASH_MINTING") ? 'import {ERC20FlashMint} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20FlashMint.sol";' : "";
+        const voteImport = vote ? (features.includes("PERMIT") ? "" : 'import {ERC20Permit} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";\n') + 
+        'import {ERC20Votes} from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";' + 
+        '\nimport {Nonces} from "@openzeppelin/contracts/utils/Nonces.sol";' : "";
+        const ownableImport = access.includes("OWNABLE") ? 'import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";' : "";
+        const rolesImport = access.includes("ROLES") ? 'import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";' : "";
+        const managedImport = access.includes("MANAGED") ? 'import {AccessManaged} from "@openzeppelin/contracts/access/manager/AccessManaged.sol";' : "";
+        const trasparentImport = upgradeability.includes("TRANSPARENT") ? 'import {Initializable} from "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";' : "";
+        const imports = [
+            burnableImport,
+            pausableImport,
+            permitImport,
+            flashMintingImport,
+            voteImport,
+            ownableImport,
+            rolesImport,
+            managedImport,
+            trasparentImport,
+            "\n",
+        ].filter(Boolean);
+
+        const contractIs = [
+            upgradeability.length > 0 ? "ERC20Upgradeable" : "ERC20",
+            features.includes("BURNABLE") ? "ERC20Burnable" : "",
+            features.includes("PAUSABLE") ? "ERC20Pausable" : "",
+            features.includes("PERMIT") ? "ERC20Permit" : "",
+            features.includes("FLASH_MINTING") ? "ERC20FlashMint" : "",
+            vote.length > 0 ? "ERC20Votes" + (features.includes("PERMIT") ? "" : ", ERC20Permit") : "",
+            access.includes("OWNABLE") ? "Ownable" : "",
+            access.includes("ROLES") ? "AccessControl" : "",
+            access.includes("MANAGED") ? "AccessManaged" : "",
+            upgradeability.includes("TRANSPARENT") ? "Initializable, ERC20Upgradeable" : "",
+            upgradeability.includes("UUPS") ? "ERC20Upgradeable" : "",
+        ].filter(Boolean);
+
+        const constants = [
+            access.includes("ROLES") && features.includes("MINTABLE") ? 'bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");' : "",
+            access.includes("ROLES") && features.includes("PAUSABLE") ? 'bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");' : "",
+            access.includes("ROLES") && upgradeability.includes("UUPS") ? 'bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");' : "",
+        ].filter(Boolean);
+
+        const constructorParams = [
+            premint > "0" ? "address recipient" : "",
+            access.includes("OWNABLE") ? "address initialOwner" : "",
+            access.includes("ROLES") ? "address defaultAdmin" : "",
+            access.includes("ROLES") && features.includes("MINTABLE") ? "address minter" : "",
+            access.includes("MANAGED") ? "address initialAuthority" : "",
+        ].filter(Boolean);
+
+        const methodsCalls = [
+            premint > "0" ? `_mint(recipient, ${premint} * 10 ** decimals());` : "",
+            features.includes("PAUSABLE") && access.includes("ROLES") ? "_grantRole(PAUSER_ROLE, pauser);" : "",
+        ]
+
+        const lines = [
+            "pragma solidity ^0.8.22;",
+            "",
+        ];
+
+        lines.push(erc20Import);
+        lines.push(imports.join("\n"));
+        lines.push(`contract ${name} is ${contractIs.join(", ")} {`)
+        lines.push(constants.map(c => `\t${c}`).join("\n"));
+
+        if (upgradeability.length > 0) {
+            lines.push("constructor() {");
+            lines.push("\t_disableInitializers();");
+            lines.push("}");
+        }
+
+        lines.push(`\tconstructor(${constructorParams}) ERC20("${name}", "${symbol}") {`);
+
+        if (premint > "0") {
+            lines.push(`\t\t_mint(recipient, ${premint} * 10 ** decimals());`);
+        }
+        lines.push("\t}");
+
+        if (features.includes("MINTABLE")) {
+            lines.push("\n\tfunction mint(address to, uint256 amount) public onlyOwner {\n\t\t_mint(to, amount);\n\t}");
+        }
+        if (features.includes("BURNABLE")) {
+            lines.push("\tfunction burn() public {}");
+        }
+
+        lines.push("}");
+
+        return lines.join("\n");
+    };
+
+    useEffect(() => {
+        const newCode = generateSolidityCode();
+        setGeneratedCode(newCode);
+    }, [name, symbol, premint, features, vote, access, upgradeability, securityContact, license]);
 
     //VIEW
     return <PageWrapper title="Contract Generator" icon={FaCode}>
         <HStack mt="2em" w="100%">
             <VStack>
-                <FungibleTokenContract />
+
             </VStack>
-            {/* <Show when={previousGeneratedList.size > 0}>
+            <Show when={previousGeneratedList.size > 0}>
                 <LaunchpadSelect w="20%" collection={previousGeneratedList} title="Previous contracts" value={previousGeneration} onValueChange={setPreviousGeneration} />
-                </Show> */}
+            </Show>
             <Spacer maxW="100%" />
         </HStack>
         <VStack w="100%" mt="3em">
-
-            {/* <Flex w="100%" gap="10em">
+            <Flex w="100%" gap="10em">
                 <LaunchpadSelect size="sm" w="20%" collection={contractTypesList} title="Contract Types" value={contractType} onValueChange={setContractType} />
                 <Show when={contractType}>
-                <LaunchpadSelect size="sm" w="20%" collection={contracVariantsList} title="Contract variants" value={contractVariant} onValueChange={setContractVariant} />
+                    <LaunchpadSelect size="sm" w="20%" collection={contracVariantsList} title="Contract variants" value={contractVariant} onValueChange={setContractVariant} />
                 </Show>
-                </Flex> */}
+            </Flex>
         </VStack>
+
+        <HStack gap="8em" m="2rem">
+            <FungibleTokenContract
+                name={name}
+                symbol={symbol}
+                premint={premint}
+                features={features}
+                vote={vote}
+                access={access}
+                upgradeability={upgradeability}
+                securityContact={securityContact}
+                license={license}
+                voteList={votesList}
+                accessList={accessList}
+                upgradeabilityList={upgradeabilityList}
+                featuresList={featuresList}
+                voteChecked={voteChecked}
+                accessChecked={accessChecked}
+                upgradeabilityChecked={upgradeabilityChecked}
+                onNameChange={setName}
+                onSymbolChange={setSymbol}
+                onPremintChange={setPremint}
+                onFeaturesChange={handleFeaturesChange}
+                onVoteChange={setVote}
+                onAccessChange={setAccess}
+                onUpgradeabilityChange={handleUpgradeabilityChange}
+                onSecurityContactChange={setSecurityContact}
+                onLicenseChange={setLicense}
+                onVoteCheck={onVoteCheck}
+                onAccessCheck={onAccessCheck}
+                onUpgradeabilityCheck={onUpgradeabilityCheck}
+            />
+            <CodeEditor code={generatedCode} readOnly={true} />
+        </HStack>
         <Show when={contractVariant}>
             <Flex w="100%" gap="10em">
-                <ContractSettings />
                 <CodePreview mt="5em" />
             </Flex>
         </Show>
     </PageWrapper>
 }
-
-export interface ContractInputItemProps {
-    label?: string;
-    value: string;
-    description?: string;
-    type: "text" | "number" | "option" | "boolean";
-    options?: { label: string, value: string }[];
-}
-
-export interface ContractGroupProps {
-    groupLabel: string;
-    inputs: ContractInputItemProps[];
-}
-
-export interface ContractGroupsProps {
-    groups: ContractGroupProps[]
-}
-export function ContractGroups({ groups }: ContractGroupsProps) {
-    const {
-        register,
-        handleSubmit,
-        control,
-        formState: { errors },
-    } = useForm<Record<string, any>>()
-
-    const onSubmit = handleSubmit((data) => console.log(data))
-
-    return (
-        groups.map((group) => (
-            <Box>
-                <Text>{group.groupLabel}</Text>
-                <Stack gap="4" align="flex-start" maxW="100%">
-                    {group.inputs.map((input) => {
-                        if (input.type === "text") {
-                            return (
-                                <InputFieldWrapper label={input.label!} description={input.description} defaultError={errors[input.value]?.message?.toString() || ""} error={errors[input.value]?.message?.toString() || false}>
-                                    <Input {...register(input.value)} variant="subtle" />
-                                </InputFieldWrapper>
-                            );
-                        }
-
-                        if (input.type === "number") {
-                            return (
-                                <InputFieldWrapper label={input.label!} description={input.description} defaultError={errors[input.value]?.message?.toString() || ""} error={errors[input.value]?.message?.toString() || false}>
-                                    <Controller
-                                        name={input.value}
-                                        control={control}
-                                        render={({ field }) => (
-                                            <IntegerInput
-                                                variant="subtle"
-                                                value={field.value}
-                                                onChange={field.onChange}
-                                            />
-                                        )} />
-                                </InputFieldWrapper>
-                            );
-                        }
-
-                        if (input.type === "option") {
-                            return (
-                                <InputFieldWrapper label={input.label!} description={input.description} defaultError={errors[input.value]?.message?.toString() || ""} error={errors[input.value]?.message?.toString() || false}>
-                                    <Controller
-                                        name={input.value}
-                                        control={control}
-                                        render={({ field }) => (
-                                            <RadioGroup.Root
-                                                variant="subtle"
-                                                value={field.value}
-                                                onValueChange={({ value }) => field.onChange(value)}
-                                            >
-                                                <VStack gap="6">
-                                                    {input.options?.map((option) => (
-                                                        <RadioGroup.Item key={option.value} value={option.value}>
-                                                            <RadioGroup.ItemHiddenInput />
-                                                            <RadioGroup.ItemIndicator />
-                                                            <RadioGroup.ItemText>{option.label}</RadioGroup.ItemText>
-                                                        </RadioGroup.Item>
-                                                    ))}
-                                                </VStack>
-                                            </RadioGroup.Root>
-                                        )}
-                                    />
-                                </InputFieldWrapper>
-                            );
-                        }
-
-                        if (input.type === "boolean") {
-                            return (
-                                <InputFieldWrapper
-                                    label={input.label!}
-                                    description={input.description}
-                                    defaultError={errors[input.value]?.message?.toString() || ""}
-                                    error={errors[input.value]?.message?.toString() || false}
-                                >
-                                    <Fieldset.Root>
-                                        <Fieldset.Content>
-                                            <For each={input.options}>
-                                                {(value) => (
-                                                    <Checkbox.Root key={value.value} value={value.value}>
-                                                        <Checkbox.HiddenInput />
-                                                        <Checkbox.Control />
-                                                        <Checkbox.Label>{value.label}</Checkbox.Label>
-                                                    </Checkbox.Root>
-                                                )}
-                                            </For>
-                                        </Fieldset.Content>
-                                    </Fieldset.Root>
-                                </InputFieldWrapper>
-                            );
-                        }
-                    })}
-                </Stack>
-            </Box>
-        ))
-    );
-}
-
-export interface InputFieldWrapperProps extends BoxProps {
-    label: string
-    description?: string
-    defaultError: string
-    error: string | boolean
-}
-
-export function InputFieldWrapper({ label, description, defaultError, error, ...props }: InputFieldWrapperProps) {
-    return (
-        <FieldRoot invalid={(typeof (error) === "boolean" && error === true) || typeof (error) === "string" && error !== ""}>
-            <Flex justifyContent="space-between" w="100%">
-                <Field.Label>{label}</Field.Label>
-                <Box title={description}><Icon size="md"><CiCircleQuestion /></Icon></Box>
-            </Flex>
-            {props.children}
-            <FieldErrorText>
-                {typeof (error) === "boolean" ? defaultError : error}
-            </FieldErrorText>
-        </FieldRoot>
-
-    );
-}
-
-
-const fungibleTokenContractInputGroups: ContractGroupProps[] = [
-    {
-        groupLabel: "Settings",
-        inputs: [
-            {
-                label: "Name",
-                value: "MyToken",
-                type: "text"
-            },
-            {
-                label: "Symbol",
-                value: "MTK",
-                type: "text"
-            },
-            {
-                label: "Premint",
-                value: "number",
-                description: "Allows gasless approvals using off-chain signatures.",
-                type: "number"
-            }
-        ]
-    },
-    {
-        groupLabel: "Features",
-        inputs: [
-            {
-                value: "features",
-                type: "boolean",
-                options: [
-                    { label: "Mintable", value: "MINTABLE" },
-                    { label: "Burnable", value: "BURNABLE" },
-                    { label: "Pausable", value: "PAUSABLE" },
-                    { label: "Permit", value: "PERMIT" },
-                    { label: "Flash Minting", value: "FLASH_MINTING" },
-                ]
-            },
-        ]
-    },
-];
-
-export function FungibleTokenContract() {
-    return (
-        <ContractGroups groups={fungibleTokenContractInputGroups} />
-    );
-}
-
 
