@@ -1,9 +1,6 @@
-using System;
-using System.IO;
-using Xunit;
 using Moongy.RD.Launchpad.ContractGenerator.Publishing.Core.Templates;
 
-namespace Moongy.RD.Launchpad.Tests.Publishing
+namespace Moongy.RD.Launchpad.Tests.Publishing.Core
 {
     public class FileSystemTemplateManagerTests : IDisposable
     {
@@ -11,12 +8,12 @@ namespace Moongy.RD.Launchpad.Tests.Publishing
         
         public FileSystemTemplateManagerTests()
         {
-            // Criar diretório de teste temporário
+            // creating a temporary test directory
             _testDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             Directory.CreateDirectory(_testDir);
             Directory.CreateDirectory(Path.Combine(_testDir, "Solidity"));
             
-            // Criar um template de teste
+            // creating a test template file
             File.WriteAllText(
                 Path.Combine(_testDir, "Solidity/Function.scriban"),
                 "function {{Model.Name}}() { {{Model.Body}} }"
@@ -26,66 +23,66 @@ namespace Moongy.RD.Launchpad.Tests.Publishing
         [Fact]
         public void GetTemplate_ExistingTemplate_ReturnsContent()
         {
-            // Arrange
+            // creating a template manager that points to our test directory
             var manager = new FileSystemTemplateManager(_testDir);
             
-            // Act
+            // retrieving a template that exists
             var content = manager.GetTemplate("Solidity/Function.scriban");
             
-            // Assert
+            // verifying the template content is returned correctly
             Assert.Equal("function {{Model.Name}}() { {{Model.Body}} }", content);
         }
         
         [Fact]
         public void GetTemplate_WithCaching_ReturnsCachedContent()
         {
-            // Arrange
+            // creating a template manager that points to our test directory
             var manager = new FileSystemTemplateManager(_testDir);
             
-            // Act - Primeiro acesso
+            // first access should load the template from disk
             var content1 = manager.GetTemplate("Solidity/Function.scriban");
             
-            // Modificar o arquivo
+            // modifying the file after the first access
             File.WriteAllText(
                 Path.Combine(_testDir, "Solidity/Function.scriban"),
                 "// Modified content"
             );
             
-            // Act - Segundo acesso (deve retornar do cache)
+            // second access should return the cached version, not the modified file
             var content2 = manager.GetTemplate("Solidity/Function.scriban");
             
-            // Assert
+            // verifying the cached content remains unchanged
             Assert.Equal(content1, content2);
         }
         
         [Fact]
         public void ClearCache_ForcesReload()
         {
-            // Arrange
+            // creating a template manager that points to our test directory
             var manager = new FileSystemTemplateManager(_testDir);
             
-            // Primeiro acesso
+            // load a template to populate the cache
             manager.GetTemplate("Solidity/Function.scriban");
             
-            // Modificar o arquivo
+            // modifying the file after it's been cached
             File.WriteAllText(
                 Path.Combine(_testDir, "Solidity/Function.scriban"),
                 "// Modified content"
             );
             
-            // Limpar cache
+            // clearing the cache
             manager.ClearCache();
             
-            // Act
+            // getting the template again should reload from disk
             var content = manager.GetTemplate("Solidity/Function.scriban");
             
-            // Assert
+            // verifying the updated content is returned after cache clear
             Assert.Equal("// Modified content", content);
         }
         
         public void Dispose()
         {
-            // Limpar o diretório de teste
+            // cleaning up the test directory
             if (Directory.Exists(_testDir))
             {
                 Directory.Delete(_testDir, true);

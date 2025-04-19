@@ -1,26 +1,17 @@
-using System;
-using System.Collections.Generic;
-using Xunit;
-using Xunit.Abstractions;
 using Moongy.RD.Launchpad.ContractGenerator.Publishing.Core.Templates;
 using Scriban;
 using Scriban.Runtime;
+using Xunit.Abstractions;
 
-namespace Moongy.RD.Launchpad.Tests.Publishing
+namespace Moongy.RD.Launchpad.Tests.Publishing.Core
 {
-    /// <summary>
-    /// Thorough tests for <see cref="ScribanTemplateBase{T}"/>.
-    /// Covers simple replacement, null handling, loops, conditionals, filters, and
-    /// parity with direct Scriban usage.
-    /// </summary>
+
     public class ScribanTemplateBaseTests
     {
         private readonly ITestOutputHelper _output;
         public ScribanTemplateBaseTests(ITestOutputHelper output) => _output = output;
 
-        // ────────────────────────────────────────────────────────────
-        // ░░  Basic demo model  ░░
-        // ────────────────────────────────────────────────────────────
+        // basic demo model for template testing
         public class TestModel
         {
             public string Name { get; set; } = "DefaultName";
@@ -36,21 +27,17 @@ namespace Moongy.RD.Launchpad.Tests.Publishing
             Assert.Equal("function Foo() { return true; }", result);
         }
 
-        // ────────────────────────────────────────────────────────────
-        // ░░  Null‑property handling  ░░
-        // ────────────────────────────────────────────────────────────
+        // testing how null properties are handled in templates
         [Fact]
         public void Render_NullBody_RendersEmptySlot()
         {
             const string tpl = "function {{Model.Name}}() { {{Model.Body}} }";
             var template = new ScribanTemplateBase<TestModel>(tpl);
             var result   = template.Render(new TestModel { Name = "Foo", Body = null });
-            Assert.Equal("function Foo() {  }", result); // Empty but still valid
+            Assert.Equal("function Foo() {  }", result); // empty but still valid
         }
 
-        // ────────────────────────────────────────────────────────────
-        // ░░  Loops with collections  ░░
-        // ────────────────────────────────────────────────────────────
+        // testing loops with collections of items
         public class ListModel
         {
             public IList<string> Items { get; set; }
@@ -60,16 +47,14 @@ namespace Moongy.RD.Launchpad.Tests.Publishing
         public void Render_ListLoop_JoinsWithCommas()
         {
             const string tpl = """
-Items: {{ for i in Model.Items }}{{ i }}{{ if !for.last }}, {{ end }}{{ end }}
-""";
+            Items: {{ for i in Model.Items }}{{ i }}{{ if !for.last }}, {{ end }}{{ end }}
+            """;
             var template = new ScribanTemplateBase<ListModel>(tpl);
             var result   = template.Render(new ListModel { Items = new List<string> { "A", "B", "C" } });
             Assert.Equal("Items: A, B, C", result.Trim());
         }
 
-        // ────────────────────────────────────────────────────────────
-        // ░░  Conditionals & filters  ░░
-        // ────────────────────────────────────────────────────────────
+        // testing conditionals and string filters
         public class ConditionalModel
         {
             public bool IsPublic { get; set; }
@@ -87,9 +72,7 @@ Items: {{ for i in Model.Items }}{{ i }}{{ if !for.last }}, {{ end }}{{ end }}
             Assert.Equal(expected, result);
         }
 
-        // ────────────────────────────────────────────────────────────
-        // ░░  Parity with direct Scriban API  ░░
-        // ────────────────────────────────────────────────────────────
+        // comparing our wrapper with direct scriban api usage
         [Fact]
         public void HelperVsDirect_RenderSameOutput()
         {

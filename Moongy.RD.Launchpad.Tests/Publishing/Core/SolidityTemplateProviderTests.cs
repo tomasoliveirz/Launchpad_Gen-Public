@@ -5,11 +5,11 @@ using Moongy.RD.Launchpad.Core.Models.Metamodel;
 using Moongy.RD.Launchpad.Core.Models.Metamodel.Base;
 using Moq;
 
-namespace Moongy.RD.Launchpad.Tests.ContractGenerator.Core
+namespace Moongy.RD.Launchpad.Tests.Publishing.Core
 {
     public class SolidityTemplateProviderTests
     {
-        // Classe mock para ContractProperty
+        // mock class for contract property testing
         private class TestContractProperty : ContractProperty
         {
             public TestContractProperty()
@@ -21,7 +21,7 @@ namespace Moongy.RD.Launchpad.Tests.ContractGenerator.Core
         [Fact]
         public void GenerateFunction_ValidFunction_GeneratesCode()
         {
-            // Arrange
+            // creating a mock template manager that returns a simple function template
             var mockTemplateManager = new Mock<ITemplateManager>();
             mockTemplateManager
                 .Setup(m => m.GetTemplate("Solidity/Function.scriban"))
@@ -31,10 +31,10 @@ namespace Moongy.RD.Launchpad.Tests.ContractGenerator.Core
             
             var function = new SmartContractFunction { Name = "transfer" };
             
-            // Act
+            // generating code from the function definition
             var result = provider.GenerateFunction(function);
             
-            // Assert
+            // verifying the generated code matches the expected output
             Assert.Equal("function transfer() { return true; }", result);
             mockTemplateManager.Verify(m => m.GetTemplate("Solidity/Function.scriban"), Times.Once);
         }
@@ -42,7 +42,7 @@ namespace Moongy.RD.Launchpad.Tests.ContractGenerator.Core
         [Fact]
         public void GenerateEvent_ValidEvent_GeneratesCode()
         {
-            // Arrange
+            // creating a mock template manager that returns a simple event template
             var mockTemplateManager = new Mock<ITemplateManager>();
             mockTemplateManager
                 .Setup(m => m.GetTemplate("Solidity/Event.scriban"))
@@ -56,10 +56,10 @@ namespace Moongy.RD.Launchpad.Tests.ContractGenerator.Core
                 PropertyType = PropertyType.Event
             };
             
-            // Act
+            // generating code from the event definition
             var result = provider.GenerateEvent(eventProperty);
             
-            // Assert
+            // verifying the generated code matches the expected output
             Assert.Equal("event Transfer();", result);
             mockTemplateManager.Verify(m => m.GetTemplate("Solidity/Event.scriban"), Times.Once);
         }
@@ -67,7 +67,7 @@ namespace Moongy.RD.Launchpad.Tests.ContractGenerator.Core
         [Fact]
         public void GenerateImports_ValidImports_GeneratesCode()
         {
-            // Arrange
+            // creating a mock template manager that returns a simple import template
             var mockTemplateManager = new Mock<ITemplateManager>();
             mockTemplateManager
                 .Setup(m => m.GetTemplate("Solidity/Import.scriban"))
@@ -80,10 +80,10 @@ namespace Moongy.RD.Launchpad.Tests.ContractGenerator.Core
                 new Import { Path = "@openzeppelin/contracts/token/ERC20/ERC20.sol" }
             };
             
-            // Act
+            // generating code from the import definition
             var result = provider.GenerateImports(imports);
             
-            // Assert
+            // verifying the generated code matches the expected output
             Assert.Equal("import \"@openzeppelin/contracts/token/ERC20/ERC20.sol\";", result);
             mockTemplateManager.Verify(m => m.GetTemplate("Solidity/Import.scriban"), Times.Once);
         }

@@ -10,7 +10,7 @@ namespace Moongy.RD.Launchpad.Tests.Publishing.Core
         [Fact]
         public void CreateBuilder_RegisteredLanguage_ReturnsBuilder()
         {
-            // Arrange
+            // setting up a registry with a mock provider for a test language
             var registry = new BuilderProviderRegistry();
             var mockProvider = new Mock<IBuilderProvider>();
             var mockBuilder = new Mock<IContractBuilder>();
@@ -21,10 +21,10 @@ namespace Moongy.RD.Launchpad.Tests.Publishing.Core
             registry.RegisterProvider(mockProvider.Object);
             var factory = new BuilderFactory(registry);
             
-            // Act
+            // getting a builder for a registered language
             var builder = factory.CreateBuilder("TestLang");
             
-            // Assert
+            // verifying we get the expected builder and the provider was called once
             Assert.Same(mockBuilder.Object, builder);
             mockProvider.Verify(p => p.CreateBuilder(), Times.Once);
         }
@@ -32,11 +32,11 @@ namespace Moongy.RD.Launchpad.Tests.Publishing.Core
         [Fact]
         public void CreateBuilder_UnregisteredLanguage_ThrowsException()
         {
-            // Arrange
+            // creating a factory with an empty registry
             var registry = new BuilderProviderRegistry();
             var factory = new BuilderFactory(registry);
             
-            // Act & Assert
+            // verifying that requesting an unknown language throws the correct exception
             var exception = Assert.Throws<ArgumentException>(() => factory.CreateBuilder("UnknownLang"));
             Assert.Contains("No provider registered", exception.Message);
         }
@@ -44,7 +44,7 @@ namespace Moongy.RD.Launchpad.Tests.Publishing.Core
         [Fact]
         public void IsLanguageSupported_RegisteredLanguage_ReturnsTrue()
         {
-            // Arrange
+            // setting up a registry with a supported language
             var registry = new BuilderProviderRegistry();
             var mockProvider = new Mock<IBuilderProvider>();
             
@@ -53,31 +53,31 @@ namespace Moongy.RD.Launchpad.Tests.Publishing.Core
             
             var factory = new BuilderFactory(registry);
             
-            // Act
+            // checking if the language is supported
             var isSupported = factory.IsLanguageSupported("TestLang");
             
-            // Assert
+            // verifying the method correctly identifies supported languages
             Assert.True(isSupported);
         }
         
         [Fact]
         public void IsLanguageSupported_UnregisteredLanguage_ReturnsFalse()
         {
-            // Arrange
+            // creating a factory with an empty registry
             var registry = new BuilderProviderRegistry();
             var factory = new BuilderFactory(registry);
             
-            // Act
+            // checking if an unknown language is supported
             var isSupported = factory.IsLanguageSupported("UnknownLang");
             
-            // Assert
+            // verifying the method correctly reports unsupported languages
             Assert.False(isSupported);
         }
         
         [Fact]
         public void GetSupportedLanguages_ReturnsAllRegisteredLanguages()
         {
-            // Arrange
+            // setting up a registry with two different languages
             var registry = new BuilderProviderRegistry();
             
             var mockProvider1 = new Mock<IBuilderProvider>();
@@ -91,10 +91,10 @@ namespace Moongy.RD.Launchpad.Tests.Publishing.Core
             
             var factory = new BuilderFactory(registry);
             
-            // Act
+            // getting all supported languages
             var languages = factory.GetSupportedLanguages();
             
-            // Assert
+            // verifying that all registered languages are returned
             Assert.Contains("Lang1", languages);
             Assert.Contains("Lang2", languages);
             Assert.Equal(2, languages.Count());
