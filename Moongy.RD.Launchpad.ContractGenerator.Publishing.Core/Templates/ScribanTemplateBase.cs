@@ -6,21 +6,22 @@ using Scriban.Runtime;
 namespace Moongy.RD.Launchpad.ContractGenerator.Publishing.Core.Templates
 {
     /// <summary>
-    /// Wrapper que compila um template Scriban uma única vez
-    /// e o renderiza contra um modelo fortemente tipado.
-    /// O modelo inteiro fica disponível no template como {{ Model }}.
+    /// A lightweight wrapper that compiles a Scriban template once
+    /// and renders it against a strongly-typed model.
+    /// The entire model is exposed to the template via the global "Model" variable.
     /// </summary>
     /// <typeparam name="TModel">
-    /// Tipo de modelo exposto ao template.
+    /// The CLR type of the model available inside the template.
     /// </typeparam>
     public class ScribanTemplateBase<TModel> : ITemplate<TModel>
     {
         private readonly Template _template;
 
         /// <summary>
-        /// Constrói a instância e faz o parse do conteúdo.
-        /// Lança <see cref="InvalidOperationException"/> se o template tiver erros.
+        /// Initializes a new instance by parsing the provided template content.
+        /// Throws <see cref="InvalidOperationException"/> if the template contains errors.
         /// </summary>
+        /// <param name="templateContent">The raw Scriban template text.</param>
         public ScribanTemplateBase(string templateContent)
         {
             if (templateContent is null)
@@ -30,11 +31,15 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Publishing.Core.Templates
 
             if (_template.HasErrors)
                 throw new InvalidOperationException(
-                    $"Template has {_template.Messages.Count} error(s): " +
-                    string.Join(", ", _template.Messages));
+                    $"Scriban template has {_template.Messages.Count} error(s): {string.Join(", ", _template.Messages)}");
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Renders the precompiled template using the specified model instance.
+        /// </summary>
+        /// <param name="model">The model object to bind to the template.</param>
+        /// <returns>The rendered output as a string.</returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="model"/> is null.</exception>
         public string Render(TModel model)
         {
             if (model is null)
@@ -42,11 +47,11 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Publishing.Core.Templates
 
             var context = new TemplateContext
             {
-                // Mantém os nomes exatamente como estão no CLR (PascalCase)
+                // Preserve .NET member names (PascalCase) in the template
                 MemberRenamer = member => member.Name
             };
 
-            // Expor o modelo inteiro sob o nome global "Model"
+            // Expose the model under the global variable "Model"
             var globals = new ScriptObject { { "Model", model } };
             context.PushGlobal(globals);
 
