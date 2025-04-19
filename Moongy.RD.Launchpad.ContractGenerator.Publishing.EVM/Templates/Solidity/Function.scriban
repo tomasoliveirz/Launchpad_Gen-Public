@@ -1,0 +1,3 @@
+function {{ Model.Name }}({{ for a in Model.SmartContractArguments }}{{ a.Type }} {{ a.Name }}{{ if !for.last }}, {{ end }}{{ end }}) public {
+  // body stub
+}

@@ -3,6 +3,6 @@
     public class Import
     {
         string? Name { get; set; }
-        string? Path { get; set; }
+        public string? Path { get; set; }
     }
 }
