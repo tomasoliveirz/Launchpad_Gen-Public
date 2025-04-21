@@ -18,6 +18,10 @@ namespace Moongy.RD.Launchpad.Core.Enums
         Array,
         Dictionary,
         Tuple,
-        Custom
+        Enum,
+        Decimal,
+        Boolean,
+        DateTime,
+        Custom,
     }
 }

@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using Moongy.RD.Launchpad.Core.Attributes;
+using Moongy.RD.Launchpad.Core.Models.Metamodel;
 
 namespace Moongy.RD.Launchpad.Generator.Contracts.Core.Models
 {
     public class BaseContractModel
     {
+        [MetaModelName(Name = nameof(SmartContractModel.Name))]
         public string Name { get; set; }
     }
 }
