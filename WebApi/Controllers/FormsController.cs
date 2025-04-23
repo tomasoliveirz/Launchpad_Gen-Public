@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Moongy.RD.Launchpad.Business.Interfaces;
 using Moongy.RD.Launchpad.Core.Models;
+using Moongy.RD.Launchpad.Tools.TokenWeighter.Models;
+using Moongy.RD.Launchpad.Tools.TokenWizard.Models;
 
 namespace WebApi.Controllers
 {
@@ -39,7 +41,7 @@ namespace WebApi.Controllers
         [HttpPost("TokenWizard")]
         public async Task<ActionResult<TokenWizardResponse>> GetToken(TokenWizardRequest request)
         {
-            var result = formsBusinessObject.GetToken(request);
+            var result = await formsBusinessObject.GetToken(request);
             if (result.IsSuccessful) return Ok(result.Result);
             return Problem(result.Exception?.Message ?? "");
         }
@@ -47,7 +49,7 @@ namespace WebApi.Controllers
         [HttpPost("TokenWeighter")]
         public async Task<ActionResult<TokenWeighterResponse>> GetTokenWeight(TokenWeighterRequest request)
         {
-            var result = formsBusinessObject.GetTokenWeight(request);
+            var result = await formsBusinessObject.GetTokenWeight(request);
             if (result.IsSuccessful) return Ok(result.Result);
             return Problem(result.Exception?.Message ?? "");
         }

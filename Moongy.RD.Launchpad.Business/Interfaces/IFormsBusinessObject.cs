@@ -1,6 +1,7 @@
 ﻿using Moongy.RD.Launchpad.Business.Base;
 using Moongy.RD.Launchpad.Core.Models;
-using Moongy.RD.Launchpad.Data.Pocos;
+using Moongy.RD.Launchpad.Tools.TokenWeighter.Models;
+using Moongy.RD.Launchpad.Tools.TokenWizard.Models;
 
 namespace Moongy.RD.Launchpad.Business.Interfaces
 {

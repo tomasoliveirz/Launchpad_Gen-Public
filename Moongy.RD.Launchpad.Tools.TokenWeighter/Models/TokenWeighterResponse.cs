@@ -1,4 +1,4 @@
-﻿namespace Moongy.RD.Launchpad.Data.Pocos;
+﻿namespace Moongy.RD.Launchpad.Tools.TokenWeighter.Models;
 
 //0-40 - dark green
 //41-60 - light green

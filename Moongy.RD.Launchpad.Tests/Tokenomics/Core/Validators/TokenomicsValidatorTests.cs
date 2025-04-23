@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Moongy.RD.Launchpad.Core.Exceptions;
 using Moongy.RD.Launchpad.Core.Models;
 using Moongy.RD.Launchpad.Generator.Tokenomics.AntiWhale.Models;

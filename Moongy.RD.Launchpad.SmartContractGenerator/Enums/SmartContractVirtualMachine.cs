@@ -2,6 +2,7 @@
 public enum SmartContractVirtualMachine
 
 {
+    None,
     EVM,
     SeaLevel
 }

@@ -17,6 +17,7 @@
     <ProjectReference Include="..\Moongy.RD.Launchpad.Business\Moongy.RD.Launchpad.Business.csproj" />
     <ProjectReference Include="..\Moongy.RD.LaunchPad.DataAccess\Moongy.RD.LaunchPad.DataAccess.csproj" />
     <ProjectReference Include="..\Moongy.RD.Launchpad.Data\Moongy.RD.Launchpad.Data.csproj" />
+    <ProjectReference Include="..\Moongy.RD.Launchpad.Tools.TokenWeighter\Moongy.RD.Launchpad.Tools.TokenWeighter.csproj" />
   </ItemGroup>
 
 </Project>
