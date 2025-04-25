@@ -63,6 +63,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moongy.RD.Launchpad.Generator.Extensions.Core", "Moongy.RD.Launchpad.Generator.Extensions.Core\Moongy.RD.Launchpad.Generator.Extensions.Core.csproj", "{83704F1F-662D-4451-B28A-425FDF285E59}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moongy.RD.Launchpad.Tools.Aissistant", "Moongy.RD.Launchpad.Tools.Aissistant\Moongy.RD.Launchpad.Tools.Aissistant.csproj", "{20E53E44-F7E4-409B-BFE8-0986018D030B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -165,6 +167,10 @@ Global
 		{83704F1F-662D-4451-B28A-425FDF285E59}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{83704F1F-662D-4451-B28A-425FDF285E59}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{83704F1F-662D-4451-B28A-425FDF285E59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20E53E44-F7E4-409B-BFE8-0986018D030B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20E53E44-F7E4-409B-BFE8-0986018D030B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20E53E44-F7E4-409B-BFE8-0986018D030B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20E53E44-F7E4-409B-BFE8-0986018D030B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -192,6 +198,7 @@ Global
 		{A9A0CFA7-98FB-4FAE-9803-84D91D92F1D9} = {B27C4DB2-83DA-4605-A139-631C0AAFF734}
 		{CADE4231-84C0-46EE-B15E-B43EC5259EA5} = {36DE9F2F-A381-4130-B6F2-0BB2DA5E6327}
 		{83704F1F-662D-4451-B28A-425FDF285E59} = {CADE4231-84C0-46EE-B15E-B43EC5259EA5}
+		{20E53E44-F7E4-409B-BFE8-0986018D030B} = {B27C4DB2-83DA-4605-A139-631C0AAFF734}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EE10EDD2-11B2-420F-96C3-AB17510C4CE6}

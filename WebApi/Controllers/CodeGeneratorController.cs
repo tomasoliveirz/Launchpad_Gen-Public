@@ -37,6 +37,11 @@ contract MyToken is ERC20, ERC20Permit {
         
         #endregion
 
+        public async Task<ActionResult> GenerateFungibleToken([FromBody]FungibleTokenForm model)
+        {
+            var result = await bo.Generate(model);
+            return Ok(result);
+        }
 
     }
 }

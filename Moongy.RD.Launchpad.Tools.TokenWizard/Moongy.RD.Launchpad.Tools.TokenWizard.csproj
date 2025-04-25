@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ContractGenerator\Contracts\Moongy.RD.Launchpad.Generator.Contracts.AdvancedFungibleToken\Moongy.RD.Launchpad.Generator.Contracts.AdvancedFungibleToken.csproj" />
+    <ProjectReference Include="..\ContractGenerator\Contracts\Moongy.RD.Launchpad.Generator.Contracts.FungibleToken\Moongy.RD.Launchpad.Generator.Contracts.FungibleToken.csproj" />
     <ProjectReference Include="..\ContractGenerator\Contracts\Moongy.RD.Launchpad.Generator.Contracts.NonFungibleToken\Moongy.RD.Launchpad.Generator.Contracts.NonFungibleToken.csproj" />
     <ProjectReference Include="..\ContractGenerator\Contracts\Moongy.RD.Launchpad.Generator.Contracts.SemiFungibleToken\Moongy.RD.Launchpad.Generator.Contracts.SemiFungibleToken.csproj" />
   </ItemGroup>

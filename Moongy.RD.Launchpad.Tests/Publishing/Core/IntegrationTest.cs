@@ -163,8 +163,8 @@ namespace Moongy.RD.Launchpad.Tests.Publishing.Core
                     {
                         Name = "totalSupply",
                         PropertyType = PropertyType.None,
-                        DataType = "uint256", 
-                        Visibility = "private"
+                        DataType = DataType.BigInteger,
+                        Visibility = VisibilityModifier.Private
                     }
                 },
                 // define contract functions
