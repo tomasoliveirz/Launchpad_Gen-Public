@@ -3,4 +3,5 @@ public enum TokenomicTriggerMode
 {
     Automatic,
     Manual,
+    None
 }

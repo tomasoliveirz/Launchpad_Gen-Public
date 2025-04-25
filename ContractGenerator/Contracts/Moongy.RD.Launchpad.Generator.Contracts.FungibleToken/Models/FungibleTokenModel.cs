@@ -1,25 +1,31 @@
 ﻿using Moongy.RD.Launchpad.Core.Attributes;
 using Moongy.RD.Launchpad.Core.Enums;
-using Moongy.RD.Launchpad.Core.Models.Metamodel;
 using Moongy.RD.Launchpad.Generator.Contracts.Core.Interfaces;
 using Moongy.RD.Launchpad.Generator.Contracts.Core.Models;
 
 namespace Moongy.RD.Launchpad.Generator.Contracts.FungibleToken.Models;
 
-public class MetaModelPropertyAttribute : Attribute
-{
-    public string? Name { get; set; }
-}
-
 [Token(Name = "Fungible Token", Tags = [TokenClassification.FungibleToken])]
 public class FungibleTokenModel : BaseTokenModel, IAutoSwappableToken, IDecimalToken, ITokenRecoverable
 {
-    [MetaModelProperty(Name = nameof(SmartContractModel.Name))]
+    [MetaModelProperty(Name = nameof(Symbol), PropertyType = PropertyType.None, DataType = DataType.String)]
     public string? Symbol { get; set; }
+
+    [MetaModelProperty(Name = nameof(Decimals), PropertyType = PropertyType.None, DataType = DataType.Integer)]
     public byte Decimals { get; set; }
+
+    [MetaModelProperty(Name = nameof(Circulation), PropertyType = PropertyType.None, DataType = DataType.BigInteger)]
     public ulong Circulation { get; set; }
+
+    [MetaModelProperty(Name = nameof(HasAutoSwap), PropertyType = PropertyType.None, DataType = DataType.Boolean)]
     public bool HasAutoSwap { get; set; }
+
+    [MetaModelProperty(Name = nameof(HasFlashMint), PropertyType = PropertyType.None, DataType = DataType.Boolean)]
     public bool HasFlashMint { get; set; }
-    public ulong PremintAmmount { get; set; }
+
+    [MetaModelProperty(Name = nameof(PremintAmount), PropertyType = PropertyType.None, DataType = DataType.BigInteger)]
+    public ulong PremintAmount { get; set; }
+
+    [MetaModelProperty(Name = nameof(HasTokenRecovery), PropertyType = PropertyType.None, DataType = DataType.Boolean)]
     public bool HasTokenRecovery { get; set; }
 }

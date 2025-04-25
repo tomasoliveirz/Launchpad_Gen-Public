@@ -10,6 +10,8 @@
     <ProjectReference Include="..\ContractGenerator\Contracts\Moongy.RD.Launchpad.Generator.Contracts.Core\Moongy.RD.Launchpad.Generator.Contracts.Core.csproj" />
     <ProjectReference Include="..\Moongy.RD.LaunchPad.DataAccess\Moongy.RD.LaunchPad.DataAccess.csproj" />
     <ProjectReference Include="..\Moongy.RD.Launchpad.Data\Moongy.RD.Launchpad.Data.csproj" />
+    <ProjectReference Include="..\Moongy.RD.Launchpad.Tools.TokenWeighter\Moongy.RD.Launchpad.Tools.TokenWeighter.csproj" />
+    <ProjectReference Include="..\Moongy.RD.Launchpad.Tools.TokenWizard\Moongy.RD.Launchpad.Tools.TokenWizard.csproj" />
   </ItemGroup>
 
 </Project>

@@ -7,7 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ContractGenerator\Contracts\Moongy.RD.Launchpad.Generator.Contracts.Core\Moongy.RD.Launchpad.Generator.Contracts.Core.csproj" />
     <ProjectReference Include="..\Moongy.RD.Launchpad.Core\Moongy.RD.Launchpad.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Scriban" Version="6.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
+      <HintPath>..\..\..\..\.nuget\packages\microsoft.extensions.dependencyinjection.abstractions\9.0.1\lib\net9.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

@@ -9,7 +9,10 @@
 
     <ItemGroup>
         <PackageReference Include="coverlet.collector" Version="6.0.2"/>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.0-preview-25107-01" />
+        <PackageReference Include="Moq" Version="4.20.72" />
+        <PackageReference Include="MSTest.TestAdapter" Version="3.9.0-preview.25167.10" />
+        <PackageReference Include="MSTest.TestFramework" Version="3.9.0-preview.25167.10" />
         <PackageReference Include="xunit" Version="2.9.2"/>
         <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2"/>
     </ItemGroup>
@@ -28,7 +31,17 @@
       <ProjectReference Include="..\ContractGenerator\Tokenomics\Moongy.RD.Launchpad.Generator.Tokenomics.Reflections\Moongy.RD.Launchpad.Generator.Tokenomics.Reflections.csproj" />
       <ProjectReference Include="..\ContractGenerator\Tokenomics\Moongy.RD.Launchpad.Generator.Tokenomics.Tax\Moongy.RD.Launchpad.Generator.Tokenomics.Tax.csproj" />
       <ProjectReference Include="..\Moongy.RD.Launchpad.ContractGenerator.Publishing.Core\Moongy.RD.Launchpad.ContractGenerator.Publishing.Core.csproj" />
+      <ProjectReference Include="..\Moongy.RD.Launchpad.ContractGenerator.Publishing.EVM\Moongy.RD.Launchpad.ContractGenerator.Publishing.EVM.csproj" />
       <ProjectReference Include="..\Moongy.RD.Launchpad.Core\Moongy.RD.Launchpad.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Microsoft.Extensions.DependencyInjection">
+        <HintPath>..\..\..\..\.nuget\packages\microsoft.extensions.dependencyinjection\9.0.1\lib\net9.0\Microsoft.Extensions.DependencyInjection.dll</HintPath>
+      </Reference>
+      <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
+        <HintPath>..\..\..\..\.nuget\packages\microsoft.extensions.dependencyinjection.abstractions\9.0.1\lib\net9.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>

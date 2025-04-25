@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Moongy.RD.Launchpad.Data.Pocos
+namespace Moongy.RD.Launchpad.Generator.Contracts.Core.Exceptions
 {
-    public class TokenWeighterRequest
+    public class NotValidContractException : Exception
     {
-        public List<string> Features { get; set; }
     }
 }

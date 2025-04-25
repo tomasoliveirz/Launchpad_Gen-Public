@@ -2,11 +2,17 @@
 {
     public enum PropertyType
     {
-        None,
+        None,      
         Event,
         Error,
         Struct,
         Enum,
-        Library
+        Library,
+
+        Flag,       // for bools 
+        Option,     // for enums or nullable configs
+        Numeric,    // for things like PremintAmount, Circulation
+        String,     // for text values like Symbol
     }
+
 }

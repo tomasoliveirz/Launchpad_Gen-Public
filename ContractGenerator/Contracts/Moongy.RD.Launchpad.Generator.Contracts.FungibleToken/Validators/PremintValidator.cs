@@ -7,7 +7,7 @@ public static class PremintValidator
 {
     public static void Validate(FungibleTokenModel token)
     {
-        if (token.PremintAmmount <= 0) return;
+        if (token.PremintAmount <= 0) return;
         if (!token.IsMintable)
             throw new PremintRequiresMintableException();
     }
