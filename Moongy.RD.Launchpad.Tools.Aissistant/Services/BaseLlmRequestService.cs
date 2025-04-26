@@ -1,14 +1,17 @@
-﻿using Moongy.RD.Launchpad.Tools.Aissistant.Enums;
+﻿using System.Net.Http.Headers;
+using System.Text;
+using Moongy.RD.Launchpad.Tools.Aissistant.Enums;
 using Moongy.RD.Launchpad.Tools.Aissistant.Extensions;
 using Moongy.RD.Launchpad.Tools.Aissistant.Interfaces;
 using Moongy.RD.Launchpad.Tools.Aissistant.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Moongy.RD.Launchpad.Tools.Aissistant.Services;
-public abstract class BaseLlmRequestService(LlmConfiguration config) : ILlmRequestService
+public abstract class BaseLlmRequestService(LlmConfiguration settings, HttpClient http) : ILlmRequestService
 {
-    protected readonly HttpClient _http;
-    protected readonly LlmConfiguration _settings = config;
+    protected readonly HttpClient _http = http;
+    protected readonly LlmConfiguration _settings = settings;
 
     public abstract Task<LlmMessage> ExecuteAsync(string message);
     public abstract Task<LlmMessage> ExecuteAsync(string message, LlmContext context);
@@ -43,23 +46,20 @@ public abstract class BaseLlmRequestService(LlmConfiguration config) : ILlmReque
         return dict;
     }
 
-
-
-
     protected virtual async Task<string> SendRequestAsync(object request)
     {
-        var opts = new JsonSerializerOptions
+        var settings = new JsonSerializerSettings
         {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            ContractResolver = new CamelCasePropertyNamesContractResolver(),
+            NullValueHandling = NullValueHandling.Ignore
         };
-        var payload = JsonSerializer.Serialize(request, opts);
+        var payload = JsonConvert.SerializeObject(request, settings);
 
         using var httpReq = new HttpRequestMessage(HttpMethod.Post, _settings.Endpoint)
         {
             Content = new StringContent(payload, Encoding.UTF8, "application/json")
         };
-        httpReq.Headers.Authorization =
-            new AuthenticationHeaderValue("Bearer", _settings.Token);
+        httpReq.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _settings.Token);
 
         var resp = await _http.SendAsync(httpReq);
         resp.EnsureSuccessStatusCode();

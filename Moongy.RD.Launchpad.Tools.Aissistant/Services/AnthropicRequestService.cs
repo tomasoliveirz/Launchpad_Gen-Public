@@ -4,7 +4,7 @@ using Moongy.RD.Launchpad.Tools.Aissistant.Models;
 using Moongy.RD.Launchpad.Tools.Aissistant.Models.Responses.Anthropic;
 using Newtonsoft.Json;
 namespace Moongy.RD.Launchpad.Tools.Aissistant.Services;
-public class AnthropicRequestService(LlmConfiguration config) : BaseLlmRequestService(config)
+public class AnthropicRequestService(LlmConfiguration config, HttpClient http) : BaseLlmRequestService(config, http)
 {
     public async override Task<LlmMessage> ExecuteAsync(string message)
     {

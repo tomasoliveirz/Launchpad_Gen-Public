@@ -13,10 +13,11 @@ namespace Moongy.RD.Launchpad.Business.BusinessObjects
     {
         public Task<OperationResult<CodeGenerationResult<FungibleTokenForm>>> Generate(FungibleTokenForm form)
         {
-            var model = ToModel<FungibleTokenModel>(form);
-            var tokenomics = ExtractTokenomics(form);
-            var extensions = ExtractExtensions(form);
-            var result = generator.Generate(model);
+            return null;
+            //var model = ToModel<FungibleTokenModel>(form);
+            //var tokenomics = ExtractTokenomics(form);
+            //var extensions = ExtractExtensions(form);
+            //var result = generator.Generate(model);
         }
 
 

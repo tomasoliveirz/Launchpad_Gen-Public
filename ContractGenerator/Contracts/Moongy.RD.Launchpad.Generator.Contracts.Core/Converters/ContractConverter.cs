@@ -12,7 +12,7 @@ namespace Moongy.RD.Launchpad.Generator.Contracts.Core.Converters
         {
             var contractAttribute = contractObject.GetType().GetCustomAttribute<ContractAttribute>(false);
             if (contractAttribute == null || contractAttribute.ContractType != typeof(T) ) throw new NotValidContractException();
-
+            return new();
 
 
 

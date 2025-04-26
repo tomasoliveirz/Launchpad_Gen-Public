@@ -175,40 +175,41 @@ namespace Moongy.RD.Launchpad.SmartContractGenerator
 
 
         #region Feature extraction
-        private IEnumerable<ITokenomic> ExtractTokenomics(object form)
-        {
+        //TODO:
+        //private IEnumerable<ITokenomic> ExtractTokenomics(object form)
+        //{
+        //    return [];
+        //}
 
-        }
+        //private IEnumerable<IContractExtension> ExtractExtensions(object form)
+        //{
+        //    return [];
+        //}
 
-        private IEnumerable<IContractExtension> ExtractExtensions(object form)
-        {
+        //private T ToModel<T>(object t)
+        //{
 
-        }
+        //}
 
-        private T ToModel<T>(object t)
-        {
+        //private FungibleTokenModel ToFungibleToken(object t)
+        //{
 
-        }
+        //}
 
-        private FungibleTokenModel ToFungibleToken(object t)
-        {
+        //private AdvancedFungibleTokenModel ToAdvancedFungibleToken(object t)
+        //{
 
-        }
+        //}
 
-        private AdvancedFungibleTokenModel ToAdvancedFungibleToken(object t)
-        {
+        //private NonFungibleTokenModel ToNonFungibleToken(object t)
+        //{
 
-        }
+        //}
 
-        private NonFungibleTokenModel ToNonFungibleToken(object t)
-        {
+        //private SemiFungibleTokenModel ToSemiFungibleToken(object t)
+        //{
 
-        }
-
-        private SemiFungibleTokenModel ToSemiFungibleToken(object t)
-        {
-
-        }
+        //}
 
 
 

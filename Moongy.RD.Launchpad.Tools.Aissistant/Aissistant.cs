@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using Moongy.RD.Launchpad.Tools.Aissistant.Constants;
 using Moongy.RD.Launchpad.Tools.Aissistant.Enums;
 using Moongy.RD.Launchpad.Tools.Aissistant.Exceptions;
 using Moongy.RD.Launchpad.Tools.Aissistant.Extensions;
@@ -8,9 +9,11 @@ using Moongy.RD.Launchpad.Tools.Aissistant.Services;
 
 namespace Moongy.RD.Launchpad.Tools.Aissistant
 {
-    public class Aissistant(IOptions<AissistantOptions> options)
+    public class Aissistant(IOptions<AissistantOptions> options, HttpClient http) : IAissistant
     {
         private AissistantOptions _options = options.Value;
+        private string _defaultLanguage = "solidity";
+        private string _defaultVersion = "0.8.20";
 
         public async Task<AissistantResponse> Execute(AissistantRequest request)
         {
@@ -21,10 +24,11 @@ namespace Moongy.RD.Launchpad.Tools.Aissistant
             foreach (var model in models)
             {
                 var service = GetService(model) ?? throw new NoAvailableModelsForOperationException();
-                var message = GenerateMessage(request.Operation, request.Code, request.Description);
+                var message = GenerateMessage(request);
                 try
                 {
                     var result = await service.ExecuteAsync(message);
+                    return new AissistantResponse() { Success = true, Content = result.Content};
                 }
                 catch
                 {
@@ -34,9 +38,20 @@ namespace Moongy.RD.Launchpad.Tools.Aissistant
             return new AissistantResponse() { Success = false, Content = "The request could not be handled"};
         }
 
-        private string GenerateMessage(OperationType operation, string? code, string? description)
+        private string GenerateMessage(AissistantRequest request)
         {
-            throw new NotImplementedException();
+            if(request.Language == null)
+            {
+                request.Language = _defaultLanguage;
+                request.Version = _defaultVersion;
+            }
+
+            var language = request.Language ?? _defaultLanguage;
+            var messageTemplate = Prompts.OperationFor[request.Operation];
+            return messageTemplate.Replace("{Version}", request.Version)
+                                  .Replace("{Language}", request.Language)
+                                  .Replace("{Code}", request.Code)
+                                  .Replace("{Description}", request.Description);
         }
 
         private ILlmRequestService? GetService(LlmModel model)
@@ -46,9 +61,8 @@ namespace Moongy.RD.Launchpad.Tools.Aissistant
             options.DefaultMode ??= _options.DefaultMode ?? LlmMode.Balanced;
             switch (model.GetService())
             {
-                case LlmService.OpenAi: return new OpenAiRequestService(options);
-                case LlmService.Claude: return new AnthropicRequestService(options);
-                case LlmService.Google: return new GoogleLlmRequestService(options);
+                case LlmService.OpenAi: return new OpenAiRequestService(options, http);
+                case LlmService.Anthropic: return new AnthropicRequestService(options, http);
                 default: return null;
             }
         }

@@ -65,6 +65,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moongy.RD.Launchpad.Generat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moongy.RD.Launchpad.Tools.Aissistant", "Moongy.RD.Launchpad.Tools.Aissistant\Moongy.RD.Launchpad.Tools.Aissistant.csproj", "{20E53E44-F7E4-409B-BFE8-0986018D030B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiV2", "WebApiV2\WebApiV2.csproj", "{115867B0-85E2-457F-B48E-D2CACE7BBC61}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -171,6 +173,10 @@ Global
 		{20E53E44-F7E4-409B-BFE8-0986018D030B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20E53E44-F7E4-409B-BFE8-0986018D030B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20E53E44-F7E4-409B-BFE8-0986018D030B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{115867B0-85E2-457F-B48E-D2CACE7BBC61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{115867B0-85E2-457F-B48E-D2CACE7BBC61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{115867B0-85E2-457F-B48E-D2CACE7BBC61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{115867B0-85E2-457F-B48E-D2CACE7BBC61}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
