@@ -15,7 +15,7 @@ namespace ScribanSolidityColorizer.Format
         public ScribanControlFormat()
         {
             DisplayName = "Scriban Control Block";
-            ForegroundColor = Colors.Goldenrod;
+            ForegroundColor = (Color)ColorConverter.ConvertFromString("#FCF5C7");
             IsItalic = true;
         }
     }

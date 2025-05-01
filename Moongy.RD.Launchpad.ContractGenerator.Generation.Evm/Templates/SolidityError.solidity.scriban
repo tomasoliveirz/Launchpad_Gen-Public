@@ -1,1 +1,0 @@
-﻿error {{ name }}({{ parameters | array.join ", " }}); {%test%} uint256 {{ test }}

@@ -50,11 +50,14 @@
     <Compile Include="Classifier\ClassificationType.cs" />
     <Compile Include="Classifier\ScribansSolidityClassifier.cs" />
     <Compile Include="Classifier\ScribansSolidityClassifierProvider.cs" />
+    <Compile Include="Enums\LanguageKind.cs" />
     <Compile Include="Enums\ScribansSolidityTokenTypes.cs" />
     <Compile Include="Expressions\ScribansExpressions.cs" />
     <Compile Include="Expressions\SolidityExpressions.cs" />
+    <Compile Include="Format\ScribanCommentFormat.cs" />
     <Compile Include="Format\ScribanControlFormat.cs" />
     <Compile Include="Format\ScribanExpressionFormat.cs" />
+    <Compile Include="Format\ScribanOperatorFormat.cs" />
     <Compile Include="Format\SolidityCommentFormat .cs" />
     <Compile Include="Format\SolidityDataTypeFormat.cs" />
     <Compile Include="Format\SolidityKeywordFormat.cs" />

@@ -8,6 +8,16 @@ namespace ScribanSolidityColorizer.Expressions
     public static class SolidityExpressions
     {
         // Control Keywords
+
+        [ProgrammingLanguageExpression(ScribanSolidityTokenTypes.SolidityKeyword)]
+        public const string Import = "import";
+
+        [ProgrammingLanguageExpression(ScribanSolidityTokenTypes.SolidityKeyword)]
+        public const string Pragma = "pragma";
+
+        [ProgrammingLanguageExpression(ScribanSolidityTokenTypes.SolidityKeyword)]
+        public const string Solidity= "solidity";
+
         [ProgrammingLanguageExpression(ScribanSolidityTokenTypes.SolidityKeyword)]
         public const string Contract = "contract";
 

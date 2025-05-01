@@ -10,6 +10,8 @@
         SolidityValue,
         SolidityVisibility,
         ScribanExpression,
-        ScribanControl
+        ScribanControl,
+        ScribanOperator,
+        ScribanComment
     }
 }

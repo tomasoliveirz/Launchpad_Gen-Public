@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Moongy.RD.Launchpad.ContractGenerator.Generation.Evm\Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.csproj" />
     <ProjectReference Include="..\Moongy.RD.Launchpad.Tools.Aissistant\Moongy.RD.Launchpad.Tools.Aissistant.csproj" />
   </ItemGroup>
 

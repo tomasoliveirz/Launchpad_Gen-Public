@@ -13,9 +13,9 @@ namespace ScribanSolidityColorizer.Classifier
 {
     internal sealed class ScribanSolidityClassifier : ITagger<ClassificationTag>
     {
-        ITextBuffer _buffer;
-        ITagAggregator<ScribanSolidityTag> _aggregator;
-        IDictionary<ScribanSolidityTokenTypes, IClassificationType> _scribansSolidityTypes;
+        readonly ITextBuffer _buffer;
+        readonly ITagAggregator<ScribanSolidityTag> _aggregator;
+        readonly IDictionary<ScribanSolidityTokenTypes, IClassificationType> _scribansSolidityTypes;
 
         public event EventHandler<SnapshotSpanEventArgs> TagsChanged
         {
@@ -39,7 +39,9 @@ namespace ScribanSolidityColorizer.Classifier
                 [ScribanSolidityTokenTypes.SolidityValue] = typeService.GetClassificationType("scriban-solidity.solidity.value"),
                 [ScribanSolidityTokenTypes.SolidityVisibility] = typeService.GetClassificationType("scriban-solidity.solidity.visibility"),
                 [ScribanSolidityTokenTypes.ScribanExpression] = typeService.GetClassificationType("scriban-solidity.scribans.expression"),
-                [ScribanSolidityTokenTypes.ScribanControl] = typeService.GetClassificationType("scriban-solidity.scribans.control")
+                [ScribanSolidityTokenTypes.ScribanControl] = typeService.GetClassificationType("scriban-solidity.scribans.control"),
+                [ScribanSolidityTokenTypes.ScribanOperator] = typeService.GetClassificationType("scriban-solidity.scribans.operator"),
+                [ScribanSolidityTokenTypes.ScribanComment] = typeService.GetClassificationType("scriban-solidity.scribans.comment"),
             };
         }
 
@@ -50,7 +52,7 @@ namespace ScribanSolidityColorizer.Classifier
                 var tagSpans = tagSpan.Span.GetSpans(spans[0].Snapshot);
                 yield return
                     new TagSpan<ClassificationTag>(tagSpans[0],
-                                                   new ClassificationTag(_scribansSolidityTypes[tagSpan.Tag.type]));
+                                                   new ClassificationTag(_scribansSolidityTypes[tagSpan.Tag.Type]));
             }
         }
     }

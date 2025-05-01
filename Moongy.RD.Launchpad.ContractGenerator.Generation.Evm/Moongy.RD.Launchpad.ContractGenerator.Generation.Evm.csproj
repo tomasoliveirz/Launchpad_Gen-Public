@@ -7,11 +7,24 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Templates\test.ook" />
+    <None Remove="Templates\ContractConstructor.solidity.scriban" />
+    <None Remove="Templates\FileHeader.solidity.scriban" />
+    <None Remove="Templates\Imports.solidity.scriban" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Templates\SolidityError.scriban" />
+    <EmbeddedResource Include="Templates\ContractConstructor.solidity.scriban" />
+    <EmbeddedResource Include="Templates\ContractHeader.solidity.scriban" />
+    <EmbeddedResource Include="Templates\FileHeader.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Imports.solidity.scriban" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Moongy.RD.Launchpad.Core\Moongy.RD.Launchpad.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Scriban" Version="6.2.0" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,8 @@
+﻿{{for importItem in imports}}
+import {{- if importItem.ImportsNamedElements -}} 
+	{ {{- for namedElement in importItem.NamedElements -}} 
+		{{- namedElement -}}{{if for.last == false}}, {{end}}
+	{{- end -}} } from {{ end -}}
+"{{importItem.Path}}"
+{{- if importItem.HasAlias }} as {{ importItem.Alias -}} {{- end -}};
+{{- end -}}

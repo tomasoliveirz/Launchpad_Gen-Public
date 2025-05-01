@@ -1,7 +1,13 @@
-﻿
-
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Enums;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Header;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Imports;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Parameters;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.State;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.TypeReferences;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Renderers.Templates;
+using Moongy.RD.Launchpad.Core.Enums;
 
 namespace WebApiV2.Controllers
 {
@@ -9,6 +15,89 @@ namespace WebApiV2.Controllers
     [ApiController]
     public class GeneratorController : ControllerBase
     {
-        [HttpPost("fungible")]
+        [HttpGet]
+        public ActionResult TryToGenerateSolidityContract()
+        {
+            #region file header
+            FileHeaderModel fileHeader = new()
+            {
+                License = SpdxLicense.Apache_2_0,
+                Version = new() { Minimum = new() { Major = 0, Minor = 8, Revision = 20 }, Maximum = new() { Major = 0, Minor = 8, Revision = 20 } }
+            };
+            #endregion
+
+            #region Constructor parameters
+            var int256Type = new SimpleTypeReference(SolidityDataTypeEnum.Uint256);
+            var stringType = new SimpleTypeReference(SolidityDataTypeEnum.String);
+
+            var nameArgument = new ConstructorParameterModel() { Name = "name", Type = stringType, Index = 0, Value="MyToken" };
+            var symbolArgument = new ConstructorParameterModel() { Name = "symbol", Type = stringType, Index = 1, Value="MTK" };
+            var maxUserCountArgument = new ConstructorParameterModel() { Name = "maxUserCount", Type = int256Type, AssignedTo="_maxUserCount" };
+            #endregion
+
+            #region Dependencies
+            var erc20Dependency = new AbstractionImportModel()
+            {
+                Name = "ERC20",
+                PathName = "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+                ConstructorParameters = [nameArgument, symbolArgument]
+            };
+
+            var erc202Dependency = new AbstractionImportModel()
+            {
+                Name = "ERC202",
+                PathName = "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+                ConstructorParameters = [nameArgument, symbolArgument]
+            };
+
+            var erc20PermitDependency = new AbstractionImportModel()
+            {
+                Name = "ERC20Permit",
+                PathName = "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol",
+                ConstructorParameters = [nameArgument]
+            };
+
+            var testImport = new ImportModel() { PathName = "a/b/c", Alias = "ABC" };
+            var testImportC = new ImportModel() { PathName = "a/c/b" };
+            var testImportB = new ImportModel() { PathName = "a/b/c" };
+            #endregion
+
+            #region State 
+            var maxUserCountProperty = new StatePropertyModel() { Name = "_maxUserCount", Type = int256Type };
+            #endregion
+
+
+            #region Contracts
+
+            SolidityContractModel contract = new()
+            {
+                Name = "MyToken",
+                BaseContracts = [erc20Dependency, erc202Dependency, erc20PermitDependency, erc20Dependency],
+                Imports = [testImport, testImportC,testImportB],
+                ConstructorParameters = [nameArgument, symbolArgument, maxUserCountArgument],
+                Interfaces = [],
+                StateProperties = [maxUserCountProperty]
+            };
+            #endregion 
+
+            SolidityFile file = new()
+            {
+                FileHeader = fileHeader,
+                Contracts = [contract]
+            };
+
+     
+
+            var result = SolidityTemplateRenderer.FileHeader.Render(file.FileHeader);
+            result += Environment.NewLine;
+            result += SolidityTemplateRenderer.Imports.Render(file);
+            result += Environment.NewLine;
+            result += Environment.NewLine;
+            foreach(var contractModel in file.Contracts)
+            {
+                result += SolidityTemplateRenderer.Constructor.Render(contractModel);
+            }
+            return Ok(result);
+        }
     }
 }

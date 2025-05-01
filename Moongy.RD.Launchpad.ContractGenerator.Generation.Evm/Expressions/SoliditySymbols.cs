@@ -10,4 +10,5 @@ public static class SoliditySymbols
     public const string CloseArray = "]";
     public const string EndInstruction = ";";
     public const string KeyValueSeparator = "=>";
+    public const string SpecificVersion = "^";
 }

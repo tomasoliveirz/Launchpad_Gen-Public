@@ -5,11 +5,11 @@ namespace ScribanSolidityColorizer.Tag
 {
     internal class ScribanSolidityTag : ITag
     {
-        public ScribanSolidityTokenTypes type { get; private set; }
+        public ScribanSolidityTokenTypes Type { get; private set; }
 
         public ScribanSolidityTag(ScribanSolidityTokenTypes type)
         {
-            this.type = type;
+            Type = type;
         }
     }
 }

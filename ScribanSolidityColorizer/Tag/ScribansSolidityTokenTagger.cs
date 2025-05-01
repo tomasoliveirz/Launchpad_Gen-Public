@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Text;
+using System.Windows.Media;
+using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Tagging;
@@ -35,53 +38,130 @@ namespace ScribanSolidityColorizer.Tag
             remove { }
         }
 
+        private bool IsEnteringScriban(bool inScriban, char curr, char next, char peek2) =>
+                        !inScriban && curr == '{' && ((next == '{' && (peek2 == '-' || peek2 == '~'))  || 
+                        (next == '{')) || (curr == '{' && next == '%' && (peek2 == '-' || peek2 == '~') || 
+                        next == '%');                                    
+
+        private bool IsLeavingScriban(bool inScriban, bool isControl, char curr, char next, char peek2) =>
+                        inScriban && ((curr == '-' || curr == '~') && next == (isControl ? '%' : '}') && 
+                        peek2 == (isControl ? '}' : '}')) || (curr == (isControl ? '%' : '}') && next == (isControl ? '}' : '}'));
+
         public IEnumerable<ITagSpan<ScribanSolidityTag>> GetTags(NormalizedSnapshotSpanCollection spans)
         {
             foreach (SnapshotSpan span in spans)
             {
                 var text = span.GetText();
+                var snapshot = span.Snapshot;
 
-                
+                bool inScriban = false;
+                bool isControl = false;
 
-                #region Solidity string literals
-                foreach (var (start, length) in StringLiteralFinder.Find(text))
+                int tokenStart = 0;
+
+                var buffer = new StringBuilder();
+
+                for (int i = 0; i < text.Length; i++)
                 {
-                    var stringSpan = new SnapshotSpan(span.Snapshot, new Span(span.Start.Position + start, length));
-                    yield return new TagSpan<ScribanSolidityTag>(stringSpan, new ScribanSolidityTag(ScribanSolidityTokenTypes.SolidityStringLiteral));
-                }
-                #endregion
+                    char c = text[i];
+                    char next = i + 1 < text.Length ? text[i + 1] : '\0';
+                    char peek2 = i+2 < text.Length ? text[i+2] : '\0';
 
-                #region Solidity number literals
-                foreach (var (start, length) in NumberLiteralFinder.Find(text))
-                {
-                    var numberSpan = new SnapshotSpan(span.Snapshot, new Span(span.Start.Position + start, length));
-                    yield return new TagSpan<ScribanSolidityTag>(numberSpan, new ScribanSolidityTag(ScribanSolidityTokenTypes.SolidityNumberLiteral));
-                }
-                #endregion
-
-                #region Solidity comment blocks
-                foreach (var (start, length) in CommentFinder.Find(text))
-                {
-                    var commentSpan = new SnapshotSpan(span.Snapshot, new Span(span.Start.Position + start, length));
-                    yield return new TagSpan<ScribanSolidityTag>(commentSpan, new ScribanSolidityTag(ScribanSolidityTokenTypes.SolidityNumberLiteral));
-                }
-
-                foreach (var kvp in GroupedExpressions)
-                {
-                    var expressionType = kvp.Key;
-                    var keywords = kvp.Value;
-
-                    foreach (var keyword in keywords)
+                    if (IsEnteringScriban(inScriban, c, next, peek2))
                     {
-                        foreach (var match in WholeWordFinder.Find(text, keyword))
+                        var flush = Flush(buffer, span.Start.Position + tokenStart, snapshot);
+                        if(flush != null) yield return flush;
+                        var kind = next == '%'
+                            ? ScribanSolidityTokenTypes.ScribanControl
+                            : ScribanSolidityTokenTypes.ScribanExpression;
+
+                        var length = 2;
+                        var tokenText = $"{c}{next}";
+                        if (peek2 == '-')
                         {
-                            var keywordSpan = new SnapshotSpan(span.Snapshot, new Span(span.Start.Position + match, keyword.Length));
-                            yield return new TagSpan<ScribanSolidityTag>(keywordSpan, new ScribanSolidityTag(expressionType));
+                            length++;
+                            tokenText += peek2;
                         }
+                        yield return MakeTag(kind, span.Start.Position + i, length, tokenText, snapshot);
+
+                        inScriban = true;
+                        isControl = next == '%';
+                        i++;
+                        tokenStart = i + 1; 
+                        if(peek2 == '-')
+                        {
+                            i++;
+                            tokenStart++;
+                        }
+                        buffer.Clear();
+                    }
+                    else if (IsLeavingScriban(inScriban, isControl, c, next, peek2))
+                    {
+                        var kind = isControl
+                   ? ScribanSolidityTokenTypes.ScribanControl
+                   : ScribanSolidityTokenTypes.ScribanExpression;
+                        var length = 2;
+                        var tokenText = $"{c}{next}";
+                        if (c == '-') {
+                            length++;
+                            tokenText += peek2;
+                        }
+                        yield return MakeTag(kind, span.Start.Position + i, length, tokenText, snapshot);
+
+                        inScriban = false;
+                        if (c == '-')
+                        {
+                            i++;
+                            tokenStart++;
+                        }
+                        buffer.Clear();
+                    }
+                    else
+                    {
+                        buffer.Append(c);
                     }
                 }
-                #endregion
+                if (buffer.Length > 0)
+                {
+                    if (inScriban)
+                    {
+                        var kind = isControl
+                            ? ScribanSolidityTokenTypes.ScribanControl
+                            : ScribanSolidityTokenTypes.ScribanExpression;
+                        yield return MakeTag(kind,
+                            span.Start.Position + tokenStart,
+                            buffer.Length,
+                            buffer.ToString(),
+                            snapshot);
+                    }
+                    else
+                    {
+                        // flush as solidity
+                        var flush = Flush(buffer, span.Start.Position + tokenStart, snapshot);
+                        if (flush != null) yield return flush;
+                    }
+                }
             }
+        }
+
+        private TagSpan<ScribanSolidityTag> Flush(StringBuilder buffer, int absoluteStart,ITextSnapshot snapshot)
+        {
+            if (buffer.Length == 0) return null;
+            var bufferLength = buffer.Length;
+            var bufferString = buffer.ToString();
+            buffer.Clear();
+            return MakeTag(
+                ScribanSolidityTokenTypes.SolidityValue,   // or whatever enum value you use for solidity text
+                absoluteStart,
+                bufferLength,
+                bufferString,
+                snapshot);
+        }
+
+        private TagSpan<ScribanSolidityTag> MakeTag(ScribanSolidityTokenTypes kind, int absoluteStart, int length, string text,ITextSnapshot snapshot)
+        {
+            var span = new SnapshotSpan(snapshot, new Span(absoluteStart, length));
+            return new TagSpan<ScribanSolidityTag>(span, new ScribanSolidityTag(kind));
         }
     }
 }
