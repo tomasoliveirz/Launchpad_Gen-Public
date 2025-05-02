@@ -16,7 +16,7 @@ namespace ScribanSolidityColorizer.Format
         {
             DisplayName = "Scriban Control Block";
             ForegroundColor = (Color)ColorConverter.ConvertFromString("#FCF5C7");
-            IsItalic = true;
+            IsBold = true;
         }
     }
 }

@@ -15,7 +15,7 @@ namespace ScribanSolidityColorizer.Format
         public ScribanSolidityNumberLiteralFormat()
         {
             DisplayName = "Scriban Solidity Number Literal";
-            ForegroundColor = Colors.OliveDrab;
+            ForegroundColor = Colors.Pink;
         }
     }
 }

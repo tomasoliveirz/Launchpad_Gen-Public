@@ -7,29 +7,20 @@ namespace ScribanSolidityColorizer.Expressions
 {
     public static class ScribanExpressions
     {
-        [ProgrammingLanguageExpression(ScribanSolidityTokenTypes.ScribanExpression)]
-        public const string TemplateExpressionOpen = "{{";
-        [ProgrammingLanguageExpression(ScribanSolidityTokenTypes.ScribanExpression)]
-        public const string TemplateExpressionClose = "}}";
-
-        //–– Control expressions {% … %}
-        [ProgrammingLanguageExpression(ScribanSolidityTokenTypes.ScribanControl)]
-        public const string TemplateControlOpen = "{%";
-        [ProgrammingLanguageExpression(ScribanSolidityTokenTypes.ScribanControl)]
-        public const string TemplateControlClose = "%}";
 
         //–– Condition & Loop keywords
-        [ProgrammingLanguageExpression(ScribanSolidityTokenTypes.ScribanControl)]
-        public const string If = "{{if";
-        [ProgrammingLanguageExpression(ScribanSolidityTokenTypes.ScribanControl)]
-        public const string Else = "{{else}}";
-        [ProgrammingLanguageExpression(ScribanSolidityTokenTypes.ScribanControl)]
-        public const string End = "{{end}}";
-        [ProgrammingLanguageExpression(ScribanSolidityTokenTypes.ScribanControl)]
+        [ProgrammingLanguageExpression(ScribanSolidityTokenTypes.ScribanExpression)]
+        public const string If = "if";
+        [ProgrammingLanguageExpression(ScribanSolidityTokenTypes.ScribanExpression)]
+        public const string Else = "else";
+        [ProgrammingLanguageExpression(ScribanSolidityTokenTypes.ScribanExpression)]
+        public const string End = "end";
+        [ProgrammingLanguageExpression(ScribanSolidityTokenTypes.ScribanExpression)]
         public const string For = "for";
-        [ProgrammingLanguageExpression(ScribanSolidityTokenTypes.ScribanControl)]
+        [ProgrammingLanguageExpression(ScribanSolidityTokenTypes.ScribanExpression)]
         public const string In = "in";
-        
+        [ProgrammingLanguageExpression(ScribanSolidityTokenTypes.ScribanExpression)]
+        public const string Is = "is";
 
         // Automatic grouped collection
         public static readonly string[] All = GetAllConstants();

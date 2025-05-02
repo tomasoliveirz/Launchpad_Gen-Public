@@ -12,6 +12,6 @@
         ScribanExpression,
         ScribanControl,
         ScribanOperator,
-        ScribanComment
+        ScribanComment,
     }
 }

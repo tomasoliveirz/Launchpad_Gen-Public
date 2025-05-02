@@ -1,4 +1,4 @@
-﻿contract {{Name}}{{ if HasDependencies}} is {{end}} 
+﻿contract {{Name}}{{ if HasDependencies}} is {{end}}
 {{- for dependency in Dependencies}}
 	{{- dependency}}{{if for.last == false}}, {{ end -}}
 {{- end}}

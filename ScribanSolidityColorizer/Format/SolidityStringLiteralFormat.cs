@@ -15,7 +15,8 @@ namespace ScribanSolidityColorizer.Format
         public SolidityStringLiteralFormat()
         {
             DisplayName = "Scriban Solidity String Literal";
-            ForegroundColor = Colors.Coral;
+            ForegroundColor = (Color)ColorConverter.ConvertFromString("#FFA500");
+
         }
     }
 }

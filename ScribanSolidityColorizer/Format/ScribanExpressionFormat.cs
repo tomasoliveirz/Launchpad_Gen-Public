@@ -15,7 +15,7 @@ namespace ScribanSolidityColorizer.Format
         public ScribanExpressionFormat()
         {
             DisplayName = "Scriban Expression";
-            ForegroundColor = (Color)ColorConverter.ConvertFromString("#FCF5C7");
+            ForegroundColor = (Color)ColorConverter.ConvertFromString("#0077B6");
         }
     }
 }

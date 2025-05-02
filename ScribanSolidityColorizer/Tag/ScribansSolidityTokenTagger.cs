@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
+using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Text;
@@ -19,17 +21,15 @@ namespace ScribanSolidityColorizer.Tag
 
         ITextBuffer _buffer;
         IDictionary<string, ScribanSolidityTokenTypes> _tokenTypes;
-        private readonly Dictionary<ScribanSolidityTokenTypes, string[]> GroupedExpressions;
+        Dictionary<ScribanSolidityTokenTypes, string[]> _scribanExpressions;
+        Dictionary<ScribanSolidityTokenTypes, string[]> _solidityExpressions;
 
         internal ScribanSolidityTokenTagger(ITextBuffer buffer)
         {
             _buffer = buffer;
             var solidityExpressions = ExpressionsHelper.GroupedExpressions(typeof(SolidityExpressions)); 
-            var scribanExpressions = ExpressionsHelper.GroupedExpressions(typeof(ScribanExpressions));
-            GroupedExpressions = new Dictionary<ScribanSolidityTokenTypes, string[]>();
-            foreach(var solExpression in solidityExpressions) GroupedExpressions.Add(solExpression.Key, solExpression.Value);
-            foreach(var scrExpression in scribanExpressions) GroupedExpressions.Add(scrExpression.Key, scrExpression.Value);
-
+            _scribanExpressions = ExpressionsHelper.GroupedExpressions(typeof(ScribanExpressions));
+            _solidityExpressions = ExpressionsHelper.GroupedExpressions(typeof(SolidityExpressions));
         }
 
         public event EventHandler<SnapshotSpanEventArgs> TagsChanged
@@ -37,125 +37,210 @@ namespace ScribanSolidityColorizer.Tag
             add { }
             remove { }
         }
-
-        private bool IsEnteringScriban(bool inScriban, char curr, char next, char peek2) =>
-                        !inScriban && curr == '{' && ((next == '{' && (peek2 == '-' || peek2 == '~'))  || 
-                        (next == '{')) || (curr == '{' && next == '%' && (peek2 == '-' || peek2 == '~') || 
-                        next == '%');                                    
-
-        private bool IsLeavingScriban(bool inScriban, bool isControl, char curr, char next, char peek2) =>
-                        inScriban && ((curr == '-' || curr == '~') && next == (isControl ? '%' : '}') && 
-                        peek2 == (isControl ? '}' : '}')) || (curr == (isControl ? '%' : '}') && next == (isControl ? '}' : '}'));
+        private bool IsEnteringScriban(char c, char next) => (c == '{' && next == '{');
+        private bool IsLeavingScriban(char c, char next) => (c == '}' && next == '}');
+        private bool IsLeavingScribanAndRemovingSpaces(char c, char next, char peek) => (c == '-' && peek == '}' && next == '}');
 
         public IEnumerable<ITagSpan<ScribanSolidityTag>> GetTags(NormalizedSnapshotSpanCollection spans)
         {
-            foreach (SnapshotSpan span in spans)
+            foreach (var span in spans)
             {
-                var text = span.GetText();
+                string text = span.GetText();
                 var snapshot = span.Snapshot;
 
                 bool inScriban = false;
-                bool isControl = false;
-
                 int tokenStart = 0;
-
                 var buffer = new StringBuilder();
 
-                for (int i = 0; i < text.Length; i++)
+                for (int i = 0; i < text.Length;)
                 {
-                    char c = text[i];
+                    char curr = text[i];
                     char next = i + 1 < text.Length ? text[i + 1] : '\0';
-                    char peek2 = i+2 < text.Length ? text[i+2] : '\0';
+                    char peek = i + 2 < text.Length ? text[i + 2] : '\0';
 
-                    if (IsEnteringScriban(inScriban, c, next, peek2))
+                    if (!inScriban && IsEnteringScriban(curr, next))
                     {
-                        var flush = Flush(buffer, span.Start.Position + tokenStart, snapshot);
-                        if(flush != null) yield return flush;
-                        var kind = next == '%'
-                            ? ScribanSolidityTokenTypes.ScribanControl
-                            : ScribanSolidityTokenTypes.ScribanExpression;
+                        var solidityChunk = buffer.ToString();
+                        foreach (var tag in ParseSolidityBuffer(
+                                     solidityChunk,
+                                     span.Start.Position + tokenStart,
+                                     snapshot))
+                            yield return tag;
 
-                        var length = 2;
-                        var tokenText = $"{c}{next}";
-                        if (peek2 == '-')
-                        {
-                            length++;
-                            tokenText += peek2;
-                        }
-                        yield return MakeTag(kind, span.Start.Position + i, length, tokenText, snapshot);
+                        bool hasMarker = peek == '-' || peek == '~';
+                        int length = 2 + (hasMarker ? 1 : 0);
+                        string tok = text.Substring(i, length);
+                        yield return MakeTag(
+                            ScribanSolidityTokenTypes.ScribanControl,
+                            span.Start.Position + i,
+                            length, tok, snapshot);
 
+                        i += length;
+                        tokenStart = i;
                         inScriban = true;
-                        isControl = next == '%';
-                        i++;
-                        tokenStart = i + 1; 
-                        if(peek2 == '-')
-                        {
-                            i++;
-                            tokenStart++;
-                        }
                         buffer.Clear();
+                        continue;
                     }
-                    else if (IsLeavingScriban(inScriban, isControl, c, next, peek2))
-                    {
-                        var kind = isControl
-                   ? ScribanSolidityTokenTypes.ScribanControl
-                   : ScribanSolidityTokenTypes.ScribanExpression;
-                        var length = 2;
-                        var tokenText = $"{c}{next}";
-                        if (c == '-') {
-                            length++;
-                            tokenText += peek2;
-                        }
-                        yield return MakeTag(kind, span.Start.Position + i, length, tokenText, snapshot);
 
+                    if (inScriban && IsLeavingScriban(curr, next))
+                    {
+                        var scribanChunk = buffer.ToString();
+                        foreach (var tag in ParseScribanBuffer(
+                                     scribanChunk,
+                                     span.Start.Position + tokenStart,
+                                     snapshot))
+                            yield return tag;
+
+                        int length = 2;
+                        string tok = text.Substring(i, length);
+                        yield return MakeTag(
+                            ScribanSolidityTokenTypes.ScribanControl,
+                            span.Start.Position + i,
+                            length, tok, snapshot);
+
+                        i += length;
+                        tokenStart = i;
                         inScriban = false;
-                        if (c == '-')
-                        {
-                            i++;
-                            tokenStart++;
-                        }
                         buffer.Clear();
+                        continue;
                     }
-                    else
+
+                    if (inScriban && IsLeavingScribanAndRemovingSpaces(curr, next, peek))
                     {
-                        buffer.Append(c);
+                        var scribanChunk = buffer.ToString();
+                        foreach (var tag in ParseScribanBuffer(
+                                     scribanChunk,
+                                     span.Start.Position + tokenStart,
+                                     snapshot))
+                            yield return tag;
+
+                        int length = 3;
+                        string tok = text.Substring(i, length);
+                        yield return MakeTag(
+                            ScribanSolidityTokenTypes.ScribanControl,
+                            span.Start.Position + i,
+                            length, tok, snapshot);
+
+                        i += length;
+                        tokenStart = i;
+                        inScriban = false;
+                        buffer.Clear();
+                        continue;
                     }
+
+                    buffer.Append(curr);
+                    i++;
                 }
-                if (buffer.Length > 0)
+
+                var tail = buffer.ToString();
+                if (tail.Length > 0)
                 {
-                    if (inScriban)
-                    {
-                        var kind = isControl
-                            ? ScribanSolidityTokenTypes.ScribanControl
-                            : ScribanSolidityTokenTypes.ScribanExpression;
-                        yield return MakeTag(kind,
-                            span.Start.Position + tokenStart,
-                            buffer.Length,
-                            buffer.ToString(),
-                            snapshot);
-                    }
-                    else
-                    {
-                        // flush as solidity
-                        var flush = Flush(buffer, span.Start.Position + tokenStart, snapshot);
-                        if (flush != null) yield return flush;
-                    }
+                    var flushTags = inScriban
+                        ? ParseScribanBuffer(tail, span.Start.Position + tokenStart, snapshot)
+                        : ParseSolidityBuffer(tail, span.Start.Position + tokenStart, snapshot);
+
+                    foreach (var t in flushTags)
+                        yield return t;
                 }
             }
         }
 
-        private TagSpan<ScribanSolidityTag> Flush(StringBuilder buffer, int absoluteStart,ITextSnapshot snapshot)
+
+        private IEnumerable<ITagSpan<ScribanSolidityTag>> ParseScribanBuffer(
+    string text,
+    int absoluteStart,
+    ITextSnapshot snapshot)
         {
-            if (buffer.Length == 0) return null;
-            var bufferLength = buffer.Length;
-            var bufferString = buffer.ToString();
-            buffer.Clear();
-            return MakeTag(
-                ScribanSolidityTokenTypes.SolidityValue,   // or whatever enum value you use for solidity text
-                absoluteStart,
-                bufferLength,
-                bufferString,
-                snapshot);
+            // 1) string literals
+            foreach (var (s, len) in StringLiteralFinder.Find(text))
+                yield return MakeTag(
+                    ScribanSolidityTokenTypes.SolidityStringLiteral,
+                    absoluteStart + s,
+                    len,
+                    text.Substring(s, len),
+                    snapshot);
+
+            // 2) number literals
+            foreach (var (s, len) in NumberLiteralFinder.Find(text))
+                yield return MakeTag(
+                    ScribanSolidityTokenTypes.SolidityNumberLiteral,
+                    absoluteStart + s,
+                    len,
+                    text.Substring(s, len),
+                    snapshot);
+
+            // 3) scriban keywords (for, in, if, end)
+            foreach (var kw in _scribanExpressions)
+            {
+                foreach(var word in kw.Value)
+                {
+                    foreach (var idx in WholeWordFinder.Find(text, word))
+                        yield return MakeTag(
+                            ScribanSolidityTokenTypes.ScribanControl,
+                            absoluteStart + idx,
+                            word.Length,
+                            word,
+                            snapshot);
+                }
+            }
+
+            // 4) everything else
+            if (text.Length > 0)
+                yield return MakeTag(
+                    ScribanSolidityTokenTypes.ScribanExpression,
+                    absoluteStart,
+                    text.Length,
+                    text,
+                    snapshot);
+        }
+
+        private IEnumerable<ITagSpan<ScribanSolidityTag>> ParseSolidityBuffer(
+    string text,
+    int absoluteStart,
+    ITextSnapshot snapshot)
+        {
+            // 1) string literals  
+            foreach (var (s, len) in StringLiteralFinder.Find(text))
+                yield return MakeTag(
+                    ScribanSolidityTokenTypes.SolidityStringLiteral,
+                    absoluteStart + s,
+                    len,
+                    text.Substring(s, len),
+                    snapshot);
+
+            // 2) number literals  
+            foreach (var (s, len) in NumberLiteralFinder.Find(text))
+                yield return MakeTag(
+                    ScribanSolidityTokenTypes.SolidityNumberLiteral,
+                    absoluteStart + s,
+                    len,
+                    text.Substring(s, len),
+                    snapshot);
+
+            // 3) keywords (from your grouped solidity expressions)  
+            foreach (var kv in _solidityExpressions)
+            {
+                foreach (var word in kv.Value)
+                {
+                    foreach (var idx in WholeWordFinder.Find(text, word))
+                        yield return MakeTag(
+                            kv.Key,                                      // the token type enum
+                            absoluteStart + idx,
+                            word.Length,
+                            word,
+                            snapshot);
+                }
+            }
+
+            // 4) everything else  
+            //    any region not yet covered you can treat as a single Value span:
+            if (text.Length > 0)
+                yield return MakeTag(
+                    ScribanSolidityTokenTypes.SolidityValue,
+                    absoluteStart,
+                    text.Length,
+                    text,
+                    snapshot);
         }
 
         private TagSpan<ScribanSolidityTag> MakeTag(ScribanSolidityTokenTypes kind, int absoluteStart, int length, string text,ITextSnapshot snapshot)
