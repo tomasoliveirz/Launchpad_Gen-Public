@@ -9,6 +9,7 @@ using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Sta
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.TypeReferences;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors;
 using Moongy.RD.Launchpad.Core.Enums;
+using System;
 
 namespace WebApiV2.Controllers
 {
@@ -119,6 +120,23 @@ namespace WebApiV2.Controllers
                 result += renderEvent;
                 result += Environment.NewLine;
             }
+
+            #region Constructor
+            result += Environment.NewLine;
+            foreach (var contractModel in file.Contracts)
+            {
+                try
+                {
+                    var constructorCode = SolidityTemplateProcessor.Constructor.Render(contractModel);
+                    result += constructorCode;
+                    result += Environment.NewLine;
+                }
+                catch (Exception ex)
+                {
+                    result += $"// Error rendering constructor for {contractModel.Name}: {ex.Message}" + Environment.NewLine;
+                }
+            }
+            #endregion
 
             return Ok(result);
         }

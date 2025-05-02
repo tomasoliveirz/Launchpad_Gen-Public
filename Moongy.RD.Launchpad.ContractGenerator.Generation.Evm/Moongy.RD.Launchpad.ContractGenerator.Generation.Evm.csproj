@@ -19,6 +19,7 @@
     <EmbeddedResource Include="Templates\Event.solidity.scriban" />
     <EmbeddedResource Include="Templates\FileHeader.solidity.scriban" />
     <EmbeddedResource Include="Templates\Imports.solidity.scriban" />
+    <EmbeddedResource Include="Templates\StateProperty.solidity.scriban" />
   </ItemGroup>
 
   <ItemGroup>
