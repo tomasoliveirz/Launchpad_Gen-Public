@@ -1,4 +1,4 @@
-﻿{{-if license}}
-// SPDX-License-Identifier: {{ license }}
+﻿{{- if HasLicense}}
+// SPDX-License-Identifier: {{ License }}
 {{-end}}
-pragma solidity {{ version }};
+pragma solidity {{ Version }};

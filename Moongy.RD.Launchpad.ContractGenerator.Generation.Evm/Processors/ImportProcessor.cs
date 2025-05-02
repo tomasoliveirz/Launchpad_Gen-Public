@@ -13,7 +13,7 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
         }
 
         #region Model Transformations
-        private List<ImportRenderModel> Transform(SolidityFile model)
+        private static List<ImportRenderModel> Transform(SolidityFile model)
         {
             var imports = GetModels(model);
             var result = new List<ImportRenderModel>();
@@ -55,7 +55,7 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
             return result;
         }
 
-        private List<ImportModel> GetModels(SolidityFile model) 
+        private static List<ImportModel> GetModels(SolidityFile model) 
         {
             var imports = model.Contracts.SelectMany(x => x.Imports).ToList();
             imports.AddRange(model.Contracts.SelectMany(x => x.BaseContracts));

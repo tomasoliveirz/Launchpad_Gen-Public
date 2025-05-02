@@ -6,7 +6,7 @@ using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Imp
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Parameters;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.State;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.TypeReferences;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Renderers.Templates;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Renderers.TemplateRenderers;
 using Moongy.RD.Launchpad.Core.Enums;
 
 namespace WebApiV2.Controllers
@@ -88,14 +88,14 @@ namespace WebApiV2.Controllers
 
      
 
-            var result = SolidityTemplateRenderer.FileHeader.Render(file.FileHeader);
+            var result = SolidityTemplateRenderer.FileHeader.Render(file);
             result += Environment.NewLine;
             result += SolidityTemplateRenderer.Imports.Render(file);
             result += Environment.NewLine;
             result += Environment.NewLine;
             foreach(var contractModel in file.Contracts)
             {
-                result += SolidityTemplateRenderer.Constructor.Render(contractModel);
+                result += SolidityTemplateRenderer.ContractHeader.Render(contractModel);
             }
             return Ok(result);
         }

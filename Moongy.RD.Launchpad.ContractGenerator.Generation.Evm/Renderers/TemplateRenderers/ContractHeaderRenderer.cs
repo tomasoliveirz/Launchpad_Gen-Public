@@ -1,8 +1,9 @@
 ﻿using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Renderers.ComplexExpressions;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Renderers.Templates;
 using Moongy.RD.Launchpad.Core.Helpers;
 
-namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Renderers.Templates
+namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Renderers.TemplateRenderers
 {
     public class ContractHeaderRenderer : BaseTemplateRenderer<SolidityContractModel>
     {
@@ -13,7 +14,7 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Renderers.Templat
 
         public override string Render(SolidityContractModel model)
         {
-            return Render(new { name = model.Name,  });
+            return Render(new { name = model.Name, });
         }
     }
 }

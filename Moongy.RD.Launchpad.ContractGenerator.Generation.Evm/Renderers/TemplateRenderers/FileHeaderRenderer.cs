@@ -1,8 +1,9 @@
 ﻿using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Header;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Renderers.ComplexExpressions;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Renderers.Templates;
 using Moongy.RD.Launchpad.Core.Helpers;
 
-namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Renderers.Templates
+namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Renderers.TemplateRenderers
 {
     public class FileHeaderRenderer : BaseTemplateRenderer<FileHeaderModel>
     {
@@ -13,9 +14,9 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Renderers.Templat
 
         public override string Render(FileHeaderModel model)
         {
-            var version = SoliditySyntaxRenderer.Version.Render(model.Version);
+            //var version = SoliditySyntaxRenderer.Version.Render(model.Version);
             var license = SPDXLicenseHelper.GetValue(model.License);
-            return Render(new { version, license });
+            return Render(new { version="version", license });
         }
     }
 }
