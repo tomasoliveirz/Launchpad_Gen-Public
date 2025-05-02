@@ -2,6 +2,7 @@ using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Enums;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Helpers;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.State;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.TypeReferences;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.ScribanRenderingModels;
 
 namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors;
 
@@ -13,7 +14,7 @@ public class StatePropertyProcessor() : BaseSolidityTemplateProcessor<StatePrope
         return base.Render(renderModel);
     }
 
-    private static object Transform(StatePropertyModel model)
+    private static StatePropertyRenderingModel Transform(StatePropertyModel model)
     {
         var typeString = SolidityReferenceTypeSyntaxHelper.RenderTypeReference(model.Type);
         
@@ -29,7 +30,7 @@ public class StatePropertyProcessor() : BaseSolidityTemplateProcessor<StatePrope
             initialValue = $"\"{initialValue}\"";
         }
         
-        return new
+        return new StatePropertyRenderingModel
         {
             Type = typeString,
             IsConstant = model.IsConstant,
