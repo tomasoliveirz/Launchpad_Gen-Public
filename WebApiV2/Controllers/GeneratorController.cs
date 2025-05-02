@@ -1,11 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Enums;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Errors;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Enums;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Events;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Header;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Imports;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Modifiers;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Parameters;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.State;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Structs;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.TypeReferences;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors;
 using Moongy.RD.Launchpad.Core.Enums;
@@ -78,6 +82,45 @@ namespace WebApiV2.Controllers
             var events = new EventModel[]{ event1, event2, event3 };
             #endregion
 
+            #region Structs
+            var property1 = new StructPropertyModel() { Name = "test", DataType = int256Type };
+            var property2 = new StructPropertyModel() { Name = "build", DataType = stringType };
+            var property3 = new StructPropertyModel() { Name = "struct", DataType = int256Type };
+
+
+            var struct1 = new StructModel() { Name = "TestStruct", Properties = [property1, property2, property3] };
+            var struct2 = new StructModel() { Name = "TestStruct2", Properties = [property3, property2, property1] };
+            var struct3 = new StructModel() { Name = "TestStruct3", Properties = [property2, property1, property3] };
+            var structs = new StructModel[] { struct1, struct2, struct3 };
+            #endregion
+
+            #region Enums
+
+            var enum1 = new EnumModel() { Name = "TestEnum", Values = ["A", "B", "C"] };
+            var enum2 = new EnumModel() { Name = "TestEnum2", Values = ["A", "B", "C"] };
+            var enum3 = new EnumModel() { Name = "TestEnum3", Values = ["A", "B", "C"] };
+            var enums = new EnumModel[] { enum1, enum2, enum3 };
+            #endregion
+
+            #region Modifiers
+
+            var booleanType = new SimpleTypeReference(SolidityDataTypeEnum.Bool);
+            var addressType = new SimpleTypeReference(SolidityDataTypeEnum.Address);
+
+            var ownerModifierParam = new ModifierParameterModel() { Name = "owner", Type = addressType };
+            var activeModifierParam = new ModifierParameterModel() { Name = "isActive", Type = booleanType };
+
+            var modifier1 = new ModifierModel() { Name = "TestModifier", Body = "require(msg.sender == owner())" };
+            var modifier2 = new ModifierModel() { Name = "TestModifier2", Body = "require(msg.sender == owner())" };
+            var modifier3 = new ModifierModel() { Name = "TestModifier3", Body = "require(msg.sender == owner())" };
+            var modifier4 = new ModifierModel()
+            {
+                Name = "TestModifier4",
+                Parameters = [ownerModifierParam, activeModifierParam],
+                Body = "require(msg.sender == owner && isActive == true)"
+            };
+            var modifiers = new ModifierModel[] { modifier1, modifier2, modifier3, modifier4 };
+            #endregion
             #region State 
             var maxUserCountProperty = new StatePropertyModel() { Name = "_maxUserCount", Type = int256Type };
             #endregion
@@ -93,7 +136,20 @@ namespace WebApiV2.Controllers
                 Interfaces = [],
                 StateProperties = [maxUserCountProperty]
             };
-            #endregion 
+            #endregion
+            #region Errors
+            var errorParameter1 = new ErrorParameterModel() { Name = "name", Type = stringType, Index = 0 };
+            var errorParameter2 = new ErrorParameterModel() { Name = "round", Type = int256Type, Index = 1 };
+            var errorParameter3 = new ErrorParameterModel() { Name = "version", Type = stringType };
+
+            var error1 = new ErrorModel() { Name = "TestError", Parameters = [errorParameter3, errorParameter2, errorParameter1] };
+            var error2 = new ErrorModel() { Name = "BuildError", Parameters = [errorParameter2, errorParameter3] };
+            var error3 = new ErrorModel() { Name = "UseError", Parameters = [errorParameter3] };
+
+
+            var errors = new ErrorModel[] { error1, error2, error3 };
+            #endregion
+
 
             SolidityFile file = new()
             {
@@ -113,12 +169,77 @@ namespace WebApiV2.Controllers
                 result += SolidityTemplateProcessor.ContractHeader.Render(contractModel);
             }
             result += Environment.NewLine;
+            foreach(var contractModel in file.Contracts)
+            {
+                result += SolidityTemplateProcessor.ContractHeader.Render(contractModel);
+                result += Environment.NewLine;
+    
+                foreach (var stateProperty in contractModel.StateProperties)
+                {
+                    try 
+                    {
+                        var statePropertyCode = SolidityTemplateProcessor.StateProperties.Render(stateProperty);
+                        result += statePropertyCode;
+                        result += Environment.NewLine;
+                    }
+                    catch (Exception ex)
+                    {
+                        result += $"// Error rendering state property {stateProperty.Name}: {ex.Message}" + Environment.NewLine;
+                    }
+                }
+            }
             foreach (var @event in events)
             {
                 var renderEvent = SolidityTemplateProcessor.Events.Render(@event);
                 result += renderEvent;
                 result += Environment.NewLine;
             }
+            foreach(var structModel in structs)
+            {
+                var renderStruct = SolidityTemplateProcessor.Structs.Render(structModel);
+                result += renderStruct;
+                result += Environment.NewLine;
+            }
+            result += Environment.NewLine;
+            foreach (var @enum in enums)
+            {
+                var renderEnum = SolidityTemplateProcessor.Enums.Render(@enum);
+                result += renderEnum;
+                result += Environment.NewLine;
+            }
+            result += Environment.NewLine;
+            foreach (var modifier in modifiers)
+            {
+                var renderModifier = SolidityTemplateProcessor.Modifiers.Render(modifier);
+                result += renderModifier;
+                result += Environment.NewLine;
+            }
+            result += Environment.NewLine;
+
+            foreach(var errorModel in errors)
+            {
+                var renderError = SolidityTemplateProcessor.Errors.Render(errorModel);
+                result += renderError;
+                result += Environment.NewLine;
+            }
+
+
+            #region Constructor
+            result += Environment.NewLine;
+            foreach (var contractModel in file.Contracts)
+            {
+                try
+                {
+                    var constructorCode = SolidityTemplateProcessor.Constructor.Render(contractModel);
+                    result += constructorCode;
+                    result += Environment.NewLine;
+                }
+                catch (Exception ex)
+                {
+                    result += $"// Error rendering constructor for {contractModel.Name}: {ex.Message}" + Environment.NewLine;
+                }
+            }
+            #endregion
 
             return Ok(result);
         }
