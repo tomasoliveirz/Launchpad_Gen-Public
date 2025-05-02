@@ -7,7 +7,7 @@ using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Imp
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Parameters;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.State;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.TypeReferences;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Renderers.TemplateRenderers;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors;
 using Moongy.RD.Launchpad.Core.Enums;
 
 namespace WebApiV2.Controllers
@@ -82,7 +82,6 @@ namespace WebApiV2.Controllers
             var maxUserCountProperty = new StatePropertyModel() { Name = "_maxUserCount", Type = int256Type };
             #endregion
 
-
             #region Contracts
 
             SolidityContractModel contract = new()
@@ -104,20 +103,19 @@ namespace WebApiV2.Controllers
 
      
 
-            var result = SolidityTemplateRenderer.FileHeader.Render(file);
+            var result = SolidityTemplateProcessor.FileHeader.Render(file);
             result += Environment.NewLine;
-            result += SolidityTemplateRenderer.Imports.Render(file);
+            result += SolidityTemplateProcessor.Imports.Render(file);
             result += Environment.NewLine;
             result += Environment.NewLine;
             foreach(var contractModel in file.Contracts)
             {
-                result += SolidityTemplateRenderer.ContractHeader.Render(contractModel);
+                result += SolidityTemplateProcessor.ContractHeader.Render(contractModel);
             }
             result += Environment.NewLine;
-            result += Environment.NewLine;
-            foreach(var @event in events)
+            foreach (var @event in events)
             {
-                var renderEvent = SolidityTemplateRenderer.Events.Render(@event);
+                var renderEvent = SolidityTemplateProcessor.Events.Render(@event);
                 result += renderEvent;
                 result += Environment.NewLine;
             }

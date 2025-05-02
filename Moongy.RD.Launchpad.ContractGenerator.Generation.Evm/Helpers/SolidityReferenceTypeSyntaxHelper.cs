@@ -2,9 +2,9 @@
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Expressions;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.TypeReferences;
 
-namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Renderers;
+namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Helpers;
 
-public class SolidityReferenceTypeSyntaxRenderer : BaseSoliditySyntaxRenderer<TypeReference>
+public class SolidityReferenceTypeSyntaxHelper : BaseSoliditySyntaxHelper<TypeReference>
 {
     private static readonly Dictionary<SolidityDataTypeEnum, string> SolidityDataType = new()
     {

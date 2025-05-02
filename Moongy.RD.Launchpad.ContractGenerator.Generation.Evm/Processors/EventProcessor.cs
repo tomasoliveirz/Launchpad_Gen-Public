@@ -1,7 +1,7 @@
-﻿using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Events;
+﻿using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Helpers;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Events;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Parameters;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.ScribanRenderingModels;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Renderers;
 
 namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
 {
@@ -27,7 +27,7 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
 
         private string TransformParameter(EventParameterModel parameter)
         {
-            var dataType = SolidityReferenceTypeSyntaxRenderer.RenderTypeReference(parameter.Type);
+            var dataType = SolidityReferenceTypeSyntaxHelper.RenderTypeReference(parameter.Type);
             var indexedExpression = parameter.IsIndexed ? "indexed ":"";
             return $"{dataType} {indexedExpression}{parameter.Name}";
         }
