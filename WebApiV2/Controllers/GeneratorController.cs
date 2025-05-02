@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Enums;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Events;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Header;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Imports;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Parameters;
@@ -62,6 +63,21 @@ namespace WebApiV2.Controllers
             var testImportB = new ImportModel() { PathName = "a/b/c" };
             #endregion
 
+            #region Events
+
+            var nameEventArgument = new EventParameterModel() { Name = "name", Type = stringType, Index = 1 };
+            var roundEventArgument = new EventParameterModel() { Name = "round", IsIndexed=true, Type = int256Type, Index = 0 };
+
+            var versionEventArgument = new EventParameterModel() { Name = "version", Type = stringType};
+
+
+            var event1 = new EventModel() { Name = "Test", Parameters = [nameEventArgument, roundEventArgument] };
+            var event2 = new EventModel() { Name = "Build", Parameters = [versionEventArgument, nameEventArgument] };
+            var event3 = new EventModel() { Name = "Use", Parameters = [] };
+
+            var events = new EventModel[]{ event1, event2, event3 };
+            #endregion
+
             #region State 
             var maxUserCountProperty = new StatePropertyModel() { Name = "_maxUserCount", Type = int256Type };
             #endregion
@@ -97,6 +113,15 @@ namespace WebApiV2.Controllers
             {
                 result += SolidityTemplateRenderer.ContractHeader.Render(contractModel);
             }
+            result += Environment.NewLine;
+            result += Environment.NewLine;
+            foreach(var @event in events)
+            {
+                var renderEvent = SolidityTemplateRenderer.Events.Render(@event);
+                result += renderEvent;
+                result += Environment.NewLine;
+            }
+
             return Ok(result);
         }
     }

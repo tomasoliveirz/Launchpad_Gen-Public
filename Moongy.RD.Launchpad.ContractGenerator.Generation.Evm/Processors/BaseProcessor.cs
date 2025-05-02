@@ -1,5 +1,4 @@
 ﻿using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Exceptions;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Renderers.Templates;
 using Scriban;
 
 namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors;
@@ -9,7 +8,7 @@ public class BaseTemplateProcessor<TModel>
     protected readonly Template _template;
     protected BaseTemplateProcessor(string @namespace,  string templateName, string extension)
     {
-        var assembly = typeof(BaseTemplateRenderer<TModel>).Assembly;
+        var assembly = typeof(BaseSolidityTemplateProcessor<TModel>).Assembly;
         var fileName = $"{templateName}.{extension}";
         var path = $"{@namespace}.{fileName}";
         using var stream = assembly.GetManifestResourceStream(path) ?? throw new InvalidTemplateException(path);

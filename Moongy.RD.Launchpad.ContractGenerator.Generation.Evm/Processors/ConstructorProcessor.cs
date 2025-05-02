@@ -1,4 +1,4 @@
-﻿using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models;
+﻿using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.ScribanRenderingModels;
 
 namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors;
@@ -32,6 +32,6 @@ public class ConstructorProcessor() : BaseSolidityTemplateProcessor<SolidityCont
 
     private static List<string> TransformArguments(SolidityContractModel model)
     {
-
+        return null;
     }
 }

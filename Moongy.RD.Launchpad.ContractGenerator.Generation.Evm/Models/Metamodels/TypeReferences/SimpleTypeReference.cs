@@ -9,6 +9,7 @@ public class SimpleTypeReference : TypeReference
     {
         if (baseType == SolidityDataTypeEnum.Array ||
             baseType == SolidityDataTypeEnum.Mapping ||
+            baseType == SolidityDataTypeEnum.Tuple ||
             baseType == SolidityDataTypeEnum.Custom)
             throw new ArgumentException("Use appropriate derived classes for Array, Mapping, or Custom types.");
     }

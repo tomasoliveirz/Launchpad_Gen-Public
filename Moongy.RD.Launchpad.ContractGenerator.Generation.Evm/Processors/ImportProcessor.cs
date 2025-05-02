@@ -1,4 +1,4 @@
-﻿using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models;
+﻿using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Imports;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.ScribanRenderingModels;
 

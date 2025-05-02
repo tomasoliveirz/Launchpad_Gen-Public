@@ -20,5 +20,6 @@ public enum SolidityDataTypeEnum
     Bytes,
     Custom,
     Array,
-    Mapping
+    Mapping,
+    Tuple
 }
