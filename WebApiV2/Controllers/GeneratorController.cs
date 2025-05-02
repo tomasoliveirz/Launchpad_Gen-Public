@@ -169,6 +169,25 @@ namespace WebApiV2.Controllers
                 result += SolidityTemplateProcessor.ContractHeader.Render(contractModel);
             }
             result += Environment.NewLine;
+            foreach(var contractModel in file.Contracts)
+            {
+                result += SolidityTemplateProcessor.ContractHeader.Render(contractModel);
+                result += Environment.NewLine;
+    
+                foreach (var stateProperty in contractModel.StateProperties)
+                {
+                    try 
+                    {
+                        var statePropertyCode = SolidityTemplateProcessor.StateProperties.Render(stateProperty);
+                        result += statePropertyCode;
+                        result += Environment.NewLine;
+                    }
+                    catch (Exception ex)
+                    {
+                        result += $"// Error rendering state property {stateProperty.Name}: {ex.Message}" + Environment.NewLine;
+                    }
+                }
+            }
             foreach (var @event in events)
             {
                 var renderEvent = SolidityTemplateProcessor.Events.Render(@event);
