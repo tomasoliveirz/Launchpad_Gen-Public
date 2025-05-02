@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <None Remove="Templates\ContractConstructor.solidity.scriban" />
+    <None Remove="Templates\Error.solidity.scriban" />
     <None Remove="Templates\Event.solidity.scriban" />
     <None Remove="Templates\FileHeader.solidity.scriban" />
     <None Remove="Templates\Imports.solidity.scriban" />
@@ -17,6 +18,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Templates\ContractConstructor.solidity.scriban" />
     <EmbeddedResource Include="Templates\ContractHeader.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Error.solidity.scriban" />
     <EmbeddedResource Include="Templates\Event.solidity.scriban" />
     <EmbeddedResource Include="Templates\FileHeader.solidity.scriban" />
     <EmbeddedResource Include="Templates\Imports.solidity.scriban" />

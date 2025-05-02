@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Enums;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Errors;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Events;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Header;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Imports;
@@ -107,7 +108,20 @@ namespace WebApiV2.Controllers
                 Interfaces = [],
                 StateProperties = [maxUserCountProperty]
             };
-            #endregion 
+            #endregion
+            #region Errors
+            var errorParameter1 = new ErrorParameterModel() { Name = "name", Type = stringType, Index = 0 };
+            var errorParameter2 = new ErrorParameterModel() { Name = "round", Type = int256Type, Index = 1 };
+            var errorParameter3 = new ErrorParameterModel() { Name = "version", Type = stringType };
+
+            var error1 = new ErrorModel() { Name = "TestError", Parameters = [errorParameter3, errorParameter2, errorParameter1] };
+            var error2 = new ErrorModel() { Name = "BuildError", Parameters = [errorParameter2, errorParameter3] };
+            var error3 = new ErrorModel() { Name = "UseError", Parameters = [errorParameter3] };
+
+
+            var errors = new ErrorModel[] { error1, error2, error3 };
+            #endregion
+
 
             SolidityFile file = new()
             {
@@ -137,6 +151,13 @@ namespace WebApiV2.Controllers
             {
                 var renderStruct = SolidityTemplateProcessor.Structs.Render(structModel);
                 result += renderStruct;
+                result += Environment.NewLine;
+            }
+
+            foreach(var errorModel in errors)
+            {
+                var renderError = SolidityTemplateProcessor.Errors.Render(errorModel);
+                result += renderError;
                 result += Environment.NewLine;
             }
 
