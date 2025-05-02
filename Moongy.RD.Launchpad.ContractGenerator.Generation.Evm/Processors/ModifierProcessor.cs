@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
 {
+    //TODO: Duplicate parameters
     public class ModifierProcessor() : BaseSolidityTemplateProcessor<ModifierModel>("Modifier")
     {
         public override string Render(ModifierModel model)
@@ -30,15 +31,23 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
             return result;
         }
 
-        private string[] TransformParameters(IEnumerable<ParameterModel> parameters)
+        private string[] TransformParameters(IEnumerable<ModifierParameterModel> parameters)
         {
             return parameters.OrderBy(x => x.Index).Select(TransformParameter).ToArray();
         }
 
-        private string TransformParameter(ParameterModel parameter)
+        private string TransformParameter(ModifierParameterModel parameter)
         {
             var dataType = SolidityReferenceTypeSyntaxHelper.RenderTypeReference(parameter.Type);
-            return $"{dataType} {parameter.Name}";
+
+            //TODO: Can be replaced with an helper
+            var location =
+                 parameter.Location == Enums.SolidityMemoryLocation.None || parameter.Location == null ? "":
+                parameter.Location == Enums.SolidityMemoryLocation.Memory ? "memory " :
+                parameter.Location == Enums.SolidityMemoryLocation.Calldata ? "calldata ":
+                parameter.Location == Enums.SolidityMemoryLocation.Storage ? "storage ": throw new Exception();
+
+            return $"{dataType} {location}{parameter.Name}";
         }
     }
 }

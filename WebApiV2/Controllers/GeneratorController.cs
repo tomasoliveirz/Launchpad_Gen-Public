@@ -13,6 +13,8 @@ using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Str
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.TypeReferences;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors;
 using Moongy.RD.Launchpad.Core.Enums;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Functions;
+using Moongy.RD.Launchpad.Core.Models.Metamodel;
 
 namespace WebApiV2.Controllers
 {
@@ -20,6 +22,71 @@ namespace WebApiV2.Controllers
     [ApiController]
     public class GeneratorController : ControllerBase
     {
+        public ActionResult GenerateSolidityContract()
+        {
+
+            #region Constructor parameters
+            var int256Type = new SimpleTypeReference(SolidityDataTypeEnum.Uint256);
+            var stringType = new SimpleTypeReference(SolidityDataTypeEnum.String);
+            var addressType = new SimpleTypeReference(SolidityDataTypeEnum.Address);
+
+            var nameParameter = new ConstructorParameterModel() { Name = "name", Type = stringType, Index = 0, Value = "MyToken" };
+            var symbolParameter = new ConstructorParameterModel() { Name = "symbol", Type = stringType, Index = 1, Value = "MTK" };
+            var initialOwnerParameter = new ConstructorParameterModel() { Name = "initialOwner", Type = addressType };
+            var toParameter = new ConstructorParameterModel() { Name = "to", Type = addressType };
+            var amountParameter = new ConstructorParameterModel() { Name = "amount", Type = int256Type };
+            #endregion
+
+            #region Modifiers 
+            var onlyOwnerModifier = new ModifierModel() { Name = "onlyOwner", Body = "" };
+            #endregion
+
+            var erc20PermitDependency = new AbstractionImportModel()
+            {
+                Name = "ERC20Permit",
+                PathName = "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol",
+                ConstructorParameters = [nameParameter]
+            };
+            var erc20Dependency = new AbstractionImportModel()
+            {
+                Name = "ERC20",
+                PathName = "@openzeppelin/contracts/token/ERC20/ERC20.sol",
+                ConstructorParameters = [nameParameter, symbolParameter]
+            };
+
+            var ownableDependency = new AbstractionImportModel()
+            {
+                Name = "Ownable",
+                PathName = "@openzeppelin/contracts/access/Ownable.sol",
+                ConstructorParameters = [initialOwnerParameter]
+            };
+
+            var constructorParameters = new List<ConstructorParameterModel>
+            {
+                nameParameter, symbolParameter, initialOwnerParameter
+            };
+
+            var mintFunction = new FunctionModel()
+            {
+                Name = "mint",
+                Parameters = [toParameter, amountParameter],
+                Modifiers = [onlyOwnerModifier],
+                Body = "_mint(to, amount);"
+            };
+
+            var contract = new SolidityContractModel() { Name = "MyToken", BaseContracts = [erc20Dependency, erc20PermitDependency, ownableDependency],
+            ConstructorParameters = constructorParameters,
+            Functions = [mintFunction]
+            };
+
+
+            var version = new SoftwareVersion() { Major = 0, Minor = 8, Revision = 27 };
+            var fileHeader = new FileHeaderModel() { License = SpdxLicense.MIT, Version = new() { Maximum = version, Minimum = version } };
+
+            var file = new SolidityFile() { FileHeader = fileHeader, Contracts = [contract] };
+        }
+
+
         [HttpGet]
         public ActionResult TryToGenerateSolidityContract()
         {
@@ -36,7 +103,7 @@ namespace WebApiV2.Controllers
             var stringType = new SimpleTypeReference(SolidityDataTypeEnum.String);
 
             var nameArgument = new ConstructorParameterModel() { Name = "name", Type = stringType, Index = 0, Value="MyToken" };
-            var symbolArgument = new ConstructorParameterModel() { Name = "symbol", Type = stringType, Index = 1, Value="MTK" };
+            var symbolArgument = new ConstructorParameterModel() { Name = "symbol", Type = stringType, Index = 1, Value="MTK", Location = SolidityMemoryLocation.Memory };
             var maxUserCountArgument = new ConstructorParameterModel() { Name = "maxUserCount", Type = int256Type, AssignedTo="_maxUserCount" };
             #endregion
 

@@ -16,6 +16,8 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
         private EventRenderingModel Transform(EventModel model)
         {
             var result = new EventRenderingModel() { Name = model.Name};
+            if (model.Parameters.Count != model.Parameters.DistinctBy(x => x.Name).Count())
+                throw new Exceptions.DuplicateException("event", model.Name, "arguments");
             result.Parameters = TransformParameters(model.Parameters);
             return result;
         }

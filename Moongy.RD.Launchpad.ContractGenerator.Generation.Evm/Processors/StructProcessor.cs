@@ -5,6 +5,8 @@ using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.ScribanRenderi
 
 namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
 {
+    //TODO: Duplicate properties
+    //TODO: Property order is not correct
     public class StructProcessor() : BaseSolidityTemplateProcessor<StructModel>("Struct")
     {
         public override string Render(StructModel model)

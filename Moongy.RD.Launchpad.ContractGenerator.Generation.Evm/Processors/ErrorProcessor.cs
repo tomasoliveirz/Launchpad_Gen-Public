@@ -5,6 +5,8 @@ using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.ScribanRenderi
 
 namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
 {
+
+    //TODO: Validate duplicate parameters
     public class ErrorProcessor() : BaseSolidityTemplateProcessor<ErrorModel>("Error")
     {
         public override string Render(ErrorModel model)

@@ -6,6 +6,9 @@ using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.ScribanRenderi
 
 namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors;
 
+
+//TODO: Validate duplicate arguments, assigns with different data types, arguments with value that are being used on the base constructors,  and data location.
+//TODO: Template doesn't provide any advantages. too simple.
 public class ConstructorProcessor() : BaseSolidityTemplateProcessor<SolidityContractModel>("ContractConstructor")
 {
     public override string Render(SolidityContractModel model)
