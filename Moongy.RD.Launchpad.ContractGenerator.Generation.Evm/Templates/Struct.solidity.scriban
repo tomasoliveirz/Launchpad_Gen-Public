@@ -1,0 +1,5 @@
+﻿{{ "\t" }}struct {{Name}} {
+        {{- for property in Properties }}
+            {{property}}
+        {{- end }}
+        }

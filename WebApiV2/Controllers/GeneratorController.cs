@@ -1,15 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Enums;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Errors;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Events;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Header;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Imports;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Parameters;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.State;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Structs;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.TypeReferences;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors;
 using Moongy.RD.Launchpad.Core.Enums;
-using System;
 
 namespace WebApiV2.Controllers
 {
@@ -79,6 +80,18 @@ namespace WebApiV2.Controllers
             var events = new EventModel[]{ event1, event2, event3 };
             #endregion
 
+            #region Structs
+            var property1 = new StructPropertyModel() { Name = "test", DataType = int256Type };
+            var property2 = new StructPropertyModel() { Name = "build", DataType = stringType };
+            var property3 = new StructPropertyModel() { Name = "struct", DataType = int256Type };
+
+
+            var struct1 = new StructModel() { Name = "TestStruct", Properties = [property1, property2, property3] };
+            var struct2 = new StructModel() { Name = "TestStruct2", Properties = [property3, property2, property1] };
+            var struct3 = new StructModel() { Name = "TestStruct3", Properties = [property2, property1, property3] };
+            var structs = new StructModel[] { struct1, struct2, struct3 };
+            #endregion
+
             #region State 
             var maxUserCountProperty = new StatePropertyModel() { Name = "_maxUserCount", Type = int256Type };
             #endregion
@@ -94,7 +107,20 @@ namespace WebApiV2.Controllers
                 Interfaces = [],
                 StateProperties = [maxUserCountProperty]
             };
-            #endregion 
+            #endregion
+            #region Errors
+            var errorParameter1 = new ErrorParameterModel() { Name = "name", Type = stringType, Index = 0 };
+            var errorParameter2 = new ErrorParameterModel() { Name = "round", Type = int256Type, Index = 1 };
+            var errorParameter3 = new ErrorParameterModel() { Name = "version", Type = stringType };
+
+            var error1 = new ErrorModel() { Name = "TestError", Parameters = [errorParameter3, errorParameter2, errorParameter1] };
+            var error2 = new ErrorModel() { Name = "BuildError", Parameters = [errorParameter2, errorParameter3] };
+            var error3 = new ErrorModel() { Name = "UseError", Parameters = [errorParameter3] };
+
+
+            var errors = new ErrorModel[] { error1, error2, error3 };
+            #endregion
+
 
             SolidityFile file = new()
             {
@@ -120,6 +146,20 @@ namespace WebApiV2.Controllers
                 result += renderEvent;
                 result += Environment.NewLine;
             }
+            foreach(var structModel in structs)
+            {
+                var renderStruct = SolidityTemplateProcessor.Structs.Render(structModel);
+                result += renderStruct;
+                result += Environment.NewLine;
+            }
+
+            foreach(var errorModel in errors)
+            {
+                var renderError = SolidityTemplateProcessor.Errors.Render(errorModel);
+                result += renderError;
+                result += Environment.NewLine;
+            }
+
 
             #region Constructor
             result += Environment.NewLine;
