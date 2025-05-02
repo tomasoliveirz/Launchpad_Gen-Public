@@ -11,6 +11,7 @@
     <None Remove="Templates\Event.solidity.scriban" />
     <None Remove="Templates\FileHeader.solidity.scriban" />
     <None Remove="Templates\Imports.solidity.scriban" />
+    <None Remove="Templates\Struct.solidity.scriban" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,6 +20,7 @@
     <EmbeddedResource Include="Templates\Event.solidity.scriban" />
     <EmbeddedResource Include="Templates\FileHeader.solidity.scriban" />
     <EmbeddedResource Include="Templates\Imports.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Struct.solidity.scriban" />
   </ItemGroup>
 
   <ItemGroup>

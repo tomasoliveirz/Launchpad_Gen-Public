@@ -13,5 +13,6 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
         public static EventProcessor Events { get; } = new EventProcessor();
         public static FileHeaderProcessor FileHeader { get; } = new FileHeaderProcessor();
         public static ImportProcessor Imports { get; } = new ImportProcessor();
+        public static StructProcessor Structs { get; } = new StructProcessor();
     }
 }
