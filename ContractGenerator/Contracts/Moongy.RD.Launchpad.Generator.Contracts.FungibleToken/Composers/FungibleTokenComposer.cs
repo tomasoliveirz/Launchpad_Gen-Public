@@ -53,7 +53,7 @@ namespace Moongy.RD.Launchpad.Generator.Contracts.FungibleToken.Composers
                     new PrimitiveProperty
                     {
                         Name = "PremintAmount",
-                        Value = tokenModel.PremintAmmount.ToString(),
+                        Value = tokenModel.PremintAmount.ToString(),
                         PropertyType = PropertyType.None
                     },
                     new PrimitiveProperty
@@ -62,6 +62,20 @@ namespace Moongy.RD.Launchpad.Generator.Contracts.FungibleToken.Composers
                         Value = tokenModel.HasTokenRecovery.ToString().ToLower(),
                         PropertyType = PropertyType.None
                     }
+                },
+                ConstructorOperations = new List<ContractOperation>
+                {
+                    new ContractOperation
+                    {
+                        Value = "premintAmount",
+                        Index = 0,
+                    }
+                },
+                SmartContractFunctions = new List<SmartContractFunction>
+                {
+                   if (HasTokenRecovery){
+                   
+                   }
                 }
             };
 

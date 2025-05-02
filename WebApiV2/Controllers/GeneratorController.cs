@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Enums;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Enums;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Events;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Header;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Imports;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Modifiers;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Parameters;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.State;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.TypeReferences;
@@ -78,6 +80,33 @@ namespace WebApiV2.Controllers
             var events = new EventModel[]{ event1, event2, event3 };
             #endregion
 
+            #region Enums
+
+            var enum1 = new EnumModel() { Name = "TestEnum", Values = ["A", "B", "C"] };
+            var enum2 = new EnumModel() { Name = "TestEnum2", Values = ["A", "B", "C"] };
+            var enum3 = new EnumModel() { Name = "TestEnum3", Values = ["A", "B", "C"] };
+            var enums = new EnumModel[] { enum1, enum2, enum3 };
+            #endregion
+
+            #region Modifiers
+
+            var booleanType = new SimpleTypeReference(SolidityDataTypeEnum.Bool);
+            var addressType = new SimpleTypeReference(SolidityDataTypeEnum.Address);
+
+            var ownerModifierParam = new ModifierParameterModel() { Name = "owner", Type = addressType };
+            var activeModifierParam = new ModifierParameterModel() { Name = "isActive", Type = booleanType };
+
+            var modifier1 = new ModifierModel() { Name = "TestModifier", Body = "require(msg.sender == owner())" };
+            var modifier2 = new ModifierModel() { Name = "TestModifier2", Body = "require(msg.sender == owner())" };
+            var modifier3 = new ModifierModel() { Name = "TestModifier3", Body = "require(msg.sender == owner())" };
+            var modifier4 = new ModifierModel()
+            {
+                Name = "TestModifier4",
+                Parameters = [ownerModifierParam, activeModifierParam],
+                Body = "require(msg.sender == owner && isActive == true)"
+            };
+            var modifiers = new ModifierModel[] { modifier1, modifier2, modifier3, modifier4 };
+            #endregion
             #region State 
             var maxUserCountProperty = new StatePropertyModel() { Name = "_maxUserCount", Type = int256Type };
             #endregion
@@ -119,6 +148,21 @@ namespace WebApiV2.Controllers
                 result += renderEvent;
                 result += Environment.NewLine;
             }
+            result += Environment.NewLine;
+            foreach (var @enum in enums)
+            {
+                var renderEnum = SolidityTemplateProcessor.Enums.Render(@enum);
+                result += renderEnum;
+                result += Environment.NewLine;
+            }
+            result += Environment.NewLine;
+            foreach (var modifier in modifiers)
+            {
+                var renderModifier = SolidityTemplateProcessor.Modifiers.Render(modifier);
+                result += renderModifier;
+                result += Environment.NewLine;
+            }
+            result += Environment.NewLine;
 
             return Ok(result);
         }
