@@ -1,6 +1,6 @@
-﻿   constructor({{parameters}}) {{baseConstructors}}
-   {
-      {{-for assignment in assignments}}
-      {{-assignment}}
-      {{-end}}
-   }
+﻿    constructor({{parameters}}) {{baseConstructors}}
+    {
+       {{~ for assignment in assignments ~}}
+          {{assignment}}
+       {{~ end ~}}
+    }
