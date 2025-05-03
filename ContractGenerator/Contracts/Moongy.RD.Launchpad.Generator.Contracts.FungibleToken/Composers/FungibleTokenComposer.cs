@@ -71,14 +71,10 @@ namespace Moongy.RD.Launchpad.Generator.Contracts.FungibleToken.Composers
                         Index = 0,
                     }
                 },
-                SmartContractFunctions = new List<SmartContractFunction>
-                {
-                   if (HasTokenRecovery){
-                   
-                   }
-                }
-            };
+                SmartContractFunctions = new List<SmartContractFunction>()
 
+
+            };
             return smartContractModel;
         }
 
@@ -87,9 +83,9 @@ namespace Moongy.RD.Launchpad.Generator.Contracts.FungibleToken.Composers
             FungibleTokenValidator _validator = new();
             _validator.Validate(tokenModel);
         }
-    }
-    public class PrimitiveProperty : ContractProperty
-    {
-        public string? Value { get; set; }
+        public class PrimitiveProperty : ContractProperty
+        {
+            public string? Value { get; set; }
+        }
     }
 }

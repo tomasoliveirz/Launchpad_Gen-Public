@@ -84,7 +84,8 @@ namespace WebApiV2.Controllers
             var fileHeader = new FileHeaderModel() { License = SpdxLicense.MIT, Version = new() { Maximum = version, Minimum = version } };
 
             var file = new SolidityFile() { FileHeader = fileHeader, Contracts = [contract] };
-            return Ok();
+
+            return Ok(file);
         }
 
 
@@ -153,7 +154,7 @@ namespace WebApiV2.Controllers
             #region Structs
             var property1 = new StructPropertyModel() { Name = "test", DataType = int256Type };
             var property2 = new StructPropertyModel() { Name = "build", DataType = stringType };
-            var property3 = new StructPropertyModel() { Name = "struct", DataType = int256Type };
+            var property3 = new StructPropertyModel() { Name = "amount", DataType = int256Type };
 
 
             var struct1 = new StructModel() { Name = "TestStruct", Properties = [property1, property2, property3] };
@@ -216,6 +217,20 @@ namespace WebApiV2.Controllers
 
 
             var errors = new ErrorModel[] { error1, error2, error3 };
+            #endregion
+
+            #region Functions
+            var functionParameter1 = new FunctionParameterModel() { Name = "to", Type = addressType, Index = 0 };
+            var functionParameter2 = new FunctionParameterModel() { Name = "amount", Type = int256Type, Index = 1 };
+
+            var function1 = new FunctionModel()
+            {
+                Name = "TestFunction",
+                Parameters = [functionParameter2, functionParameter1],
+                Body = "require(msg.sender == owner())"
+            };
+
+            var functions = new FunctionModel[] { function1 };
             #endregion
 
 
@@ -288,6 +303,14 @@ namespace WebApiV2.Controllers
             {
                 var renderError = SolidityTemplateProcessor.Errors.Render(errorModel);
                 result += renderError;
+                result += Environment.NewLine;
+            }
+
+            result += Environment.NewLine;
+            foreach (var function in functions)
+            {
+                var renderFunction = SolidityTemplateProcessor.Functions.Render(function);
+                result += renderFunction;
                 result += Environment.NewLine;
             }
 

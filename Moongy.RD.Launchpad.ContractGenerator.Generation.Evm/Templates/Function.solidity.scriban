@@ -1,0 +1,13 @@
+﻿function {{Name}}(
+    {{- for parameter in Parameters -}}
+        {{- if !for.first -}}, {{- end -}}
+        {{parameter}}
+    {{- end -}}
+) {{Visibility}} {{Mutability}} returns (
+    {{- for returnValue in ReturnValues -}}
+        {{- if !for.first -}}, {{- end -}}
+        {{returnValue}}
+    {{- end -}}
+) {
+    
+}
