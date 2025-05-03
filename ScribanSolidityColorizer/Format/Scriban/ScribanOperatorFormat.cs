@@ -6,8 +6,8 @@ using System.Windows.Media;
 namespace ScribanSolidityColorizer.Format
 {
     [Export(typeof(EditorFormatDefinition))]
-    [ClassificationType(ClassificationTypeNames = "scriban-solidity.scribans.operator")]
-    [Name("scriban-solidity.scribans.operator")]
+    [ClassificationType(ClassificationTypeNames = "scriban-solidity.scriban.operator")]
+    [Name("scriban-solidity.scriban.operator")]
     [UserVisible(true)]
     [Order(Before = Priority.Default)]
     internal sealed class ScribanOperatorFormat : ClassificationFormatDefinition
@@ -15,7 +15,7 @@ namespace ScribanSolidityColorizer.Format
         public ScribanOperatorFormat()
         {
             DisplayName = "Scriban Operator";
-            ForegroundColor = Colors.OrangeRed;
+            ForegroundColor = (Color)ColorConverter.ConvertFromString("#68aedb");
         }
     }
 }

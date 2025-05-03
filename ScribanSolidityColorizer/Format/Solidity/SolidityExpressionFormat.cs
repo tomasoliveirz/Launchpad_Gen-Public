@@ -6,17 +6,16 @@ using System.Windows.Media;
 namespace ScribanSolidityColorizer.Format
 {
     [Export(typeof(EditorFormatDefinition))]
-    [ClassificationType(ClassificationTypeNames = "scriban-solidity.solidity.keyword")]
-    [Name("scriban-solidity.solidity.keyword")]
+    [ClassificationType(ClassificationTypeNames = "scriban-solidity.solidity.expression")]
+    [Name("scriban-solidity.solidity.expression")]
     [UserVisible(true)]
     [Order(Before = Priority.Default)]
-    internal sealed class ScribanSolidityKeywordFormat : ClassificationFormatDefinition
+    internal sealed class ScribanSolidityExpressionFormat : ClassificationFormatDefinition
     {
-        public ScribanSolidityKeywordFormat()
+        public ScribanSolidityExpressionFormat()
         {
             DisplayName = "Scriban Solidity Keyword";
-            ForegroundColor = Colors.DodgerBlue;
-            IsBold = true;
+            ForegroundColor = (Color)ColorConverter.ConvertFromString("#3580BB");
         }
     }
 }

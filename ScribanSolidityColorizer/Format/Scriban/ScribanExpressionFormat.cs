@@ -6,8 +6,8 @@ using System.Windows.Media;
 namespace ScribanSolidityColorizer.Format
 {
     [Export(typeof(EditorFormatDefinition))]
-    [ClassificationType(ClassificationTypeNames = "scriban-solidity.scribans.expression")]
-    [Name("scriban-solidity.scribans.expression")]
+    [ClassificationType(ClassificationTypeNames = "scriban-solidity.scriban.expression")]
+    [Name("scriban-solidity.scriban.expression")]
     [UserVisible(true)]
     [Order(Before = Priority.Default)]
     internal sealed class ScribanExpressionFormat : ClassificationFormatDefinition
@@ -15,7 +15,7 @@ namespace ScribanSolidityColorizer.Format
         public ScribanExpressionFormat()
         {
             DisplayName = "Scriban Expression";
-            ForegroundColor = (Color)ColorConverter.ConvertFromString("#0077B6");
+            ForegroundColor = (Color)ColorConverter.ConvertFromString("#686adb");
         }
     }
 }

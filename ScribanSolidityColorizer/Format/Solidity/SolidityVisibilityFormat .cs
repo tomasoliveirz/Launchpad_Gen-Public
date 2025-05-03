@@ -5,8 +5,8 @@ using System.Windows.Media;
 namespace ScribanSolidityColorizer.Format
 {
     [Export(typeof(EditorFormatDefinition))]
-    [ClassificationType(ClassificationTypeNames = "scriban-solidity.keyword.visibility")]
-    [Name("scriban-solidity.keyword.visibility")]
+    [ClassificationType(ClassificationTypeNames = "scriban-solidity.solidity.visibility")]
+    [Name("scriban-solidity.solidity.visibility")]
     [UserVisible(true)]
     [Order(Before = Priority.Default)]
     internal sealed class SolidityVisibilityFormat : ClassificationFormatDefinition
@@ -14,7 +14,7 @@ namespace ScribanSolidityColorizer.Format
         public SolidityVisibilityFormat()
         {
             DisplayName = "Scriban Solidity Visibility Modifier";
-            ForegroundColor = Colors.MediumVioletRed;
+            ForegroundColor = (Color)ColorConverter.ConvertFromString("#03520f");
         }
     }
 }

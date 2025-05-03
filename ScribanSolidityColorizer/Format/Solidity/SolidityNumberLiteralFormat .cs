@@ -6,8 +6,8 @@ using System.Windows.Media;
 namespace ScribanSolidityColorizer.Format
 {
     [Export(typeof(EditorFormatDefinition))]
-    [ClassificationType(ClassificationTypeNames = "scriban-solidity.solidity.number-literal")]
-    [Name("scriban-solidity.solidity.number-literal")]
+    [ClassificationType(ClassificationTypeNames = "scriban-solidity.solidity.number")]
+    [Name("scriban-solidity.solidity.number")]
     [UserVisible(true)]
     [Order(Before = Priority.Low)]
     internal sealed class ScribanSolidityNumberLiteralFormat : ClassificationFormatDefinition
@@ -15,7 +15,8 @@ namespace ScribanSolidityColorizer.Format
         public ScribanSolidityNumberLiteralFormat()
         {
             DisplayName = "Scriban Solidity Number Literal";
-            ForegroundColor = Colors.Pink;
+            ForegroundColor = (Color)ColorConverter.ConvertFromString("#f08ff7");
+
         }
     }
 }

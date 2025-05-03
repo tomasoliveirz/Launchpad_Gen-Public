@@ -84,6 +84,7 @@ namespace WebApiV2.Controllers
             var fileHeader = new FileHeaderModel() { License = SpdxLicense.MIT, Version = new() { Maximum = version, Minimum = version } };
 
             var file = new SolidityFile() { FileHeader = fileHeader, Contracts = [contract] };
+            return Ok();
         }
 
 

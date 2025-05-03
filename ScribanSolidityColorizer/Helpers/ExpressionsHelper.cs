@@ -31,5 +31,22 @@ namespace ScribanSoliditySyntaxHighlighter.Helpers
 
             return grouped.ToDictionary(g => g.Key, g => g.Value.ToArray());
         }
+
+        public static Dictionary<string, ProgrammingLanguageExpressionAttribute> GroupedExpressionDescriptions(Type type)
+        {
+            var fields = type
+                .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
+                .Where(fi => fi.IsLiteral && !fi.IsInitOnly && fi.FieldType == typeof(string));
+
+            var grouped = new Dictionary<string, ProgrammingLanguageExpressionAttribute>();
+
+            foreach (var field in fields)
+            {
+                var attribute = field.GetCustomAttribute<ProgrammingLanguageExpressionAttribute>();
+                grouped.Add(field.GetRawConstantValue().ToString(), attribute);
+            }
+
+            return grouped;
+        }
     }
 }

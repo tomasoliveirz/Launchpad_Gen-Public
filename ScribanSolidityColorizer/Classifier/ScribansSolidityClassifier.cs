@@ -31,17 +31,20 @@ namespace ScribanSolidityColorizer.Classifier
             _aggregator = ookTagAggregator;
             _scribansSolidityTypes = new Dictionary<ScribanSolidityTokenTypes, IClassificationType>
             {
-                [ScribanSolidityTokenTypes.SolidityKeyword] = typeService.GetClassificationType("scriban-solidity.solidity.keyword"),
-                [ScribanSolidityTokenTypes.SolidityDataType] = typeService.GetClassificationType("scriban-solidity.solidity.data-type"),
+                [ScribanSolidityTokenTypes.ScribanComment] = typeService.GetClassificationType("scriban-solidity.scriban.comment"),
+                [ScribanSolidityTokenTypes.ScribanExpression] = typeService.GetClassificationType("scriban-solidity.scriban.expression"),
+                [ScribanSolidityTokenTypes.ScribanNumber] = typeService.GetClassificationType("scriban-solidity.scriban.number"),
+                [ScribanSolidityTokenTypes.ScribanOperator] = typeService.GetClassificationType("scriban-solidity.scriban.operator"),
+                [ScribanSolidityTokenTypes.ScribanString] = typeService.GetClassificationType("scriban-solidity.scriban.string"),
+                [ScribanSolidityTokenTypes.ScribanWrapper] = typeService.GetClassificationType("scriban-solidity.scriban.wrapper"),
+
                 [ScribanSolidityTokenTypes.SolidityComment] = typeService.GetClassificationType("scriban-solidity.solidity.comment"),
-                [ScribanSolidityTokenTypes.SolidityStringLiteral] = typeService.GetClassificationType("scriban-solidity.solidity.string-literal"),
-                [ScribanSolidityTokenTypes.SolidityNumberLiteral] = typeService.GetClassificationType("scriban-solidity.solidity.number-literal"),
-                [ScribanSolidityTokenTypes.SolidityValue] = typeService.GetClassificationType("scriban-solidity.solidity.value"),
+                [ScribanSolidityTokenTypes.SolidityDataType] = typeService.GetClassificationType("scriban-solidity.solidity.data-type"),
+                [ScribanSolidityTokenTypes.SolidityExpression] = typeService.GetClassificationType("scriban-solidity.solidity.expression"),
+                [ScribanSolidityTokenTypes.SolidityNumber] = typeService.GetClassificationType("scriban-solidity.solidity.number"),
+                [ScribanSolidityTokenTypes.SolidityString] = typeService.GetClassificationType("scriban-solidity.solidity.string"),
                 [ScribanSolidityTokenTypes.SolidityVisibility] = typeService.GetClassificationType("scriban-solidity.solidity.visibility"),
-                [ScribanSolidityTokenTypes.ScribanExpression] = typeService.GetClassificationType("scriban-solidity.scribans.expression"),
-                [ScribanSolidityTokenTypes.ScribanControl] = typeService.GetClassificationType("scriban-solidity.scribans.control"),
-                [ScribanSolidityTokenTypes.ScribanOperator] = typeService.GetClassificationType("scriban-solidity.scribans.operator"),
-                [ScribanSolidityTokenTypes.ScribanComment] = typeService.GetClassificationType("scriban-solidity.scribans.comment"),
+                [ScribanSolidityTokenTypes.SolidityOperator] = typeService.GetClassificationType("scriban-solidity.solidity.operator"),
             };
         }
 

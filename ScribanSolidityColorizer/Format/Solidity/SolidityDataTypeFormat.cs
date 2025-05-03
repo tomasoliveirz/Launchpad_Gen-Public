@@ -14,7 +14,8 @@ namespace ScribanSolidityColorizer.Format
         public SolidityDataTypeFormat()
         {
             DisplayName = "Scriban Solidity Data Type";
-            ForegroundColor = Colors.MediumPurple;
+            ForegroundColor = (Color)ColorConverter.ConvertFromString("#688bdb");
+
         }
     }
 }

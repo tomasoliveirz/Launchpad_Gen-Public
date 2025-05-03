@@ -2,16 +2,19 @@
 {
     public enum ScribanSolidityTokenTypes
     {
-        SolidityComment,
-        SolidityKeyword,
-        SolidityDataType,
-        SolidityNumberLiteral,
-        SolidityStringLiteral,
-        SolidityValue,
-        SolidityVisibility,
-        ScribanExpression,
-        ScribanControl,
-        ScribanOperator,
         ScribanComment,
+        ScribanExpression,
+        ScribanNumber,
+        ScribanOperator,
+        ScribanString,
+        ScribanWrapper,
+
+        SolidityComment,
+        SolidityDataType,
+        SolidityExpression,
+        SolidityNumber,
+        SolidityOperator,
+        SolidityString,
+        SolidityVisibility,
     }
 }

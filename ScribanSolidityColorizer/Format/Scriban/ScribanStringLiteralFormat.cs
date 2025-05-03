@@ -6,13 +6,13 @@ using System.Windows.Media;
 namespace ScribanSolidityColorizer.Format
 {
     [Export(typeof(EditorFormatDefinition))]
-    [ClassificationType(ClassificationTypeNames = "scriban-solidity.solidity.string-literal")]
-    [Name("scriban-solidity.solidity.string-literal")]
+    [ClassificationType(ClassificationTypeNames = "scriban-solidity.scriban.string")]
+    [Name("scriban-solidity.solidity.string")]
     [UserVisible(true)]
     [Order(Before = Priority.Default)]
-    internal sealed class SolidityStringLiteralFormat : ClassificationFormatDefinition
+    internal sealed class ScribanStringLiteralFormat : ClassificationFormatDefinition
     {
-        public SolidityStringLiteralFormat()
+        public ScribanStringLiteralFormat()
         {
             DisplayName = "Scriban Solidity String Literal";
             ForegroundColor = (Color)ColorConverter.ConvertFromString("#FFA500");

@@ -7,7 +7,7 @@ namespace ScribanSolidityColorizer.Format
 {
     [Export(typeof(EditorFormatDefinition))]
     [ClassificationType(ClassificationTypeNames = "scriban-solidity.solidity.comment")]
-    [Name("scriban-solidity.comment")]
+    [Name("scriban-solidity.solidity.comment")]
     [UserVisible(true)]
     [Order(Before = Priority.Default)]
     internal sealed class SolidityCommentFormat : ClassificationFormatDefinition
@@ -15,8 +15,7 @@ namespace ScribanSolidityColorizer.Format
         public SolidityCommentFormat()
         {
             DisplayName = "Scriban Solidity Comment";
-            ForegroundColor = Colors.ForestGreen;
-            IsItalic = true;
+            ForegroundColor = (Color)ColorConverter.ConvertFromString("#4e992d");
         }
     }
 }
