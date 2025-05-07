@@ -1,15 +1,16 @@
 ﻿using System.Reflection;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels;
 using Moongy.RD.Launchpad.Core.Attributes;
-using Moongy.RD.Launchpad.Core.Models.Metamodel.Base;
-using Moongy.RD.Launchpad.Core.Models.Metamodel;
 
 namespace Moongy.RD.Launchpad.Generator.Contracts.Core.Composers
 {
     public class GenericMetaModelComposer
     {
-        public static SmartContractModel Compose<T>(T token) where T : class
+        public static SolidityContractModel Compose<T>(T token) where T : class
+           
         {
-            var metaModel = new SmartContractModel();
+            // TODO imcomplete
+            var metaModel = new SolidityContractModel() { Name= "TODO"};
 
             var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
@@ -22,15 +23,6 @@ namespace Moongy.RD.Launchpad.Generator.Contracts.Core.Composers
                     continue;
                 }
 
-                var contractProperty = new ContractProperty
-                {
-                    Name = metaModelProperty.Name ?? property.Name,
-                    PropertyType = metaModelProperty.PropertyType,
-                    DataType = metaModelProperty.DataType
-                };
-
-
-                metaModel.Properties.Add(contractProperty);
             }
 
             return metaModel;

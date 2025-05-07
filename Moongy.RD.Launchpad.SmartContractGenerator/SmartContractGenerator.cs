@@ -1,4 +1,4 @@
-﻿using Moongy.RD.Launchpad.Core.Models.Metamodel;
+﻿using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels;
 using Moongy.RD.Launchpad.Generator.Contracts.AdvancedFungibleToken.Interfaces;
 using Moongy.RD.Launchpad.Generator.Contracts.AdvancedFungibleToken.Models;
 using Moongy.RD.Launchpad.Generator.Contracts.Core.Interfaces;
@@ -139,7 +139,7 @@ namespace Moongy.RD.Launchpad.SmartContractGenerator
 
         #region Tokenomic Decoration
 
-        public SmartContractModel Decorate<TToken>(List<ITokenomic> tokenomics, SmartContractModel model) where TToken : IToken
+        public SolidityContractModel Decorate<TToken>(List<ITokenomic> tokenomics, SolidityContractModel model) where TToken : IToken
         {
             foreach (var tokenomic in tokenomics)
             {
@@ -148,7 +148,7 @@ namespace Moongy.RD.Launchpad.SmartContractGenerator
             return model;
         }
 
-        public SmartContractModel Decorate<TToken, TTokenomic, TDecorator>(ITokenomic tokenomic, SmartContractModel model, TDecorator decorator) 
+        public SolidityContractModel Decorate<TToken, TTokenomic, TDecorator>(ITokenomic tokenomic, SolidityContractModel model, TDecorator decorator) 
             where TToken : IToken 
             where TTokenomic:ITokenomic
             where TDecorator:ITokenomicDecorator<TTokenomic>
@@ -161,7 +161,7 @@ namespace Moongy.RD.Launchpad.SmartContractGenerator
             return model;
         }
 
-        public SmartContractModel Decorate<TToken>(ITokenomic tokenomic, SmartContractModel model) where TToken : IToken
+        public SolidityContractModel Decorate<TToken>(ITokenomic tokenomic, SolidityContractModel model) where TToken : IToken
         {
             model = Decorate<TToken, TaxTokenomicModel, ITaxTokenomicDecorator>(tokenomic, model, _taxDecorator);
             model = Decorate<TToken, DeflationTokenomicModel, IDeflationTokenomicDecorator>(tokenomic, model, _deflationDecorator);

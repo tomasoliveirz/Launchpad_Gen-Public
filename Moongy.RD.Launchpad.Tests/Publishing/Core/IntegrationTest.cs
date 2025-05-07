@@ -10,8 +10,7 @@ using Moongy.RD.Launchpad.ContractGenerator.Publishing.Core.Services;
 using Moongy.RD.Launchpad.ContractGenerator.Publishing.Core.Templates;
 using Moongy.RD.Launchpad.ContractGenerator.Publishing.EVM.Providers;
 using Moongy.RD.Launchpad.Core.Enums;
-using Moongy.RD.Launchpad.Core.Models.Metamodel;
-using Moongy.RD.Launchpad.Core.Models.Metamodel.Base;
+
 using Xunit.Abstractions;
 
 namespace Moongy.RD.Launchpad.Tests.Publishing.Core

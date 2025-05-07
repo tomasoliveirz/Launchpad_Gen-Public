@@ -1,9 +1,9 @@
 ﻿using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Expressions;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Header;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Version;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.ScribanRenderingModels;
 using Moongy.RD.Launchpad.Core.Helpers;
-using Moongy.RD.Launchpad.Core.Models.Metamodel;
 
 namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
 {

@@ -1,9 +1,8 @@
 using System;
 using Moongy.RD.Launchpad.ContractGenerator.Publishing.Core.Builders;
 using Moongy.RD.Launchpad.ContractGenerator.Publishing.Core.Interfaces;
-using Moongy.RD.Launchpad.Core.Models.Metamodel;
-using Moongy.RD.Launchpad.Core.Models.Metamodel.Base;
 using Moongy.RD.Launchpad.Core.Enums;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels;
 
 namespace Moongy.RD.Launchpad.ContractGenerator.Publishing.Core.Services
 {
@@ -36,7 +35,7 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Publishing.Core.Services
         /// <param name="license">The software license.</param>
         /// <param name="version">The compiler version.</param>
         /// <returns>The generated code.</returns>
-        public string GenerateCode(SmartContractModel model, string language, SoftwareLicense license, string? version = null)
+        public string GenerateCode(SolidityContractModel model, string language, SpdxLicense license, string? version = null)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -72,33 +71,13 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Publishing.Core.Services
             }
             
             // Generate events and state variables
-            if (model.Properties != null)
-            {
-                foreach (var property in model.Properties)
-                {
-                    if (property.PropertyType == PropertyType.Event)
-                    {
-                        string eventCode = templateProvider.GenerateEvent(property);
-                        if (!string.IsNullOrEmpty(eventCode))
-                        {
-                            builder.WithEvent(eventCode);
-                        }
-                    }
-                    else if (property.PropertyType == PropertyType.None)
-                    {
-                        string stateVarCode = templateProvider.GenerateStateVariable(property);
-                        if (!string.IsNullOrEmpty(stateVarCode))
-                        {
-                            builder.WithStateVariable(stateVarCode);
-                        }
-                    }
-                }
-            }
+           
+           
             
             // Generate functions
-            if (model.SmartContractFunctions != null)
+            if (model.Functions != null)
             {
-                foreach (var function in model.SmartContractFunctions)
+                foreach (var function in model.Functions)
                 {
                     string functionCode = templateProvider.GenerateFunction(function);
                     if (!string.IsNullOrEmpty(functionCode))
@@ -115,7 +94,7 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Publishing.Core.Services
         /// <summary>
         /// Supports generating code from language-specific models.
         /// </summary>
-        public string GenerateCodeFromSolidityModel(object solidityModel, string language, SoftwareLicense license, string? version = null)
+        public string GenerateCodeFromSolidityModel(object solidityModel, string language, SpdxLicense license, string? version = null)
         {
             // Implementation for SolidityModel would go here
             // This method would be expanded when SolidityModel is implemented

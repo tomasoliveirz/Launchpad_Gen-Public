@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Moongy.RD.Launchpad.ContractGenerator.Generation.Evm\Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.csproj" />
     <ProjectReference Include="..\Moongy.RD.Launchpad.Generator.Contracts.Core\Moongy.RD.Launchpad.Generator.Contracts.Core.csproj" />
     <ProjectReference Include="..\Moongy.RD.Launchpad.Generator.Contracts.FungibleToken\Moongy.RD.Launchpad.Generator.Contracts.FungibleToken.csproj" />
   </ItemGroup>

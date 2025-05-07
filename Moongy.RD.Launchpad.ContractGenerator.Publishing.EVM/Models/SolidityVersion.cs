@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Moongy.RD.Launchpad.Core.Models.Metamodel;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Header;
 
 namespace Moongy.RD.Launchpad.ContractGenerator.Publishing.EVM.Models
 {
-    public class SolidityVersion: SoftwareVersion
+    public class SolidityVersion: VersionModel
     {
     }
 }

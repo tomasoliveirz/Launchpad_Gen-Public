@@ -14,7 +14,7 @@ using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Typ
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors;
 using Moongy.RD.Launchpad.Core.Enums;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Functions;
-using Moongy.RD.Launchpad.Core.Models.Metamodel;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Version;
 
 namespace WebApiV2.Controllers
 {

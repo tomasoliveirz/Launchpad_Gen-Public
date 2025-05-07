@@ -1,19 +1,20 @@
 ﻿using Moongy.RD.Launchpad.Core.Attributes;
 using Moongy.RD.Launchpad.Core.Enums;
-using Moongy.RD.Launchpad.Core.Models.Metamodel.Executions;
 using Moongy.RD.Launchpad.Generator.Contracts.Core.Interfaces;
 using Moongy.RD.Launchpad.Generator.Contracts.Core.Models;
 
 namespace Moongy.RD.Launchpad.Generator.Contracts.AdvancedFungibleToken.Models;
 
-[Token(Name ="Advanced Fungible Token", Tags = [TokenClassification.FungibleToken]) ]
+[Token(Name ="Advanced Fungible Token", Tags = [TokenClassification.FungibleToken])]
 public class AdvancedFungibleTokenModel : BaseTokenModel, IAutoSwappableToken, IDecimalToken, ITokenRecoverable
 {
     [MetaModelProperty(Name = nameof(PreTransferHooks), PropertyType = PropertyType.None, DataType = DataType.Array)]
-    public List<Execution> PreTransferHooks { get; set; } = [];
+    // TODO Type of list placeholder
+    public List<string> PreTransferHooks { get; set; } = [];
 
     [MetaModelProperty(Name = nameof(PostTransferHooks), PropertyType = PropertyType.None, DataType = DataType.Array)]
-    public List<Execution> PostTransferHooks { get; set; } = [];
+    // TODO  Type of list placeholder
+    public List<string> PostTransferHooks { get; set; } = [];
     [MetaModelProperty(Name = nameof(Symbol), PropertyType = PropertyType.None, DataType = DataType.String)]
     public string? Symbol { get; set; }
 

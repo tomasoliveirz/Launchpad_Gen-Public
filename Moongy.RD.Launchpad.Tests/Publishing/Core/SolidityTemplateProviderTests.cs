@@ -1,8 +1,8 @@
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Functions;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Imports;
 using Moongy.RD.Launchpad.ContractGenerator.Publishing.Core.Interfaces;
 using Moongy.RD.Launchpad.ContractGenerator.Publishing.EVM.Providers;
 using Moongy.RD.Launchpad.Core.Enums;
-using Moongy.RD.Launchpad.Core.Models.Metamodel;
-using Moongy.RD.Launchpad.Core.Models.Metamodel.Base;
 using Moq;
 
 namespace Moongy.RD.Launchpad.Tests.Publishing.Core
@@ -29,7 +29,7 @@ namespace Moongy.RD.Launchpad.Tests.Publishing.Core
                 
             var provider = new SolidityTemplateProvider(mockTemplateManager.Object);
             
-            var function = new SmartContractFunction { Name = "transfer" };
+            var function = new FunctionModel { Name = "transfer", Body = "" };
             
             // generating code from the function definition
             var result = provider.GenerateFunction(function);
@@ -75,9 +75,9 @@ namespace Moongy.RD.Launchpad.Tests.Publishing.Core
                 
             var provider = new SolidityTemplateProvider(mockTemplateManager.Object);
             
-            var imports = new List<Import>
+            var imports = new List<ImportModel>
             {
-                new Import { Path = "@openzeppelin/contracts/token/ERC20/ERC20.sol" }
+                new() { PathName = "@openzeppelin/contracts/token/ERC20/ERC20.sol" }
             };
             
             // generating code from the import definition

@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using Moongy.RD.Launchpad.ContractGenerator.Publishing.Core.Interfaces;
 using Moongy.RD.Launchpad.ContractGenerator.Publishing.Core.Templates;
 using Moongy.RD.Launchpad.Core.Enums;
-using Moongy.RD.Launchpad.Core.Models.Metamodel;
-using Moongy.RD.Launchpad.Core.Models.Metamodel.Base;
+
 
 namespace Moongy.RD.Launchpad.ContractGenerator.Publishing.EVM.Providers
 {
