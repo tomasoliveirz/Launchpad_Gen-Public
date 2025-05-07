@@ -7,22 +7,19 @@ using ScribanSolidityColorizer.Enums;
 using ScribanSolidityColorizer.Expressions;
 using ScribanSolidityColorizer.Helpers;
 using ScribanSoliditySyntaxHighlighter.Helpers;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace ScribanSolidityColorizer.Tag
 {
     internal class ScribanSolidityTokenTagger : ITagger<ScribanSolidityTag>
     {
 
-        ITextBuffer _buffer;
-        IDictionary<string, ScribanSolidityTokenTypes> _tokenTypes;
-        Dictionary<ScribanSolidityTokenTypes, string[]> _scribanExpressions;
-        Dictionary<ScribanSolidityTokenTypes, string[]> _solidityExpressions;
+        readonly ITextBuffer _buffer;
+        readonly Dictionary<ScribanSolidityTokenTypes, string[]> _scribanExpressions;
+        readonly Dictionary<ScribanSolidityTokenTypes, string[]> _solidityExpressions;
 
         internal ScribanSolidityTokenTagger(ITextBuffer buffer)
         {
             _buffer = buffer;
-            var solidityExpressions = ExpressionsHelper.GroupedExpressions(typeof(SolidityExpressions)); 
             _scribanExpressions = ExpressionsHelper.GroupedExpressions(typeof(ScribanExpressions));
             _solidityExpressions = ExpressionsHelper.GroupedExpressions(typeof(SolidityExpressions));
         }

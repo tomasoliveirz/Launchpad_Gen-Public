@@ -14,8 +14,10 @@ namespace ScribanSolidityColorizer.QuickInfo
     {
 
         [Import]
+        [System.Obsolete]
         internal IQuickInfoBroker QuickInfoBroker { get; set; }
 
+        [System.Obsolete]
         public IIntellisenseController TryCreateIntellisenseController(ITextView textView, IList<ITextBuffer> subjectBuffers)
         {
             return new ScribanSolidityQuickInfoController(textView, subjectBuffers, this);

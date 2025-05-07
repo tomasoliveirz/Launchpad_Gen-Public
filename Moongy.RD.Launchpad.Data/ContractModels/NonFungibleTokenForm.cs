@@ -8,6 +8,6 @@ namespace Moongy.RD.Launchpad.Data.ContractModels
 {
     public class NonFungibleTokenForm
     {
-        public string Name { get; set; }
+        public string? Name { get; set; }
     }
 }

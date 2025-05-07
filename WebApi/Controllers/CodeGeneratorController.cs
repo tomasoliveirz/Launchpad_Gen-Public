@@ -25,16 +25,16 @@ contract MyToken is ERC20, ERC20Permit {
 
         #region SimpleToken
         [HttpPost("SimpleToken")]
-        public async Task<ActionResult<CodeGenerationResult<FungibleTokenForm>>> Generate([FromBody]FungibleTokenForm model)
+        public ActionResult<CodeGenerationResult<FungibleTokenForm>> Generate([FromBody] FungibleTokenForm model)
         {
             //var result = await bo.Generate(model);
-            var result = new CodeGenerationResult<FungibleTokenForm>() { Model = model, Code = TestCode};
+            var result = new CodeGenerationResult<FungibleTokenForm>() { Model = model, Code = TestCode };
             return Ok(result);
             //if (result.IsSuccessful) return StatusCode(201, result.Result);
             //if (result.Exception is InvalidModelException ime) return BadRequest(ime.Message);
             //return Problem(result.Exception?.Message ?? "");
         }
-        
+
         #endregion
 
         public async Task<ActionResult> GenerateFungibleToken([FromBody]FungibleTokenForm model)

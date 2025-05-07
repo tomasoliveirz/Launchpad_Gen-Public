@@ -9,7 +9,6 @@ using Moongy.RD.Launchpad.Generator.Tokenomics.Deflation.Models;
 using Moongy.RD.Launchpad.Generator.Tokenomics.LiquidityGeneration.Models;
 using Moongy.RD.Launchpad.Generator.Tokenomics.Reflections.Models;
 using Moongy.RD.Launchpad.Generator.Tokenomics.Tax.Models;
-using Xunit;
 
 namespace Moongy.RD.Launchpad.Tests.Tokenomics.Core.Validators
 {
@@ -88,7 +87,7 @@ namespace Moongy.RD.Launchpad.Tests.Tokenomics.Core.Validators
             var method = typeof(TokenomicsValidator).GetMethod("CalcManualModeWeight", 
                 System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
 
-            var result = (double)method.Invoke(null, new object[] { reflectionTokenomic });
+            var result = (double)method.Invoke(null, [reflectionTokenomic]);
 
             Assert.Equal(40.0, result);
         }
@@ -165,23 +164,22 @@ namespace Moongy.RD.Launchpad.Tests.Tokenomics.Core.Validators
                 {
                     TaxPercentage = 3.0,
                     TriggerMode = TokenomicTriggerMode.Automatic,
-                    TaxRecipients = new List<TaxRecipient>
-                    {
-                        new TaxRecipient
-                        {
+                    TaxRecipients =
+                    [
+                        new() {
                             Address = new Address("0x1234567890123456789012345678901234567890"),
                             Shares = 100
                         }
-                    }
+                    ]
                 },
                 new DeflationTokenomicModel { TaxPercentage = 1.0, TriggerMode = TokenomicTriggerMode.Automatic },
                 new AntiWhaleTokenomicModel 
                 { 
                     MaxWalletPercentage = 2, 
-                    NotAplicableAddresses = new List<Address>
-                    {
-                        new Address("0x1234567890123456789012345678901234567890")
-                    }
+                    NotAplicableAddresses =
+                    [
+                        new("0x1234567890123456789012345678901234567890")
+                    ]
                 }
             };
 
@@ -197,38 +195,38 @@ namespace Moongy.RD.Launchpad.Tests.Tokenomics.Core.Validators
                 new TaxTokenomicModel 
                 { 
                     TaxPercentage = 8.0,
-                    TaxRecipients = new List<TaxRecipient>
-                    {
+                    TaxRecipients =
+                    [
                         new TaxRecipient
                         {
                             Address = new Address("0x1234567890123456789012345678901234567890"),
                             Shares = 100
                         }
-                    }
+                    ]
                 },
                 new TaxTokenomicModel 
                 { 
                     TaxPercentage = 7.0,
-                    TaxRecipients = new List<TaxRecipient>
-                    {
+                    TaxRecipients =
+                    [
                         new TaxRecipient
                         {
                             Address = new Address("0x2234567890123456789012345678901234567890"),
                             Shares = 100
                         }
-                    }
+                    ]
                 },
                 new TaxTokenomicModel 
                 { 
                     TaxPercentage = 6.0,
-                    TaxRecipients = new List<TaxRecipient>
-                    {
+                    TaxRecipients =
+                    [
                         new TaxRecipient
                         {
                             Address = new Address("0x3234567890123456789012345678901234567890"),
                             Shares = 100
                         }
-                    }
+                    ]
                 }
             };
 
@@ -267,24 +265,24 @@ namespace Moongy.RD.Launchpad.Tests.Tokenomics.Core.Validators
                 { 
                     TaxPercentage = 1.0, 
                     TriggerMode = TokenomicTriggerMode.Automatic,
-                    TaxRecipients = new List<TaxRecipient>
-                    {
+                    TaxRecipients =
+                    [
                         new TaxRecipient
                         {
                             Address = new Address("0x1234567890123456789012345678901234567890"),
                             Shares = 100
                         }
-                    }
+                    ]
                 },
                 new DeflationTokenomicModel { TaxPercentage = 1.0, TriggerMode = TokenomicTriggerMode.Automatic },
                 new AntiWhaleTokenomicModel 
                 { 
                     MaxWalletPercentage = 2, 
                     TriggerMode = TokenomicTriggerMode.Automatic,
-                    NotAplicableAddresses = new List<Address>
-                    {
+                    NotAplicableAddresses =
+                    [
                         new Address("0x1234567890123456789012345678901234567890")
-                    }
+                    ]
                 }
             };
 

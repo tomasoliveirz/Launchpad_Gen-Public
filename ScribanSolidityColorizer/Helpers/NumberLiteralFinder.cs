@@ -15,7 +15,6 @@ namespace ScribanSolidityColorizer.Helpers
                 if (char.IsDigit(text[position]))
                 {
                     int start = position;
-                    bool hasUnderscore = false;
                     bool hasExponent = false;
 
                     position++;
@@ -24,7 +23,6 @@ namespace ScribanSolidityColorizer.Helpers
                         var c = text[position];
                         if (char.IsDigit(c) || (c == '_' && !hasExponent))
                         {
-                            if (c == '_') hasUnderscore = true;
                             position++;
                         }
                         else if ((c == 'e' || c == 'E') && !hasExponent)

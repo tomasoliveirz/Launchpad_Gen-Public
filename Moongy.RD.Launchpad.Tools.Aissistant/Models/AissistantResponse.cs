@@ -9,7 +9,7 @@ namespace Moongy.RD.Launchpad.Tools.Aissistant.Models
     public class AissistantResponse
     {
         public bool Success { get; set; }
-        public string Content { get; set; }
+        public string? Content { get; set; }
         public string? RawApiResponse { get; set; }
     }
 }

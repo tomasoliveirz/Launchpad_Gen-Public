@@ -16,18 +16,16 @@ public static class DataSeeder
 
     public class SeedData
     {
-        public List<BlockchainNetwork> Networks { get; set; }
-        public List<ContractType> ContractTypes { get; set; }
-        public List<ContractFeature> ContractFeatures { get; set; }
-        public List<ContractCharacteristic> ContractCharacteristics { get; set; }
-        public List<ContractVariant> ContractVariants { get; set; }
-        public List<CharacteristicInContractVariant> CharacteristicInContractVariants { get; set; }
-        public List<ContractGenerationResult> GenerationResults { get; set; }
-        public List<PublishResult> PublishResults { get; set; }
-        public List<GenerationResultFeatureValue> GenerationResultFeatureValues { get; set; }
-        public List<FeatureInContractType> FeatureInContractTypes { get; set; }
-
-
+        public required List<BlockchainNetwork> Networks { get; set; }
+        public required List<ContractType> ContractTypes { get; set; }
+        public required List<ContractFeature> ContractFeatures { get; set; }
+        public required List<ContractCharacteristic> ContractCharacteristics { get; set; }
+        public required List<ContractVariant> ContractVariants { get; set; }
+        public required List<CharacteristicInContractVariant> CharacteristicInContractVariants { get; set; }
+        public required List<ContractGenerationResult> GenerationResults { get; set; }
+        public required List<PublishResult> PublishResults { get; set; }
+        public required List<GenerationResultFeatureValue> GenerationResultFeatureValues { get; set; }
+        public required List<FeatureInContractType> FeatureInContractTypes { get; set; }
     }
 
     public static async Task Seed(LaunchpadContext context)
@@ -169,7 +167,7 @@ public static class RelationshipProcessor
 
                 // Create dictionary for fast lookup
                 var targetDict = targetCollection.Cast<object>().ToDictionary(
-                    target => targetKeyProperty.GetValue(target),
+                    targetKeyProperty.GetValue,
                     target => target
                 );
 

@@ -11,9 +11,9 @@ namespace Moongy.RD.Launchpad.Tools.Aissistant
 {
     public class Aissistant(IOptions<AissistantOptions> options, HttpClient http) : IAissistant
     {
-        private AissistantOptions _options = options.Value;
-        private string _defaultLanguage = "solidity";
-        private string _defaultVersion = "0.8.20";
+        private readonly AissistantOptions _options = options.Value;
+        private const string _defaultLanguage = "solidity";
+        private const string _defaultVersion = "0.8.20";
 
         public async Task<AissistantResponse> Execute(AissistantRequest request)
         {

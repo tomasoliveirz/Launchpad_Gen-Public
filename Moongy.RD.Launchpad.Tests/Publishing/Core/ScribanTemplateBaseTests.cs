@@ -40,7 +40,7 @@ namespace Moongy.RD.Launchpad.Tests.Publishing.Core
         // testing loops with collections of items
         public class ListModel
         {
-            public IList<string> Items { get; set; }
+            public IList<string>? Items { get; set; }
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace Moongy.RD.Launchpad.Tests.Publishing.Core
             Items: {{ for i in Model.Items }}{{ i }}{{ if !for.last }}, {{ end }}{{ end }}
             """;
             var template = new ScribanTemplateBase<ListModel>(tpl);
-            var result   = template.Render(new ListModel { Items = new List<string> { "A", "B", "C" } });
+            var result   = template.Render(new ListModel { Items = ["A", "B", "C"] });
             Assert.Equal("Items: A, B, C", result.Trim());
         }
 
@@ -58,7 +58,7 @@ namespace Moongy.RD.Launchpad.Tests.Publishing.Core
         public class ConditionalModel
         {
             public bool IsPublic { get; set; }
-            public string VarName { get; set; }
+            public required string VarName { get; set; }
         }
 
         [Theory]

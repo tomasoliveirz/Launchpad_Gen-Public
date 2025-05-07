@@ -18,12 +18,13 @@ using ScribanSoliditySyntaxHighlighter.Helpers;
 
 namespace ScribanSolidityColorizer.QuickInfo
 {
+    [Obsolete]
     internal class ScribanSolidityQuickInfoSource : IQuickInfoSource
     {
-        private ScribanSolidityQuickInfoSourceProvider m_provider;
-        private ITextBuffer m_subjectBuffer;
-        private Dictionary<string, ProgrammingLanguageExpressionAttribute> _solidityDocs;
-        private Dictionary<string, ProgrammingLanguageExpressionAttribute> _scribanDocs;
+        private readonly ScribanSolidityQuickInfoSourceProvider m_provider;
+        private readonly ITextBuffer m_subjectBuffer;
+        private readonly Dictionary<string, ProgrammingLanguageExpressionAttribute> _solidityDocs;
+        private readonly Dictionary<string, ProgrammingLanguageExpressionAttribute> _scribanDocs;
         readonly IDictionary<ScribanSolidityTokenTypes, string> _scribansSolidityTypes;
 
         public ScribanSolidityQuickInfoSource(ScribanSolidityQuickInfoSourceProvider provider, ITextBuffer subjectBuffer)

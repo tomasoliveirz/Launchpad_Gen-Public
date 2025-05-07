@@ -8,15 +8,13 @@ public static class SPDXLicenseHelper
 {
 
 
-    public static string GetValue(SpdxLicense license)
+    public static string? GetValue(SpdxLicense license)
     {
         var member = typeof(SpdxLicense)
             .GetMember(license.ToString())
             .FirstOrDefault();
         var attr = member?.GetCustomAttribute<EnumLabelAttribute>();
-        if (attr == null)
-            throw new ArgumentException($"No EnumLabelAttribute found for {license}", nameof(license));
-        return attr.Value;
+        return attr == null ? throw new ArgumentException($"No EnumLabelAttribute found for {license}", nameof(license)) : attr.Value;
     }
 
 
@@ -36,7 +34,7 @@ public static class SPDXLicenseHelper
                      .GetFields(BindingFlags.Public | BindingFlags.Static))
         {
             var attr = field.GetCustomAttribute<EnumLabelAttribute>();
-            if (attr != null && attr.Display.Equals(display, StringComparison.Ordinal))
+            if (attr != null && attr.Display != null && attr.Display.Equals(display, StringComparison.Ordinal))
             {
                 return (SpdxLicense)field.GetValue(null)!;
             }

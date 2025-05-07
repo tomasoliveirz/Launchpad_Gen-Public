@@ -15,6 +15,7 @@ namespace ScribanSolidityColorizer.QuickInfo
     [Name("ToolTip QuickInfo Source")]
     [Order(Before = "Default Quick Info Presenter")]
     [ContentType("scribans-solidity")]
+    [Obsolete]
     internal class ScribanSolidityQuickInfoSourceProvider : IQuickInfoSourceProvider
     {
 

@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
 using Moongy.RD.Launchpad.Core.Exceptions;
 using Moongy.RD.Launchpad.Core.Models;
 using Moongy.RD.Launchpad.Generator.Tokenomics.Tax.Models;
 using Moongy.RD.Launchpad.Generator.Tokenomics.Tax.Validators;
-using Xunit;
 
 namespace Moongy.RD.Launchpad.Tests.Tokenomics.Tax.Validators
 {
@@ -16,14 +13,14 @@ namespace Moongy.RD.Launchpad.Tests.Tokenomics.Tax.Validators
             var model = new TaxTokenomicModel
             {
                 TaxPercentage = 5.0,
-                TaxRecipients = new List<TaxRecipient>
-                {
+                TaxRecipients =
+                [
                     new TaxRecipient
                     {
                         Address = new Address("0x1234567890123456789012345678901234567890"),
                         Shares = 100
                     }
-                }
+                ]
             };
 
             var exception = Record.Exception(() => TaxTokenomicValidator.Validate(model));
@@ -42,7 +39,7 @@ namespace Moongy.RD.Launchpad.Tests.Tokenomics.Tax.Validators
             var model = new TaxTokenomicModel
             {
                 TaxPercentage = 5.0,
-                TaxRecipients = new List<TaxRecipient>()
+                TaxRecipients = []
             };
 
             var exception = Assert.Throws<InvalidTokenomicException>(() => 
@@ -57,14 +54,13 @@ namespace Moongy.RD.Launchpad.Tests.Tokenomics.Tax.Validators
             var model = new TaxTokenomicModel
             {
                 TaxPercentage = 5.0,
-                TaxRecipients = new List<TaxRecipient>
-                {
-                    new TaxRecipient
-                    {
+                TaxRecipients =
+                [
+                    new() {
                         Address = null,
                         Shares = 100
                     }
-                }
+                ]
             };
 
             var exception = Assert.Throws<InvalidTokenomicException>(() => 
@@ -79,14 +75,13 @@ namespace Moongy.RD.Launchpad.Tests.Tokenomics.Tax.Validators
             var model = new TaxTokenomicModel
             {
                 TaxPercentage = 5.0,
-                TaxRecipients = new List<TaxRecipient>
-                {
-                    new TaxRecipient
-                    {
+                TaxRecipients =
+                [
+                    new() {
                         Address = new Address("0x1234567890123456789012345678901234567890"),
                         Shares = 0
                     }
-                }
+                ]
             };
 
             var exception = Assert.Throws<InvalidTokenomicException>(() => 
@@ -101,19 +96,17 @@ namespace Moongy.RD.Launchpad.Tests.Tokenomics.Tax.Validators
             var model = new TaxTokenomicModel
             {
                 TaxPercentage = 5.0,
-                TaxRecipients = new List<TaxRecipient>
-                {
-                    new TaxRecipient
-                    {
+                TaxRecipients =
+                [
+                    new() {
                         Address = new Address("0x1234567890123456789012345678901234567890"),
                         Shares = 60
                     },
-                    new TaxRecipient
-                    {
+                    new() {
                         Address = new Address("0x2234567890123456789012345678901234567890"),
                         Shares = 50
                     }
-                }
+                ]
             };
 
             var exception = Assert.Throws<InvalidTokenomicException>(() => 
