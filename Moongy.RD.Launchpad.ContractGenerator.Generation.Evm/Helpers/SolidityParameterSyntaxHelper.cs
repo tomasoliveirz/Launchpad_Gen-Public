@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Enums;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Parameters;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.TypeReferences;
 
@@ -35,7 +36,15 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Helpers
 
         private string RenderFunctionParameter(FunctionParameterModel function)
         {
-            throw new NotImplementedException();
+            var typeString = SolidityReferenceTypeSyntaxHelper.RenderTypeReference(function.Type);
+        
+            var memoryLocation = string.Empty;
+            if (function.Location.HasValue && function.Location.Value != SolidityMemoryLocation.None)
+            {
+                memoryLocation = $" {function.Location.Value.ToString().ToLowerInvariant()}";
+            }
+        
+            return $"{typeString}{memoryLocation} {function.Name}";
         }
 
         private string RenderEventParameter(EventParameterModel @event)

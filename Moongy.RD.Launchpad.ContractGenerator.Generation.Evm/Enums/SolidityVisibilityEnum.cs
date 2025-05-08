@@ -3,5 +3,6 @@ public enum SolidityVisibilityEnum
 {
     Public,
     Private,
-    Internal
+    Internal,
+    External
 }

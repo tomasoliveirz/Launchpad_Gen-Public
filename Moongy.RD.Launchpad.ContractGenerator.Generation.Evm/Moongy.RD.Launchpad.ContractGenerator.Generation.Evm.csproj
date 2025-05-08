@@ -32,6 +32,8 @@
     <EmbeddedResource Include="Templates\Modifier.solidity.scriban" />
     <EmbeddedResource Include="Templates\StateProperty.solidity.scriban" />
     <EmbeddedResource Include="Templates\Struct.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Receive.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Fallback.solidity.scriban" />
   </ItemGroup>
 
   <ItemGroup>
