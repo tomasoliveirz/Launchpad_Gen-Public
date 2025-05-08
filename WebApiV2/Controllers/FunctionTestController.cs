@@ -10,9 +10,9 @@ using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Hea
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Modifiers;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Parameters;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.TypeReferences;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Version;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors;
 using Moongy.RD.Launchpad.Core.Enums;
-using Moongy.RD.Launchpad.Core.Models.Metamodel;
 
 namespace Moongy.RD.Launchpad.ContractGenerator.Controllers
 {

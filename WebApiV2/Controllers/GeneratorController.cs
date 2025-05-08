@@ -71,7 +71,6 @@ namespace WebApiV2.Controllers
                 Name = "mint",
                 Parameters = [toParameter, amountParameter],
                 Modifiers = [onlyOwnerModifier],
-                Body = "_mint(to, amount);"
             };
 
             var contract = new SolidityContractModel() { Name = "MyToken", BaseContracts = [erc20Dependency, erc20PermitDependency, ownableDependency],
@@ -227,7 +226,6 @@ namespace WebApiV2.Controllers
             {
                 Name = "TestFunction",
                 Parameters = [functionParameter2, functionParameter1],
-                Body = "require(msg.sender == owner())"
             };
 
             var functions = new FunctionModel[] { function1 };
