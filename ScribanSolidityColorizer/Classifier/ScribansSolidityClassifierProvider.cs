@@ -20,6 +20,11 @@ namespace ScribanSolidityColorizer.Classifier
         [BaseDefinition("code")]
         internal static ContentTypeDefinition ScribanSolidityContentType = null;
 
+        [Export(typeof(FileExtensionToContentTypeDefinition))]
+        [ContentType("scribans-solidity")]
+        [FileExtension(".sol")]
+        public static FileExtensionToContentTypeDefinition SolFileExtensionDefinition { get; set; }
+
         [Export]
         [FileExtension(".solidity.scriban")]
         [ContentType("scribans-solidity")]

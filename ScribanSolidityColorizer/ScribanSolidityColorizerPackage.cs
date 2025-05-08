@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Threading;
 using Microsoft.VisualStudio.Shell;
+using ScribanSolidityColorizer.Pages;
 using Task = System.Threading.Tasks.Task;
 
 namespace ScribanSolidityColorizer
@@ -25,6 +26,9 @@ namespace ScribanSolidityColorizer
     /// </remarks>
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [Guid(ScribanSolidityColorizerPackage.PackageGuidString)]
+    [ProvideMenuResource("Menus.ctmenu", 1)]
+    [ProvideToolWindow(typeof(ScribanSolidityColorizer.ToolWindows.AnalysisToolWindows))]
+    [ProvideOptionPage(typeof(OptionsPage), "ChatGPT Extension", "General", 0, 0, true)]
     public sealed class ScribanSolidityColorizerPackage : AsyncPackage
     {
         /// <summary>
@@ -46,6 +50,11 @@ namespace ScribanSolidityColorizer
             // When initialized asynchronously, the current thread may be a background thread at this point.
             // Do any initialization that requires the UI thread after switching to the UI thread.
             await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            await ScribanSolidityColorizer.Commands.DocumentCommand.InitializeAsync(this);
+            await ScribanSolidityColorizer.Commands.AnalyzeCommand.InitializeAsync(this);
+            await ScribanSolidityColorizer.Commands.FormatCommand.InitializeAsync(this);
+            await ScribanSolidityColorizer.Commands.AnalyzeTemplateCommand.InitializeAsync(this);
+            await ScribanSolidityColorizer.ToolWindows.AnalysisToolWindowsCommand.InitializeAsync(this);
         }
 
         #endregion

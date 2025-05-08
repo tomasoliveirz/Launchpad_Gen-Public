@@ -17,6 +17,30 @@ namespace ScribanSolidityColorizer.Expressions
         UsageExample = "pragma solidity ^0.8.0;")]
         public const string Pragma = "pragma";
 
+
+        [ProgrammingLanguageExpression(ScribanSolidityTokenTypes.SolidityExpression,
+        Description = "",
+        UsageExample = "")]
+        public const string From = "from";
+
+
+        [ProgrammingLanguageExpression(ScribanSolidityTokenTypes.SolidityExpression,
+        Description = "",
+        UsageExample = "")]
+        public const string Is = "is";
+
+        [ProgrammingLanguageExpression(ScribanSolidityTokenTypes.SolidityExpression,
+        Description = "",
+        UsageExample = "")]
+        public const string CloseBlock = "}";
+
+
+        [ProgrammingLanguageExpression(ScribanSolidityTokenTypes.SolidityExpression,
+        Description = "",
+        UsageExample = "")]
+        public const string OpenBlock = "{";
+
+
         [ProgrammingLanguageExpression(ScribanSolidityTokenTypes.SolidityExpression,
             Description = "Specifies Solidity language version.",
             UsageExample = "pragma solidity ^0.8.0;")]

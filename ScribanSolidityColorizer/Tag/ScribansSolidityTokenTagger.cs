@@ -172,6 +172,8 @@ namespace ScribanSolidityColorizer.Tag
                     {
                         yield return MakeTag(expression.Key, absoluteStart + pos, word.Length, word, snapshot);
                     }
+                   
+
                 }
             }
 
@@ -216,6 +218,10 @@ namespace ScribanSolidityColorizer.Tag
                     foreach (var pos in WholeWordFinder.Find(text, word))
                     {
                         yield return MakeTag(expression.Key, absoluteStart + pos, word.Length, word, snapshot);
+                    }
+                    foreach (var (start, end) in CommentFinder.Find(text))
+                    {
+                        yield return MakeTag(ScribanSolidityTokenTypes.SolidityComment, absoluteStart + start, end, word, snapshot);
                     }
                 }
             }

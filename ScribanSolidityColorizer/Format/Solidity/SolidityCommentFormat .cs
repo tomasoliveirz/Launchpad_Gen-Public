@@ -15,7 +15,7 @@ namespace ScribanSolidityColorizer.Format
         public SolidityCommentFormat()
         {
             DisplayName = "Scriban Solidity Comment";
-            ForegroundColor = (Color)ColorConverter.ConvertFromString("#4e992d");
+            ForegroundColor = (Color)ColorConverter.ConvertFromString("#9ee97d");
         }
     }
 }
