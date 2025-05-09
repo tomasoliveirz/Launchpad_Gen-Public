@@ -4,5 +4,5 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels
 
 public class ModifierParameterModel : ParameterModel
 {
-    public SolidityMemoryLocation? Location { get; set; }
+    public SolidityMemoryLocation? Location { get; set; } = SolidityMemoryLocation.None;
 }
