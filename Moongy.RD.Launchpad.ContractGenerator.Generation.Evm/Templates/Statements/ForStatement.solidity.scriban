@@ -1,0 +1,5 @@
+﻿for ({{ Initialization }}{{ if !Initialization }}{{ end }}{{ if Condition }} {{ Condition }}{{ end }}; {{ if Iterator }}{{ Iterator }}{{ end }}) {
+{{~ for statement in Body ~}}
+    {{ statement }}
+{{~ end ~}}
+}
