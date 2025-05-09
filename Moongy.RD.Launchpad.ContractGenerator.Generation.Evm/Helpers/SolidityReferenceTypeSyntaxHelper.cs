@@ -11,6 +11,7 @@ public class SolidityReferenceTypeSyntaxHelper : BaseSoliditySyntaxHelper<TypeRe
         { SolidityDataTypeEnum.Uint256, SolidityDataTypes.Uint256 },
         { SolidityDataTypeEnum.Uint128, SolidityDataTypes.Uint128 },
         { SolidityDataTypeEnum.Uint64, SolidityDataTypes.Uint64 },
+        { SolidityDataTypeEnum.Uint48, SolidityDataTypes.Uint48 },
         { SolidityDataTypeEnum.Uint32, SolidityDataTypes.Uint32 },
         { SolidityDataTypeEnum.Uint16, SolidityDataTypes.Uint16 },
         { SolidityDataTypeEnum.Uint8, SolidityDataTypes.Uint8 },
@@ -23,7 +24,8 @@ public class SolidityReferenceTypeSyntaxHelper : BaseSoliditySyntaxHelper<TypeRe
         { SolidityDataTypeEnum.Address, SolidityDataTypes.Address },
         { SolidityDataTypeEnum.Bool, SolidityDataTypes.Bool },
         { SolidityDataTypeEnum.String, SolidityDataTypes.String },
-        { SolidityDataTypeEnum.Bytes, SolidityDataTypes.Bytes }
+        { SolidityDataTypeEnum.Bytes, SolidityDataTypes.Bytes },
+        { SolidityDataTypeEnum.Bytes4, SolidityDataTypes.Bytes4 }
     };
 
     public override string Render(TypeReference typeReference)

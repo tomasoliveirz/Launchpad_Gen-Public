@@ -5,7 +5,7 @@ using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.ScribanRenderi
 namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
 {
 
-    //TODO: Avoid duplicate values.
+    //TODO: Avoid duplicate values. (Resolvido)
     public class EnumProcessor() : BaseSolidityTemplateProcessor<EnumModel>("Enum")
     {
         public override string Render(EnumModel model)
@@ -15,7 +15,9 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
         }
         private EnumRenderingModel Transform(EnumModel model)
         {
-            var result = new EnumRenderingModel() { Name = model.Name, Values = [.. model.Values] };
+            var result = new EnumRenderingModel() { Name = model.Name, Values = model.Values.ToArray() };
+            if (model.Values.Count != model.Values.DistinctBy(x => x).Count())
+                throw new Exceptions.DuplicateException("enum", model.Name, "values");
             return result;
         }
 

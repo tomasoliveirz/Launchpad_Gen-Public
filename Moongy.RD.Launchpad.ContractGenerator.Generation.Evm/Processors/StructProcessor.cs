@@ -5,7 +5,7 @@ using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.ScribanRenderi
 
 namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
 {
-    //TODO: Duplicate properties
+    //TODO: Duplicate properties (RESOLVIDO)
     public class StructProcessor() : BaseSolidityTemplateProcessor<StructModel>("Struct")
     {
         public override string Render(StructModel model)
@@ -21,6 +21,8 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
             {
                 Name = model.Name,
             };
+            if (model.Properties.Count() != model.Properties.DistinctBy(x => x.Name).Count())
+                throw new Exceptions.DuplicateException("struct", model.Name, "properties");
             result.Properties = TransfromProperties(model.Properties);
             return result;
         }

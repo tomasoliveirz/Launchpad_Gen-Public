@@ -4,4 +4,5 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels
 public class ArrayTypeReference(TypeReference elementType) : TypeReference(SolidityDataTypeEnum.Array)
 {
     public TypeReference ElementType { get; init; } = elementType;
+    
 }

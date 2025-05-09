@@ -15,7 +15,7 @@ namespace Moongy.RD.Launchpad.Tests.Publishing.Core
         public class TestModel
         {
             public string Name { get; set; } = "DefaultName";
-            public string Body { get; set; } = "DefaultBody";
+            public string ?Body { get; set; } = "DefaultBody";
         }
 
         [Fact]
@@ -83,8 +83,10 @@ namespace Moongy.RD.Launchpad.Tests.Publishing.Core
 
             var template = Template.Parse(tpl);
             var globals  = new ScriptObject { { "Model", model } };
-            var ctx      = new TemplateContext();
-            ctx.MemberRenamer = member => member.Name; // keep PascalCase like the wrapper
+            var ctx = new TemplateContext
+            {
+                MemberRenamer = member => member.Name // keep PascalCase like the wrapper
+            };
             ctx.PushGlobal(globals);
             var directResult = template.Render(ctx);
 

@@ -15,69 +15,14 @@ using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors;
 using Moongy.RD.Launchpad.Core.Enums;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Functions;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Version;
-using Moongy.RD.Launchpad.Business.Interfaces;
-using Moongy.RD.Launchpad.Data.Forms;
-using Moongy.RD.Launchpad.Business.Base;
-using Moongy.RD.Launchpad.Business.Models;
 
 namespace WebApiV2.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GeneratorController(ICodeGenerationBusinessObject codeGenerationService) : ControllerBase
+    public class GeneratorController : ControllerBase
     {
-        [HttpPost("fungible")]
-        public async Task<IActionResult> GenerateFungibleToken([FromBody] FungibleTokenForm form)
-        {
-            var result = await codeGenerationService.GenerateFungibleToken(form);
-            return HandleResult(result);
-        }
-
-        [HttpPost("semi-fungible")]
-        public async Task<IActionResult> GenerateSemiFungibleToken([FromBody] SemiFungibleTokenForm form)
-        {
-            var result = await codeGenerationService.GenerateSemiFungibleToken(form);
-            return HandleResult(result);
-        }
-
-        [HttpPost("non-fungible")]
-        public async Task<IActionResult> GenerateNonFungibleToken([FromBody] NonFungibleTokenForm form)
-        {
-            var result = await codeGenerationService.GenerateNonFungibleToken(form);
-            return HandleResult(result);
-        }
-
-        [HttpPost("stablecoin")]
-        public async Task<IActionResult> GenerateStablecoin([FromBody] StableCoinForm form)
-        {
-            var result = await codeGenerationService.GenerateStablecoin(form);
-            return HandleResult(result);
-        }
-
-        [HttpPost("real-world-asset")]
-        public async Task<IActionResult> GenerateRealWorldAsset([FromBody] RealWorldAssetForm form)
-        {
-            var result = await codeGenerationService.GenerateRealWorldAsset(form);
-            return HandleResult(result);
-        }
-
-        [HttpPost("governor")]
-        public async Task<IActionResult> GenerateGovernor([FromBody] GovernorForm form)
-        {
-            var result = await codeGenerationService.GenerateGovernor(form);
-            return HandleResult(result);
-        }
-
-        private IActionResult HandleResult<T>(OperationResult<GenerationResult<T>> result) where T : TokenBaseModel
-        {
-            if (result.IsSuccessful)
-                return Ok(result.Result);
-
-            return BadRequest(new { error = result.Exception?.Message });
-        }
-
-
-        [HttpGet("test1")]
+        [HttpGet("generate")] // Adicionado este atributo para resolver o erro
         public ActionResult GenerateSolidityContract()
         {
 
@@ -127,7 +72,6 @@ namespace WebApiV2.Controllers
                 Name = "mint",
                 Parameters = [toParameter, amountParameter],
                 Modifiers = [onlyOwnerModifier],
-                Body = "_mint(to, amount);"
             };
 
             var contract = new SolidityContractModel() { Name = "MyToken", BaseContracts = [erc20Dependency, erc20PermitDependency, ownableDependency],
@@ -145,7 +89,7 @@ namespace WebApiV2.Controllers
         }
 
 
-        [HttpGet("test2")]
+        [HttpGet]
         public ActionResult TryToGenerateSolidityContract()
         {
             #region file header
@@ -283,7 +227,6 @@ namespace WebApiV2.Controllers
             {
                 Name = "TestFunction",
                 Parameters = [functionParameter2, functionParameter1],
-                Body = "require(msg.sender == owner())"
             };
 
             var functions = new FunctionModel[] { function1 };
@@ -390,6 +333,5 @@ namespace WebApiV2.Controllers
 
             return Ok(result);
         }
-
     }
 }

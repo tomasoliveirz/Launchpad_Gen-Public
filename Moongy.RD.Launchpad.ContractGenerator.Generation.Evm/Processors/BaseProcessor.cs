@@ -29,7 +29,7 @@ public class BaseTemplateProcessor<TModel>
 
 public class BaseSolidityTemplateProcessor<TModel> : BaseTemplateProcessor<TModel>
 {
-    protected BaseSolidityTemplateProcessor(string templateName) : base("Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Templates", templateName, "solidity.scriban")
+    public BaseSolidityTemplateProcessor(string templateName) : base("Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Templates", templateName, "solidity.scriban")
     {
     }
 }

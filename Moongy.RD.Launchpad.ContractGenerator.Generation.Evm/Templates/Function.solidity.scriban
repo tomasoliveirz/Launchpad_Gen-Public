@@ -1,13 +1,191 @@
-﻿function {{Name}}(
-    {{- for parameter in Parameters -}}
-        {{- if !for.first -}}, {{- end -}}
-        {{parameter}}
-    {{- end -}}
-) {{Visibility}} {{Mutability}} returns (
-    {{- for returnValue in ReturnValues -}}
-        {{- if !for.first -}}, {{- end -}}
-        {{returnValue}}
-    {{- end -}}
-) {
-    
-}
+﻿{{~ func render_statement(statement) ~}}
+  {{~ case statement.Type ~}}
+    {{~ when "Raw" ~}}
+        {{ statement.Text }}
+    {{~ when "Require" ~}}
+      {{~ if statement.Message ~}}
+        require({{ statement.Condition }}, "{{ statement.Message }}");
+      {{~ else ~}}
+        require({{ statement.Condition }});
+      {{~ end ~}}
+    {{~ when "Revert" ~}}
+      {{~ if statement.Arguments.size > 0 ~}}
+        revert {{ statement.Name }}({{ statement.Arguments | array.join ", " }});
+      {{~ else ~}}
+        revert {{ statement.Name }}();
+      {{~ end ~}}
+    {{~ when "MethodCall" ~}}
+      {{~ if statement.Arguments.size > 0 ~}}
+        {{ statement.Name }}({{ statement.Arguments | array.join ", " }});
+      {{~ else ~}}
+        {{ statement.Name }}();
+      {{~ end ~}}
+    {{~ when "Assignment" ~}}
+        {{ statement.Target }} {{ statement.Operator }} {{ statement.Value }};
+    {{~ when "Emit" ~}}
+      {{~ if statement.Arguments.size > 0 ~}}
+        emit {{ statement.Name }}({{ statement.Arguments | array.join ", " }});
+      {{~ else ~}}
+        emit {{ statement.Name }}();
+      {{~ end ~}}
+    {{~ when "Return" ~}}
+      {{~ if statement.Arguments.size > 0 ~}}
+        return {{ statement.Arguments | array.join ", " }};
+      {{~ else ~}}
+        return;
+      {{~ end ~}}
+    {{~ when "Comment" ~}}
+      {{~ if statement.Text contains "\n" ~}}
+        /*
+         * {{ statement.Text | string.replace "\n" "\n         * " }}
+         */
+      {{~ else ~}}
+        // {{ statement.Text }}
+      {{~ end ~}}
+    {{~ when "If" ~}}
+        if ({{ statement.Condition }}) {
+      {{~ for thenStmt in statement.ThenStatements ~}}
+            {{~ render_inner_statement thenStmt ~}}
+      {{~ end ~}}
+        }
+      {{~ if statement.ElseStatements.size > 0 ~}}
+        else {
+      {{~ for elseStmt in statement.ElseStatements ~}}
+            {{~ render_inner_statement elseStmt ~}}
+      {{~ end ~}}
+        }
+      {{~ end ~}}
+  {{~ end ~}}
+{{~ end ~}}
+
+{{~ func render_inner_statement(statement) ~}}
+  {{~ case statement.Type ~}}
+    {{~ when "Raw" ~}}
+            {{ statement.Text }}
+    {{~ when "Require" ~}}
+      {{~ if statement.Message ~}}
+            require({{ statement.Condition }}, "{{ statement.Message }}");
+      {{~ else ~}}
+            require({{ statement.Condition }});
+      {{~ end ~}}
+    {{~ when "Revert" ~}}
+      {{~ if statement.Arguments.size > 0 ~}}
+            revert {{ statement.Name }}({{ statement.Arguments | array.join ", " }});
+      {{~ else ~}}
+            revert {{ statement.Name }}();
+      {{~ end ~}}
+    {{~ when "MethodCall" ~}}
+      {{~ if statement.Arguments.size > 0 ~}}
+            {{ statement.Name }}({{ statement.Arguments | array.join ", " }});
+      {{~ else ~}}
+            {{ statement.Name }}();
+      {{~ end ~}}
+    {{~ when "Assignment" ~}}
+            {{ statement.Target }} {{ statement.Operator }} {{ statement.Value }};
+    {{~ when "Emit" ~}}
+      {{~ if statement.Arguments.size > 0 ~}}
+            emit {{ statement.Name }}({{ statement.Arguments | array.join ", " }});
+      {{~ else ~}}
+            emit {{ statement.Name }}();
+      {{~ end ~}}
+    {{~ when "Return" ~}}
+      {{~ if statement.Arguments.size > 0 ~}}
+            return {{ statement.Arguments | array.join ", " }};
+      {{~ else ~}}
+            return;
+      {{~ end ~}}
+    {{~ when "Comment" ~}}
+      {{~ if statement.Text contains "\n" ~}}
+            /*
+             * {{ statement.Text | string.replace "\n" "\n             * " }}
+             */
+      {{~ else ~}}
+            // {{ statement.Text }}
+      {{~ end ~}}
+    {{~ when "If" ~}}
+            if ({{ statement.Condition }}) {
+      {{~ for innerThenStmt in statement.ThenStatements ~}}
+                {{~ render_inner_inner_statement innerThenStmt ~}}
+      {{~ end ~}}
+            }
+      {{~ if statement.ElseStatements.size > 0 ~}}
+            else {
+      {{~ for innerElseStmt in statement.ElseStatements ~}}
+                {{~ render_inner_inner_statement innerElseStmt ~}}
+      {{~ end ~}}
+            }
+      {{~ end ~}}
+  {{~ end ~}}
+{{~ end ~}}
+
+{{~ func render_inner_inner_statement(statement) ~}}
+  {{~ case statement.Type ~}}
+    {{~ when "Raw" ~}}
+                {{ statement.Text }}
+    {{~ when "Require" ~}}
+      {{~ if statement.Message ~}}
+                require({{ statement.Condition }}, "{{ statement.Message }}");
+      {{~ else ~}}
+                require({{ statement.Condition }});
+      {{~ end ~}}
+    {{~ when "Revert" ~}}
+      {{~ if statement.Arguments.size > 0 ~}}
+                revert {{ statement.Name }}({{ statement.Arguments | array.join ", " }});
+      {{~ else ~}}
+                revert {{ statement.Name }}();
+      {{~ end ~}}
+    {{~ when "MethodCall" ~}}
+      {{~ if statement.Arguments.size > 0 ~}}
+                {{ statement.Name }}({{ statement.Arguments | array.join ", " }});
+      {{~ else ~}}
+                {{ statement.Name }}();
+      {{~ end ~}}
+    {{~ when "Assignment" ~}}
+                {{ statement.Target }} {{ statement.Operator }} {{ statement.Value }};
+    {{~ when "Emit" ~}}
+      {{~ if statement.Arguments.size > 0 ~}}
+                emit {{ statement.Name }}({{ statement.Arguments | array.join ", " }});
+      {{~ else ~}}
+                emit {{ statement.Name }}();
+      {{~ end ~}}
+    {{~ when "Return" ~}}
+      {{~ if statement.Arguments.size > 0 ~}}
+                return {{ statement.Arguments | array.join ", " }};
+      {{~ else ~}}
+                return;
+      {{~ end ~}}
+    {{~ when "Comment" ~}}
+      {{~ if statement.Text contains "\n" ~}}
+                /*
+                 * {{ statement.Text | string.replace "\n" "\n                 * " }}
+                 */
+      {{~ else ~}}
+                // {{ statement.Text }}
+      {{~ end ~}}
+  {{~ end ~}}
+{{~ end ~}}
+
+{{~ func render_body(statements) ~}}
+  {{~ for statement in statements ~}}
+    {{~ render_statement statement ~}}
+  {{~ end ~}}
+{{~ end ~}}
+
+    function {{ Name }}({{- if HasParameters -}}{{ for parameter in Parameters }}{{- if !for.first }}, {{ end -}}{{ parameter }}{{- end -}}{{- end -}})
+        {{ Visibility }}{{- if Mutability != "" }} {{ Mutability }}{{ end -}}{{- if IsVirtual }} virtual{{ end -}}{{- if IsOverride }} override{{ OverrideSpecifier }}{{ end -}}{{- if HasModifiers }}{{ for modifier in Modifiers }} {{ modifier }}{{ end }}{{ end -}}{{- if HasReturnValues }} returns ({{ for returnValue in ReturnValues }}{{- if !for.first }}, {{ end -}}{{ returnValue }}{{- end -}}){{ end }} {
+{{- if HasCustomError }}
+        try {
+{{- end }}
+{{- if HasStatements }}
+{{ render_body Statements }}
+{{- else }}
+        // Implementation
+{{- end }}
+{{- if HasCustomError }}
+        } catch {
+            emit {{ CustomError }}();
+            return false;
+        }
+        return true;
+{{- end }}
+    }

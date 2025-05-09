@@ -6,7 +6,7 @@ using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.ScribanRenderi
 namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
 {
 
-    //TODO: Validate duplicate parameters
+    //TODO: Validate duplicate parameters (RESOLVIDO)
     public class ErrorProcessor() : BaseSolidityTemplateProcessor<ErrorModel>("Error")
     {
         public override string Render(ErrorModel model)
@@ -20,6 +20,8 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
             {
                 Name = model.Name,
             };
+            if (model.Parameters.Count != model.Parameters.DistinctBy(x => x.Name).Count())
+                throw new Exceptions.DuplicateException("error", model.Name, "arguments");
             result.Parameters = TransfromParameters(model.Parameters);
             return result;
         }
