@@ -11,10 +11,7 @@ namespace Moongy.RD.Launchpad.Business.BusinessObjects
 
         public async Task<OperationResult<GenerationResult<FungibleTokenForm>>> GenerateFungibleToken(FungibleTokenForm form)
         {
-            return ExecuteOperation(async () =>
-            {
-                return null;
-            });
+            throw new NotImplementedException();
         }
 
         public async Task<OperationResult<GenerationResult<GovernorForm>>> GenerateGovernor(GovernorForm form)
