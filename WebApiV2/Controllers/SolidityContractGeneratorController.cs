@@ -388,17 +388,7 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Controllers
             }
             resultBuilder.AppendLine();
             
-            resultBuilder.AppendLine("    constructor(address tokenBridge, address recipient, address initialOwner)");
-            resultBuilder.AppendLine("        ERC20(\"MyToken\", \"MTK\")");
-            resultBuilder.AppendLine("        Ownable(initialOwner)");
-            resultBuilder.AppendLine("        ERC20Permit(\"MyToken\")");
-            resultBuilder.AppendLine("    {");
-            resultBuilder.AppendLine("        require(tokenBridge != address(0), \"Invalid TOKEN_BRIDGE address\");");
-            resultBuilder.AppendLine("        TOKEN_BRIDGE = tokenBridge;");
-            resultBuilder.AppendLine("        if (block.chainid == 140) {");
-            resultBuilder.AppendLine("            _mint(recipient, 301 * (10 ** decimals()));");
-            resultBuilder.AppendLine("        }");
-            resultBuilder.AppendLine("    }");
+            resultBuilder.AppendLine(SolidityTemplateProcessor.Constructor.Render(contract));
             resultBuilder.AppendLine();
             
             foreach (var function in contract.Functions)
@@ -520,11 +510,7 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Controllers
                 resultBuilder.AppendLine();
                 resultBuilder.AppendLine(SolidityTemplateProcessor.ContractHeader.Render(contract));
                 resultBuilder.AppendLine();
-                resultBuilder.AppendLine("    constructor(string memory name, string memory symbol, address initialOwner)");
-                resultBuilder.AppendLine("        ERC20(name, symbol)");
-                resultBuilder.AppendLine("        Ownable(initialOwner)");
-                resultBuilder.AppendLine("    {");
-                resultBuilder.AppendLine("    }");
+                resultBuilder.AppendLine(SolidityTemplateProcessor.Constructor.Render(contract));
                 resultBuilder.AppendLine();
                 
                 foreach (var function in contract.Functions)

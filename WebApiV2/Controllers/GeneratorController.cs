@@ -22,6 +22,7 @@ namespace WebApiV2.Controllers
     [ApiController]
     public class GeneratorController : ControllerBase
     {
+        [HttpGet("generate")] // Adicionado este atributo para resolver o erro
         public ActionResult GenerateSolidityContract()
         {
 
