@@ -5,5 +5,5 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels
 public class ErrorModel : SolidityModel
 {
     public required string Name { get; set; }
-    public List<ErrorParameterModel> Parameters { get; set; } = new();
+    public List<ErrorParameterModel> Parameters { get; set; } = [];
 }

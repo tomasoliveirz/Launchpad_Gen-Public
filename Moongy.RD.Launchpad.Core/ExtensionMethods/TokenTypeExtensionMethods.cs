@@ -16,11 +16,11 @@ namespace Moongy.RD.Launchpad.Core.ExtensionMethods
 
         public static Type[] GetTokensByTag(this Type[] tokens, TokenClassification tag) 
         {
-            return tokens.Where(t =>
+            return [.. tokens.Where(t =>
             {
                 var attr = t.GetCustomAttribute<TokenAttribute>();
                 return attr != null && attr.Tags != null && attr.Tags.Contains(tag);
-            }).ToArray();
+            })];
         }
 
         public static TokenClassification[] GetTokenTags(this Type tokenType)

@@ -11,18 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ContractGenerator\Contracts\Moongy.RD.Launchpad.Generator.Contracts.AdvancedFungibleToken\Moongy.RD.Launchpad.Generator.Contracts.AdvancedFungibleToken.csproj" />
     <ProjectReference Include="..\ContractGenerator\Contracts\Moongy.RD.Launchpad.Generator.Contracts.Core\Moongy.RD.Launchpad.Generator.Contracts.Core.csproj" />
-    <ProjectReference Include="..\ContractGenerator\Contracts\Moongy.RD.Launchpad.Generator.Contracts.FungibleToken\Moongy.RD.Launchpad.Generator.Contracts.FungibleToken.csproj" />
-    <ProjectReference Include="..\ContractGenerator\Contracts\Moongy.RD.Launchpad.Generator.Contracts.NonFungibleToken\Moongy.RD.Launchpad.Generator.Contracts.NonFungibleToken.csproj" />
-    <ProjectReference Include="..\ContractGenerator\Contracts\Moongy.RD.Launchpad.Generator.Contracts.SemiFungibleToken\Moongy.RD.Launchpad.Generator.Contracts.SemiFungibleToken.csproj" />
-    <ProjectReference Include="..\ContractGenerator\Tokenomics\Moongy.RD.Launchpad.Generator.Tokenomics.AntiWhale\Moongy.RD.Launchpad.Generator.Tokenomics.AntiWhale.csproj" />
-    <ProjectReference Include="..\ContractGenerator\Tokenomics\Moongy.RD.Launchpad.Generator.Tokenomics.Buyback\Moongy.RD.Launchpad.Generator.Tokenomics.Buyback.csproj" />
-    <ProjectReference Include="..\ContractGenerator\Tokenomics\Moongy.RD.Launchpad.Generator.Tokenomics.Core\Moongy.RD.Launchpad.Generator.Tokenomics.Core.csproj" />
-    <ProjectReference Include="..\ContractGenerator\Tokenomics\Moongy.RD.Launchpad.Generator.Tokenomics.Deflation\Moongy.RD.Launchpad.Generator.Tokenomics.Deflation.csproj" />
-    <ProjectReference Include="..\ContractGenerator\Tokenomics\Moongy.RD.Launchpad.Generator.Tokenomics.LiquidityGeneration\Moongy.RD.Launchpad.Generator.Tokenomics.LiquidityGeneration.csproj" />
-    <ProjectReference Include="..\ContractGenerator\Tokenomics\Moongy.RD.Launchpad.Generator.Tokenomics.Reflections\Moongy.RD.Launchpad.Generator.Tokenomics.Reflections.csproj" />
-    <ProjectReference Include="..\ContractGenerator\Tokenomics\Moongy.RD.Launchpad.Generator.Tokenomics.Tax\Moongy.RD.Launchpad.Generator.Tokenomics.Tax.csproj" />
   </ItemGroup>
 
 </Project>

@@ -84,6 +84,8 @@ namespace ScribanSolidityColorizer.ToolWindows
         /// </summary>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event args.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "VSTHRD110:Observe result of async calls", Justification = "<Pending>")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "<Pending>")]
         private void Execute(object sender, EventArgs e)
         {
             this.package.JoinableTaskFactory.RunAsync(async delegate

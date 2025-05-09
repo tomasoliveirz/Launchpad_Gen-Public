@@ -104,14 +104,13 @@ public class ConstructorProcessor() : BaseSolidityTemplateProcessor<SolidityCont
         if (model.ConstructorParameters.Count == 0)
             return [];
 
-        return model.ConstructorParameters
+        return [.. model.ConstructorParameters
             .OrderBy(p => p.Index)
             .Select(p => 
             {
                 var typeString = SolidityReferenceTypeSyntaxHelper.RenderTypeReference(p.Type);
                 var locationString = p.Location.HasValue ? $" {p.Location.Value.ToString().ToLowerInvariant()}" : "";
                 return $"{typeString}{locationString} {p.Name}";
-            })
-            .ToList();
+            })];
     }
 }

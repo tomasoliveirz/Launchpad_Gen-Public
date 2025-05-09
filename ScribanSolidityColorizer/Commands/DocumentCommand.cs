@@ -64,6 +64,8 @@ namespace ScribanSolidityColorizer.Commands
         /// </summary>
         /// <param name="sender">Event sender.</param>
         /// <param name="e">Event args.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "VSTHRD100:Avoid async void methods", Justification = "<Pending>")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "<Pending>")]
         private async void Execute(object sender, EventArgs e)
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
@@ -85,7 +87,7 @@ namespace ScribanSolidityColorizer.Commands
             try
             {
 
-                responseText = await CallChatGptApi(fileContent, apiKey);
+                responseText = await CallChatGptApiAsync(fileContent, apiKey);
             }
             catch (Exception ex)
             {
@@ -140,7 +142,7 @@ namespace ScribanSolidityColorizer.Commands
             return response;
         }
 
-        private async Task<string> CallChatGptApi(string fileContent, string apiKey)
+        private async Task<string> CallChatGptApiAsync(string fileContent, string apiKey)
         {
             var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);

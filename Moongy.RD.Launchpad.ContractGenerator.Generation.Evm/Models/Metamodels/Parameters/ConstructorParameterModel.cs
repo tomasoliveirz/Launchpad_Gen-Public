@@ -4,6 +4,5 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels
 public class ConstructorParameterModel : FunctionParameterModel
 {
     public string? AssignedTo { get; set; }
-    public SolidityMemoryLocation? Location { get; set; }
 
 }

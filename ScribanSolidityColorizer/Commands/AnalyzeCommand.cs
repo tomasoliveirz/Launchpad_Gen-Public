@@ -57,6 +57,7 @@ namespace ScribanSolidityColorizer.Commands
             Instance = new AnalyzeCommand(package, commandService);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "VSTHRD100:Avoid async void methods", Justification = "<Pending>")]
         private async void Execute(object sender, EventArgs e)
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
@@ -78,7 +79,7 @@ namespace ScribanSolidityColorizer.Commands
             string responseText;
             try
             {
-                responseText = await CallChatGptApi(fileContent, apiKey);
+                responseText = await CallChatGptApiAsync(fileContent, apiKey);
             }
             catch (Exception ex)
             {
@@ -107,7 +108,7 @@ namespace ScribanSolidityColorizer.Commands
             return apiKey;
         }
 
-        private async Task<string> CallChatGptApi(string fileContent, string apiKey)
+        private async Task<string> CallChatGptApiAsync(string fileContent, string apiKey)
         {
             var window = await package.ShowToolWindowAsync(typeof(AnalysisToolWindows), 0, true, package.DisposalToken);
             var control = (AnalysisToolWindowsControl)((ToolWindowPane)window).Content;
@@ -137,6 +138,7 @@ namespace ScribanSolidityColorizer.Commands
         }
 
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "VSTHRD100:Avoid async void methods", Justification = "<Pending>")]
         private async void ShowAnalysisWindow(string analysisText)
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();

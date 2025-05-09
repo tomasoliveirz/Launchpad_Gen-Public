@@ -1,13 +1,8 @@
 ﻿namespace Moongy.RD.Launchpad.Core.Models
 {
-    public class Address
+    public class Address(string address)
     {
-        private readonly string _address;
-
-        public Address(string address) 
-        {
-            _address = address;
-        }
+        private readonly string _address = address;
 
         public override string ToString()
         {

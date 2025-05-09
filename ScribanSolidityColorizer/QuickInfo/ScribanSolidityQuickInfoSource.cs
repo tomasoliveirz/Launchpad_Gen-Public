@@ -83,9 +83,8 @@ namespace ScribanSolidityColorizer.QuickInfo
                                                 extent.Span.Start + foundIndex, key.Length, SpanTrackingMode.EdgeInclusive
                         );
 
-                    ProgrammingLanguageExpressionAttribute value;
                     var type = "";
-                    _solidityDocs.TryGetValue(key, out value);
+                    _solidityDocs.TryGetValue(key, out ProgrammingLanguageExpressionAttribute value);
                     if (value == null)
                     {
                         _scribanDocs.TryGetValue(key, out value);

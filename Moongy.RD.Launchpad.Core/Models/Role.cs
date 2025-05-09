@@ -3,14 +3,9 @@ using System.Net;
 
 namespace Moongy.RD.Launchpad.Core.Models
 {
-    public class Role
+    public class Role(string role)
     {
-        private readonly string _role;
-
-        public Role(string role)
-        {
-            _role = role;
-        }
+        private readonly string _role = role;
 
         public override string ToString()
         {

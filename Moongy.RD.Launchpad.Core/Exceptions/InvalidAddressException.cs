@@ -2,17 +2,10 @@
 
 namespace Moongy.RD.Launchpad.Core.Exceptions
 {
-    public class InvalidAddressException : Exception
+    public class InvalidAddressException(string paramName) : Exception($"Invalid address provided for '{paramName}'")
     {
-        public string ParamName { get; }
-        
-        public string Address { get; }
+        public string ParamName { get; } = paramName;
 
-        public InvalidAddressException(string paramName) 
-            : base($"Invalid address provided for '{paramName}'")
-        {
-            ParamName = paramName;
-            Address = string.Empty;
-        }
+        public string Address { get; } = string.Empty;
     }
 }

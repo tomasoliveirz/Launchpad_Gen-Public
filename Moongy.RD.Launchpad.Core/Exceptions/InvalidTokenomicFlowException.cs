@@ -1,9 +1,6 @@
 namespace Moongy.RD.Launchpad.Core.Exceptions
 {
-    public class InvalidTokenomicFlowException : Exception
+    public class InvalidTokenomicFlowException(string message) : Exception(message)
     {
-        public InvalidTokenomicFlowException(string message) : base(message)
-        {
-        }
     }
 }

@@ -7,6 +7,6 @@ namespace Moongy.RD.Launchpad.Generator.Contracts.Core.Models
     public class BaseContractModel
     {
         [MetaModelName(Name = nameof(SolidityContractModel.Name))]
-        public string Name { get; set; }
+        public required string Name { get; set; }
     }
 }

@@ -32,22 +32,18 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
 
         private static string TransformVisibility(SolidityVisibilityEnum visibility)
         {
-            switch (visibility)
+            return visibility switch
             {
-                case SolidityVisibilityEnum.Public:
-                    return "public";
-                case SolidityVisibilityEnum.Private:
-                    return "private";
-                case SolidityVisibilityEnum.Internal:
-                    return "internal";
-                default:
-                    return "public";
-            }
+                SolidityVisibilityEnum.Public => "public",
+                SolidityVisibilityEnum.Private => "private",
+                SolidityVisibilityEnum.Internal => "internal",
+                _ => "public",
+            };
         }
 
         private static string[] TransformParameters(List<FunctionParameterModel> parameters)
         {
-            return parameters.Select(TransformParameter).ToArray();
+            return [.. parameters.Select(TransformParameter)];
         }
 
         public static string TransformParameter(FunctionParameterModel parameter)

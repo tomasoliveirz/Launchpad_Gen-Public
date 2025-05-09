@@ -24,7 +24,7 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
 
         private string[] TransformParameters(IEnumerable<EventParameterModel> parameters)
         {
-            return parameters.OrderBy(x => x.Index).Select(TransformParameter).ToArray();
+            return [.. parameters.OrderBy(x => x.Index).Select(TransformParameter)];
         }
 
         private string TransformParameter(EventParameterModel parameter)

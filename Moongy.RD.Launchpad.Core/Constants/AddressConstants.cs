@@ -4,5 +4,5 @@ namespace Moongy.RD.Launchpad.Core.Constants;
 
 public static class AddressConstants
 {
-    public static Address ZeroAddress => new Address("0x0");
+    public static Address ZeroAddress => new("0x0");
 }

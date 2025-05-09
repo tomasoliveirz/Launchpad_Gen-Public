@@ -15,7 +15,7 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
         }
         private EnumRenderingModel Transform(EnumModel model)
         {
-            var result = new EnumRenderingModel() { Name = model.Name, Values = model.Values.ToArray() };
+            var result = new EnumRenderingModel() { Name = model.Name, Values = [.. model.Values] };
             return result;
         }
 

@@ -26,7 +26,7 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
         }
         private static string[] TransfromProperties(StructPropertyModel[] properties)
         {
-            return properties.Select(TransformProperty).ToArray();
+            return [.. properties.Select(TransformProperty)];
         }
 
         private static string TransformProperty(StructPropertyModel property)

@@ -6,7 +6,7 @@ namespace Moongy.RD.Launchpad.Core.Validators
 {
     public static class EthereumAddressValidator
     {
-        private static readonly Regex EthAddressRegex = new Regex("^0x[0-9a-fA-F]{40}$", RegexOptions.Compiled);
+        private static readonly Regex EthAddressRegex = new("^0x[0-9a-fA-F]{40}$", RegexOptions.Compiled);
         
         public static void Validate(Address? address, bool isRequired = false, string paramName = "address")
         {

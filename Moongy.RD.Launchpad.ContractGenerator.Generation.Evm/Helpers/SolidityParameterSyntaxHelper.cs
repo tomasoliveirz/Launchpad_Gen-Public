@@ -50,7 +50,7 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Helpers
 
         public string[] Render(ParameterModel[] parameters)
         {
-            return parameters.Select(Render).ToArray();
+            return [.. parameters.Select(Render)];
         }
 
     }
