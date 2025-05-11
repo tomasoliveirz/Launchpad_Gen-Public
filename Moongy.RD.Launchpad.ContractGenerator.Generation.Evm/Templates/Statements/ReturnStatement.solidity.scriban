@@ -1,5 +1,5 @@
 ﻿{{~ if Values.size > 0 ~}}
-return {{ Values | array.join ", " }};
+return {{Values | array.join ", "}};
 {{~ else ~}}
 return;
 {{~ end ~}}

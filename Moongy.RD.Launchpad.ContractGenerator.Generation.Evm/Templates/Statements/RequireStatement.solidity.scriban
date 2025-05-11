@@ -1,5 +1,5 @@
 ﻿{{~ if Message ~}}
-require({{ Condition }}, "{{ Message }}");
+require({{Condition}}, "{{Message}}");
 {{~ else ~}}
-require({{ Condition }});
+require({{Condition}});
 {{~ end ~}}

@@ -17,29 +17,19 @@ public class StatePropertyProcessor() : BaseSolidityTemplateProcessor<StatePrope
     private static StatePropertyRenderingModel Transform(StatePropertyModel model)
     {
         var typeString = SolidityReferenceTypeSyntaxHelper.RenderTypeReference(model.Type);
-
-        // verificar se há valor inicial
-        string initialValue = model.InitialValue ?? "";
+    
+        // check for initial value
+        string initialValue = model.InitialValue;
         bool hasInitialValue = !string.IsNullOrEmpty(initialValue);
-
-        // adicionar aspas se o tipo for string e o inicial value não estiver entre aspas
-        if (!hasInitialValue || model.Type is not SimpleTypeReference simpleType ||
-            simpleType.BaseType != SolidityDataTypeEnum.String ||
-            initialValue.StartsWith('"'))
+    
+        // add quotes if type is string and value isn't already quoted
+        if (hasInitialValue && model.Type is SimpleTypeReference simpleType && 
+            simpleType.BaseType == SolidityDataTypeEnum.String && 
+            !initialValue.StartsWith("\""))
         {
-            return new StatePropertyRenderingModel
-            {
-                Type = typeString,
-                IsConstant = model.IsConstant,
-                IsImmutable = model.IsImmutable,
-                Visibility = GetVisibilityKeyword(model.Visibility),
-                Name = model.Name,
-                HasInitialValue = hasInitialValue,
-                InitialValue = initialValue
-            };
+            initialValue = $"\"{initialValue}\"";
         }
-        initialValue = $"\"{initialValue}\"";
-
+    
         return new StatePropertyRenderingModel
         {
             Type = typeString,
@@ -51,7 +41,6 @@ public class StatePropertyProcessor() : BaseSolidityTemplateProcessor<StatePrope
             InitialValue = initialValue
         };
     }
-
     private static string GetVisibilityKeyword(SolidityVisibilityEnum visibility)
     {
         return visibility switch

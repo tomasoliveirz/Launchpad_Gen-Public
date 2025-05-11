@@ -1,5 +1,0 @@
-﻿{{ "\t" }}event {{Name}}(
-	{{- for parameter in Parameters -}}
-		{{- parameter -}}
-		{{- if for.last == false}}, {{end -}}
-	{{- end}});

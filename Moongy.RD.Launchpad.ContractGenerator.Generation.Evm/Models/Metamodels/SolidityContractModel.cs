@@ -24,7 +24,7 @@ public class SolidityContractModel : SolidityModel
     public List<ModifierModel> Modifiers { get; set; } = [];
     public List<ErrorModel> Errors { get; set; } = [];
     public List<EventModel> Events { get; set; } = [];
-    public List<FunctionModel> Functions { get; set; } = [];
+    public List<BaseFunctionModel> Functions { get; set; } = []; 
     public bool IsInterface {  get; set; }
     public bool IsAbstract { get; set; }
 }

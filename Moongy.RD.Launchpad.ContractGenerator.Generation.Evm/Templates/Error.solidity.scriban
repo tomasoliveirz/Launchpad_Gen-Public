@@ -1,4 +1,4 @@
-﻿    error {{Name}}(
+﻿error {{Name}}(
 	{{- for parameter in Parameters -}}
 		{{- parameter -}}
 		{{- if for.last == false}}, {{end -}}

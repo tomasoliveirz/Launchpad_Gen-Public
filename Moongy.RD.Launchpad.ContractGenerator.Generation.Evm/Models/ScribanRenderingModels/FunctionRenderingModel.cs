@@ -1,32 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Functions.Body;
+﻿using System.Collections.Generic;
 
 namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.ScribanRenderingModels
 {
     public class FunctionRenderingModel
     {
-        public string Name { get; set; } = string.Empty;
-        
-        public string Visibility { get; set; } = string.Empty;
-
-        public string Mutability { get; set; } = string.Empty;
-        public string? CustomError { get; set; }
-        public List<StatementInfo> Statements { get; set; } = new();
-        public string[] Parameters { get; set; } = Array.Empty<string>();
-        public string[] ReturnValues { get; set; } = Array.Empty<string>();
-        public string[] Modifiers { get; set; } = Array.Empty<string>();
+        public required string Name { get; set; }
+        public required string Visibility { get; set; }
+        public required string Mutability { get; set; }
         public bool IsVirtual { get; set; }
         public bool IsOverride { get; set; }
+        public required string OverrideSpecifier { get; set; } = string.Empty;
         public bool IsInterface { get; set; }
-        public bool IsPayable { get; set; }
-        public bool IsFallback { get; set; }
+        public required string CustomError { get; set; } = string.Empty;
+        public bool HasCustomError { get; set; }
         public bool IsReceive { get; set; }
-        public string OverrideSpecifier { get; set; } = string.Empty;
-        public bool HasParameters => Parameters != null && Parameters.Length > 0;
-        public bool HasReturnValues => ReturnValues != null && ReturnValues.Length > 0;
-        public bool HasModifiers => Modifiers != null && Modifiers.Length > 0;
-        public bool HasStatements => Statements != null && Statements.Count > 0;
-        public bool HasCustomError => !string.IsNullOrEmpty(CustomError);
+        public bool IsFallback { get; set; }
+        public bool IsPayable { get; set; }
+        
+        public bool HasParameters { get; set; }
+        public string[] Parameters { get; set; } = new string[0];
+        
+        public bool HasReturnValues { get; set; }
+        public string[] ReturnValues { get; set; } = new string[0];
+        
+        public bool HasModifiers { get; set; }
+        public string[] Modifiers { get; set; } = new string[0];
+        
+        public bool HasStatements { get; set; }
+        public List<string> Statements { get; set; } = new List<string>();
     }
 }

@@ -1,9 +1,5 @@
-﻿{{~ if ErrorName ~}}
-{{~ if Arguments.size > 0 ~}}
-revert {{ ErrorName }}({{ Arguments | array.join ", " }});
+﻿{{~ if Arguments.size > 0 ~}}
+revert {{ Name }}({{ Arguments | array.join ", " }});
 {{~ else ~}}
-revert {{ ErrorName }}();
-{{~ end ~}}
-{{~ else ~}}
-revert({{ if Message }}"{{ Message }}"{{ end }});
+revert {{ Name }}();
 {{~ end ~}}

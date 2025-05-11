@@ -2,18 +2,22 @@
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Enums;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Errors;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Enums;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Events;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Header;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Imports;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Modifiers;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Parameters;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.State;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Structs;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.TypeReferences;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors;
 using Moongy.RD.Launchpad.Core.Enums;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Functions;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Statements;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Statements.Expressions;
+using System.Text;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Version;
 
 namespace WebApiV2.Controllers
@@ -22,316 +26,1642 @@ namespace WebApiV2.Controllers
     [ApiController]
     public class GeneratorController : ControllerBase
     {
-        [HttpGet("generate")] // Adicionado este atributo para resolver o erro
-        public ActionResult GenerateSolidityContract()
+        [HttpGet("generate-erc20")]
+        public ActionResult GenerateERC20Contract()
         {
-
-            #region Constructor parameters
-            var int256Type = new SimpleTypeReference(SolidityDataTypeEnum.Uint256);
+            #region Types
+            // Define basic types
+            var uint256Type = new SimpleTypeReference(SolidityDataTypeEnum.Uint256);
+            var uint8Type = new SimpleTypeReference(SolidityDataTypeEnum.Uint8);
             var stringType = new SimpleTypeReference(SolidityDataTypeEnum.String);
             var addressType = new SimpleTypeReference(SolidityDataTypeEnum.Address);
+            var boolType = new SimpleTypeReference(SolidityDataTypeEnum.Bool);
 
-            var nameParameter = new ConstructorParameterModel() { Name = "name", Type = stringType, Index = 0, Value = "MyToken" };
-            var symbolParameter = new ConstructorParameterModel() { Name = "symbol", Type = stringType, Index = 1, Value = "MTK" };
-            var initialOwnerParameter = new ConstructorParameterModel() { Name = "initialOwner", Type = addressType };
-            var toParameter = new ConstructorParameterModel() { Name = "to", Type = addressType };
-            var amountParameter = new ConstructorParameterModel() { Name = "amount", Type = int256Type };
+            // Define array types
+            var addressArrayType = new ArrayTypeReference(addressType);
+            var uint256ArrayType = new ArrayTypeReference(uint256Type);
+
+            // Define mapping types
+            var balancesType = new MappingTypeReference(addressType, uint256Type);
+            var allowancesType = new MappingTypeReference(addressType, 
+                                new MappingTypeReference(addressType, uint256Type));
             #endregion
 
-            #region Modifiers 
-            var onlyOwnerModifier = new ModifierModel() { Name = "onlyOwner", Body = "" };
+            #region State Properties
+            // Basic token properties
+            var nameProperty = new StatePropertyModel 
+            { 
+                Name = "_name", 
+                Type = stringType, 
+                Visibility = SolidityVisibilityEnum.Private
+            };
+
+            var symbolProperty = new StatePropertyModel 
+            { 
+                Name = "_symbol", 
+                Type = stringType, 
+                Visibility = SolidityVisibilityEnum.Private
+            };
+
+            var decimalsProperty = new StatePropertyModel 
+            { 
+                Name = "_decimals", 
+                Type = uint8Type, 
+                Visibility = SolidityVisibilityEnum.Private,
+                IsConstant = true,
+                InitialValue = "18"
+            };
+
+            var totalSupplyProperty = new StatePropertyModel 
+            { 
+                Name = "_totalSupply", 
+                Type = uint256Type, 
+                Visibility = SolidityVisibilityEnum.Private
+            };
+
+            var balancesProperty = new StatePropertyModel 
+            { 
+                Name = "_balances", 
+                Type = balancesType, 
+                Visibility = SolidityVisibilityEnum.Private
+            };
+
+            var allowancesProperty = new StatePropertyModel 
+            { 
+                Name = "_allowances", 
+                Type = allowancesType, 
+                Visibility = SolidityVisibilityEnum.Private
+            };
+
+            var ownerProperty = new StatePropertyModel 
+            { 
+                Name = "_owner", 
+                Type = addressType, 
+                Visibility = SolidityVisibilityEnum.Private
+            };
+
+            var feeRateProperty = new StatePropertyModel
+            {
+                Name = "_feeRate",
+                Type = uint256Type,
+                Visibility = SolidityVisibilityEnum.Private,
+                InitialValue = "0"
+            };
+
+            var pausedProperty = new StatePropertyModel
+            {
+                Name = "_paused",
+                Type = boolType,
+                Visibility = SolidityVisibilityEnum.Private,
+                InitialValue = "false"
+            };
+
+            var stateProperties = new List<StatePropertyModel>
+            {
+                nameProperty,
+                symbolProperty,
+                decimalsProperty,
+                totalSupplyProperty,
+                balancesProperty,
+                allowancesProperty,
+                ownerProperty,
+                feeRateProperty,
+                pausedProperty
+            };
             #endregion
 
-            var erc20PermitDependency = new AbstractionImportModel()
-            {
-                Name = "ERC20Permit",
-                PathName = "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol",
-                ConstructorParameters = [nameParameter]
+            #region Events
+            // Transfer event
+            var fromParam = new EventParameterModel 
+            { 
+                Name = "from", 
+                Type = addressType, 
+                IsIndexed = true 
             };
-            var erc20Dependency = new AbstractionImportModel()
-            {
-                Name = "ERC20",
-                PathName = "@openzeppelin/contracts/token/ERC20/ERC20.sol",
-                ConstructorParameters = [nameParameter, symbolParameter]
+            
+            var toParam = new EventParameterModel 
+            { 
+                Name = "to", 
+                Type = addressType, 
+                IsIndexed = true 
+            };
+            
+            var valueParam = new EventParameterModel 
+            { 
+                Name = "value", 
+                Type = uint256Type 
+            };
+            
+            var transferEvent = new EventModel 
+            { 
+                Name = "Transfer", 
+                Parameters = new List<EventParameterModel> { fromParam, toParam, valueParam } 
             };
 
-            var ownableDependency = new AbstractionImportModel()
+            // Approval event
+            var ownerParam = new EventParameterModel 
+            { 
+                Name = "owner", 
+                Type = addressType, 
+                IsIndexed = true 
+            };
+            
+            var spenderParam = new EventParameterModel 
+            { 
+                Name = "spender", 
+                Type = addressType, 
+                IsIndexed = true 
+            };
+            
+            var approvalEvent = new EventModel 
+            { 
+                Name = "Approval", 
+                Parameters = new List<EventParameterModel> { ownerParam, spenderParam, valueParam } 
+            };
+
+            // Fee changed event
+            var oldFeeParam = new EventParameterModel
             {
-                Name = "Ownable",
-                PathName = "@openzeppelin/contracts/access/Ownable.sol",
-                ConstructorParameters = [initialOwnerParameter]
+                Name = "oldFee",
+                Type = uint256Type
+            };
+
+            var newFeeParam = new EventParameterModel
+            {
+                Name = "newFee",
+                Type = uint256Type
+            };
+
+            var feeChangedEvent = new EventModel
+            {
+                Name = "FeeChanged",
+                Parameters = new List<EventParameterModel> { oldFeeParam, newFeeParam }
+            };
+
+            // Paused events
+            var pausedEvent = new EventModel
+            {
+                Name = "Paused",
+                Parameters = new List<EventParameterModel> { }
+            };
+
+            var unpausedEvent = new EventModel
+            {
+                Name = "Unpaused",
+                Parameters = new List<EventParameterModel> { }
+            };
+
+            var events = new List<EventModel> 
+            { 
+                transferEvent, 
+                approvalEvent, 
+                feeChangedEvent,
+                pausedEvent,
+                unpausedEvent
+            };
+            #endregion
+
+            #region Errors
+            var addressErrorParam = new ErrorParameterModel 
+            { 
+                Name = "account", 
+                Type = addressType 
+            };
+            
+            var zeroAddressError = new ErrorModel 
+            { 
+                Name = "ZeroAddress", 
+                Parameters = new List<ErrorParameterModel> { addressErrorParam } 
+            };
+
+            var amountErrorParam = new ErrorParameterModel 
+            { 
+                Name = "available", 
+                Type = uint256Type 
+            };
+            
+            var requiredErrorParam = new ErrorParameterModel 
+            { 
+                Name = "required", 
+                Type = uint256Type 
+            };
+            
+            var insufficientBalanceError = new ErrorModel 
+            { 
+                Name = "InsufficientBalance", 
+                Parameters = new List<ErrorParameterModel> { amountErrorParam, requiredErrorParam } 
+            };
+
+            var pausedError = new ErrorModel
+            {
+                Name = "Paused",
+                Parameters = new List<ErrorParameterModel> { }
+            };
+
+            var notOwnerError = new ErrorModel
+            {
+                Name = "NotOwner",
+                Parameters = new List<ErrorParameterModel> { }
+            };
+
+            var transferFailedError = new ErrorModel
+            {
+                Name = "TransferFailed",
+                Parameters = new List<ErrorParameterModel> { }
+            };
+
+            var errors = new List<ErrorModel> 
+            { 
+                zeroAddressError, 
+                insufficientBalanceError,
+                pausedError,
+                notOwnerError,
+                transferFailedError
+            };
+            #endregion
+
+            #region Modifiers
+            var onlyOwnerModifier = new ModifierModel 
+            { 
+                Name = "onlyOwner", 
+                Body = "require(msg.sender == _owner, \"Caller is not the owner\");\n_;" 
+            };
+
+            var whenNotPausedModifier = new ModifierModel
+            {
+                Name = "whenNotPaused",
+                Body = "require(!_paused, \"Contract is paused\");\n_;"
+            };
+
+            var whenPausedModifier = new ModifierModel
+            {
+                Name = "whenPaused",
+                Body = "require(_paused, \"Contract is not paused\");\n_;"
+            };
+
+            var modifiers = new List<ModifierModel> 
+            { 
+                onlyOwnerModifier, 
+                whenNotPausedModifier,
+                whenPausedModifier
+            };
+            #endregion
+
+            #region Constructor
+            var nameParameter = new ConstructorParameterModel 
+            { 
+                Name = "name_", 
+                Type = stringType, 
+                Index = 0,
+                AssignedTo = "_name"
+            };
+            
+            var symbolParameter = new ConstructorParameterModel 
+            { 
+                Name = "symbol_", 
+                Type = stringType, 
+                Index = 1,
+                AssignedTo = "_symbol"
+            };
+            
+            var initialOwnerParameter = new ConstructorParameterModel 
+            { 
+                Name = "initialOwner", 
+                Type = addressType, 
+                Index = 2,
+                AssignedTo = "_owner"
             };
 
             var constructorParameters = new List<ConstructorParameterModel>
             {
-                nameParameter, symbolParameter, initialOwnerParameter
+                nameParameter,
+                symbolParameter,
+                initialOwnerParameter
             };
-
-            var mintFunction = new FunctionModel()
-            {
-                Name = "mint",
-                Parameters = [toParameter, amountParameter],
-                Modifiers = [onlyOwnerModifier],
-            };
-
-            var contract = new SolidityContractModel() { Name = "MyToken", BaseContracts = [erc20Dependency, erc20PermitDependency, ownableDependency],
-            ConstructorParameters = constructorParameters,
-            Functions = [mintFunction]
-            };
-
-
-            var version = new SoftwareVersion() { Major = 0, Minor = 8, Revision = 27 };
-            var fileHeader = new FileHeaderModel() { License = SpdxLicense.MIT, Version = new() { Maximum = version, Minimum = version } };
-
-            var file = new SolidityFile() { FileHeader = fileHeader, Contracts = [contract] };
-
-            return Ok(file);
-        }
-
-
-        [HttpGet]
-        public ActionResult TryToGenerateSolidityContract()
-        {
-            #region file header
-            FileHeaderModel fileHeader = new()
-            {
-                License = SpdxLicense.Apache_2_0,
-                Version = new() { Minimum = new() { Major = 0, Minor = 8, Revision = 20 }, Maximum = new() { Major = 0, Minor = 8, Revision = 20 } }
-            };
-            #endregion
-
-            #region Constructor parameters
-            var int256Type = new SimpleTypeReference(SolidityDataTypeEnum.Uint256);
-            var stringType = new SimpleTypeReference(SolidityDataTypeEnum.String);
-
-            var nameArgument = new ConstructorParameterModel() { Name = "name", Type = stringType, Index = 0, Value="MyToken" };
-            var symbolArgument = new ConstructorParameterModel() { Name = "symbol", Type = stringType, Index = 1, Value="MTK", Location = SolidityMemoryLocation.Memory };
-            var maxUserCountArgument = new ConstructorParameterModel() { Name = "maxUserCount", Type = int256Type, AssignedTo="_maxUserCount" };
-            #endregion
-
-            #region Dependencies
-            var erc20Dependency = new AbstractionImportModel()
-            {
-                Name = "ERC20",
-                PathName = "@openzeppelin/contracts/token/ERC20/ERC20.sol",
-                ConstructorParameters = [nameArgument, symbolArgument]
-            };
-
-            var erc202Dependency = new AbstractionImportModel()
-            {
-                Name = "ERC202",
-                PathName = "@openzeppelin/contracts/token/ERC20/ERC20.sol",
-                ConstructorParameters = [nameArgument, symbolArgument]
-            };
-
-            var erc20PermitDependency = new AbstractionImportModel()
-            {
-                Name = "ERC20Permit",
-                PathName = "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol",
-                ConstructorParameters = [nameArgument]
-            };
-
-            var testImport = new ImportModel() { PathName = "a/b/c", Alias = "ABC" };
-            var testImportC = new ImportModel() { PathName = "a/c/b" };
-            var testImportB = new ImportModel() { PathName = "a/b/c" };
-            #endregion
-
-            #region Events
-
-            var nameEventArgument = new EventParameterModel() { Name = "name", Type = stringType, Index = 1 };
-            var roundEventArgument = new EventParameterModel() { Name = "round", IsIndexed=true, Type = int256Type, Index = 0 };
-
-            var versionEventArgument = new EventParameterModel() { Name = "version", Type = stringType};
-
-
-            var event1 = new EventModel() { Name = "Test", Parameters = [nameEventArgument, roundEventArgument] };
-            var event2 = new EventModel() { Name = "Build", Parameters = [versionEventArgument, nameEventArgument] };
-            var event3 = new EventModel() { Name = "Use", Parameters = [] };
-
-            var events = new EventModel[]{ event1, event2, event3 };
-            #endregion
-
-            #region Structs
-            var property1 = new StructPropertyModel() { Name = "test", DataType = int256Type };
-            var property2 = new StructPropertyModel() { Name = "build", DataType = stringType };
-            var property3 = new StructPropertyModel() { Name = "amount", DataType = int256Type };
-
-
-            var struct1 = new StructModel() { Name = "TestStruct", Properties = [property1, property2, property3] };
-            var struct2 = new StructModel() { Name = "TestStruct2", Properties = [property3, property2, property1] };
-            var struct3 = new StructModel() { Name = "TestStruct3", Properties = [property2, property1, property3] };
-            var structs = new StructModel[] { struct1, struct2, struct3 };
-            #endregion
-
-            #region Enums
-
-            var enum1 = new EnumModel() { Name = "TestEnum", Values = ["A", "B", "C"] };
-            var enum2 = new EnumModel() { Name = "TestEnum2", Values = ["A", "B", "C"] };
-            var enum3 = new EnumModel() { Name = "TestEnum3", Values = ["A", "B", "C"] };
-            var enums = new EnumModel[] { enum1, enum2, enum3 };
-            #endregion
-
-            #region Modifiers
-
-            var booleanType = new SimpleTypeReference(SolidityDataTypeEnum.Bool);
-            var addressType = new SimpleTypeReference(SolidityDataTypeEnum.Address);
-
-            var ownerModifierParam = new ModifierParameterModel() { Name = "owner", Type = addressType };
-            var activeModifierParam = new ModifierParameterModel() { Name = "isActive", Type = booleanType };
-
-            var modifier1 = new ModifierModel() { Name = "TestModifier", Body = "require(msg.sender == owner())" };
-            var modifier2 = new ModifierModel() { Name = "TestModifier2", Body = "require(msg.sender == owner())" };
-            var modifier3 = new ModifierModel() { Name = "TestModifier3", Body = "require(msg.sender == owner())" };
-            var modifier4 = new ModifierModel()
-            {
-                Name = "TestModifier4",
-                Parameters = [ownerModifierParam, activeModifierParam],
-                Body = "require(msg.sender == owner && isActive == true)"
-            };
-            var modifiers = new ModifierModel[] { modifier1, modifier2, modifier3, modifier4 };
-            #endregion
-            #region State 
-            var maxUserCountProperty = new StatePropertyModel() { Name = "_maxUserCount", Type = int256Type };
-            #endregion
-
-            #region Contracts
-
-            SolidityContractModel contract = new()
-            {
-                Name = "MyToken",
-                BaseContracts = [erc20Dependency, erc202Dependency, erc20PermitDependency, erc20Dependency],
-                Imports = [testImport, testImportC,testImportB],
-                ConstructorParameters = [nameArgument, symbolArgument, maxUserCountArgument],
-                Interfaces = [],
-                StateProperties = [maxUserCountProperty]
-            };
-            #endregion
-            #region Errors
-            var errorParameter1 = new ErrorParameterModel() { Name = "name", Type = stringType, Index = 0 };
-            var errorParameter2 = new ErrorParameterModel() { Name = "round", Type = int256Type, Index = 1 };
-            var errorParameter3 = new ErrorParameterModel() { Name = "version", Type = stringType };
-
-            var error1 = new ErrorModel() { Name = "TestError", Parameters = [errorParameter3, errorParameter2, errorParameter1] };
-            var error2 = new ErrorModel() { Name = "BuildError", Parameters = [errorParameter2, errorParameter3] };
-            var error3 = new ErrorModel() { Name = "UseError", Parameters = [errorParameter3] };
-
-
-            var errors = new ErrorModel[] { error1, error2, error3 };
             #endregion
 
             #region Functions
-            var functionParameter1 = new FunctionParameterModel() { Name = "to", Type = addressType, Index = 0 };
-            var functionParameter2 = new FunctionParameterModel() { Name = "amount", Type = int256Type, Index = 1 };
-
-            var function1 = new FunctionModel()
-            {
-                Name = "TestFunction",
-                Parameters = [functionParameter2, functionParameter1],
-            };
-
-            var functions = new FunctionModel[] { function1 };
+            // Create functions for the ERC20 token
+            var functions = new List<BaseFunctionModel>();
+            
+            // Standard ERC20 functions
+            var mintFunction = CreateMintFunction(addressType, uint256Type, onlyOwnerModifier);
+            functions.Add(mintFunction);
+            
+            var transferFunction = CreateTransferFunction(addressType, uint256Type, boolType, whenNotPausedModifier);
+            functions.Add(transferFunction);
+            
+            var approveFunction = CreateApproveFunction(addressType, uint256Type, boolType, whenNotPausedModifier);
+            functions.Add(approveFunction);
+            
+            var transferFromFunction = CreateTransferFromFunction(addressType, uint256Type, boolType, whenNotPausedModifier);
+            functions.Add(transferFromFunction);
+            
+            var balanceOfFunction = CreateBalanceOfFunction(addressType, uint256Type);
+            functions.Add(balanceOfFunction);
+            
+            var allowanceFunction = CreateAllowanceFunction(addressType, uint256Type);
+            functions.Add(allowanceFunction);
+            
+            var totalSupplyFunction = CreateTotalSupplyFunction(uint256Type);
+            functions.Add(totalSupplyFunction);
+            
+            var nameFunction = CreateSimpleGetterFunction("name", "_name", stringType);
+            functions.Add(nameFunction);
+            
+            var symbolFunction = CreateSimpleGetterFunction("symbol", "_symbol", stringType);
+            functions.Add(symbolFunction);
+            
+            var decimalsFunction = CreateSimpleGetterFunction("decimals", "_decimals", uint8Type);
+            functions.Add(decimalsFunction);
+            
+            // Additional functions with different statements
+            var batchTransferFunction = CreateBatchTransferFunction(addressArrayType, uint256ArrayType, uint256Type, boolType, whenNotPausedModifier);
+            functions.Add(batchTransferFunction);
+            
+            var burnFunction = CreateBurnFunction(uint256Type, boolType, whenNotPausedModifier);
+            functions.Add(burnFunction);
+            
+            var setFeeFunction = CreateSetFeeFunction(uint256Type, onlyOwnerModifier);
+            functions.Add(setFeeFunction);
+            
+            var pauseFunction = CreatePauseFunction(onlyOwnerModifier, whenNotPausedModifier);
+            functions.Add(pauseFunction);
+            
+            var unpauseFunction = CreateUnpauseFunction(onlyOwnerModifier, whenPausedModifier);
+            functions.Add(unpauseFunction);
+            
+            var transferWithFeeFunction = CreateTransferWithFeeFunction(addressType, uint256Type, boolType, whenNotPausedModifier);
+            functions.Add(transferWithFeeFunction);
+            
+            var safeTransferFunction = CreateSafeTransferFunction(addressType, uint256Type, boolType, whenNotPausedModifier);
+            functions.Add(safeTransferFunction);
             #endregion
 
+            #region Contract
+            // Create the contract model
+            var contract = new SolidityContractModel
+            {
+                Name = "EnhancedERC20",
+                StateProperties = stateProperties,
+                Events = events,
+                Errors = errors,
+                Modifiers = modifiers,
+                ConstructorParameters = constructorParameters,
+                Functions = functions
+            };
+            #endregion
 
-            SolidityFile file = new()
+            #region File Header
+            // Create file header
+            var minVersion = new SoftwareVersion { Major = 0, Minor = 8, Revision = 20 };
+            var maxVersion = new SoftwareVersion { Major = 0, Minor = 8, Revision = 20 };
+            var fileHeader = new FileHeaderModel
+            {
+                License = SpdxLicense.MIT,
+                Version = new VersionModel { Minimum = minVersion, Maximum = maxVersion }
+            };
+            #endregion
+
+            #region File
+            // Create the Solidity file
+            var file = new SolidityFile
             {
                 FileHeader = fileHeader,
-                Contracts = [contract]
+                Contracts = new[] { contract }
+            };
+            #endregion
+
+            #region Render
+            // Generate complete Solidity code
+            var solidityCode = GenerateSolidityCode(file);
+            #endregion
+
+            return Ok(solidityCode);
+        }
+
+        #region Helper Methods for Creating Functions
+        
+        private NormalFunctionModel CreateApproveFunction(TypeReference addressType, TypeReference uint256Type, TypeReference boolType, ModifierModel whenNotPausedModifier)
+        {
+            // Parameters
+            var spenderParam = new FunctionParameterModel
+            {
+                Name = "spender",
+                Type = addressType,
+                Index = 0
             };
 
-     
+            var amountParam = new FunctionParameterModel
+            {
+                Name = "amount",
+                Type = uint256Type,
+                Index = 1
+            };
 
-            var result = SolidityTemplateProcessor.FileHeader.Render(file);
-            result += Environment.NewLine;
-            result += SolidityTemplateProcessor.Imports.Render(file);
-            result += Environment.NewLine;
-            result += Environment.NewLine;
-            foreach(var contractModel in file.Contracts)
+            // Return parameter
+            var successParam = new ReturnParameterModel
             {
-                result += SolidityTemplateProcessor.ContractHeader.Render(contractModel);
-            }
-            result += Environment.NewLine;
-            foreach(var contractModel in file.Contracts)
+                Name = "success",
+                Type = boolType,
+                Index = 0
+            };
+
+            // Create function
+            var approveFunction = new NormalFunctionModel
             {
-                result += SolidityTemplateProcessor.ContractHeader.Render(contractModel);
-                result += Environment.NewLine;
-    
-                foreach (var stateProperty in contractModel.StateProperties)
+                Name = "approve",
+                Visibility = SolidityVisibilityEnum.External,
+                Parameters = new List<FunctionParameterModel> { spenderParam, amountParam },
+                ReturnParameters = new List<ReturnParameterModel> { successParam }
+            };
+            
+            // Add modifier
+            approveFunction.Modifiers.Add(whenNotPausedModifier);
+
+            // Create expressions for require
+            var spenderExpr = new LiteralExpressionModel("spender");
+            var zeroAddressExpr = new LiteralExpressionModel("address(0)");
+            var notZeroAddressExpr = spenderExpr.NotEqual(zeroAddressExpr);
+            
+            // Add require statement
+            approveFunction.AddStatement(new RequireStatement { 
+                Condition = notZeroAddressExpr, 
+                Message = "Cannot approve zero address" 
+            });
+
+            // Add assignment statement
+            approveFunction.AddStatement(new AssignmentStatement { 
+                Target = "_allowances[msg.sender][spender]", 
+                Value = "amount" 
+            });
+
+            // Add emit statement
+            var emitStmt = new EmitStatement("Approval");
+            emitStmt.Arguments.AddRange(new[] { "msg.sender", "spender", "amount" });
+            approveFunction.AddStatement(emitStmt);
+
+            // Add return statement
+            approveFunction.AddStatement(new ReturnStatement("true"));
+
+            return approveFunction;
+        }
+
+        private NormalFunctionModel CreateTransferFromFunction(TypeReference addressType, TypeReference uint256Type, TypeReference boolType, ModifierModel whenNotPausedModifier)
+        {
+            // Parameters
+            var fromParam = new FunctionParameterModel
+            {
+                Name = "from",
+                Type = addressType,
+                Index = 0
+            };
+
+            var toParam = new FunctionParameterModel
+            {
+                Name = "to",
+                Type = addressType,
+                Index = 1
+            };
+
+            var amountParam = new FunctionParameterModel
+            {
+                Name = "amount",
+                Type = uint256Type,
+                Index = 2
+            };
+
+            // Return parameter
+            var successParam = new ReturnParameterModel
+            {
+                Name = "success",
+                Type = boolType,
+                Index = 0
+            };
+
+            // Create function
+            var transferFromFunction = new NormalFunctionModel
+            {
+                Name = "transferFrom",
+                Visibility = SolidityVisibilityEnum.External,
+                Parameters = new List<FunctionParameterModel> { fromParam, toParam, amountParam },
+                ReturnParameters = new List<ReturnParameterModel> { successParam }
+            };
+            
+            // Add modifier
+            transferFromFunction.Modifiers.Add(whenNotPausedModifier);
+
+            // Create expressions for require statements
+            var fromExpr = new LiteralExpressionModel("from");
+            var toExpr = new LiteralExpressionModel("to");
+            var zeroAddressExpr = new LiteralExpressionModel("address(0)");
+            var fromNotZeroExpr = fromExpr.NotEqual(zeroAddressExpr);
+            var toNotZeroExpr = toExpr.NotEqual(zeroAddressExpr);
+            
+            var amountExpr = new LiteralExpressionModel("amount");
+            var fromBalanceExpr = new LiteralExpressionModel("_balances[from]");
+            var allowanceExpr = new LiteralExpressionModel("_allowances[from][msg.sender]");
+            var sufficientBalanceExpr = amountExpr.LessOrEqual(fromBalanceExpr);
+            var sufficientAllowanceExpr = amountExpr.LessOrEqual(allowanceExpr);
+            
+            // Add require statements
+            transferFromFunction.AddStatement(new RequireStatement { 
+                Condition = fromNotZeroExpr, 
+                Message = "Cannot transfer from zero address" 
+            });
+            
+            transferFromFunction.AddStatement(new RequireStatement { 
+                Condition = toNotZeroExpr, 
+                Message = "Cannot transfer to zero address" 
+            });
+            
+            transferFromFunction.AddStatement(new RequireStatement { 
+                Condition = sufficientBalanceExpr, 
+                Message = "Insufficient balance" 
+            });
+            
+            transferFromFunction.AddStatement(new RequireStatement { 
+                Condition = sufficientAllowanceExpr, 
+                Message = "Insufficient allowance" 
+            });
+
+            // Add variable declaration for current allowance
+            transferFromFunction.AddStatement(new VariableDeclarationStatement(
+                uint256Type, 
+                "currentAllowance", 
+                "_allowances[from][msg.sender]", 
+                null)
+            );
+
+            // Add assignment statements
+            transferFromFunction.AddStatement(new AssignmentStatement { 
+                Target = "_balances[from]", 
+                Value = "_balances[from] - amount" 
+            });
+            
+            transferFromFunction.AddStatement(new AssignmentStatement { 
+                Target = "_balances[to]", 
+                Value = "_balances[to] + amount" 
+            });
+            
+            transferFromFunction.AddStatement(new AssignmentStatement { 
+                Target = "_allowances[from][msg.sender]", 
+                Value = "currentAllowance - amount" 
+            });
+
+            // Add emit statement
+            var emitStmt = new EmitStatement("Transfer");
+            emitStmt.Arguments.AddRange(new[] { "from", "to", "amount" });
+            transferFromFunction.AddStatement(emitStmt);
+
+            // Add return statement
+            transferFromFunction.AddStatement(new ReturnStatement("true"));
+
+            return transferFromFunction;
+        }
+
+        private NormalFunctionModel CreateBalanceOfFunction(TypeReference addressType, TypeReference uint256Type)
+        {
+            // Parameter
+            var accountParam = new FunctionParameterModel
+            {
+                Name = "account",
+                Type = addressType,
+                Index = 0
+            };
+
+            // Return parameter
+            var balanceParam = new ReturnParameterModel
+            {
+                Name = "balance",
+                Type = uint256Type,
+                Index = 0
+            };
+
+            // Create function
+            var balanceOfFunction = new NormalFunctionModel
+            {
+                Name = "balanceOf",
+                Visibility = SolidityVisibilityEnum.External,
+                Mutability = SolidityFunctionMutabilityEnum.View,
+                Parameters = new List<FunctionParameterModel> { accountParam },
+                ReturnParameters = new List<ReturnParameterModel> { balanceParam }
+            };
+
+            // Add return statement
+            var returnStmt = new ReturnStatement();
+            returnStmt.Values.Add("_balances[account]");
+            balanceOfFunction.AddStatement(returnStmt);
+
+            return balanceOfFunction;
+        }
+
+        private NormalFunctionModel CreateAllowanceFunction(TypeReference addressType, TypeReference uint256Type)
+        {
+            // Parameters
+            var ownerParam = new FunctionParameterModel
+            {
+                Name = "owner",
+                Type = addressType,
+                Index = 0
+            };
+
+            var spenderParam = new FunctionParameterModel
+            {
+                Name = "spender",
+                Type = addressType,
+                Index = 1
+            };
+
+            // Return parameter
+            var allowanceParam = new ReturnParameterModel
+            {
+                Name = "remaining",
+                Type = uint256Type,
+                Index = 0
+            };
+
+            // Create function
+            var allowanceFunction = new NormalFunctionModel
+            {
+                Name = "allowance",
+                Visibility = SolidityVisibilityEnum.External,
+                Mutability = SolidityFunctionMutabilityEnum.View,
+                Parameters = new List<FunctionParameterModel> { ownerParam, spenderParam },
+                ReturnParameters = new List<ReturnParameterModel> { allowanceParam }
+            };
+
+            // Add return statement
+            var returnStmt = new ReturnStatement();
+            returnStmt.Values.Add("_allowances[owner][spender]");
+            allowanceFunction.AddStatement(returnStmt);
+
+            return allowanceFunction;
+        }
+
+        private NormalFunctionModel CreateTotalSupplyFunction(TypeReference uint256Type)
+        {
+            // Return parameter
+            var totalSupplyParam = new ReturnParameterModel
+            {
+                Name = "supply",
+                Type = uint256Type,
+                Index = 0
+            };
+
+            // Create function
+            var totalSupplyFunction = new NormalFunctionModel
+            {
+                Name = "totalSupply",
+                Visibility = SolidityVisibilityEnum.External,
+                Mutability = SolidityFunctionMutabilityEnum.View,
+                ReturnParameters = new List<ReturnParameterModel> { totalSupplyParam }
+            };
+
+            // Add return statement
+            var returnStmt = new ReturnStatement();
+            returnStmt.Values.Add("_totalSupply");
+            totalSupplyFunction.AddStatement(returnStmt);
+
+            return totalSupplyFunction;
+        }
+
+        private NormalFunctionModel CreateSimpleGetterFunction(string functionName, string propertyName, TypeReference returnType)
+        {
+            // Return parameter
+            var returnParam = new ReturnParameterModel
+            {
+                Name = "value",
+                Type = returnType,
+                Index = 0
+            };
+
+            // Create function
+            var getterFunction = new NormalFunctionModel
+            {
+                Name = functionName,
+                Visibility = SolidityVisibilityEnum.External,
+                Mutability = SolidityFunctionMutabilityEnum.View,
+                ReturnParameters = new List<ReturnParameterModel> { returnParam }
+            };
+
+            // Add return statement
+            var returnStmt = new ReturnStatement();
+            returnStmt.Values.Add(propertyName);
+            getterFunction.AddStatement(returnStmt);
+
+            return getterFunction;
+        }
+        
+        // Function using a for loop to process arrays
+        private NormalFunctionModel CreateBatchTransferFunction(TypeReference addressArrayType, TypeReference uint256ArrayType, TypeReference uint256Type, TypeReference boolType, ModifierModel whenNotPausedModifier)
+        {
+            // Parameters
+            var recipientsParam = new FunctionParameterModel
+            {
+                Name = "recipients",
+                Type = addressArrayType,
+                Index = 0,
+                Location = SolidityMemoryLocation.Memory
+            };
+
+            var amountsParam = new FunctionParameterModel
+            {
+                Name = "amounts",
+                Type = uint256ArrayType,
+                Index = 1,
+                Location = SolidityMemoryLocation.Memory
+            };
+
+            // Return parameter
+            var successParam = new ReturnParameterModel
+            {
+                Name = "success",
+                Type = boolType,
+                Index = 0
+            };
+
+            // Create function
+            var batchTransferFunction = new NormalFunctionModel
+            {
+                Name = "batchTransfer",
+                Visibility = SolidityVisibilityEnum.External,
+                Parameters = new List<FunctionParameterModel> { recipientsParam, amountsParam },
+                ReturnParameters = new List<ReturnParameterModel> { successParam }
+            };
+            
+            // Add modifier
+            batchTransferFunction.Modifiers.Add(whenNotPausedModifier);
+
+            // Create expressions for require statements
+            var recipientsLengthExpr = new LiteralExpressionModel("recipients.length");
+            var amountsLengthExpr = new LiteralExpressionModel("amounts.length");
+            var zeroExpr = new LiteralExpressionModel("0");
+            
+            var lengthsEqualExpr = recipientsLengthExpr.Equal(amountsLengthExpr);
+            var lengthsNotEmptyExpr = recipientsLengthExpr.GreaterThan(zeroExpr);
+            
+            // Add require statements
+            batchTransferFunction.AddStatement(new RequireStatement { 
+                Condition = lengthsEqualExpr, 
+                Message = "Arrays length mismatch" 
+            });
+            
+            batchTransferFunction.AddStatement(new RequireStatement { 
+                Condition = lengthsNotEmptyExpr, 
+                Message = "Empty arrays" 
+            });
+
+            // Declare variable for total amount
+            batchTransferFunction.AddStatement(new VariableDeclarationStatement(
+                uint256Type, 
+                "totalAmount", 
+                "0", 
+                null)
+            );
+
+            // First loop initialization
+            var initExpr1 = new VariableDeclarationStatement(
+                uint256Type, 
+                "i", 
+                "0", 
+                null
+            );
+            
+            // First loop condition
+            var iExpr = new LiteralExpressionModel("i");
+            var conditionExpr1 = iExpr.LessThan(amountsLengthExpr);
+            
+            // First loop iterator
+            var iteratorExpr1 = new AssignmentStatement { 
+                Target = "i", 
+                Value = "i + 1" 
+            };
+            
+            // Create first for loop
+            var firstForLoop = new ForStatement(initExpr1, conditionExpr1, iteratorExpr1);
+            
+            // Add statements to first loop body
+            var amountAtIExpr = new LiteralExpressionModel("amounts[i]");
+            var amountGreaterZeroExpr = amountAtIExpr.GreaterThan(zeroExpr);
+            
+            firstForLoop.AddBodyStatement(new RequireStatement { 
+                Condition = amountGreaterZeroExpr, 
+                Message = "Zero amount" 
+            });
+            
+            firstForLoop.AddBodyStatement(new AssignmentStatement { 
+                Target = "totalAmount", 
+                Value = "totalAmount + amounts[i]" 
+            });
+            
+            // Add first loop to function
+            batchTransferFunction.AddStatement(firstForLoop);
+            
+            // Check if sender has enough balance
+            var totalAmountExpr = new LiteralExpressionModel("totalAmount");
+            var senderBalanceExpr = new LiteralExpressionModel("_balances[msg.sender]");
+            var sufficientBalanceExpr = totalAmountExpr.LessOrEqual(senderBalanceExpr);
+            
+            batchTransferFunction.AddStatement(new RequireStatement { 
+                Condition = sufficientBalanceExpr, 
+                Message = "Insufficient balance" 
+            });
+            
+            // Second loop initialization
+            var initExpr2 = new VariableDeclarationStatement(
+                uint256Type, 
+                "i", 
+                "0", 
+                null
+            );
+            
+            // Second loop condition
+            var recipientsLengthExpr2 = new LiteralExpressionModel("recipients.length");
+            var conditionExpr2 = iExpr.LessThan(recipientsLengthExpr2);
+            
+            // Second loop iterator
+            var iteratorExpr2 = new AssignmentStatement { 
+                Target = "i", 
+                Value = "i + 1" 
+            };
+            
+            // Create second for loop
+            var secondForLoop = new ForStatement(initExpr2, conditionExpr2, iteratorExpr2);
+            
+            // Add statements to second loop body
+            var recipientAtIExpr = new LiteralExpressionModel("recipients[i]");
+            var recipientNotZeroExpr = recipientAtIExpr.NotEqual(new LiteralExpressionModel("address(0)"));
+            
+            secondForLoop.AddBodyStatement(new RequireStatement { 
+                Condition = recipientNotZeroExpr, 
+                Message = "Zero address" 
+            });
+            
+            secondForLoop.AddBodyStatement(new AssignmentStatement { 
+                Target = "_balances[msg.sender]", 
+                Value = "_balances[msg.sender] - amounts[i]" 
+            });
+            
+            secondForLoop.AddBodyStatement(new AssignmentStatement { 
+                Target = "_balances[recipients[i]]", 
+                Value = "_balances[recipients[i]] + amounts[i]" 
+            });
+            
+            // Use this method to build the emit statement to avoid ambiguity
+            var emitTransfer = new EmitStatement("Transfer");
+            emitTransfer.Arguments.Add("msg.sender");
+            emitTransfer.Arguments.Add("recipients[i]");
+            emitTransfer.Arguments.Add("amounts[i]");
+            secondForLoop.AddBodyStatement(emitTransfer);
+            
+            // Add second loop to function
+            batchTransferFunction.AddStatement(secondForLoop);
+            
+            // Return true
+            batchTransferFunction.AddStatement(new ReturnStatement("true"));
+            
+            return batchTransferFunction;
+        }
+        
+        private NormalFunctionModel CreateMintFunction(TypeReference addressType, TypeReference uint256Type, ModifierModel onlyOwnerModifier) {
+            // Parameters
+            var toParam = new FunctionParameterModel
+            {
+                Name = "to",
+                Type = addressType,
+                Index = 0
+            };
+
+            var amountParam = new FunctionParameterModel
+            {
+                Name = "amount",
+                Type = uint256Type,
+                Index = 1
+            };
+
+            // Create function
+            var mintFunction = new NormalFunctionModel
+            {
+                Name = "mint",
+                Visibility = SolidityVisibilityEnum.Public,
+                Parameters = new List<FunctionParameterModel> { toParam, amountParam }
+            };
+
+            // Add onlyOwner modifier
+            mintFunction.Modifiers.Add(onlyOwnerModifier);
+
+            // Add require statements using ExpressionModel
+            // require(to != address(0), "Cannot mint to zero address");
+            var toExpr = new LiteralExpressionModel("to");
+            var zeroAddressExpr = new LiteralExpressionModel("address(0)");
+            var notZeroAddressExpr = toExpr.NotEqual(zeroAddressExpr);
+            
+            mintFunction.AddStatement(new RequireStatement { 
+                Condition = notZeroAddressExpr, 
+                Message = "Cannot mint to zero address" 
+            });
+
+            // require(amount > 0, "Amount must be greater than zero");
+            var amountExpr = new LiteralExpressionModel("amount");
+            var zeroExpr = new LiteralExpressionModel("0");
+            var amountGreaterZeroExpr = amountExpr.GreaterThan(zeroExpr);
+            
+            mintFunction.AddStatement(new RequireStatement { 
+                Condition = amountGreaterZeroExpr, 
+                Message = "Amount must be greater than zero" 
+            });
+
+            // Add assignment statements
+            // _balances[to] = _balances[to] + amount;
+            mintFunction.AddStatement(new AssignmentStatement { 
+                Target = "_balances[to]", 
+                Value = "_balances[to] + amount" 
+            });
+
+            // _totalSupply = _totalSupply + amount;
+            mintFunction.AddStatement(new AssignmentStatement { 
+                Target = "_totalSupply", 
+                Value = "_totalSupply + amount" 
+            });
+
+            // Add emit statement
+            var emitTransfer = new EmitStatement("Transfer")
+                .AddStringArgument("address(0)")
+                .AddStringArgument("to")
+                .AddStringArgument("amount");
+                
+            mintFunction.AddStatement(emitTransfer);
+
+            return mintFunction;
+        }
+
+        private NormalFunctionModel CreateTransferFunction(TypeReference addressType, TypeReference uint256Type, TypeReference boolType, ModifierModel whenNotPausedModifier)
+        {
+            // Parameters
+            var toParam = new FunctionParameterModel
+            {
+                Name = "to",
+                Type = addressType,
+                Index = 0
+            };
+
+            var amountParam = new FunctionParameterModel
+            {
+                Name = "amount",
+                Type = uint256Type,
+                Index = 1
+            };
+
+            // Return parameter
+            var successParam = new ReturnParameterModel
+            {
+                Name = "success",
+                Type = boolType,
+                Index = 0
+            };
+
+            // Create function
+            var transferFunction = new NormalFunctionModel
+            {
+                Name = "transfer",
+                Visibility = SolidityVisibilityEnum.External,
+                Parameters = new List<FunctionParameterModel> { toParam, amountParam },
+                ReturnParameters = new List<ReturnParameterModel> { successParam }
+            };
+            
+            // Add modifier
+            transferFunction.Modifiers.Add(whenNotPausedModifier);
+
+            // Create expressions for require statements
+            var toExpr = new LiteralExpressionModel("to");
+            var zeroAddressExpr = new LiteralExpressionModel("address(0)");
+            var notZeroAddressExpr = toExpr.NotEqual(zeroAddressExpr);
+            
+            var amountExpr = new LiteralExpressionModel("amount");
+            var balanceExpr = new LiteralExpressionModel("_balances[msg.sender]");
+            var sufficientBalanceExpr = amountExpr.LessOrEqual(balanceExpr);
+            
+            // Add require statements
+            transferFunction.AddStatement(new RequireStatement { 
+                Condition = notZeroAddressExpr, 
+                Message = "Cannot transfer to zero address" 
+            });
+            
+            transferFunction.AddStatement(new RequireStatement { 
+                Condition = sufficientBalanceExpr, 
+                Message = "Insufficient balance" 
+            });
+
+            // Then statements
+            var thenStatements = new StatementModel[]
+            {
+                new AssignmentStatement {
+                    Target = "_balances[msg.sender]",
+                    Value = "_balances[msg.sender] - amount"
+                },
+                new AssignmentStatement {
+                    Target = "_balances[to]",
+                    Value = "_balances[to] + amount"
+                },
+                new EmitStatement("Transfer")
+                    .AddStringArgument("msg.sender")
+                    .AddStringArgument("to")
+                    .AddStringArgument("amount"),
+                new ReturnStatement("true")
+            };
+            
+            // Else statements
+            var elseStatements = new StatementModel[]
+            {
+                new ReturnStatement("false")
+            };
+            
+            // Create conditional statement
+            var condition = ConditionStatementModel.IfElse(
+                sufficientBalanceExpr,
+                thenStatements,
+                elseStatements
+            );
+            
+            // Add the conditional statement to function
+            transferFunction.AddStatement(condition);
+
+            return transferFunction;
+        }
+
+        // Example of a function with more complex condition (burnFunction)
+        private NormalFunctionModel CreateBurnFunction(TypeReference uint256Type, TypeReference boolType, ModifierModel whenNotPausedModifier)
+        {
+            // Parameters
+            var amountParam = new FunctionParameterModel
+            {
+                Name = "amount",
+                Type = uint256Type,
+                Index = 0
+            };
+
+            // Return parameter
+            var successParam = new ReturnParameterModel
+            {
+                Name = "success",
+                Type = boolType,
+                Index = 0
+            };
+
+            // Create function
+            var burnFunction = new NormalFunctionModel
+            {
+                Name = "burn",
+                Visibility = SolidityVisibilityEnum.External,
+                Parameters = new List<FunctionParameterModel> { amountParam },
+                ReturnParameters = new List<ReturnParameterModel> { successParam }
+            };
+            
+            // Add modifier
+            burnFunction.Modifiers.Add(whenNotPausedModifier);
+
+            // Create expressions for require statements
+            var amountExpr = new LiteralExpressionModel("amount");
+            var zeroExpr = new LiteralExpressionModel("0");
+            var balanceExpr = new LiteralExpressionModel("_balances[msg.sender]");
+            var totalSupplyExpr = new LiteralExpressionModel("_totalSupply");
+            
+            var amountGreaterZeroExpr = amountExpr.GreaterThan(zeroExpr);
+            var sufficientBalanceExpr = amountExpr.LessOrEqual(balanceExpr);
+            var sufficientTotalExpr = amountExpr.LessOrEqual(totalSupplyExpr);
+            
+            // Add require statements
+            burnFunction.AddStatement(new RequireStatement { 
+                Condition = amountGreaterZeroExpr, 
+                Message = "Zero amount" 
+            });
+            
+            burnFunction.AddStatement(new RequireStatement { 
+                Condition = sufficientBalanceExpr, 
+                Message = "Insufficient balance" 
+            });
+
+            // Create complex if condition - combining two conditions with AND
+            var combinedConditionExpr = ExpressionModel.And(
+                sufficientBalanceExpr,
+                sufficientTotalExpr
+            );
+            
+            // Define statements for then branch
+            var thenStatements = new StatementModel[]
+            {
+                new AssignmentStatement {
+                    Target = "_balances[msg.sender]",
+                    Value = "_balances[msg.sender] - amount"
+                },
+                new AssignmentStatement {
+                    Target = "_totalSupply",
+                    Value = "_totalSupply - amount"
+                },
+                new EmitStatement("Transfer")
+                    .AddStringArgument("msg.sender")
+                    .AddStringArgument("address(0)")
+                    .AddStringArgument("amount"),
+                new ReturnStatement("true")
+            };
+            
+            // Define statements for else branch
+            var elseStatements = new StatementModel[]
+            {
+                new ReturnStatement("false")
+            };
+            
+            // Create the conditional statement using the consolidated model
+            var conditionalStatement = ConditionStatementModel.IfElse(
+                combinedConditionExpr,
+                thenStatements,
+                elseStatements
+            );
+            
+            // Add the conditional statement to the function
+            burnFunction.AddStatement(conditionalStatement);
+
+            return burnFunction;
+        }
+ 
+        // Configuration function that uses a state variable
+        private NormalFunctionModel CreateSetFeeFunction(TypeReference uint256Type, ModifierModel onlyOwnerModifier)
+        {
+            // Parameter
+            var newFeeParam = new FunctionParameterModel
+            {
+                Name = "newFee",
+                Type = uint256Type,
+                Index = 0
+            };
+
+            // Create function
+            var setFeeFunction = new NormalFunctionModel
+            {
+                Name = "setFee",
+                Visibility = SolidityVisibilityEnum.External,
+                Parameters = new List<FunctionParameterModel> { newFeeParam }
+            };
+            
+            // Add modifier
+            setFeeFunction.Modifiers.Add(onlyOwnerModifier);
+
+            // Create expression for require using ExpressionModel
+            var newFeeExpr = new LiteralExpressionModel("newFee");
+            var maxFeeExpr = new LiteralExpressionModel("1000");
+            var validFeeExpr = newFeeExpr.LessOrEqual(maxFeeExpr);
+            
+            // Add require statement
+            setFeeFunction.AddStatement(new RequireStatement { 
+                Condition = validFeeExpr, 
+                Message = "Fee too high" 
+            });
+
+            // Add variable for old fee
+            setFeeFunction.AddStatement(new VariableDeclarationStatement(
+                uint256Type, 
+                "oldFee", 
+                "_feeRate", 
+                null)
+            );
+            
+            // Update fee
+            setFeeFunction.AddStatement(new AssignmentStatement { 
+                Target = "_feeRate", 
+                Value = "newFee" 
+            });
+            
+            // Emit event
+            var emitFeeChanged = new EmitStatement("FeeChanged");
+            emitFeeChanged.Arguments.AddRange(new[] { "oldFee", "newFee" });
+            setFeeFunction.AddStatement(emitFeeChanged);
+
+            return setFeeFunction;
+        }
+        
+        // Pause function - without parameters
+        private NormalFunctionModel CreatePauseFunction(ModifierModel onlyOwnerModifier, ModifierModel whenNotPausedModifier)
+        {
+            // Create function
+            var pauseFunction = new NormalFunctionModel
+            {
+                Name = "pause",
+                Visibility = SolidityVisibilityEnum.External
+            };
+            
+            // Add modifiers
+            pauseFunction.Modifiers.Add(onlyOwnerModifier);
+            pauseFunction.Modifiers.Add(whenNotPausedModifier);
+
+            // Set paused to true
+            pauseFunction.AddStatement(new AssignmentStatement { 
+                Target = "_paused", 
+                Value = "true" 
+            });
+            
+            // Emit paused event
+            var emitPaused = new EmitStatement("Paused");
+            pauseFunction.AddStatement(emitPaused);
+
+            return pauseFunction;
+        }
+        
+        // Unpause function - without parameters
+        private NormalFunctionModel CreateUnpauseFunction(ModifierModel onlyOwnerModifier, ModifierModel whenPausedModifier)
+        {
+            // Create function
+            var unpauseFunction = new NormalFunctionModel
+            {
+                Name = "unpause",
+                Visibility = SolidityVisibilityEnum.External
+            };
+            
+            // Add modifiers
+            unpauseFunction.Modifiers.Add(onlyOwnerModifier);
+            unpauseFunction.Modifiers.Add(whenPausedModifier);
+
+            // Set paused to false
+            unpauseFunction.AddStatement(new AssignmentStatement { 
+                Target = "_paused", 
+                Value = "false" 
+            });
+            
+            // Emit unpaused event
+            var emitUnpaused = new EmitStatement("Unpaused");
+            unpauseFunction.AddStatement(emitUnpaused);
+
+            return unpauseFunction;
+        }
+        
+        // Fee-based transfer function - advanced use of local variables and nested conditions
+        private NormalFunctionModel CreateTransferWithFeeFunction(TypeReference addressType, TypeReference uint256Type, TypeReference boolType, ModifierModel whenNotPausedModifier)
+        {
+            // Parameters
+            var toParam = new FunctionParameterModel
+            {
+                Name = "to",
+                Type = addressType,
+                Index = 0
+            };
+
+            var amountParam = new FunctionParameterModel
+            {
+                Name = "amount",
+                Type = uint256Type,
+                Index = 1
+            };
+
+            // Return parameter
+            var successParam = new ReturnParameterModel
+            {
+                Name = "success",
+                Type = boolType,
+                Index = 0
+            };
+
+            // Create function
+            var transferWithFeeFunction = new NormalFunctionModel
+            {
+                Name = "transferWithFee",
+                Visibility = SolidityVisibilityEnum.External,
+                Parameters = new List<FunctionParameterModel> { toParam, amountParam },
+                ReturnParameters = new List<ReturnParameterModel> { successParam }
+            };
+            
+            // Add modifier
+            transferWithFeeFunction.Modifiers.Add(whenNotPausedModifier);
+
+            // Create expressions using ExpressionModel
+            var toExpr = new LiteralExpressionModel("to");
+            var zeroAddressExpr = new LiteralExpressionModel("address(0)");
+            var notZeroAddressExpr = toExpr.NotEqual(zeroAddressExpr);
+            
+            var amountExpr = new LiteralExpressionModel("amount");
+            var zeroExpr = new LiteralExpressionModel("0");
+            var balanceExpr = new LiteralExpressionModel("_balances[msg.sender]");
+            var amountGreaterZeroExpr = amountExpr.GreaterThan(zeroExpr);
+            var sufficientBalanceExpr = amountExpr.LessOrEqual(balanceExpr);
+            
+            // Add require statements
+            transferWithFeeFunction.AddStatement(new RequireStatement { 
+                Condition = notZeroAddressExpr, 
+                Message = "Zero address" 
+            });
+            
+            transferWithFeeFunction.AddStatement(new RequireStatement { 
+                Condition = amountGreaterZeroExpr, 
+                Message = "Zero amount" 
+            });
+            
+            transferWithFeeFunction.AddStatement(new RequireStatement { 
+                Condition = sufficientBalanceExpr, 
+                Message = "Insufficient balance" 
+            });
+            
+            // Add variables for fee calculation
+            transferWithFeeFunction.AddStatement(new VariableDeclarationStatement(
+                uint256Type, 
+                "feeAmount", 
+                "amount * _feeRate / 10000", 
+                null)
+            );
+            
+            transferWithFeeFunction.AddStatement(new VariableDeclarationStatement(
+                uint256Type, 
+                "transferAmount", 
+                "amount - feeAmount", 
+                null)
+            );
+            
+            // Create condition for fee handling using the consolidated model
+            var feeCondition = new ConditionStatementModel();
+            
+            // Add if block - feeAmount > 0
+            var feeAmountExpr = new LiteralExpressionModel("feeAmount");
+            var feeConditionExpr = feeAmountExpr.GreaterThan(zeroExpr);
+            feeCondition.AddIfBlock(feeConditionExpr);
+            
+            // Add statements to fee block
+            feeCondition.AddStatement(new AssignmentStatement { 
+                Target = "_balances[msg.sender]", 
+                Value = "_balances[msg.sender] - amount" 
+            });
+            
+            feeCondition.AddStatement(new AssignmentStatement { 
+                Target = "_balances[to]", 
+                Value = "_balances[to] + transferAmount" 
+            });
+            
+            // Create nested condition for owner fee distribution
+            var nestedOwnerCondition = new ConditionStatementModel();
+            
+            // Add if block - _owner != address(0)
+            var ownerExpr = new LiteralExpressionModel("_owner");
+            var ownerNotZeroExpr = ownerExpr.NotEqual(zeroAddressExpr);
+            nestedOwnerCondition.AddIfBlock(ownerNotZeroExpr);
+            
+            // Add statements to owner if block
+            nestedOwnerCondition.AddStatement(new AssignmentStatement { 
+                Target = "_balances[_owner]", 
+                Value = "_balances[_owner] + feeAmount" 
+            });
+            
+            var emitToOwner = new EmitStatement("Transfer");
+            emitToOwner.Arguments.AddRange(new[] { "msg.sender", "_owner", "feeAmount" });
+            nestedOwnerCondition.AddStatement(emitToOwner);
+            
+            // Add else block to owner condition
+            nestedOwnerCondition.AddElseBlock();
+            
+            // Add statements to owner else block
+            nestedOwnerCondition.AddStatement(new AssignmentStatement { 
+                Target = "_totalSupply", 
+                Value = "_totalSupply - feeAmount" 
+            });
+            
+            var emitToBurn = new EmitStatement("Transfer");
+            emitToBurn.Arguments.AddRange(new[] { "msg.sender", "address(0)", "feeAmount" });
+            nestedOwnerCondition.AddStatement(emitToBurn);
+            
+            // Add the owner condition to the fee condition
+            feeCondition.AddStatement(nestedOwnerCondition);
+            
+            // Add transfer event emission to fee condition
+            var emitTransfer = new EmitStatement("Transfer");
+            emitTransfer.Arguments.AddRange(new[] { "msg.sender", "to", "transferAmount" });
+            feeCondition.AddStatement(emitTransfer);
+            
+            // Add else block to fee condition
+            feeCondition.AddElseBlock();
+            
+            // Add statements to fee else block
+            feeCondition.AddStatement(new AssignmentStatement { 
+                Target = "_balances[msg.sender]", 
+                Value = "_balances[msg.sender] - amount" 
+            });
+            
+            feeCondition.AddStatement(new AssignmentStatement { 
+                Target = "_balances[to]", 
+                Value = "_balances[to] + amount" 
+            });
+            
+            var emitDirectTransfer = new EmitStatement("Transfer");
+            emitDirectTransfer.Arguments.AddRange(new[] { "msg.sender", "to", "amount" });
+            feeCondition.AddStatement(emitDirectTransfer);
+            
+            // Add the entire condition structure to function
+            transferWithFeeFunction.AddStatement(feeCondition);
+            
+            // Return success
+            transferWithFeeFunction.AddStatement(new ReturnStatement("true"));
+            
+            return transferWithFeeFunction;
+        }
+        
+        // Function with error handling using custom error
+        private NormalFunctionModel CreateSafeTransferFunction(TypeReference addressType, TypeReference uint256Type, TypeReference boolType, ModifierModel whenNotPausedModifier)
+        {
+            // Parameters
+            var toParam = new FunctionParameterModel
+            {
+                Name = "to",
+                Type = addressType,
+                Index = 0
+            };
+
+            var amountParam = new FunctionParameterModel
+            {
+                Name = "amount",
+                Type = uint256Type,
+                Index = 1
+            };
+
+            // Return parameter
+            var successParam = new ReturnParameterModel
+            {
+                Name = "success",
+                Type = boolType,
+                Index = 0
+            };
+
+            // Create function with custom error handling
+            var safeTransferFunction = new NormalFunctionModel
+            {
+                Name = "safeTransfer",
+                Visibility = SolidityVisibilityEnum.External,
+                Parameters = new List<FunctionParameterModel> { toParam, amountParam },
+                ReturnParameters = new List<ReturnParameterModel> { successParam },
+                CustomError = "TransferFailed" // Enable try-catch generation
+            };
+            
+            // Add modifier
+            safeTransferFunction.Modifiers.Add(whenNotPausedModifier);
+
+            // Create expressions for require statements
+            var toExpr = new LiteralExpressionModel("to");
+            var zeroAddressExpr = new LiteralExpressionModel("address(0)");
+            var notZeroAddressExpr = toExpr.NotEqual(zeroAddressExpr);
+            
+            var amountExpr = new LiteralExpressionModel("amount");
+            var zeroExpr = new LiteralExpressionModel("0");
+            var amountGreaterZeroExpr = amountExpr.GreaterThan(zeroExpr);
+            
+            var balanceExpr = new LiteralExpressionModel("_balances[msg.sender]");
+            var sufficientBalanceExpr = amountExpr.LessOrEqual(balanceExpr);
+            
+            // Add require statements
+            safeTransferFunction.AddStatement(new RequireStatement { 
+                Condition = notZeroAddressExpr, 
+                Message = "Zero address" 
+            });
+            
+            safeTransferFunction.AddStatement(new RequireStatement { 
+                Condition = amountGreaterZeroExpr, 
+                Message = "Zero amount" 
+            });
+            
+            safeTransferFunction.AddStatement(new RequireStatement { 
+                Condition = sufficientBalanceExpr, 
+                Message = "Insufficient balance" 
+            });
+            
+            // Update balances
+            safeTransferFunction.AddStatement(new AssignmentStatement { 
+                Target = "_balances[msg.sender]", 
+                Value = "_balances[msg.sender] - amount" 
+            });
+            
+            safeTransferFunction.AddStatement(new AssignmentStatement { 
+                Target = "_balances[to]", 
+                Value = "_balances[to] + amount" 
+            });
+            
+            // Emit transfer event
+            var emitTransfer = new EmitStatement("Transfer");
+            emitTransfer.Arguments.AddRange(new[] { "msg.sender", "to", "amount" });
+            safeTransferFunction.AddStatement(emitTransfer);
+            
+            // No need to add a return statement as the template will
+            // automatically add a "return true" for functions with CustomError
+            
+            return safeTransferFunction;
+        }
+        #endregion
+
+        private string GenerateSolidityCode(SolidityFile file)
+        {
+            var sb = new StringBuilder();
+            
+            // Render file header
+            sb.AppendLine(SolidityTemplateProcessor.FileHeader.Render(file));
+            sb.AppendLine();
+            
+            foreach (var contract in file.Contracts)
+            {
+                // Render contract header
+                sb.Append(SolidityTemplateProcessor.ContractHeader.Render(contract));
+                sb.AppendLine(" {");
+                sb.AppendLine();
+                
+                // Render state properties
+                foreach (var property in contract.StateProperties)
                 {
                     try 
                     {
-                        var statePropertyCode = SolidityTemplateProcessor.StateProperties.Render(stateProperty);
-                        result += statePropertyCode;
-                        result += Environment.NewLine;
+                        sb.Append("    ");
+                        sb.AppendLine(SolidityTemplateProcessor.StateProperties.Render(property));
                     }
                     catch (Exception ex)
                     {
-                        result += $"// Error rendering state property {stateProperty.Name}: {ex.Message}" + Environment.NewLine;
+                        sb.AppendLine($"    // Error rendering state property {property.Name}: {ex.Message}");
                     }
                 }
-            }
-            foreach (var @event in events)
-            {
-                var renderEvent = SolidityTemplateProcessor.Events.Render(@event);
-                result += renderEvent;
-                result += Environment.NewLine;
-            }
-            foreach(var structModel in structs)
-            {
-                var renderStruct = SolidityTemplateProcessor.Structs.Render(structModel);
-                result += renderStruct;
-                result += Environment.NewLine;
-            }
-            result += Environment.NewLine;
-            foreach (var @enum in enums)
-            {
-                var renderEnum = SolidityTemplateProcessor.Enums.Render(@enum);
-                result += renderEnum;
-                result += Environment.NewLine;
-            }
-            result += Environment.NewLine;
-            foreach (var modifier in modifiers)
-            {
-                var renderModifier = SolidityTemplateProcessor.Modifiers.Render(modifier);
-                result += renderModifier;
-                result += Environment.NewLine;
-            }
-            result += Environment.NewLine;
-
-            foreach(var errorModel in errors)
-            {
-                var renderError = SolidityTemplateProcessor.Errors.Render(errorModel);
-                result += renderError;
-                result += Environment.NewLine;
-            }
-
-            result += Environment.NewLine;
-            foreach (var function in functions)
-            {
-                var renderFunction = SolidityTemplateProcessor.Functions.Render(function);
-                result += renderFunction;
-                result += Environment.NewLine;
-            }
-
-
-            #region Constructor
-            result += Environment.NewLine;
-            foreach (var contractModel in file.Contracts)
-            {
+                sb.AppendLine();
+                
+                // Render events
+                foreach (var @event in contract.Events)
+                {
+                    try 
+                    {
+                        sb.Append("    ");
+                        sb.AppendLine(SolidityTemplateProcessor.Events.Render(@event));
+                    }
+                    catch (Exception ex)
+                    {
+                        sb.AppendLine($"    // Error rendering event {@event.Name}: {ex.Message}");
+                    }
+                }
+                sb.AppendLine();
+                
+                // Render errors
+                foreach (var error in contract.Errors)
+                {
+                    try 
+                    {
+                        sb.Append("    ");
+                        sb.AppendLine(SolidityTemplateProcessor.Errors.Render(error));
+                    }
+                    catch (Exception ex)
+                    {
+                        sb.AppendLine($"    // Error rendering error {error.Name}: {ex.Message}");
+                    }
+                }
+                sb.AppendLine();
+                
+                // Render modifiers
+                foreach (var modifier in contract.Modifiers)
+                {
+                    try 
+                    {
+                        sb.Append("    ");
+                        sb.AppendLine(SolidityTemplateProcessor.Modifiers.Render(modifier));
+                    }
+                    catch (Exception ex)
+                    {
+                        sb.AppendLine($"    // Error rendering modifier {modifier.Name}: {ex.Message}");
+                    }
+                }
+                sb.AppendLine();
+                
+                // Render constructor
                 try
                 {
-                    var constructorCode = SolidityTemplateProcessor.Constructor.Render(contractModel);
-                    result += constructorCode;
-                    result += Environment.NewLine;
+                    var constructorCode = SolidityTemplateProcessor.Constructor.Render(contract);
+                    sb.Append("    ");
+                    sb.AppendLine(constructorCode);
+                    sb.AppendLine();
                 }
                 catch (Exception ex)
                 {
-                    result += $"// Error rendering constructor for {contractModel.Name}: {ex.Message}" + Environment.NewLine;
+                    sb.AppendLine($"    // Error rendering constructor: {ex.Message}");
                 }
+                
+                // Render functions
+                foreach (var function in contract.Functions)
+                {
+                    try 
+                    {
+                        string renderedFunction = SolidityTemplateProcessor.Functions.Render(function);
+                        // Indent the function code
+                        renderedFunction = "    " + renderedFunction.Replace("\n", "\n    ");
+                        sb.AppendLine(renderedFunction);
+                        sb.AppendLine();
+                    }
+                    catch (Exception ex)
+                    {
+                        string functionName = "";
+                        if (function is NormalFunctionModel normalFunction)
+                            functionName = normalFunction.Name;
+                            
+                        sb.AppendLine($"    // Error rendering function {functionName}: {ex.Message}");
+                    }
+                }
+                
+                sb.AppendLine("}");
             }
-            #endregion
-
-            return Ok(result);
+            
+            return sb.ToString();
         }
     }
 }

@@ -21,19 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Templates\ContractConstructor.solidity.scriban" />
-    <EmbeddedResource Include="Templates\ContractHeader.solidity.scriban" />
-    <EmbeddedResource Include="Templates\Enum.solidity.scriban" />
-    <EmbeddedResource Include="Templates\Error.solidity.scriban" />
-    <EmbeddedResource Include="Templates\Event.solidity.scriban" />
-    <EmbeddedResource Include="Templates\FileHeader.solidity.scriban" />
-    <EmbeddedResource Include="Templates\Function.solidity.scriban" />
-    <EmbeddedResource Include="Templates\Imports.solidity.scriban" />
-    <EmbeddedResource Include="Templates\Modifier.solidity.scriban" />
-    <EmbeddedResource Include="Templates\StateProperty.solidity.scriban" />
-    <EmbeddedResource Include="Templates\Struct.solidity.scriban" />
-    <EmbeddedResource Include="Templates\Receive.solidity.scriban" />
-    <EmbeddedResource Include="Templates\Fallback.solidity.scriban" />
+    <EmbeddedResource Include="Templates\**\*.scriban" />
   </ItemGroup>
 
   <ItemGroup>

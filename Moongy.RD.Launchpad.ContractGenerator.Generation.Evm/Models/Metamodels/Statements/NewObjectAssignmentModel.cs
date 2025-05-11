@@ -1,30 +1,49 @@
-﻿using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Enums;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Statements;
+﻿using System;
+using System.Collections.Generic;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Enums;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Helpers;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.TypeReferences;
 
-namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Assigments;
-
-public class NewObjectAssignmentModel : AssignmentModel
+namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Statements
 {
-    /// <summary>
-    /// The type of the object being instantiated (e.g., "MyStruct", "uint256").
-    /// </summary>
-    public TypeReference DataType { get; set; }
-
-    /// <summary>
-    /// The location keyword, typically "memory", "storage", or "calldata" in Solidity.
-    /// Optional — can be null or empty.
-    /// </summary>
-    public SolidityMemoryLocation Location { get; set; }
-
-    /// <summary>
-    /// The name of the variable being assigned.
-    /// </summary>
-    public string Name { get; set; }
-
-    /// <summary>
-    /// The value or constructor parameters used for instantiation.
-    /// Example: "1, 2" or "SomeStruct({a:1, b:2})"
-    /// </summary>
-    public string Value { get; set; }
+    public class NewObjectAssignmentStatement : AssignmentStatementBase
+    {
+        public TypeReference DataType { get; set; }
+        public SolidityMemoryLocation Location { get; set; }
+        public string Name { get; set; }
+        public string Value { get; set; }
+        
+        protected override string TemplateBaseName => "NewObjectStatement";
+        
+        public NewObjectAssignmentStatement(string name, TypeReference dataType, string value, SolidityMemoryLocation location = SolidityMemoryLocation.None)
+        {
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            DataType = dataType ?? throw new ArgumentNullException(nameof(dataType));
+            Value = value ?? throw new ArgumentNullException(nameof(value));
+            Location = location;
+            Target = name;
+        }
+        
+        public override void ProcessProperties(Dictionary<string, object> properties)
+        {
+            base.ProcessProperties(properties);
+            
+            // process data type
+            if (properties.ContainsKey("DataType") && properties["DataType"] is TypeReference dataType)
+            {
+                properties["DataType"] = SolidityReferenceTypeSyntaxHelper.RenderTypeReference(dataType);
+            }
+            
+            // process memory location
+            if (properties.ContainsKey("Location") && properties["Location"] is SolidityMemoryLocation location && 
+                location != SolidityMemoryLocation.None)
+            {
+                properties["Location"] = location.ToString().ToLowerInvariant();
+            }
+            else
+            {
+                properties["Location"] = string.Empty;
+            }
+        }
+    }
 }

@@ -1,4 +1,4 @@
-﻿    constructor({{parameters}}) {{baseConstructors}}
+﻿constructor({{parameters}}) {{baseConstructors}}
     {
        {{~ for assignment in assignments ~}}
           {{assignment}}

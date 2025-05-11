@@ -1,12 +1,4 @@
-﻿{{ "\t" }}modifier {{Name}}
-{{- if Parameters.size > 0 -}}(
-    {{- for param in Parameters -}}
-        {{- param -}}
-        {{- if for.last == false}}, {{end -}}
-    {{- end -}}
-    )
-{{- end -}}
- {
-    {{ "\t" }}  {{Body}}
-    {{ "\t" }}  _;
-{{ "\t" }}}
+﻿modifier {{Name}}() {
+    {{Body}}
+    _;
+    }

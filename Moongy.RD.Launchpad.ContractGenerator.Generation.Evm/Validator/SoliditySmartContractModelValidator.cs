@@ -1,5 +1,4 @@
-﻿
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels;
+﻿using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Errors;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Events;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Modifiers;
@@ -20,7 +19,8 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Validator
 
         private void ValidateErrors(IEnumerable<ErrorModel> errors, string contractName) 
         {
-            throw new NotImplementedException();
+            if (errors.Count() != errors.DistinctBy(e => e.Name).Count())
+                throw new DuplicateException("Contract", contractName, "errors");
         }
         
         private void ValidateEvents(IEnumerable<EventModel> events, string contractName) 
@@ -31,12 +31,14 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Validator
 
         private void ValidateModifiers(IEnumerable<ModifierModel> modifiers, string contractName) 
         {
-            throw new NotImplementedException();
+            if (modifiers.Count() != modifiers.DistinctBy(m => m.Name).Count())
+                throw new DuplicateException("Contract", contractName, "modifiers");
         }
 
         private void ValidateStateProperties(IEnumerable<StatePropertyModel> properties, string contractName)
         {
-            throw new NotImplementedException();
+            if (properties.Count() != properties.DistinctBy(p => p.Name).Count())
+                throw new DuplicateException("Contract", contractName, "state properties");
         }
     }
 }

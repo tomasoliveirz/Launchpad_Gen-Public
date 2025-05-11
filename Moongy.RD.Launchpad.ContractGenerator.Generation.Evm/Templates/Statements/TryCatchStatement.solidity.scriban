@@ -1,25 +1,25 @@
-﻿try {{ Call }}{{~ if ReturnType ~}} returns ({{ ReturnType }} {{ ReturnVariable }}){{~ end ~}} {
+﻿try {{ExternalCall}} {{~ if ReturnType ~}}returns ({{ReturnType}} {{ReturnVariable}}){{~ end ~}} {
 {{~ for statement in SuccessStatements ~}}
-    {{ statement }}
+    {{statement}}
 {{~ end ~}}
 }
 {{~ for clause in ErrorCatchClauses ~}}
 {{~ if clause.Type == "Error" ~}}
-catch Error(string memory {{ clause.Variable }}) {
+catch Error(string memory {{clause.Variable}}) {
 {{~ for statement in clause.Statements ~}}
-    {{ statement }}
+    {{statement}}
 {{~ end ~}}
 }
 {{~ else if clause.Type == "Panic" ~}}
-catch Panic(uint {{ clause.Variable }}) {
+catch Panic(uint {{clause.Variable}}) {
 {{~ for statement in clause.Statements ~}}
-    {{ statement }}
+    {{statement}}
 {{~ end ~}}
 }
 {{~ else ~}}
-catch (bytes memory {{ clause.Variable }}) {
+catch (bytes memory {{clause.Variable}}) {
 {{~ for statement in clause.Statements ~}}
-    {{ statement }}
+    {{statement}}
 {{~ end ~}}
 }
 {{~ end ~}}

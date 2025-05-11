@@ -1,5 +1,5 @@
 ﻿do {
 {{~ for statement in Body ~}}
-    {{ statement }}
+    {{statement}}
 {{~ end ~}}
-} while ({{ Condition }});
+} while ({{Condition}});
