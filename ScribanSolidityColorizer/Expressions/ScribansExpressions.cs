@@ -45,6 +45,13 @@ namespace ScribanSolidityColorizer.Expressions
             UsageExample = "{{ if variable is 'value' }} ... {{ end }}")]
         public const string Is = "is";
 
+
+        [ProgrammingLanguageExpression(
+            ScribanSolidityTokenTypes.ScribanOperator,
+            Description = "Literal value of false.",
+            UsageExample = "")]
+        public const string False = "false";
+
         // Automatic grouped collection
         public static readonly string[] All = GetAllConstants();
         private static string[] GetAllConstants()
