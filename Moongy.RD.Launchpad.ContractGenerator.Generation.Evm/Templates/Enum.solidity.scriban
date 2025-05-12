@@ -1,5 +1,0 @@
-﻿{{ "\t" }}enum {{Name}}{
-	{{- for value in Values -}}
-		{{- value -}}
-		{{- if for.last == false}}, {{end -}}
-	{{- end}}};

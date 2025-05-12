@@ -1,3 +1,0 @@
-{{ if Model.PropertyType == "Event" }}
-    event {{ Model.Name }}({{ for arg in Model.Arguments }}{{ arg.Type }} {{ if arg.IsIndexed }}indexed {{ end }}{{ arg.Name }}{{ if !for.last }}, {{ end }}{{ end }});
-{{ end }}

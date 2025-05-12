@@ -1,7 +1,0 @@
-{{ if Model }}
-  {{ for itm in Model }}
-    {{ if itm.Path }}
-import "{{ itm.Path }}";
-    {{ end }}
-  {{ end }}
-{{ end }}

@@ -1,5 +1,0 @@
-﻿{{~ if Arguments.size > 0 ~}}
-revert {{ Name }}({{ Arguments | array.join ", " }});
-{{~ else ~}}
-revert {{ Name }}();
-{{~ end ~}}

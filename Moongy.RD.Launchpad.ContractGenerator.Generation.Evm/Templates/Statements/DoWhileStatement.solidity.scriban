@@ -1,5 +1,0 @@
-﻿do {
-{{~ for statement in Body ~}}
-    {{statement}}
-{{~ end ~}}
-} while ({{Condition}});

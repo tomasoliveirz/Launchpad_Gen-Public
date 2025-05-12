@@ -1,5 +1,0 @@
-{{~ if Location ~}}
-{{Type}} {{Location}} {{Name}}{{~ if InitialValue ~}} = {{InitialValue}}{{~ end ~}};
-{{~ else ~}}
-{{Type}} {{Name}}{{~ if InitialValue ~}} = {{InitialValue}}{{~ end ~}};
-{{~ end ~}}

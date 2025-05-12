@@ -1,3 +1,0 @@
-{{ if Model.PropertyType == "None" }}
-{{ Model.DataType }}{{ if Model.Visibility }} {{ Model.Visibility | string.downcase }}{{ end }}{{ if Model.IsConstant }} constant{{ end }} {{ Model.Name }}{{ if Model.InitialValue }} = {{ Model.InitialValue }}{{ end }};
-{{ end }}

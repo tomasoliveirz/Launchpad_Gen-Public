@@ -1,4 +1,0 @@
-﻿modifier {{Name}}() {
-    {{Body}}
-    _;
-    }

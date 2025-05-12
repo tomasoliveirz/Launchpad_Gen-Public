@@ -1,5 +1,0 @@
-﻿unchecked {
-{{~ for statement in Body ~}}
-    {{ statement }}
-{{~ end ~}}
-}
