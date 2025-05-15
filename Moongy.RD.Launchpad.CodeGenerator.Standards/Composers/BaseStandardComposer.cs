@@ -16,7 +16,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers
 
             var module = new ModuleDefinition
             {
-                Name = standard.Name,
+                Name = standard.Name!,
                 Fields = fields
             };
 
