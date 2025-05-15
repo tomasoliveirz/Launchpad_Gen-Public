@@ -1433,7 +1433,6 @@ namespace WebApiV2.Controllers
             feeCondition.AddStatement(emitTransfer);
             
             // Add else block to fee condition
-            feeCondition.AddElseBlock();
             
             // Add statements to fee else block
             feeCondition.AddStatement(new AssignmentStatement { 
@@ -1663,5 +1662,673 @@ namespace WebApiV2.Controllers
             
             return sb.ToString();
         }
+        
+        [HttpGet("generate-erc20-with-receive-fallback")]
+    public ActionResult GenerateERC20WithReceiveFallback()
+    {
+        #region Types
+        // Define basic types
+        var uint256Type = new SimpleTypeReference(SolidityDataTypeEnum.Uint256);
+        var uint8Type = new SimpleTypeReference(SolidityDataTypeEnum.Uint8);
+        var stringType = new SimpleTypeReference(SolidityDataTypeEnum.String);
+        var addressType = new SimpleTypeReference(SolidityDataTypeEnum.Address);
+        var boolType = new SimpleTypeReference(SolidityDataTypeEnum.Bool);
+        var bytesType = new SimpleTypeReference(SolidityDataTypeEnum.Bytes);
+
+        // Define array types
+        var addressArrayType = new ArrayTypeReference(addressType);
+        var uint256ArrayType = new ArrayTypeReference(uint256Type);
+
+        // Define mapping types
+        var balancesType = new MappingTypeReference(addressType, uint256Type);
+        var allowancesType = new MappingTypeReference(addressType, 
+                            new MappingTypeReference(addressType, uint256Type));
+        #endregion
+
+        #region State Properties
+        // Basic token properties
+        var nameProperty = new StatePropertyModel 
+        { 
+            Name = "_name", 
+            Type = stringType, 
+            Visibility = SolidityVisibilityEnum.Private
+        };
+
+        var symbolProperty = new StatePropertyModel 
+        { 
+            Name = "_symbol", 
+            Type = stringType, 
+            Visibility = SolidityVisibilityEnum.Private
+        };
+
+        var decimalsProperty = new StatePropertyModel 
+        { 
+            Name = "_decimals", 
+            Type = uint8Type, 
+            Visibility = SolidityVisibilityEnum.Private,
+            IsConstant = true,
+            InitialValue = "18"
+        };
+
+        var totalSupplyProperty = new StatePropertyModel 
+        { 
+            Name = "_totalSupply", 
+            Type = uint256Type, 
+            Visibility = SolidityVisibilityEnum.Private
+        };
+
+        var balancesProperty = new StatePropertyModel 
+        { 
+            Name = "_balances", 
+            Type = balancesType, 
+            Visibility = SolidityVisibilityEnum.Private
+        };
+
+        var allowancesProperty = new StatePropertyModel 
+        { 
+            Name = "_allowances", 
+            Type = allowancesType, 
+            Visibility = SolidityVisibilityEnum.Private
+        };
+
+        var ownerProperty = new StatePropertyModel 
+        { 
+            Name = "_owner", 
+            Type = addressType, 
+            Visibility = SolidityVisibilityEnum.Private
+        };
+
+        var treasuryProperty = new StatePropertyModel 
+        { 
+            Name = "_treasury", 
+            Type = addressType, 
+            Visibility = SolidityVisibilityEnum.Private
+        };
+
+        var feeRateProperty = new StatePropertyModel
+        {
+            Name = "_feeRate",
+            Type = uint256Type,
+            Visibility = SolidityVisibilityEnum.Private,
+            InitialValue = "0"
+        };
+
+        var pausedProperty = new StatePropertyModel
+        {
+            Name = "_paused",
+            Type = boolType,
+            Visibility = SolidityVisibilityEnum.Private,
+            InitialValue = "false"
+        };
+
+        var stateProperties = new List<StatePropertyModel>
+        {
+            nameProperty,
+            symbolProperty,
+            decimalsProperty,
+            totalSupplyProperty,
+            balancesProperty,
+            allowancesProperty,
+            ownerProperty,
+            treasuryProperty,
+            feeRateProperty,
+            pausedProperty
+        };
+        #endregion
+
+        #region Events
+        // Transfer event
+        var fromParam = new EventParameterModel 
+        { 
+            Name = "from", 
+            Type = addressType, 
+            IsIndexed = true 
+        };
+        
+        var toParam = new EventParameterModel 
+        { 
+            Name = "to", 
+            Type = addressType, 
+            IsIndexed = true 
+        };
+        
+        var valueParam = new EventParameterModel 
+        { 
+            Name = "value", 
+            Type = uint256Type 
+        };
+        
+        var transferEvent = new EventModel 
+        { 
+            Name = "Transfer", 
+            Parameters = new List<EventParameterModel> { fromParam, toParam, valueParam } 
+        };
+
+        // Approval event
+        var ownerParam = new EventParameterModel 
+        { 
+            Name = "owner", 
+            Type = addressType, 
+            IsIndexed = true 
+        };
+        
+        var spenderParam = new EventParameterModel 
+        { 
+            Name = "spender", 
+            Type = addressType, 
+            IsIndexed = true 
+        };
+        
+        var approvalEvent = new EventModel 
+        { 
+            Name = "Approval", 
+            Parameters = new List<EventParameterModel> { ownerParam, spenderParam, valueParam } 
+        };
+
+        // Fee changed event
+        var oldFeeParam = new EventParameterModel
+        {
+            Name = "oldFee",
+            Type = uint256Type
+        };
+
+        var newFeeParam = new EventParameterModel
+        {
+            Name = "newFee",
+            Type = uint256Type
+        };
+
+        var feeChangedEvent = new EventModel
+        {
+            Name = "FeeChanged",
+            Parameters = new List<EventParameterModel> { oldFeeParam, newFeeParam }
+        };
+
+        // Paused events
+        var pausedEvent = new EventModel
+        {
+            Name = "Paused",
+            Parameters = new List<EventParameterModel> { }
+        };
+
+        var unpausedEvent = new EventModel
+        {
+            Name = "Unpaused",
+            Parameters = new List<EventParameterModel> { }
+        };
+
+        var events = new List<EventModel> 
+        { 
+            transferEvent, 
+            approvalEvent, 
+            feeChangedEvent,
+            pausedEvent,
+            unpausedEvent
+        };
+        #endregion
+
+        #region Errors
+        var addressErrorParam = new ErrorParameterModel 
+        { 
+            Name = "account", 
+            Type = addressType 
+        };
+        
+        var zeroAddressError = new ErrorModel 
+        { 
+            Name = "ZeroAddress", 
+            Parameters = new List<ErrorParameterModel> { addressErrorParam } 
+        };
+
+        var amountErrorParam = new ErrorParameterModel 
+        { 
+            Name = "available", 
+            Type = uint256Type 
+        };
+        
+        var requiredErrorParam = new ErrorParameterModel 
+        { 
+            Name = "required", 
+            Type = uint256Type 
+        };
+        
+        var insufficientBalanceError = new ErrorModel 
+        { 
+            Name = "InsufficientBalance", 
+            Parameters = new List<ErrorParameterModel> { amountErrorParam, requiredErrorParam } 
+        };
+
+        var pausedError = new ErrorModel
+        {
+            Name = "Paused",
+            Parameters = new List<ErrorParameterModel> { }
+        };
+
+        var notOwnerError = new ErrorModel
+        {
+            Name = "NotOwner",
+            Parameters = new List<ErrorParameterModel> { }
+        };
+
+        var transferFailedError = new ErrorModel
+        {
+            Name = "TransferFailed",
+            Parameters = new List<ErrorParameterModel> { }
+        };
+
+        var errors = new List<ErrorModel> 
+        { 
+            zeroAddressError, 
+            insufficientBalanceError,
+            pausedError,
+            notOwnerError,
+            transferFailedError
+        };
+        #endregion
+
+        #region Modifiers
+        var onlyOwnerModifier = new ModifierModel 
+        { 
+            Name = "onlyOwner", 
+            Body = "require(msg.sender == _owner, \"Caller is not the owner\");" 
+        };
+
+        var whenNotPausedModifier = new ModifierModel
+        {
+            Name = "whenNotPaused",
+            Body = "require(!_paused, \"Contract is paused\");"
+        };
+
+        var whenPausedModifier = new ModifierModel
+        {
+            Name = "whenPaused",
+            Body = "require(_paused, \"Contract is not paused\");"
+        };
+
+        var modifiers = new List<ModifierModel> 
+        { 
+            onlyOwnerModifier, 
+            whenNotPausedModifier,
+            whenPausedModifier
+        };
+        #endregion
+
+        #region Constructor
+        var nameParameter = new ConstructorParameterModel 
+        { 
+            Name = "name_", 
+            Type = stringType, 
+            Index = 0,
+            AssignedTo = "_name"
+        };
+        
+        var symbolParameter = new ConstructorParameterModel 
+        { 
+            Name = "symbol_", 
+            Type = stringType, 
+            Index = 1,
+            AssignedTo = "_symbol"
+        };
+        
+        var initialOwnerParameter = new ConstructorParameterModel 
+        { 
+            Name = "initialOwner", 
+            Type = addressType, 
+            Index = 2,
+            AssignedTo = "_owner"
+        };
+
+        var constructorParameters = new List<ConstructorParameterModel>
+        {
+            nameParameter,
+            symbolParameter,
+            initialOwnerParameter
+        };
+        #endregion
+
+        #region Functions
+        // Create ERC20 functions (just basic functions for now, will add fallback/receive later)
+        var functions = new List<BaseFunctionModel>();
+        
+        // Standard ERC20 functions (abbreviated for example)
+        var transferFunction = CreateTransferFunction(addressType, uint256Type, boolType, whenNotPausedModifier);
+        functions.Add(transferFunction);
+        
+        var approveFunction = CreateApproveFunction(addressType, uint256Type, boolType, whenNotPausedModifier);
+        functions.Add(approveFunction);
+        
+        var balanceOfFunction = CreateBalanceOfFunction(addressType, uint256Type);
+        functions.Add(balanceOfFunction);
+        
+        var nameFunction = CreateSimpleGetterFunction("name", "_name", stringType);
+        functions.Add(nameFunction);
+        
+        var symbolFunction = CreateSimpleGetterFunction("symbol", "_symbol", stringType);
+        functions.Add(symbolFunction);
+        #endregion
+
+        #region Contract
+        // Create the contract model
+        var contract = new SolidityContractModel
+        {
+            Name = "EnhancedERC20WithFallback",
+            StateProperties = stateProperties,
+            Events = events,
+            Errors = errors,
+            Modifiers = modifiers,
+            ConstructorParameters = constructorParameters,
+            Functions = functions
+        };
+        #endregion
+
+        #region Add Fallback and Receive Functions
+        // Add the fallback and receive functions to the contract
+        AddFallbackAndReceiveFunctions(contract);
+        #endregion
+
+        #region File Header
+        // Create file header
+        var minVersion = new SoftwareVersion { Major = 0, Minor = 8, Revision = 20 };
+        var maxVersion = new SoftwareVersion { Major = 0, Minor = 8, Revision = 20 };
+        var fileHeader = new FileHeaderModel
+        {
+            License = SpdxLicense.MIT,
+            Version = new VersionModel { Minimum = minVersion, Maximum = maxVersion }
+        };
+        #endregion
+
+        #region File
+        // Create the Solidity file
+        var file = new SolidityFile
+        {
+            FileHeader = fileHeader,
+            Contracts = new[] { contract }
+        };
+        #endregion
+
+        #region Render
+        // Generate complete Solidity code
+        var solidityCode = GenerateSolidityCode(file);
+        #endregion
+
+        return Ok(solidityCode);
     }
+
+    private void AddFallbackAndReceiveFunctions(SolidityContractModel contract)
+    {
+        // Criação de uma função Fallback básica sem parâmetros
+        var simpleFallback = new FallbackFunctionModel()
+            .MakePayable(); // Torna a função payable
+                
+        // Adicionar uma lógica de rastreamento de chamadas
+        var callCounterIncrement = new AssignmentStatement
+        {
+            Target = "_fallbackCallCount",
+            Value = "_fallbackCallCount + 1"
+        };
+                    
+        simpleFallback.AddStatement(callCounterIncrement);
+                
+        // Adicionar log de evento
+        var fallbackCalledEvent = new EmitStatement("FallbackCalled")
+            .AddStringArgument("msg.sender")
+            .AddStringArgument("msg.value");
+        simpleFallback.AddStatement(fallbackCalledEvent);
+                
+        // Criação de uma função Fallback mais complexa com parâmetros     
+        var advancedFallback = FallbackFunctionModel.CreateWithBytesCalldata();
+                
+        // Adicionar modificador
+        var whenNotPausedModifier = contract.Modifiers.FirstOrDefault(m => m.Name == "whenNotPaused");
+        if (whenNotPausedModifier != null)
+        {
+            advancedFallback.Modifiers.Add(whenNotPausedModifier);
+        }
+                
+        // Adicionar verificações de condição
+        var notZeroAddressComparison = ExpressionModel.NotEqual("msg.sender", "address(0)");
+        var notContractComparison = ExpressionModel.NotEqual("msg.sender.code.length", "0");
+        advancedFallback.WithConditions(new[] { notZeroAddressComparison, notContractComparison }, "Invalid caller");
+                
+        // Adicionar processamento de dados
+        advancedFallback.AddStatement(new VariableDeclarationStatement(
+            new SimpleTypeReference(SolidityDataTypeEnum.Bytes),
+            "result",
+            "abi.encodePacked(msg.sender, block.timestamp, data)",
+            SolidityMemoryLocation.Memory
+        ));
+                
+        // Adicionar log de evento
+        var fallbackDataEvent = new EmitStatement("FallbackData")
+            .AddStringArgument("msg.sender")
+            .AddStringArgument("data.length");
+        advancedFallback.AddStatement(fallbackDataEvent);
+                
+        // Adicionar retorno
+        advancedFallback.AddStatement(new ReturnStatement("result"));
+                
+        // Criação de uma função Receive que registra o recebimento de ETH
+        var simpleReceive = ReceiveFunctionModel.CreateWithEvent("EtherReceived", "msg.sender", "msg.value");
+                
+        // Adicionar verificação de valor mínimo
+        simpleReceive.WithValueCheck("0.01 ether");
+                
+        // Adicionar atualização de saldo
+        simpleReceive.AddStatement(new AssignmentStatement
+        {
+            Target = "_etherBalance",
+            Value = "_etherBalance + msg.value"
+        });
+                
+        // Criação de uma função Receive para distribuição automática
+        var distributionReceive = new ReceiveFunctionModel();
+                
+        // Adicionar condição de quantidade mínima
+        var minimumEthComparison = ExpressionModel.GreaterOrEqual("msg.value", "1 ether");
+        var requireStatement = distributionReceive.AddStatement(new RequireStatement
+        {
+            Condition = minimumEthComparison,
+            Message = "Minimum 1 ETH required"
+        });
+        // Calcular valores para distribuição
+        distributionReceive.AddStatement(new VariableDeclarationStatement(
+            new SimpleTypeReference(SolidityDataTypeEnum.Uint256),
+            "ownerShare",
+            "msg.value * 70 / 100",
+            null
+        ));
+                
+        distributionReceive.AddStatement(new VariableDeclarationStatement(
+            new SimpleTypeReference(SolidityDataTypeEnum.Uint256),
+            "treasuryShare",
+            "msg.value - ownerShare",
+            null
+        ));
+                
+        // Adicionar lógica condicional avançada
+        var ownerSet = ExpressionModel.NotEqual("_owner", "address(0)");
+        var treasurySet = ExpressionModel.NotEqual("_treasury", "address(0)");
+                
+        // Criar condições aninhadas
+        var distributionCondition = ConditionStatementModel.IfElse(
+            ownerSet,
+            new StatementModel[] {
+                // Se o owner está setado, enviar a parte do owner
+                new AssignmentStatement
+                {
+                    Target = "(bool success,)",
+                    Value = "payable(_owner).call{value: ownerShare}(\"\")"
+                },
+                new RequireStatement
+                {
+                    Condition = ExpressionModel.Equal("success", "true"),
+                    Message = "Owner transfer failed"
+                },
+                // Verificar se a treasury está setada
+                ConditionStatementModel.IfElse(
+                    treasurySet,
+                    new StatementModel[] {
+                        // Enviar para treasury
+                        new AssignmentStatement
+                        {
+                            Target = "(bool treasurySuccess,)",
+                            Value = "payable(_treasury).call{value: treasuryShare}(\"\")"
+                        },
+                                            
+                        new RequireStatement
+                        {
+                            Condition = ExpressionModel.Equal("treasurySuccess", "true"),
+                            Message = "Treasury transfer failed"
+                        },
+                    },
+                    new StatementModel[] {
+                        // Manter na conta do contrato
+                        new AssignmentStatement
+                        {
+                            Target = "_unclaimedBalance",
+                            Value = "_unclaimedBalance + treasuryShare"
+                        }
+                    }
+                )
+            },
+            new StatementModel[] {
+                // Se owner não está setado, manter tudo no contrato
+                new AssignmentStatement
+                {
+                    Target = "_unclaimedBalance",
+                    Value = "_unclaimedBalance + msg.value"
+                },
+            }
+        );
+                
+        distributionReceive.AddStatement(distributionCondition);
+                
+        // Adicionar as funções ao contrato
+        contract.Functions.Add(simpleFallback);
+        contract.Functions.Add(advancedFallback);
+        contract.Functions.Add(simpleReceive);
+        contract.Functions.Add(distributionReceive);
+                
+        // Adicionar variáveis de estado necessárias
+        var uint256Type = new SimpleTypeReference(SolidityDataTypeEnum.Uint256);
+        var addressType = new SimpleTypeReference(SolidityDataTypeEnum.Address);
+                
+        if (!contract.StateProperties.Any(p => p.Name == "_fallbackCallCount"))
+        {
+            contract.StateProperties.Add(new StatePropertyModel 
+            {
+                Name = "_fallbackCallCount",
+                Type = uint256Type,
+                Visibility = SolidityVisibilityEnum.Private,
+                InitialValue = "0"
+            });
+        }
+                
+        if (!contract.StateProperties.Any(p => p.Name == "_etherBalance"))
+        {
+            contract.StateProperties.Add(new StatePropertyModel 
+            {
+                Name = "_etherBalance",
+                Type = uint256Type,
+                Visibility = SolidityVisibilityEnum.Private,
+                InitialValue = "0"
+            });
+        }
+                
+        if (!contract.StateProperties.Any(p => p.Name == "_unclaimedBalance"))
+        {
+            contract.StateProperties.Add(new StatePropertyModel 
+            {
+                Name = "_unclaimedBalance",
+                Type = uint256Type,
+                Visibility = SolidityVisibilityEnum.Private,
+                InitialValue = "0"
+            });
+        }
+                
+        if (!contract.StateProperties.Any(p => p.Name == "_treasury"))
+        {
+            contract.StateProperties.Add(new StatePropertyModel 
+            {
+                Name = "_treasury",
+                Type = addressType,
+                Visibility = SolidityVisibilityEnum.Private
+            });
+        }
+                
+        // Adicionar eventos necessários
+        bool hasFallbackCalledEvent = contract.Events.Any(e => e.Name == "FallbackCalled");
+        if (!hasFallbackCalledEvent)
+        {
+            var senderParam = new EventParameterModel 
+            {
+                Name = "sender",
+                Type = addressType,
+                IsIndexed = true
+            };
+                    
+            var valueParam = new EventParameterModel 
+            {
+                Name = "value",
+                Type = uint256Type
+            };
+                    
+            contract.Events.Add(new EventModel 
+            {
+                Name = "FallbackCalled",
+                Parameters = new List<EventParameterModel> { senderParam, valueParam }
+            });
+        }
+                
+        bool hasFallbackDataEvent = contract.Events.Any(e => e.Name == "FallbackData");
+        if (!hasFallbackDataEvent)
+        {
+            var senderParam = new EventParameterModel 
+            {
+                Name = "sender",
+                Type = addressType,
+                IsIndexed = true
+            };
+                    
+            var dataLengthParam = new EventParameterModel 
+            {
+                Name = "dataLength",
+                Type = uint256Type
+            };
+                    
+            contract.Events.Add(new EventModel 
+            {
+                Name = "FallbackData",
+                Parameters = new List<EventParameterModel> { senderParam, dataLengthParam }
+            });
+        }
+                
+        bool hasEtherReceivedEvent = contract.Events.Any(e => e.Name == "EtherReceived");
+        if (!hasEtherReceivedEvent)
+        {
+            var senderParam = new EventParameterModel 
+            {
+                Name = "sender",
+                Type = addressType,
+                IsIndexed = true
+            };
+                    
+            var valueParam = new EventParameterModel 
+            {
+                Name = "value",
+                Type = uint256Type
+            };
+                    
+            contract.Events.Add(new EventModel 
+            {
+                Name = "EtherReceived",
+                Parameters = new List<EventParameterModel> { senderParam, valueParam }
+            });
+        }
+    }
+    
+        
+    }
+    
+    
 }

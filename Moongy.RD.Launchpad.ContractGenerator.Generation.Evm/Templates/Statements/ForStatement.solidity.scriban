@@ -1,5 +1,6 @@
-﻿for ({{Initialization}}; {{Condition}}; {{Iterator}}) {
-{{~ for statement in Body ~}}
-    {{statement}}
-{{~ end ~}}
-}
+﻿
+    for ({{- Initialization -}}; {{- Condition -}}; {{- Iterator -}}) {
+    {{~ for statement in Body ~}}
+        {{statement}}
+    {{~ end ~}}
+    }

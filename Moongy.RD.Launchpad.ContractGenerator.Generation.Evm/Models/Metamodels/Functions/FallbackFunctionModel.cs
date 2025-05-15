@@ -1,10 +1,17 @@
+using System;
+using System.Collections.Generic;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Enums;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Helpers;
-using System;
-using System.Linq;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Parameters;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Statements;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Statements.Expressions;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.TypeReferences;
 
 namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Functions
 {
+    /// <summary>
+    /// Representa uma função fallback em Solidity.
+    /// </summary>
     public class FallbackFunctionModel : BaseFunctionModel
     {
         public override string TemplateName => "Fallback";
@@ -15,6 +22,57 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels
             Visibility = SolidityVisibilityEnum.External;
         }
         
+        public static FallbackFunctionModel CreateWithBytesCalldata()
+        {
+            var model = new FallbackFunctionModel();
+            var bytesType = new SimpleTypeReference(SolidityDataTypeEnum.Bytes);
+            model.Parameters.Add(new FunctionParameterModel
+            {
+                Name = "data",
+                Type = bytesType,
+                Location = SolidityMemoryLocation.Calldata,
+                Index = 0
+            }); 
+            
+            model.ReturnParameters.Add(new ReturnParameterModel
+            {
+                Name = "result",
+                Type = bytesType,
+                Location = SolidityMemoryLocation.Memory,
+                Index = 0
+            });
+            
+            return model;
+        }
+
+        public static FallbackFunctionModel CreateWithErrorHandling(string errorName)
+        {
+            var model = new FallbackFunctionModel();
+            model.CustomError = errorName;
+            return model;
+        }
+        
+        
+        public FallbackFunctionModel WithConditions(IEnumerable<ExpressionModel> conditions, string errorMessage)
+        {
+            foreach (ExpressionModel condition in conditions)
+            {
+                var requireStatement = new RequireStatement
+                {
+                    Condition = condition,
+                    Message = errorMessage
+                };
+                AddStatement(requireStatement);
+            }
+            return this;
+        }
+        
+        public FallbackFunctionModel MakePayable()
+        {
+            Mutability = SolidityFunctionMutabilityEnum.Payable;
+            return this;
+        }
+
         public override void Validate()
         {
             if (Visibility != SolidityVisibilityEnum.External)
@@ -64,12 +122,6 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels
             {
                 throw new ArgumentException("Fallback function without parameters cannot have return values");
             }
-        }
-        
-        public FallbackFunctionModel MakePayable()
-        {
-            Mutability = SolidityFunctionMutabilityEnum.Payable;
-            return this;
         }
     }
 }
