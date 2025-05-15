@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Interfaces;
-using Moongy.RD.Launchpad.Core.Validators;
+using Moongy.RD.Launchpad.CodeGenerator.Core.Validators.Functions;
 
-namespace Moongy.RD.Launchpad.CodeGenerator.Core.Validators
+namespace Moongy.RD.Launchpad.CodeGenerator.Core.Validators.FileComponents
 {
-    public class InterfaceValidator : LaunchpadValidator<InterfaceDefinition>
+    public class InterfaceValidator : ContextModelValidator<InterfaceDefinition>
     {
-        public FunctionSignatureValidator _functionSignatureValidator;
+        public FunctionSignatureValidator? _functionSignatureValidator;
 
 
         public override void Validate(InterfaceDefinition iface)
@@ -25,7 +20,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Core.Validators
                 .Where(g => g.Count() > 1)
                 .Select(g => g.Key)
                 .ToList();
-            if (dupNames.Any())
+            if (dupNames.Count != 0)
                 throw new ValidationException(
                     $"Duplicate function signatures in interface '{iface.Name}': {string.Join(", ", dupNames)}");
 
@@ -36,7 +31,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Core.Validators
                     .Where(g => g.Count() > 1)
                     .Select(g => g.Key)
                     .ToList();
-                if (paramDups.Any())
+                if (paramDups.Count != 0)
                     throw new ValidationException(
                         $"Duplicate parameter names in signature '{sig.Name}': {string.Join(", ", paramDups)}");
 
@@ -45,7 +40,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Core.Validators
                     .Where(g => g.Count() > 1)
                     .Select(g => g.Key)
                     .ToList();
-                if (returnDups.Any())
+                if (returnDups.Count != 0)
                     throw new ValidationException(
                         $"Duplicate return parameter names in signature '{sig.Name}': {string.Join(", ", returnDups)}");
             }

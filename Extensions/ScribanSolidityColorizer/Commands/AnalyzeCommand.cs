@@ -1,10 +1,8 @@
 ﻿using System;
 using System.ComponentModel.Design;
-using System.Globalization;
 using System.Net.Http.Headers;
 using System.Net.Http;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using EnvDTE;
 using EnvDTE80;
@@ -57,7 +55,6 @@ namespace ScribanSolidityColorizer.Commands
             Instance = new AnalyzeCommand(package, commandService);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "VSTHRD100:Avoid async void methods", Justification = "<Pending>")]
         private async void Execute(object sender, EventArgs e)
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
@@ -88,7 +85,7 @@ namespace ScribanSolidityColorizer.Commands
                 return;
             }
 
-            ShowAnalysisWindow(responseText);
+            await ShowAnalysisWindowAsync(responseText);
         }
 
         private string GetApiKey()
@@ -138,8 +135,7 @@ namespace ScribanSolidityColorizer.Commands
         }
 
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "VSTHRD100:Avoid async void methods", Justification = "<Pending>")]
-        private async void ShowAnalysisWindow(string analysisText)
+        private async Task ShowAnalysisWindowAsync(string analysisText)
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 

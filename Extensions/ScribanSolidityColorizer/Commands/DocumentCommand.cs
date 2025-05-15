@@ -1,10 +1,8 @@
 ﻿using System;
 using System.ComponentModel.Design;
-using System.Globalization;
 using System.Net.Http.Headers;
 using System.Net.Http;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using EnvDTE;
 using EnvDTE80;

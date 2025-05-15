@@ -4,17 +4,18 @@ using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Directives;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Imports;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Interfaces;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Modules;
-using Moongy.RD.Launchpad.Core.Validators;
+using Moongy.RD.Launchpad.CodeGenerator.Core.Validators.FileComponents;
+using Moongy.RD.Launchpad.CodeGenerator.Core.Validators.ModuleValidators;
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Core.Validators;
-public class ModuleFileValidator : LaunchpadValidator<ModuleFileDefinition>
+public class ModuleFileValidator : ContextModelValidator<ModuleFileDefinition>
 {
-    private DirectiveValidator _directiveValidator;
-    private ImportValidator _importValidator;
-    private EnumValidator _enumValidator;
-    private StructValidator _structValidator;
-    private InterfaceValidator _interfaceValidator;
-    private ModuleValidator _moduleValidator;
+    private DirectiveValidator? _directiveValidator;
+    private ImportValidator? _importValidator;
+    private EnumValidator? _enumValidator;
+    private StructValidator? _structValidator;
+    private InterfaceValidator? _interfaceValidator;
+    private ModuleValidator? _moduleValidator;
 
     public override void Validate(ModuleFileDefinition o)
     {
@@ -65,7 +66,7 @@ public class ModuleFileValidator : LaunchpadValidator<ModuleFileDefinition>
     }
 
 
-    private void ValidateDuplicates(ModuleFileDefinition o)
+    private static void ValidateDuplicates(ModuleFileDefinition o)
     {
         ValidateDuplicateDirectives(o.Directives);
         ValidateDuplicateImports(o.Imports);
@@ -98,7 +99,7 @@ public class ModuleFileValidator : LaunchpadValidator<ModuleFileDefinition>
         ValidateDuplicateModules(o.Modules);
     }
 
-    private void ValidateDuplicateDirectives(List<DirectiveDefinition> directives)
+    private static void ValidateDuplicateDirectives(List<DirectiveDefinition> directives)
     {
         var dupKinds = directives
         .GroupBy(x => x.Kind)
@@ -113,7 +114,7 @@ public class ModuleFileValidator : LaunchpadValidator<ModuleFileDefinition>
         }
     }
 
-    private void ValidateDuplicateImports(List<ImportDefinition> imports)
+    private static void ValidateDuplicateImports(List<ImportDefinition> imports)
     {
         var byPath = imports.GroupBy(i => i.Path, StringComparer.OrdinalIgnoreCase);
         foreach (var group in byPath)
@@ -139,7 +140,7 @@ public class ModuleFileValidator : LaunchpadValidator<ModuleFileDefinition>
                 .Where(g => g.Count() > 1)
                 .Select(g => g.Key)
                 .ToList();
-            if (aliasDuplicates.Any())
+            if (aliasDuplicates.Count != 0)
             {
                 throw new ValidationException(
                     $"Duplicate import aliases for '{path}': {string.Join(", ", aliasDuplicates)}");
@@ -151,7 +152,7 @@ public class ModuleFileValidator : LaunchpadValidator<ModuleFileDefinition>
                 .Where(g => g.Count() > 1)
                 .Select(g => g.Key)
                 .ToList();
-            if (nameDuplicates.Any())
+            if (nameDuplicates.Count != 0)
             {
                 throw new ValidationException(
                     $"Duplicate import names for '{path}': {string.Join(", ", nameDuplicates)}");
@@ -160,50 +161,38 @@ public class ModuleFileValidator : LaunchpadValidator<ModuleFileDefinition>
         }
     }
 
-    private void ValidateDuplicateEnums(List<EnumDefinition> enums)
+    private static void ValidateDuplicateEnums(List<EnumDefinition> enums)
     {
         var dups = enums
             .GroupBy(e => e.Name, StringComparer.OrdinalIgnoreCase)
             .Where(g => g.Count() > 1)
             .Select(g => g.Key)
             .ToList();
-        if (dups.Any())
+        if (dups.Count != 0)
             throw new ValidationException(
                 $"Duplicate enum names found: {string.Join(", ", dups)}");
     }
 
-    private void ValidateDuplicateStructs(List<StructDefinition> structs)
+    private static void ValidateDuplicateStructs(List<StructDefinition> structs)
     {
         var dups = structs
             .GroupBy(s => s.Name, StringComparer.OrdinalIgnoreCase)
             .Where(g => g.Count() > 1)
             .Select(g => g.Key)
             .ToList();
-        if (dups.Any())
+        if (dups.Count != 0)
             throw new ValidationException(
                 $"Duplicate struct names found: {string.Join(", ", dups)}");
     }
 
-    private void ValidateDuplicateInterfaces(List<InterfaceDefinition> ifaces)
-    {
-        var dups = ifaces
-            .GroupBy(i => i.Name, StringComparer.OrdinalIgnoreCase)
-            .Where(g => g.Count() > 1)
-            .Select(g => g.Key)
-            .ToList();
-        if (dups.Any())
-            throw new ValidationException(
-                $"Duplicate interface names found: {string.Join(", ", dups)}");
-    }
-
-    private void ValidateDuplicateModules(List<ModuleDefinition> modules)
+    private static void ValidateDuplicateModules(List<ModuleDefinition> modules)
     {
         var dups = modules
             .GroupBy(m => m.Name, StringComparer.OrdinalIgnoreCase)
             .Where(g => g.Count() > 1)
             .Select(g => g.Key)
             .ToList();
-        if (dups.Any())
+        if (dups.Count != 0)
             throw new ValidationException(
                 $"Duplicate module (contract/library/interface) names found: {string.Join(", ", dups)}");
     }

@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Moongy.RD.Launchpad.CodeGenerator.Core\Moongy.RD.Launchpad.CodeGenerator.Core.csproj" />
+    <ProjectReference Include="..\Moongy.RD.Launchpad.CodeGenerator.Standards\Moongy.RD.Launchpad.CodeGenerator.Standards.csproj" />
   </ItemGroup>
 
   <ItemGroup>

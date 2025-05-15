@@ -1,10 +1,7 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using Moongy.RD.Launchpad.CodeGenerator.Core.Attributes;
+﻿using System.ComponentModel.DataAnnotations;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Others;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Validators;
-using Moongy.RD.Launchpad.Core.Validators;
 
 namespace CoreTests
 {

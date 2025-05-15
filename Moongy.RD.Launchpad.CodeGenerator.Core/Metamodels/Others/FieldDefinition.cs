@@ -5,4 +5,5 @@ public class FieldDefinition
     public required TypeReference Type { get; set; }
     public required Visibility Visibility { get; set; }
     public bool IsImmutable { get; set; }
+    public string? Value { get; set; }
 }

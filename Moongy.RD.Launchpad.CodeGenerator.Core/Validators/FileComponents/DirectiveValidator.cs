@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Directives;
-using Moongy.RD.Launchpad.Core.Validators;
 
-namespace Moongy.RD.Launchpad.CodeGenerator.Core.Validators
+namespace Moongy.RD.Launchpad.CodeGenerator.Core.Validators.FileComponents
 {
-    public class DirectiveValidator : LaunchpadValidator<DirectiveDefinition>
+    public class DirectiveValidator : ContextModelValidator<DirectiveDefinition>
     {
         public override void Validate(DirectiveDefinition d)
         {

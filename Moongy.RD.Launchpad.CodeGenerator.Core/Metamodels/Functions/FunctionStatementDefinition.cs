@@ -41,10 +41,10 @@ public class FunctionStatementDefinition
 
     #region Trigger
     public TriggerDefinition? Trigger { get; set; }
-    public List<ExpressionDefinition> TriggerArguments { get; set; } = new List<ExpressionDefinition>();
+    public List<ExpressionDefinition> TriggerArguments { get; set; } = [];
     #endregion
 
     #region Return
-    public List<ExpressionDefinition> ReturnValues { get; set; } = new List<ExpressionDefinition>();
+    public List<ExpressionDefinition> ReturnValues { get; set; } = [];
     #endregion
 }

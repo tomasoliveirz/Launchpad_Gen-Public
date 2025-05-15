@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels;
-using Moongy.RD.Launchpad.Core.Validators;
 
-namespace Moongy.RD.Launchpad.CodeGenerator.Core.Validators
+namespace Moongy.RD.Launchpad.CodeGenerator.Core.Validators.FileComponents
 {
-    public class StructValidator : LaunchpadValidator<StructDefinition>
+    public class StructValidator : ContextModelValidator<StructDefinition>
     {
         public override void Validate(StructDefinition s)
         {
@@ -19,7 +13,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Core.Validators
                 .Where(g => g.Count() > 1)
                 .Select(g => g.Key)
                 .ToList();
-            if (duplicates.Any())
+            if (duplicates.Count != 0)
                 throw new ValidationException(
                     $"Duplicate struct fields in '{s.Name}': {string.Join(", ", duplicates)}");
         }

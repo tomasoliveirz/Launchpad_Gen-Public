@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Others
+﻿namespace Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Others
 {
     public class TriggerDefinition
     {

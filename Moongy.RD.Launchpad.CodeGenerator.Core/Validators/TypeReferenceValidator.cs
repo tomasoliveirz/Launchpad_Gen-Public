@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Others;
-using Moongy.RD.Launchpad.Core.Validators;
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Core.Validators;
-public class TypeReferenceValidator : LaunchpadValidator<TypeReference>
+public class TypeReferenceValidator : ContextModelValidator<TypeReference>
 {
     public override void Validate(TypeReference o)
     {

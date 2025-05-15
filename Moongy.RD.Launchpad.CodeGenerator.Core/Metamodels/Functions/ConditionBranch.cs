@@ -3,5 +3,5 @@
 public class ConditionBranch
 {
     public ExpressionDefinition? Condition { get; set; }
-    public List<FunctionStatementDefinition> Body { get; set; } = new List<FunctionStatementDefinition>();
+    public List<FunctionStatementDefinition> Body { get; set; } = [];
 }

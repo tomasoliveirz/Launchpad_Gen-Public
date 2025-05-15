@@ -1,4 +1,4 @@
-﻿namespace Moongy.RD.Launchpad.Core.Interfaces
+﻿namespace Moongy.RD.Launchpad.CodeGenerator.Core.Interfaces
 {
     public interface IValidator<T>
     {

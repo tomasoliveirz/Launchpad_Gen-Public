@@ -27,7 +27,7 @@ namespace ScribanSolidityColorizer
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [Guid(ScribanSolidityColorizerPackage.PackageGuidString)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    [ProvideToolWindow(typeof(ScribanSolidityColorizer.ToolWindows.AnalysisToolWindows))]
+    [ProvideToolWindow(typeof(ToolWindows.AnalysisToolWindows))]
     [ProvideOptionPage(typeof(OptionsPage), "ChatGPT Extension", "General", 0, 0, true)]
     public sealed class ScribanSolidityColorizerPackage : AsyncPackage
     {

@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Interfaces;
-using Moongy.RD.Launchpad.Core.Validators;
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Core.Validators.Functions
 {
-    public class FunctionSignatureValidator : LaunchpadValidator<FunctionSignature>
+    public class FunctionSignatureValidator : ContextModelValidator<FunctionSignature>
     {
         public override void Validate(FunctionSignature sig)
         {
@@ -22,7 +16,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Core.Validators.Functions
                 .Where(g => g.Count() > 1)
                 .Select(g => g.Key)
                 .ToList();
-            if (paramDups.Any())
+            if (paramDups.Count != 0)
                 throw new ValidationException(
                     $"Duplicate parameter names in function '{sig.Name}': {string.Join(", ", paramDups)}");
 
@@ -31,9 +25,10 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Core.Validators.Functions
                 .Where(g => g.Count() > 1)
                 .Select(g => g.Key)
                 .ToList();
-            if (returnDups.Any())
+            if (returnDups.Count != 0)
                 throw new ValidationException(
                     $"Duplicate return parameter names in function '{sig.Name}': {string.Join(", ", returnDups)}");
 
         }
     }
+}

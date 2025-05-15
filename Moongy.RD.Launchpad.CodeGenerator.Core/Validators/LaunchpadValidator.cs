@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Attributes;
-using Moongy.RD.Launchpad.Core.Interfaces;
+using Moongy.RD.Launchpad.CodeGenerator.Core.Interfaces;
 
-namespace Moongy.RD.Launchpad.Core.Validators;
+namespace Moongy.RD.Launchpad.CodeGenerator.Core.Validators;
 public class LaunchpadValidator<T> : IValidator<T>
 {
     /// <summary>
@@ -15,6 +15,8 @@ public class LaunchpadValidator<T> : IValidator<T>
         foreach (var property in properties)
         {
             var validatorAttributes = property.GetCustomAttributes<ValidationAttribute>();
+            var required = property.GetCustomAttribute<RequiredAttribute>();
+            if (required != null) required.Validate(o);
             foreach (var attribute in validatorAttributes)
             {
                 var val = property.GetValue(o);
@@ -24,3 +26,5 @@ public class LaunchpadValidator<T> : IValidator<T>
         }
     }
 }
+
+

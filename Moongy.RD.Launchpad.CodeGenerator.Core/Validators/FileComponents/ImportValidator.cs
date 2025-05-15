@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Imports;
-using Moongy.RD.Launchpad.Core.Validators;
 
-namespace Moongy.RD.Launchpad.CodeGenerator.Core.Validators
+namespace Moongy.RD.Launchpad.CodeGenerator.Core.Validators.FileComponents
 {
-    public class ImportValidator : LaunchpadValidator<ImportDefinition>
+    public class ImportValidator : ContextModelValidator<ImportDefinition>
     {
         private static readonly Regex IdentifierRegex = new(
             "^[A-Za-z_][A-Za-z0-9_]*$", RegexOptions.Compiled);
@@ -29,7 +23,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Core.Validators
 
             if(!string.IsNullOrWhiteSpace(i.Alias) && !string.IsNullOrWhiteSpace(i.Name))
             {
-                throw new ValidationException("Can't have an import with both name and alias";
+                throw new ValidationException("Can't have an import with both name and alias");
             }
         }
     }

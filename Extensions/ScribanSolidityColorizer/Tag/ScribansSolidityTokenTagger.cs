@@ -138,24 +138,7 @@ namespace ScribanSolidityColorizer.Tag
             }
         }
 
-        private IEnumerable<ITagSpan<ScribanSolidityTag>> ParseEntry(string text, StringBuilder buffer, int cursor, int peekModifer, int tokenLength, int tokenStart, ITextSnapshot snapshot)
-        {
-            var txt = buffer.ToString();
-            foreach (var tag in ParseSolidityBuffer(txt, tokenStart, snapshot)) yield return tag;
-            buffer.Clear();
-            string token = text.Substring(cursor, tokenLength);
-            yield return MakeTag(ScribanSolidityTokenTypes.ScribanWrapper, cursor, tokenLength, token, snapshot);
-        }
-
-        private IEnumerable<ITagSpan<ScribanSolidityTag>> ParseExit(string text, StringBuilder buffer, int cursor, int peekModifer, int tokenLength, int tokenStart, ITextSnapshot snapshot)
-        {
-            var txt = buffer.ToString();
-            foreach (var tag in ParseScribanBuffer(txt, tokenStart, snapshot)) yield return tag;
-            buffer.Clear();
-            string token = text.Substring(cursor, tokenLength+peekModifer);
-            yield return MakeTag(ScribanSolidityTokenTypes.ScribanWrapper, cursor, tokenLength, token, snapshot);
-        }
-
+       
 
         private IEnumerable<ITagSpan<ScribanSolidityTag>> ParseScribanBuffer(
     string text,
@@ -242,6 +225,7 @@ namespace ScribanSolidityColorizer.Tag
 
         private TagSpan<ScribanSolidityTag> MakeTag(ScribanSolidityTokenTypes kind, int absoluteStart, int length, string text,ITextSnapshot snapshot)
         {
+            if (string.IsNullOrEmpty(text)) return null;
             var span = new SnapshotSpan(snapshot, new Span(absoluteStart, length));
             return new TagSpan<ScribanSolidityTag>(span, new ScribanSolidityTag(kind));
         }
