@@ -19,6 +19,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Version;
+using System.Diagnostics.Contracts;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Prebuilds;
 
 namespace WebApiV2.Controllers
 {
@@ -26,6 +28,54 @@ namespace WebApiV2.Controllers
     [ApiController]
     public class GeneratorController : ControllerBase
     {
+
+        [HttpGet("generate-prebuilds")]
+        public ActionResult GeneratePrebuilds()
+
+        {
+            #region File Header
+            // Create file header
+            var minVersion = new SoftwareVersion { Major = 0, Minor = 8, Revision = 20 };
+            var maxVersion = new SoftwareVersion { Major = 0, Minor = 8, Revision = 20 };
+            var fileHeader = new FileHeaderModel
+            {
+                License = SpdxLicense.MIT,
+                Version = new VersionModel { Minimum = minVersion, Maximum = maxVersion }
+            };
+            #endregion
+
+            #region Contract
+            var permitContract = new SolidityContractModel
+            {
+                Name = "Permit",
+                Errors = new List<ErrorModel>
+        {
+            PermitPrebuild.ERC2612ExpiredSignature,
+            PermitPrebuild.ERC2612InvalidSigner
+        },
+                ConstructorParameters = new List<ConstructorParameterModel>
+        {
+            PermitPrebuild.EIP712ConstructorParameter
+        }
+            };
+            #endregion
+
+            #region File
+            var file = new SolidityFile
+            {
+                FileHeader = fileHeader,
+                Contracts = [permitContract]
+            };
+            #endregion
+
+            #region Render
+            // Generate complete Solidity code
+            var solidityCode = GenerateSolidityCode(file);
+            #endregion
+
+            return Ok(solidityCode);
+        }
+
         [HttpGet("generate-erc20")]
         public ActionResult GenerateERC20Contract()
         {

@@ -20,6 +20,7 @@ public enum SolidityDataTypeEnum
     String,
     Bytes,
     Bytes4,
+    Bytes32,
     Custom,
     Array,
     Mapping,
