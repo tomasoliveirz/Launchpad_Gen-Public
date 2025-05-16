@@ -7,7 +7,7 @@ public static class FeatureExtractor
 {
     public static FungibleTokenFeatureExtractor FungibleToken { get; set; } = new();
 
-
+    public static NonFungibleTokenFeatureExtractor NonFungibleToken { get; set; } = new();
     public static StandardEnum GetStandard(object form)
     {
         var standard = form.GetStandard() ?? throw new Exception("No standard found");
