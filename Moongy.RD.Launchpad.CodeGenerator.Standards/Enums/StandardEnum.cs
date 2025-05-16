@@ -5,5 +5,5 @@ public enum StandardEnum
     FungibleToken,
     AdvancedFungibleToken,
     SemiFungibleToken,
-    NonFugibleToken
+    NonFungibleToken
 }
