@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Tokenomics.Models.BuyBack
 {
-    internal class BuyBackTokenomicModel
+    public class BuyBackTokenomicModel
     {
         public byte BuyBackFeePercent { get; set; }
         public ulong BuyBackThreshold { get; set; }
