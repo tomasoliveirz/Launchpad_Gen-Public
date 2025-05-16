@@ -5,7 +5,7 @@ using Moongy.RD.Launchpad.CodeGenerator.Standards.ExtensionMethods;
 
 namespace CoreTests
 {
-    [Standard(Standard = StandardEnum.FungibleToken)]
+    [Standard(Source = StandardEnum.FungibleToken)]
     public class A
     {
         [StandardProperty(Source = StandardEnum.FungibleToken, Name = nameof(FungibleTokenModel.MaxSupply))]

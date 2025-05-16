@@ -12,8 +12,8 @@ public class ModuleDefinition
     public List<StructDefinition> Structs { get; set; } = [];
     public List<EnumDefinition> Enums { get; set; } = [];
     public List<FieldDefinition> Fields { get; set; } = [];
-    public List<FunctionDefinition> Functions { get; set; } = [];
     public List<TriggerDefinition> Triggers { get; set; } = [];
     public List<ModifierDefinition> Modifiers { get; set; } = [];
     public AccessControlDefinition? AccessControl { get; set; }
+    public List<FunctionDefinition> Functions { get; set; } = [];
 }

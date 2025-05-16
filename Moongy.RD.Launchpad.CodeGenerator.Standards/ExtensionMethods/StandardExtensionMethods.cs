@@ -9,7 +9,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.ExtensionMethods
         public static StandardEnum? GetStandardFromForm(this object form)
         {
             var standardAttr = form.GetType().GetCustomAttribute<StandardAttribute>();
-            return standardAttr?.Standard;
+            return standardAttr?.Source;
         }
 
         public static IEnumerable<(PropertyInfo, StandardPropertyAttribute)> GetStandardProperties(this object obj)

@@ -26,7 +26,6 @@ public class FunctionStatementDefinition
 
     #region ConditionLoop
     public ExpressionDefinition? LoopCondition { get; set; }
-
     #endregion
 
     #region Range Loop

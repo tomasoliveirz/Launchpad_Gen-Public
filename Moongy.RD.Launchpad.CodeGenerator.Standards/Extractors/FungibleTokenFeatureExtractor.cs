@@ -1,6 +1,6 @@
-﻿using Moongy.RD.Launchpad.CodeGenerator.Standards.Enums;
+﻿using Moongy.RD.Launchpad.CodeGenerator.Core.Interfaces;
+using Moongy.RD.Launchpad.CodeGenerator.Standards.Enums;
 using Moongy.RD.Launchpad.CodeGenerator.Standards.ExtensionMethods;
-using Moongy.RD.Launchpad.CodeGenerator.Standards.Interfaces;
 using Moongy.RD.Launchpad.CodeGenerator.Standards.Models;
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Extractors;

@@ -5,6 +5,6 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Attributes
     [AttributeUsage(AttributeTargets.Class)]
     public class StandardAttribute : Attribute
     {
-        public required StandardEnum Standard { get; set; }
+        public required StandardEnum Source { get; set; }
     }
 }
