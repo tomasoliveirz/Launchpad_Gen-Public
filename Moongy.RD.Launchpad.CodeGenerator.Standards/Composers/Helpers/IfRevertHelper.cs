@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Functions;
+﻿using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Functions;
+using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Others;
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Helpers
 {
@@ -11,43 +7,42 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Helpers
     {
         private readonly ExpressionDefinition _condition;
         private readonly string _errorName;
-        private readonly List<ExpressionDefinition> _errorArguments;
+        private readonly List<ParameterDefinition> _revertParameters;
 
-        public IfRevertHelper(ExpressionDefinition condition, string errorName, List<ExpressionDefinition> errorArguments)
+        public IfRevertHelper(ExpressionDefinition condition, string errorName, List<ParameterDefinition> revertParameters)
         {
             _condition = condition;
             _errorName = errorName;
-            _errorArguments = errorArguments;
+            _revertParameters = revertParameters;
         }
 
         public FunctionStatementDefinition Build()
         {
-            var revertCall = new ExpressionDefinition
+            var errorTrigger = new FunctionStatementDefinition
             {
-                Kind = ExpressionKind.FunctionCall,
-                Callee = new ExpressionDefinition { Identifier = _errorName },
-                Arguments = _errorArguments
-            };
-
-            var revertStatement = new FunctionStatementDefinition
-            {
-                Kind = FunctionStatementKind.Revert,
-                Expression = revertCall
+                Kind = FunctionStatementKind.Trigger,
+                Trigger = new TriggerDefinition
+                {
+                    Kind = TriggerKind.Error,
+                    Name = _errorName,
+                    Parameters = _revertParameters,
+                }
             };
 
             return new FunctionStatementDefinition
             {
                 Kind = FunctionStatementKind.Condition,
                 ConditionBranches = new List<ConditionBranch>
+        {
+            new ConditionBranch
             {
-                new ConditionBranch
-                {
-                    Condition = _condition,
-                    Body = new List<FunctionStatementDefinition> { revertStatement }
-                }
+                Condition = _condition,
+                Body = new List<FunctionStatementDefinition> { errorTrigger }
             }
+        }
             };
         }
+
     }
 
 }

@@ -41,6 +41,15 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Base
             #endregion
 
             #region Errors
+            var revertParameters = new List<ParameterDefinition>
+            {
+                new ParameterDefinition
+                {
+                    Name = "account(0)",
+                    Type = DataTypeReference.Address
+                }
+            };
+
             var errorHelper = new IfRevertHelper
             (
                 condition: new ExpressionDefinition
@@ -51,7 +60,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Base
                     Right = zeroAddress
                 },
                 errorName: _isMint ? "ERC20InvalidReceiver" : "ERC20InvalidSender",
-                errorArguments: new List<ExpressionDefinition> { zeroAddress }
+                revertParameters: revertParameters
             ).Build();
             #endregion
 
