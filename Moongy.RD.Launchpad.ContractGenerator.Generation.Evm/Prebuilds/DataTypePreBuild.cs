@@ -10,5 +10,8 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Prebuilds
         public static SimpleTypeReference Address => new SimpleTypeReference(SolidityDataTypeEnum.Address);
         public static SimpleTypeReference Bytes32 => new SimpleTypeReference(SolidityDataTypeEnum.Bytes32);
         public static SimpleTypeReference Uint8 => new SimpleTypeReference(SolidityDataTypeEnum.Uint8);
+        public static SimpleTypeReference Bytes4 => new SimpleTypeReference(SolidityDataTypeEnum.Bytes4);
+        public static SimpleTypeReference Bool => new SimpleTypeReference(SolidityDataTypeEnum.Bool);
+        public static SimpleTypeReference Bytes => new SimpleTypeReference(SolidityDataTypeEnum.Bytes);
     }
 }

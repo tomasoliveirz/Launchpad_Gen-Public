@@ -276,7 +276,7 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels
     {
         public string MethodName { get; set; }
         public List<ExpressionModel> Arguments { get; set; } = new();
-        
+
         public MethodCallExpressionModel(string methodName, params ExpressionModel[] args)
         {
             MethodName = methodName;
