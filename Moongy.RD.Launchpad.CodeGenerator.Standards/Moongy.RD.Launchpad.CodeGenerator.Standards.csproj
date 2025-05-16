@@ -10,8 +10,4 @@
     <ProjectReference Include="..\Moongy.RD.Launchpad.CodeGenerator.Core\Moongy.RD.Launchpad.CodeGenerator.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Interfaces\" />
-  </ItemGroup>
-
 </Project>

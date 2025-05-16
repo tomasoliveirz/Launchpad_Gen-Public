@@ -1,10 +1,11 @@
 ﻿using Moongy.RD.Launchpad.CodeGenerator.Core.Attributes;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Others;
 using Moongy.RD.Launchpad.CodeGenerator.Standards.Enums;
+using Moongy.RD.Launchpad.CodeGenerator.Standards.Interfaces;
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Models;
 
-public class NonFungibleTokenModel : BaseContractModel
+public class NonFungibleTokenModel : BaseContractModel, IUriStorable
 {
     [ContextProperty(Name = "isEnumerable", Type = PrimitiveType.Bool, Visibility = Visibility.Public, HasDefaultValue = true)]
     public bool IsEnumerable { get; set; }
