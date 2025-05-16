@@ -29,4 +29,9 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
         return burn.Build();
     }
 
+    private FunctionDefinition GenerateConstructorDefinition()
+    {
+        var constructor = new ConstructorGenerator();
+        return constructor.Build();
+    }
 }

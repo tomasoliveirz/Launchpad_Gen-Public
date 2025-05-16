@@ -9,6 +9,5 @@ public enum FunctionStatementKind
     RangeLoop,
     ConditionLoop,
     Trigger,
-    Revert,
     Return
 }
