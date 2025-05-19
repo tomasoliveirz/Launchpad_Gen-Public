@@ -2,6 +2,7 @@
 using Moongy.RD.Launchpad.CodeGenerator.Standards.Enums;
 using Moongy.RD.Launchpad.CodeGenerator.Standards.Models;
 using Moongy.RD.Launchpad.CodeGenerator.Tokenomics.Attributes;
+using Moongy.RD.Launchpad.CodeGenerator.Tokenomics.Enums;
 using Moongy.RD.Launchpad.CodeGenerator.Tokenomics.Models.Tax;
 
 
@@ -21,16 +22,18 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Forms
         public TaxTokenomic? Tax { get; set; }
     }
 
-    [Tokenomic(Source = CodeGenerator.Tokenomics.Enums.TokenomicEnum.Tax)]
+    [Tokenomic(Source = TokenomicEnum.Tax)]
     public class TaxTokenomic
     {
+        [TokenomicProperty(
+            Name = nameof(TaxTokenomicModel.TaxFee),
+            Source = TokenomicEnum.Tax)]
         public double TaxFee { get; set; }
+
+        [TokenomicProperty(
+            Name = nameof(TaxTokenomicModel.TaxRecipients),
+            Source = TokenomicEnum.Tax)]
         public List<TaxRecipient> Recipients { get; set; } = [];
     }
 
-    public class TaxRecipient
-    {
-        public required String Address { get; set; }
-        public decimal Shares { get; set; }
-    }
 }
