@@ -1,5 +1,6 @@
 using System.Reflection;
 using Moongy.RD.Launchpad.CodeGenerator.Tokenomics.Attributes;
+using Moongy.RD.Launchpad.CodeGenerator.Tokenomics.Enums;
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Tokenomics.ExtensionMethods;
 
@@ -15,10 +16,11 @@ public static class TokenomicExtensionMethods
     }
     
     // has tokenomic -- we are probably going to use this on the generator to check if we have a certain tokenomic on the contract
-    public static bool HasTokenomic(this object tokenomicFormSection)
+    public static bool HasTokenomicSource(this object tokenomicFormSection, TokenomicEnum source)
     {
         var tokenomicAttribute = tokenomicFormSection.GetType()
             .GetCustomAttribute<TokenomicAttribute>();
-        return tokenomicAttribute != null;
+        return tokenomicAttribute != null && tokenomicAttribute.Source == source;
     }
+
 }

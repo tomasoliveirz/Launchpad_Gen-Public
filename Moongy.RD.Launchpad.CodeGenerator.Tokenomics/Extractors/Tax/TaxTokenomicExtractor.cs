@@ -1,40 +1,30 @@
+using System.Reflection;
+using Moongy.RD.Launchpad.CodeGenerator.Tokenomics.Attributes;
+using Moongy.RD.Launchpad.CodeGenerator.Tokenomics.Enums;
 using Moongy.RD.Launchpad.CodeGenerator.Tokenomics.ExtensionMethods;
 using Moongy.RD.Launchpad.CodeGenerator.Tokenomics.Models.Tax;
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Tokenomics.Extractors.Tax;
 
-public class TaxTokenomicExtractor
+public class TaxTokenomicExtractor:BaseTokenomicExtractor<TaxTokenomicModel>
 {
-    public TaxTokenomicModel Extract(object tokenomicFormSection)
+    public override bool CanHandle(object tokenomicFormSection)
     {
-        var taxSectionObject = tokenomicFormSection.GetType().GetProperty("Tax")?.GetValue(tokenomicFormSection);
-        if (taxSectionObject == null) throw new InvalidOperationException("Form does not contain a Tax section");
-        var model = new TaxTokenomicModel();
+        return tokenomicFormSection.HasTokenomicSource(TokenomicEnum.Tax);
+    }
 
-        foreach (var (prop, attr) in taxSectionObject.GetTokenomicProperties())
+    public override object Extract(object tokenomicFormSection)
+    {
+        var model = (TaxTokenomicModel) base.Extract(tokenomicFormSection);
+        
+        var recipientsProp = tokenomicFormSection.GetType().GetProperty("Recipients");
+        if (recipientsProp?.GetValue(tokenomicFormSection) is IEnumerable<object> recipientForms)
         {
-            var targetProp = typeof(TaxTokenomicModel).GetProperty(attr!.Name ?? prop.Name);
-            if (targetProp == null) continue;
-            
-            var value = prop.GetValue(taxSectionObject);
-            if (value == null) continue;
-
-            if (targetProp.PropertyType == typeof(List<TaxRecipient>))
+            model.TaxRecipients = recipientForms.Select(r => new TaxRecipient
             {
-                var recipients = ((IEnumerable<object>)value)
-                    .Select(r => new TaxRecipient
-                    {
-                        Address = (string)r.GetType().GetProperty("Address")!.GetValue(r)!,
-                        Shares = (decimal)(r.GetType().GetProperty("Shares")!.GetValue(r)!)
-                    })
-                    .ToList();
-                targetProp.SetValue(model, recipients);
-                
-            }
-            else
-            {
-                targetProp.SetValue(model, value);
-            }
+                Address = (string)r.GetType().GetProperty("Address")!.GetValue(r)!,
+                Shares = (decimal)r.GetType().GetProperty("Shares")!.GetValue(r)!
+            }).ToList();
         }
         return model;
     }
