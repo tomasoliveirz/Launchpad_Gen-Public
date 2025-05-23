@@ -5,7 +5,7 @@ using Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Helpers;
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
 {
-    public class TransferFunction
+    public class ApproveFunction
     {
         public FunctionDefinition Build()
         {
@@ -13,10 +13,13 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
 
 
             #region Literals
-            var fromAddress = new ExpressionDefinition { Identifier = "from" };
-            var toAddress = new ExpressionDefinition { Identifier = "to" };
+            var ownerAddress = new ExpressionDefinition { Identifier = "owner" };
+            var spenderAddress = new ExpressionDefinition { Identifier = "spender" };
             var valueExpr = new ExpressionDefinition { Identifier = "value" };
+            var emitEvent = new ExpressionDefinition { Identifier = "emitEvent" };
             var zeroAddress = new ExpressionDefinition { Identifier = "address(0)" };
+            // TODO Change this
+            var allowanceExpr = new ExpressionDefinition { Identifier = "_allowance[owner][spender]" };
             #endregion
 
             #region Errors
@@ -33,11 +36,11 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
                 condition: new ExpressionDefinition
                 {
                     Kind = ExpressionKind.Binary,
-                    Left = fromAddress,
+                    Left = ownerAddress,
                     Operator = BinaryOperator.Equal,
                     Right = zeroAddress
                 },
-                errorName: "ERC20InvalidSender",
+                errorName: "ERC20InvalidOwner",
                 revertParameters: revertParameters
             ).Build();
 
@@ -45,35 +48,39 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
                 condition: new ExpressionDefinition
                 {
                     Kind = ExpressionKind.Binary,
-                    Left = toAddress,
+                    Left = spenderAddress,
                     Operator = BinaryOperator.Equal,
                     Right = zeroAddress
                 },
-                errorName: "ERC20InvalidReceiver",
+                errorName: "ERC20InvalidSpender",
                 revertParameters: revertParameters
             ).Build();
+
+
+            #endregion
+
+            #region Assignments
+            var allowancesAssignment = new FunctionStatementDefinition
+            {
+                Kind = FunctionStatementKind.Assignment,
+                ParameterAssignment = { Left = allowanceExpr, Right = valueExpr },
+                Expression = valueExpr
+            };
+            #endregion
+
+            #region IfStatements
+
             #endregion
 
             #region FunctionCalls
-            var updateCall = new ExpressionDefinition
-            {
-                Kind = ExpressionKind.FunctionCall,
-                Callee = new ExpressionDefinition { Identifier = "_update" },
-                Arguments = new List<ExpressionDefinition> { fromAddress, toAddress, valueExpr }
-            };
 
-            var updateStatement = new FunctionStatementDefinition
-            {
-                Kind = FunctionStatementKind.Expression,
-                Expression = updateCall
-            };
             #endregion
 
             #region FunctionDefinition
 
             var res = new FunctionDefinition
             {
-                Name = "_transfer",
+                Name = "_approve",
                 Kind = FunctionKind.Normal,
                 Visibility = Visibility.Internal,
                 Parameters = parameters,
@@ -86,14 +93,14 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
 
         public List<ParameterDefinition> BuildParameters()
         {
-            var from = new ParameterDefinition
+            var owner = new ParameterDefinition
             {
-                Name = "from",
+                Name = "owner",
                 Type = DataTypeReference.Address
             };
-            var to = new ParameterDefinition
+            var spender = new ParameterDefinition
             {
-                Name = "to",
+                Name = "spender",
                 Type = DataTypeReference.Address
             };
             var value = new ParameterDefinition
@@ -101,12 +108,18 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
                 Name = "value",
                 Type = DataTypeReference.Uint256
             };
+            var emitEvent = new ParameterDefinition
+            {
+                Name = "emitEvent",
+                Type = DataTypeReference.Bool
+            };
 
             var parameters = new List<ParameterDefinition>
             {
-                from,
-                to,
-                value
+                owner,
+                spender,
+                value,
+                emitEvent
             };
             return parameters;
         }

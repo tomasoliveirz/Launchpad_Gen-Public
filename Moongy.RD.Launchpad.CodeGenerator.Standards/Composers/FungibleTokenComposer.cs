@@ -37,9 +37,10 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
         var constructor = new ERC20Constructor();
         return constructor.Build();
     }
+
     private FunctionDefinition TransferFunctionDefinition()
     {
-        var transfer = new TransferFunction();
+        var transfer = new _TransferFunction();
         return transfer.Build();
     }
 
@@ -102,5 +103,22 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
     {
         var allowance = new AllowanceFunction();
         return allowance.Build();
+    }
+    private FunctionDefinition _TransferFunctionDefinition()
+    {
+        var transfer = new _TransferFunction();
+        return transfer.Build();
+    }
+
+    private FunctionDefinition TransferFromFunctionDefinition()
+    {
+        var transferFrom = new TransferFromFunction();
+        return transferFrom.Build();
+    }
+
+    private FunctionDefinition ApproveFunctionDefinition()
+    {
+        var approve = new ApproveFunction();
+        return approve.Build();
     }
 }
