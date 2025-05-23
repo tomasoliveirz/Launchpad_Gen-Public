@@ -1,5 +1,6 @@
 ﻿using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Functions;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Others;
+using Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Base;
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
 {
@@ -26,7 +27,15 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
                             }
                         }
                     }
-                }
+                },
+                ReturnParameters = new List<ParameterDefinition>
+                {
+                    new ParameterDefinition
+                    {
+                        Name = "",
+                        Type = DataTypeReference.Uint8,
+                    }
+                },
             };
             return function;
         }
