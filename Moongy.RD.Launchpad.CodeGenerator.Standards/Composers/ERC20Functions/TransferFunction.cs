@@ -14,29 +14,8 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
             #region Literals
             var toAddress = new ExpressionDefinition { Identifier = "to" };
             var valueExpr = new ExpressionDefinition { Identifier = "value" };
-            var ownerExpr = new ExpressionDefinition { Identifier = "owner" };
+            var msgSender = new ExpressionDefinition { Identifier = "msg.sender" };
             var trueExpr = new ExpressionDefinition { Identifier = "true" };
-            #endregion
-
-            #region Variable Declaration
-            var msgSenderCall = new ExpressionDefinition
-            {
-                Kind = ExpressionKind.FunctionCall,
-                Callee = new ExpressionDefinition { Identifier = "_msgSender" },
-                Arguments = new List<ExpressionDefinition>()
-            };
-
-            var ownerDeclaration = new FunctionStatementDefinition
-            {
-                Kind = FunctionStatementKind.LocalDeclaration,
-                LocalParameter = new ParameterDefinition
-                {
-                    Name = "owner",
-                    Type = DataTypeReference.Address,
-                    //TODO: check this one
-                    Value = "_msgSender()" 
-                }
-            };
             #endregion
 
             #region Function Calls
@@ -44,7 +23,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
             {
                 Kind = ExpressionKind.FunctionCall,
                 Callee = new ExpressionDefinition { Identifier = "_transfer" },
-                Arguments = new List<ExpressionDefinition> { ownerExpr, toAddress, valueExpr }
+                Arguments = new List<ExpressionDefinition> { msgSender, toAddress, valueExpr }
             };
 
             var transferStatement = new FunctionStatementDefinition
@@ -72,7 +51,6 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
                 ReturnParameters = returnParameters,
                 Body = new List<FunctionStatementDefinition>
                 {
-                    ownerDeclaration,
                     transferStatement,
                     returnStatement
                 }

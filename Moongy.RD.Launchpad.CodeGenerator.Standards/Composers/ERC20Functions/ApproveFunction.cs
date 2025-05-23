@@ -4,7 +4,7 @@ using Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Base;
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
 {
-    public class TransferFromFunction
+    public class ApproveFunction
     {
         public FunctionDefinition Build()
         {
@@ -12,38 +12,24 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
             var returnParameters = BuildReturnParameters();
 
             #region Literals
-            var fromAddress = new ExpressionDefinition { Identifier = "from" };
-            var toAddress = new ExpressionDefinition { Identifier = "to" };
+            var spenderAddress = new ExpressionDefinition { Identifier = "spender" };
             var valueExpr = new ExpressionDefinition { Identifier = "value" };
             var msgSender = new ExpressionDefinition { Identifier = "msg.sender" };
             var trueExpr = new ExpressionDefinition { Identifier = "true" };
             #endregion
 
             #region Function Calls
-            var spendAllowanceCall = new ExpressionDefinition
+            var approveCall = new ExpressionDefinition
             {
                 Kind = ExpressionKind.FunctionCall,
-                Callee = new ExpressionDefinition { Identifier = "_spendAllowance" },
-                Arguments = new List<ExpressionDefinition> { fromAddress, msgSender, valueExpr }
+                Callee = new ExpressionDefinition { Identifier = "_approve" },
+                Arguments = new List<ExpressionDefinition> { msgSender, spenderAddress, valueExpr }
             };
 
-            var spendAllowanceStatement = new FunctionStatementDefinition
+            var approveStatement = new FunctionStatementDefinition
             {
                 Kind = FunctionStatementKind.Expression,
-                Expression = spendAllowanceCall
-            };
-
-            var transferCall = new ExpressionDefinition
-            {
-                Kind = ExpressionKind.FunctionCall,
-                Callee = new ExpressionDefinition { Identifier = "_transfer" },
-                Arguments = new List<ExpressionDefinition> { fromAddress, toAddress, valueExpr }
-            };
-
-            var transferStatement = new FunctionStatementDefinition
-            {
-                Kind = FunctionStatementKind.Expression,
-                Expression = transferCall
+                Expression = approveCall
             };
             #endregion
 
@@ -58,15 +44,14 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
             #region Function Definition
             var res = new FunctionDefinition
             {
-                Name = "transferFrom",
+                Name = "approve",
                 Kind = FunctionKind.Normal,
                 Visibility = Visibility.Public,
                 Parameters = parameters,
                 ReturnParameters = returnParameters,
                 Body = new List<FunctionStatementDefinition>
                 {
-                    spendAllowanceStatement,
-                    transferStatement,
+                    approveStatement,
                     returnStatement
                 }
             };
@@ -77,14 +62,9 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
 
         private List<ParameterDefinition> BuildParameters()
         {
-            var from = new ParameterDefinition
+            var spender = new ParameterDefinition
             {
-                Name = "from",
-                Type = DataTypeReference.Address
-            };
-            var to = new ParameterDefinition
-            {
-                Name = "to",
+                Name = "spender",
                 Type = DataTypeReference.Address
             };
             var value = new ParameterDefinition
@@ -95,8 +75,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
 
             var parameters = new List<ParameterDefinition>
             {
-                from,
-                to,
+                spender,
                 value
             };
             return parameters;

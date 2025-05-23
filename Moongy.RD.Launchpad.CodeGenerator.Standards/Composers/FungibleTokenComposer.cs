@@ -116,6 +116,12 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
         return transferFrom.Build();
     }
 
+    private FunctionDefinition ApproveFunctionDefinition()
+    {
+        var approve = new ApproveFunction();
+        return approve.Build();
+    }
+
     private FunctionDefinition FirstApproveFunctionDefinition()
     {
         var approve = new FirstApproveFunction();
@@ -126,5 +132,11 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
     {
         var approve = new SecondApproveFunction();
         return approve.Build();
+    }
+
+    private FunctionDefinition SpendAllowance()
+    {
+        var spendAllowance = new SpendAllowanceFunction();
+        return spendAllowance.Build();
     }
 }
