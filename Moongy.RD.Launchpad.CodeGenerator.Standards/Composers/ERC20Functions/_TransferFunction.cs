@@ -5,7 +5,7 @@ using Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Helpers;
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
 {
-    public class TransferFunction
+    public class _TransferFunction
     {
         public FunctionDefinition Build()
         {
