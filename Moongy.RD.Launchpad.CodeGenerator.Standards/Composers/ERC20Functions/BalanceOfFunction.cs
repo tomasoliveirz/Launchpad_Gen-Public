@@ -43,7 +43,15 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
                             }
                         }
                     }
-                }
+                },
+                ReturnParameters = new List<ParameterDefinition>
+                {
+                    new ParameterDefinition
+                    {
+                        Name = "",
+                        Type = DataTypeReference.Uint256,
+                    }
+                },
             };
             return function;
         }

@@ -15,7 +15,6 @@ public class FunctionStatementDefinition
     public AssignmentDefinition? ParameterAssignment { get; set; }
     #endregion
 
-
     #region Expression
     public ExpressionDefinition? Expression { get; set; }
     #endregion
