@@ -116,9 +116,15 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
         return transferFrom.Build();
     }
 
-    private FunctionDefinition ApproveFunctionDefinition()
+    private FunctionDefinition FirstApproveFunctionDefinition()
     {
-        var approve = new ApproveFunction();
+        var approve = new FirstApproveFunction();
+        return approve.Build();
+    }
+
+    private FunctionDefinition SecondApproveFunctionDefinition()
+    {
+        var approve = new SecondApproveFunction();
         return approve.Build();
     }
 }

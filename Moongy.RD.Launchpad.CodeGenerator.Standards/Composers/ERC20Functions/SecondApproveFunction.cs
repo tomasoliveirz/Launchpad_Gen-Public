@@ -5,7 +5,7 @@ using Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Helpers;
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
 {
-    public class ApproveFunction
+    public class SecondApproveFunction
     {
         public FunctionDefinition Build()
         {
@@ -91,11 +91,38 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
 
             #region IfStatements
 
+            var approvalEventParams = new List<ParameterDefinition>
+            {
+                new ParameterDefinition { Name = "owner", Type = DataTypeReference.Address },
+                new ParameterDefinition { Name = "spender", Type = DataTypeReference.Address },
+                new ParameterDefinition { Name = "value", Type = DataTypeReference.Uint256 }
+            };
+
+            var emitApprovalEvent = new FunctionStatementDefinition
+            {
+                Kind = FunctionStatementKind.Trigger,
+                Trigger = new TriggerDefinition
+                {
+                    Kind = TriggerKind.Log,
+                    Name = "Approval",
+                    Parameters = approvalEventParams
+                }
+            };
+
+            var ifEmitEventStatement = new FunctionStatementDefinition
+            {
+                Kind = FunctionStatementKind.Condition,
+                ConditionBranches = new List<ConditionBranch>
+                {
+                    new ConditionBranch
+                    {
+                        Condition = emitEvent,
+                        Body = new List<FunctionStatementDefinition> { emitApprovalEvent }
+                    }
+                }
+            };
             #endregion
 
-            #region FunctionCalls
-
-            #endregion
 
             #region FunctionDefinition
 
@@ -105,6 +132,13 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
                 Kind = FunctionKind.Normal,
                 Visibility = Visibility.Internal,
                 Parameters = parameters,
+                Body = new List<FunctionStatementDefinition>
+                {
+                    errorHelperFrom,
+                    errorHelperTo,
+                    allowancesAssignment,
+                    ifEmitEventStatement
+                }
             };
 
             #endregion
