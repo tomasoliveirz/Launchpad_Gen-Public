@@ -43,16 +43,16 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
         return transfer.Build();
     }
 
-    private FieldDefinition TotalSupplyDefiniton()
+    private FieldDefinition TokenTotalSupplyDefiniton()
     {
-        var totalSupply = new TotalSupplyField();
+        var totalSupply = new TokenTotalSupplyField();
         return totalSupply.Build();
     }
     private FieldDefinition TokenNameDefinition()
     {
         var tokenName = new TokenNameField();
         return tokenName.Build();
-    }   
+    }
     private FieldDefinition TokenSymbolDefinition()
     {
         var tokenSymbol = new TokenSymbolField();
@@ -82,5 +82,25 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
     {
         var name = new NameFunction();
         return name.Build();
+    }
+    private FieldDefinition TokenBalancesDefinition()
+    {
+        var tokenBalance = new TokenBalancesField();
+        return tokenBalance.Build();
+    }
+    private FieldDefinition TokenAllowancesDefinition()
+    {
+        var tokenAllowance = new TokenAllowancesField();
+        return tokenAllowance.Build();
+    }
+    private FunctionDefinition BalanceOfFunctionDefinition()
+    {
+        var balanceOf = new BalanceOfFunction();
+        return balanceOf.Build();
+    }
+    private FunctionDefinition AllowanceFunctionDefinition()
+    {
+        var allowance = new AllowanceFunction();
+        return allowance.Build();
     }
 }

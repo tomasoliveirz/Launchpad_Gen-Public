@@ -4,7 +4,7 @@ using Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Base;
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Fields
 {
-    public class TotalSupplyField
+    public class TokenTotalSupplyField
     {
         public FieldDefinition Build()
         {
