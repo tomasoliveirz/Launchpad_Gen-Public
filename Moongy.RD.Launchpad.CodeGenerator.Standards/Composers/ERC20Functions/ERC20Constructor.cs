@@ -9,17 +9,16 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
         public FunctionDefinition Build()
         {
             #region Parameters
-            // Missing Location ??
             var nameParam = new ParameterDefinition { Name = "name_", Type = DataTypeReference.String };
             var symbolParam = new ParameterDefinition { Name = "symbol_", Type = DataTypeReference.String };
             var parameters = new List<ParameterDefinition> { nameParam, symbolParam };
             #endregion
             
             #region Expressions
-            var nameExpr = new ExpressionDefinition { Identifier = "name_" };
-            var symbolExpr = new ExpressionDefinition { Identifier = "symbol_" };
-            var _name = new ExpressionDefinition { Identifier = "_name" };
-            var _symbol = new ExpressionDefinition { Identifier = "_symbol" };
+            var nameExpr = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "name_" };
+            var symbolExpr = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "symbol_" };
+            var _name = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "_name" };
+            var _symbol = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "_symbol" };
             #endregion
             
             #region Assignments

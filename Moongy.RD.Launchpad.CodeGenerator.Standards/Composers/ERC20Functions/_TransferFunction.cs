@@ -13,10 +13,10 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
 
 
             #region Literals
-            var fromAddress = new ExpressionDefinition { Identifier = "from" };
-            var toAddress = new ExpressionDefinition { Identifier = "to" };
-            var valueExpr = new ExpressionDefinition { Identifier = "value" };
-            var zeroAddress = new ExpressionDefinition { Identifier = "address(0)" };
+            var fromAddress = new ExpressionDefinition {Kind=ExpressionKind.Identifier, Identifier = "from" };
+            var toAddress = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "to" };
+            var valueExpr = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "value" };
+            var zeroAddress = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "address(0)" };
             #endregion
 
             #region Errors

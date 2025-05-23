@@ -12,12 +12,12 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
             var parameters = BuildParameters();
 
 
-            #region Literals
-            var ownerAddress = new ExpressionDefinition { Identifier = "owner" };
-            var spenderAddress = new ExpressionDefinition { Identifier = "spender" };
-            var valueExpr = new ExpressionDefinition { Identifier = "value" };
-            var emitEvent = new ExpressionDefinition { Identifier = "emitEvent" };
-            var zeroAddress = new ExpressionDefinition { Identifier = "address(0)" };
+            #region Identifiers
+            var ownerAddress = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "owner" };
+            var spenderAddress = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "spender" };
+            var valueExpr = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "value" };
+            var emitEvent = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "emitEvent" };
+            var zeroAddress = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "address(0)" };
             var allowanceExpr = new ExpressionDefinition
             {
                 Kind = ExpressionKind.IndexAccess, 
@@ -29,17 +29,9 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
                         Kind = ExpressionKind.Identifier,
                         Identifier = "_allowance"
                     },
-                    Index = new ExpressionDefinition
-                    {
-                        Kind = ExpressionKind.Identifier,
-                        Identifier = "owner"
-                    }
+                    Index = ownerAddress,
                 },
-                Index = new ExpressionDefinition
-                {
-                    Kind = ExpressionKind.Identifier,
-                    Identifier = "spender"
-                }
+                Index = spenderAddress
             };
             #endregion
 
