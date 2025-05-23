@@ -1,6 +1,6 @@
 namespace Moongy.RD.Launchpad.CodeGenerator.Core.Interfaces;
 
-public interface ITokenomicExtractor
+public interface ITokenomicExtractor<T>
 {
-    object Extract(object tokenomicFormSection);
+    public T Extract(object tokenomicFormSection);
 }
