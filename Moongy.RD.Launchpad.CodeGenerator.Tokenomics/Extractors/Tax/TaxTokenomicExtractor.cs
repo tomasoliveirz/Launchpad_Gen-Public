@@ -8,10 +8,6 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Tokenomics.Extractors.Tax;
 
 public class TaxTokenomicExtractor:BaseTokenomicExtractor<TaxTokenomicModel>
 {
-    public override bool CanHandle(object tokenomicFormSection)
-    {
-        return tokenomicFormSection.HasTokenomicSource(TokenomicEnum.Tax);
-    }
 
     public override object Extract(object tokenomicFormSection)
     {

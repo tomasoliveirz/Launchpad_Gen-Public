@@ -6,7 +6,6 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Tokenomics.Extractors;
 public abstract class BaseTokenomicExtractor<TModel> : ITokenomicExtractor
     where TModel: class, new() 
 {
-    public abstract bool CanHandle(object tokenomicFormSection);
     public virtual object Extract(object tokenomicFormSection)
     {
         var model = new TModel();

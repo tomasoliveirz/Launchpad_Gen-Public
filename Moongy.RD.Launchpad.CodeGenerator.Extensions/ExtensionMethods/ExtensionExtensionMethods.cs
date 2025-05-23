@@ -17,14 +17,4 @@ public static class ExtensionExtensionMethods
             .Where(t => t.Attribute != null);
     }
     
-    // check if a form section is associated witha  specific extension type
-    // this is used to determine which extractor should process the form section
-    // encapsulates the reflection logic to obtain the ExtensionAttribute atribute
-    public static bool HasExtensionSource(this object extensionFormSection, ExtensionEnum source)
-    {
-        var extensionAttribute = extensionFormSection.GetType()
-            .GetCustomAttribute<ExtensionAttribute>();
-        return extensionAttribute != null && extensionAttribute.Source == source;
-    }
-
 }
