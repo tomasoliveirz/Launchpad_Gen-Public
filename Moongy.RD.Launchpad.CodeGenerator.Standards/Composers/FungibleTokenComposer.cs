@@ -17,21 +17,26 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
         return moduleFile;
     }
 
-    private FunctionDefinition GenerateMintFunctionDefinition()
+    private FunctionDefinition MintFunctionDefinition()
     {
-        var mint = new MintFunctionGenerator();
+        var mint = new MintFunction();
         return mint.Build();
     }
 
-    private FunctionDefinition GenerateBurnFunctionDefinition()
+    private FunctionDefinition BurnFunctionDefinition()
     {
-        var burn = new BurnFunctionGenerator();
+        var burn = new BurnFunction();
         return burn.Build();
     }
 
-    private FunctionDefinition GenerateConstructorDefinition()
+    private FunctionDefinition ConstructorDefinition()
     {
-        var constructor = new ConstructorGenerator();
+        var constructor = new ERC20Constructor();
         return constructor.Build();
+    }
+    private FunctionDefinition TransferFunctionDefinition()
+    {
+        var transfer = new TransferFunction();
+        return transfer.Build();
     }
 }

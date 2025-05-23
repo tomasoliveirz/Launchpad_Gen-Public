@@ -3,18 +3,11 @@ using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Others;
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Helpers
 {
-    public class IfRevertHelper
+    public class IfRevertHelper(ExpressionDefinition condition, string errorName, List<ParameterDefinition> revertParameters)
     {
-        private readonly ExpressionDefinition _condition;
-        private readonly string _errorName;
-        private readonly List<ParameterDefinition> _revertParameters;
-
-        public IfRevertHelper(ExpressionDefinition condition, string errorName, List<ParameterDefinition> revertParameters)
-        {
-            _condition = condition;
-            _errorName = errorName;
-            _revertParameters = revertParameters;
-        }
+        private readonly ExpressionDefinition _condition = condition;
+        private readonly string _errorName = errorName;
+        private readonly List<ParameterDefinition> _revertParameters = revertParameters;
 
         public FunctionStatementDefinition Build()
         {

@@ -5,10 +5,10 @@ using Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Helpers;
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
 {
-    public class BurnFunctionGenerator
-    {
-        public FunctionDefinition Build()
+        public class MintFunction
         {
+            public FunctionDefinition Build()
+            {
             var parameters = BuildParameters();
 
             #region Literals
@@ -19,13 +19,13 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
 
             #region Errors
             var revertParameters = new List<ParameterDefinition>
+        {
+            new ParameterDefinition
             {
-                new ParameterDefinition
-                {
-                    Name = "address(0)",
-                    Type = DataTypeReference.Address
-                }
-            };
+                Name = "address(0)",
+                Type = DataTypeReference.Address
+            }
+        };
 
             var errorHelper = new IfRevertHelper(
                 condition: new ExpressionDefinition
@@ -35,7 +35,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
                     Operator = BinaryOperator.Equal,
                     Right = zeroAddress
                 },
-                errorName: "ERC20InvalidSender",
+                errorName: "ERC20InvalidReceiver",
                 revertParameters: revertParameters
             ).Build();
             #endregion
@@ -45,7 +45,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
             {
                 Kind = ExpressionKind.FunctionCall,
                 Callee = new ExpressionDefinition { Identifier = "_update" },
-                Arguments = new List<ExpressionDefinition> { accountExpr, zeroAddress, valueExpr }
+                Arguments = new List<ExpressionDefinition> { zeroAddress, accountExpr, valueExpr }
             };
 
             var updateStatement = new FunctionStatementDefinition
@@ -53,21 +53,26 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
                 Kind = FunctionStatementKind.Expression,
                 Expression = updateCall
             };
+        #endregion
+
+            #region FunctionDefinition
+            var res = new FunctionDefinition
+                {
+                    Name = "_mint",
+                    Visibility = Visibility.Internal,
+                    Parameters = parameters,
+                    Body = new List<FunctionStatementDefinition> { errorHelper, updateStatement }
+                };
             #endregion
 
-            return new FunctionDefinition
-            {
-                Name = "_burn",
-                Visibility = Visibility.Internal,
-                Parameters = parameters,
-                Body = new List<FunctionStatementDefinition> { errorHelper, updateStatement }
-            };
-        }
+            return res;
+            }
 
-        private List<ParameterDefinition> BuildParameters() => new()
+            private List<ParameterDefinition> BuildParameters() => new()
         {
             new ParameterDefinition { Name = "account", Type = DataTypeReference.Address },
             new ParameterDefinition { Name = "value", Type = DataTypeReference.Uint256 }
         };
-    }
+        }
+    
 }

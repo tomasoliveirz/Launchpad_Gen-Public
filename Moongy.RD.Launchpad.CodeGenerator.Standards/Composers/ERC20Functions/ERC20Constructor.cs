@@ -4,7 +4,7 @@ using Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Base;
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
 {
-    public class ConstructorGenerator
+    public class ERC20Constructor
     {
         public FunctionDefinition Build()
         {
