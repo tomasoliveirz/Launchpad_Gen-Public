@@ -1,6 +1,9 @@
 ﻿using Moongy.RD.Launchpad.CodeGenerator.Core.Interfaces;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Functions;
+using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Others;
+using Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Fields;
+using Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions;
 using Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator;
 using Moongy.RD.Launchpad.CodeGenerator.Standards.Models;
 
@@ -39,6 +42,47 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
     {
         var transfer = new _TransferFunction();
         return transfer.Build();
+    }
+
+    private FieldDefinition TotalSupplyDefiniton()
+    {
+        var totalSupply = new TotalSupplyField();
+        return totalSupply.Build();
+    }
+    private FieldDefinition TokenNameDefinition()
+    {
+        var tokenName = new TokenNameField();
+        return tokenName.Build();
+    }   
+    private FieldDefinition TokenSymbolDefinition()
+    {
+        var tokenSymbol = new TokenSymbolField();
+        return tokenSymbol.Build();
+    }
+    private FieldDefinition TokenDecimalsDefinition()
+    {
+        var tokenDecimals = new TokenDecimalsField();
+        return tokenDecimals.Build();
+    }
+    private FunctionDefinition TotalSupplyFunctionDefinition()
+    {
+        var totalSupply = new TotalSupplyFunction();
+        return totalSupply.Build();
+    }
+    private FunctionDefinition DecimalsFunctionDefinition()
+    {
+        var decimals = new DecimalsFunction();
+        return decimals.Build();
+    }
+    private FunctionDefinition SymbolFunctionDefinition()
+    {
+        var symbol = new SymbolFunction();
+        return symbol.Build();
+    }
+    private FunctionDefinition NameFunctionDefinition()
+    {
+        var name = new NameFunction();
+        return name.Build();
     }
 
     private FunctionDefinition _TransferFunctionDefinition()

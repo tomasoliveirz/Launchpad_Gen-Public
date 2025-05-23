@@ -1,7 +1,6 @@
 namespace Moongy.RD.Launchpad.CodeGenerator.Core.Interfaces;
 
-public interface IExtensionExtractor
+public interface IExtensionExtractor<T>
 {
-    bool CanHandle(object extensionFormSection);
-    object Extract(object extensionFormSection);
+    public T Extract(object extensionFormSection);
 }

@@ -68,11 +68,11 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
             return res;
             }
 
-            private List<ParameterDefinition> BuildParameters() => new()
-        {
+            private List<ParameterDefinition> BuildParameters() =>
+        [
             new ParameterDefinition { Name = "account", Type = DataTypeReference.Address },
             new ParameterDefinition { Name = "value", Type = DataTypeReference.Uint256 }
-        };
+        ];
         }
     
 }
