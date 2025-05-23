@@ -11,45 +11,56 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
             var function = new FunctionDefinition
             {
                 Name = "allowance",
-                Visibility = Visibility.Public,
                 Kind = FunctionKind.Normal,
+                Visibility = Visibility.Public,
                 Parameters = new List<ParameterDefinition>
+            {
+                new ParameterDefinition
                 {
-                    new ParameterDefinition
-                    {
-                        Name = "owner",
-                        Type = DataTypeReference.Address
-                    },
-                    new ParameterDefinition
-                    {
-                        Name = "spender",
-                        Type = DataTypeReference.Address
-                    }
+                    Name = "owner",
+                    Type = DataTypeReference.Address,
                 },
-                Body = new List<FunctionStatementDefinition>
+                new ParameterDefinition
                 {
-                    new FunctionStatementDefinition
+                    Name = "spender",
+                    Type = DataTypeReference.Address,
+                }
+            },
+            Body = new List<FunctionStatementDefinition>()
+            {
+                new FunctionStatementDefinition
+                {
+                    Kind = FunctionStatementKind.Return,
+                    ReturnValues = new List<ExpressionDefinition>
                     {
-                        Kind = FunctionStatementKind.Return,
-                        ReturnValues = new List<ExpressionDefinition>
+                        new ExpressionDefinition
                         {
-                            new ExpressionDefinition
+                            Kind = ExpressionKind.IndexAccess, 
+                            IndexCollection = new ExpressionDefinition
                             {
-                                Kind = ExpressionKind.IndexAccess,
+                                Kind = ExpressionKind.IndexAccess, 
                                 IndexCollection = new ExpressionDefinition
                                 {
-                                    Kind = ExpressionKind.Literal,
-                                    LiteralValue = "_allowances"
+                                    Kind = ExpressionKind.Identifier,
+                                    Identifier = "_allowances"
                                 },
-                                 
+                                Index = new ExpressionDefinition
+                                {
+                                    Kind = ExpressionKind.Identifier,
+                                    Identifier = "owner"
+                                }
+                            },
+                            Index = new ExpressionDefinition
+                            {
+                                Kind = ExpressionKind.Identifier,
+                                Identifier = "spender"
                             }
-                        },
-
+                        }
                     }
                 }
-            };
-            return function;
-
+            }
+           };
+            return function; 
         }
     }
 }

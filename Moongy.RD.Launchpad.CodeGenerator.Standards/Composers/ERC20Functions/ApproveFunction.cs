@@ -18,8 +18,29 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
             var valueExpr = new ExpressionDefinition { Identifier = "value" };
             var emitEvent = new ExpressionDefinition { Identifier = "emitEvent" };
             var zeroAddress = new ExpressionDefinition { Identifier = "address(0)" };
-            // TODO Change this
-            var allowanceExpr = new ExpressionDefinition { Identifier = "_allowance[owner][spender]" };
+            var allowanceExpr = new ExpressionDefinition
+            {
+                Kind = ExpressionKind.IndexAccess, 
+                IndexCollection = new ExpressionDefinition
+                {
+                    Kind = ExpressionKind.IndexAccess, 
+                    IndexCollection = new ExpressionDefinition
+                    {
+                        Kind = ExpressionKind.Identifier,
+                        Identifier = "_allowance"
+                    },
+                    Index = new ExpressionDefinition
+                    {
+                        Kind = ExpressionKind.Identifier,
+                        Identifier = "owner"
+                    }
+                },
+                Index = new ExpressionDefinition
+                {
+                    Kind = ExpressionKind.Identifier,
+                    Identifier = "spender"
+                }
+            };
             #endregion
 
             #region Errors
