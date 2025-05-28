@@ -1,6 +1,6 @@
 using Moongy.RD.Launchpad.CodeGenerator.Extensions.Models;
 
-namespace Moongy.RD.Launchpad.CodeGenerator.Extensions.Extractors.AccessControl;
+namespace Moongy.RD.Launchpad.CodeGenerator.Extensions.Extractors;
 
 public class AccessControlExtensionExtractor : BaseExtensionExtractor<AccessControlExtensionModel>
 {

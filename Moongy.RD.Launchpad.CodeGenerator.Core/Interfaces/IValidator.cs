@@ -2,6 +2,6 @@
 {
     public interface IValidator<T>
     {
-        public void Validate(T obj);
+        public void Validate(T? obj);
     }
 }

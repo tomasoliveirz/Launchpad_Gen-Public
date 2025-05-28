@@ -3,6 +3,6 @@ using Moongy.RD.Launchpad.CodeGenerator.Extensions.Enums;
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Extensions.Attributes;
 
-public abstract class ExtensionPropertyAttribute : CodePropertyAttribute<ExtensionEnum>
+public class ExtensionPropertyAttribute : CodePropertyAttribute<ExtensionEnum>
 {
 }
