@@ -1,4 +1,5 @@
-﻿using Moongy.RD.Launchpad.CodeGenerator.Extensions.ExtensionMethods;
+﻿using Moongy.RD.Launchpad.CodeGenerator.Core.ExtensionMethods;
+using Moongy.RD.Launchpad.CodeGenerator.Extensions.ExtensionMethods;
 using Moongy.RD.Launchpad.CodeGenerator.Extensions.Models;
 using Moongy.RD.Launchpad.CodeGenerator.Extensions.Validators;
 

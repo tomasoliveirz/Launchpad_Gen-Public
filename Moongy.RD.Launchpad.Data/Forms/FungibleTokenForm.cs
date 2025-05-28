@@ -48,7 +48,7 @@ public class FungibleTokenForm
     [Extension(Source = ExtensionEnum.Burn)]
     public bool HasBurning { get; set; }
 
-    [ExtensionProperty(Source = ExtensionEnum.AntiWhale, Name = nameof(AntiWhaleExtensionModel.CapInPercentage)]
+    [ExtensionProperty(Source = ExtensionEnum.AntiWhale, Name = nameof(AntiWhaleExtensionModel.CapInPercentage))]
     public decimal? AntiWhaleCap { get; set; }
 
     /// <summary>
