@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
+﻿namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Processors
 {
     public static class SolidityTemplateProcessor
     {

@@ -1,9 +1,8 @@
 ﻿using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.ScribanRenderingModels;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.ScribanRenderingModels;
 
-namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors;
+
+namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Processors;
 public class ContractHeaderProcessor() : BaseSolidityTemplateProcessor<SolidityContractModel>("ContractHeader")
 {
     public override string Render(SolidityContractModel model)

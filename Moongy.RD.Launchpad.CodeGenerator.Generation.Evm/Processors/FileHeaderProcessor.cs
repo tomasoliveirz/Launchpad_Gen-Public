@@ -1,26 +1,21 @@
 ﻿using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Expressions;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers;
+using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Header;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Version;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.ScribanRenderingModels;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Expressions;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Header;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Version;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.ScribanRenderingModels;
-using Moongy.RD.Launchpad.Core.Helpers;
 
-namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
+namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Processors
 {
-    public class FileHeaderProcessor() : BaseSolidityTemplateProcessor<SolidityFile>("FileHeader")
+    public class FileHeaderProcessor() : BaseSolidityTemplateProcessor<SolidityFileModel>("FileHeader")
     {
-        public override string Render(SolidityFile model)
+        public override string Render(SolidityFileModel model)
         {
             var renderModel = Transform(model);
             return Render(renderModel);
         }
 
-        private static FileHeaderRenderingModel Transform(SolidityFile model)
+        private static FileHeaderRenderingModel Transform(SolidityFileModel model)
         {
             var version = TransformVersion(model.FileHeader.Version);
             var license = SPDXLicenseHelper.GetValue(model.FileHeader.License);

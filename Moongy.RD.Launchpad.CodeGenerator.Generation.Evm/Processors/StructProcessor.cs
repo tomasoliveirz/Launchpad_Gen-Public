@@ -1,13 +1,10 @@
 ﻿using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Structs;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.ScribanRenderingModels;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Expressions;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Helpers;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Structs;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.ScribanRenderingModels;
-using System;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Exceptions;
 
-namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
+
+namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Processors
 {
     public class StructProcessor() : BaseSolidityTemplateProcessor<StructModel>("Struct")
     {
@@ -25,7 +22,7 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
                 Name = model.Name,
             };
             if (model.Properties.Count() != model.Properties.DistinctBy(x => x.Name).Count())
-                throw new Exceptions.DuplicateException("struct", model.Name, "properties");
+                throw new DuplicateException("struct", model.Name, "properties");
             result.Properties = TransfromProperties(model.Properties);
             return result;
         }
