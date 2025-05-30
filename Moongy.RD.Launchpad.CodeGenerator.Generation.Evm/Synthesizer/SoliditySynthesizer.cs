@@ -4,6 +4,7 @@ using Moongy.RD.Launchpad.CodeGenerator.Core.Attributes;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Interfaces;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Directives;
+using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Functions;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Imports;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Modules;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Others;
@@ -166,6 +167,28 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
         private List<ConstructorParameterModel> GenerateConstructorParameters(ModuleDefinition module)
         {
             var result = new List<ConstructorParameterModel>();
+            int paramIdx = 0;
+            foreach (var function in module.Functions)
+            {
+                if (function.Kind != FunctionKind.Constructor)
+                    continue;
+
+                foreach (var parameter in function.Parameters) 
+                {
+                    string? assignedTo = null;
+
+                    // Not sure if this is the right way to handle this, but it seems like
+                    if (!string.IsNullOrEmpty(parameter.Name))
+                    {
+                        var matchedField = module.Fields
+                            .FirstOrDefault(field => field.Value == parameter.Name);
+
+                        if (matchedField != null)
+                        {
+                            assignedTo = matchedField.Name;
+                        }
+                    }
+            var result = new List<ConstructorParameterModel>();
 
             if (module.Fields != null && module.Fields.Any())
             {
@@ -182,6 +205,24 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
             return result;
         }
 
+
+                    var constructorParam = new ConstructorParameterModel
+                    {
+                        Type =ContextTypeReferenceSyntaxHelper.MapToSolidityTypeReference(parameter.Type),
+                        Name = parameter.Name,
+                        Index = paramIdx,
+                        Value = parameter.Value,
+                        Location = SolidityMemoryLocation.None, 
+                        AssignedTo = assignedTo
+                    };
+                    paramIdx++;
+                    result.Add(constructorParam);
+                }
+            }
+
+            return result;
+        }
+
         private List<BaseFunctionModel> GenerateFunctions(ModuleDefinition module)
         {
             throw new NotImplementedException();
@@ -189,7 +230,27 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
 
         private List<EventModel> GenerateEvents(ModuleDefinition module)
         {
-            throw new NotImplementedException();
+            var result = new List<EventModel>();
+            foreach (var trigger in module.Triggers)
+            {
+                if (trigger.Kind == TriggerKind.Log)
+                {
+                    var paramIdx = 0;
+                    var eventModel = new EventModel()
+                    {
+                        Name = trigger.Name,
+                        Parameters = trigger.Parameters.Select(p => new EventParameterModel
+                        {
+                            Name = p.Name,
+                            Type = ContextTypeReferenceSyntaxHelper.MapToSolidityTypeReference(p.Type),
+                            Index = paramIdx,
+                            Value = p.Value,
+                        }).ToList(),
+                    };
+                    result.Add(eventModel); 
+                }
+            }
+            return result;
         }
 
         private List<ErrorModel> GenerateErrors(ModuleDefinition module)
@@ -287,17 +348,62 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
 
         private List<AbstractionImportModel> GenerateBaseContracts(ModuleDefinition module, IEnumerable<ImportDefinition> importDefinitions)
         {
-            throw new NotImplementedException();
+            var result = new List<AbstractionImportModel>();
+
+            foreach (var import in importDefinitions)
+            {
+                if (string.IsNullOrWhiteSpace(import.Name))
+                    continue; 
+
+                var abstraction = new AbstractionImportModel
+                {
+                    Name = import.Name!,
+                    PathName = import.Path,
+                    Alias = import.Alias,
+                    Code = null,
+                    ConstructorParameters = GenerateConstructorParameters(module)
+                };
+
+                result.Add(abstraction);
+            }
+
+            return result;
         }
+
 
         private List<ImportModel> GenerateImports(ModuleDefinition module, IEnumerable<ImportDefinition> importDefinitions)
         {
-            throw new NotImplementedException();
+            var result = new List<ImportModel>();
+
+            foreach (var import in importDefinitions)
+            {
+                var importModel = new ImportModel
+                {
+                    PathName = import.Path,
+                    Alias = import.Alias,
+                    Code = null 
+                };
+
+                result.Add(importModel);
+            }
+
+            return result;
         }
 
+        // TODO Incomplete
         private List<InterfaceImportModel> GenerateInterfaces(ModuleDefinition module)
         {
-            throw new NotImplementedException();
+            var result = new List<InterfaceImportModel>();
+            foreach (var interfaceDefinition in module.Implements)
+            {
+                var interfaceImport = new InterfaceImportModel()
+                {
+                    Name = interfaceDefinition.Name,
+                    
+                };
+                result.Add(interfaceImport);
+            }
+            return result;
         }
         #endregion
 
