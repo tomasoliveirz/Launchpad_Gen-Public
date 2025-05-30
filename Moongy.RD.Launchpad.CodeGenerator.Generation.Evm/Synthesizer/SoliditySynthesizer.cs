@@ -195,7 +195,23 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
 
         private List<EnumModel> GenerateEnums(ModuleDefinition module, IEnumerable<ImportDefinition> importDefinitions)
         {
-            throw new NotImplementedException();
+            var result = new List<EnumModel>();
+
+            if (module.Enums != null && module.Enums.Any())
+            {
+                foreach (var enumDefinition in module.Enums)
+                {
+                    var enumModel = new EnumModel()
+                    {
+                        Name = enumDefinition.Name,
+                        Values = enumDefinition.Members.ToList()
+                    };
+
+                    result.Add(enumModel);
+                }
+            }
+
+            return result;
         }
 
         private List<StatePropertyModel> GenerateStateProperties(ModuleDefinition module, IEnumerable<ImportDefinition> importDefinitions)
