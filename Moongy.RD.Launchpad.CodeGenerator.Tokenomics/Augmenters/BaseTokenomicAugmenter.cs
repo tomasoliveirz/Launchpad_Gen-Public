@@ -21,8 +21,11 @@ public abstract class BaseTokenomicAugmenter<TModel> : IAugmenter<TModel>
         => context.Modules.Single(); // we assume there is only one contract per file
     
     protected static FunctionDefinition UpdateFn(ModuleDefinition m) =>
-        m.Functions.First(f => f.Name is "_update" or "_transfer");
-
+        m.Functions.First(f => f.Name is "_update");
+    
+    protected static FunctionDefinition TransferFn(ModuleDefinition m) =>
+        m.Functions.First(f => f.Name is "_transfer");
+    
     protected static void AddOnce<T>(ICollection<T> list, Func<T, bool> exists, Func<T> factory)
     {
         if (list.Any(exists)) return;

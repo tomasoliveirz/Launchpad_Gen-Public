@@ -4,14 +4,8 @@ using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Paramet
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.TypeReferences;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.ScribanRenderingModels;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Enums;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Helpers;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Parameters;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.TypeReferences;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.ScribanRenderingModels;
 
-namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors;
+namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Processors;
 
 public class ConstructorProcessor() : BaseSolidityTemplateProcessor<SolidityContractModel>("ContractConstructor")
 {
@@ -27,7 +21,7 @@ public class ConstructorProcessor() : BaseSolidityTemplateProcessor<SolidityCont
                 ? " : " + string.Join(", ", renderModel.BaseConstructors)
                 : "";
 
-            return Render((object)new
+            return Render(new
             {
                 parameters,
                 baseConstructors,

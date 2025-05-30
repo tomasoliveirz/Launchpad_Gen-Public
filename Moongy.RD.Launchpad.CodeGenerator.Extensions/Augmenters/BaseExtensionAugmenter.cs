@@ -14,7 +14,6 @@ public abstract class BaseExtensionAugmenter<TModel> : IAugmenter<TModel>
 
     public virtual IReadOnlyCollection<FeatureKind> Requires { get; }
     public virtual IReadOnlyCollection<FeatureKind> Provides { get; }
-
     protected static ModuleDefinition Main(ContextMetamodel context) => context.Modules.Single();
     
     protected static void AddOnce<T>(ICollection<T> list, Func<T, bool> exists, Func<T> factory)
@@ -23,5 +22,6 @@ public abstract class BaseExtensionAugmenter<TModel> : IAugmenter<TModel>
         list.Add(factory());
     }
     
+    // we can just erite T(p) which is more readable
     protected static TypeReference T(PrimitiveType p) => TypeRef.Primitive(p);
 }

@@ -1,21 +1,20 @@
-﻿using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Imports;
+﻿using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels;
+using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Imports;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.ScribanRenderingModels;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Imports;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.ScribanRenderingModels;
 
-namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
+
+namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Processors
 {
-    public class ImportProcessor() : BaseSolidityTemplateProcessor<SolidityFile>("Imports")
+    public class ImportProcessor() : BaseSolidityTemplateProcessor<SolidityFileModel>("Imports")
     {
-        public override string Render(SolidityFile model)
+        public override string Render(SolidityFileModel model)
         {
             var renderModel = Transform(model);
             return Render(new { imports = renderModel });
         }
 
         #region Model Transformations
-        private static List<ImportRenderModel> Transform(SolidityFile model)
+        private static List<ImportRenderModel> Transform(SolidityFileModel model)
         {
             var imports = GetModels(model);
             var result = new List<ImportRenderModel>();
@@ -57,7 +56,7 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
             return result;
         }
 
-        private static List<ImportModel> GetModels(SolidityFile model)
+        private static List<ImportModel> GetModels(SolidityFileModel model)
         {
             var imports = model.Contracts.SelectMany(x => x.Imports).ToList();
             imports.AddRange(model.Contracts.SelectMany(x => x.BaseContracts));

@@ -2,13 +2,10 @@
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Errors;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Parameters;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.ScribanRenderingModels;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Helpers;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Errors;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Parameters;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.ScribanRenderingModels;
-using System;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Exceptions;
 
-namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
+
+namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Processors
 {
     public class ErrorProcessor() : BaseSolidityTemplateProcessor<ErrorModel>("Error")
     {
@@ -24,7 +21,7 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
                 Name = model.Name,
             };
             if (model.Parameters.Count != model.Parameters.DistinctBy(x => x.Name).Count())
-                throw new Exceptions.DuplicateException("error", model.Name, "arguments");
+                throw new DuplicateException("error", model.Name, "arguments");
             result.Parameters = TransfromParameters(model.Parameters);
             return result;
         }

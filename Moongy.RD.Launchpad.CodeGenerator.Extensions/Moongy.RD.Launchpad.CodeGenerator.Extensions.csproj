@@ -11,4 +11,9 @@
     <ProjectReference Include="..\Moongy.RD.Launchpad.CodeGenerator.Generation.Evm\Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Augmenters\AccessControl\Ownable\" />
+    <Folder Include="Augmenters\AccessControl\RoleBased\" />
+  </ItemGroup>
+
 </Project>

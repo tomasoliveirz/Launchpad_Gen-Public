@@ -3,13 +3,8 @@ using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.State;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.TypeReferences;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.ScribanRenderingModels;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Enums;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Helpers;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.State;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.TypeReferences;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.ScribanRenderingModels;
 
-namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors;
+namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Processors;
 
 public class StatePropertyProcessor() : BaseSolidityTemplateProcessor<StatePropertyModel>("StateProperty")
 {

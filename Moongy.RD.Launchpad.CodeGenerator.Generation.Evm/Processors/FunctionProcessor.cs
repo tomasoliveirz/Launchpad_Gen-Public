@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Enums;
+﻿using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Enums;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Functions;
+using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Modifiers;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.ScribanRenderingModels;
-using System.Reflection;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Enums;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Helpers;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.Metamodels.Functions;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Models.ScribanRenderingModels;
 
-namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
+
+namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Processors
 {
     public class FunctionProcessor : BaseSolidityTemplateProcessor<BaseFunctionModel>
     {
@@ -30,14 +24,13 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
 
                 var renderModel = PrepareRenderModel(model);
 
-                // use the appropriate template for the function type
                 if (model.TemplateName != "Function")
                 {
                     var processor = new BaseSolidityTemplateProcessor<FunctionRenderingModel>(model.TemplateName);
                     return processor.Render(renderModel);
                 }
 
-                return Render((object)renderModel);
+                return Render(renderModel);
             }
             catch (Exception ex)
             {
@@ -99,7 +92,7 @@ namespace Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors
             return string.Empty;
         }
 
-        private string FormatModifier(Models.Metamodels.Modifiers.ModifierModel modifier)
+        private string FormatModifier(ModifierModel modifier)
         {
             if (modifier.Arguments.Count == 0)
                 return modifier.Name;
