@@ -2,6 +2,7 @@ using Moongy.RD.Launchpad.CodeGenerator.Core.Enums;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Modules;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Others;
+using Moongy.RD.Launchpad.CodeGenerator.Extensions.Augmenters.AccessControl.Ownable;
 using Moongy.RD.Launchpad.CodeGenerator.Extensions.Models;
 /*
 using Moongy.RD.Launchpad.CodeGenerator.Extensions.Augmenters.AccessControl.Ownable;
@@ -93,11 +94,11 @@ public class AccessControlExtensionAugmenter : BaseExtensionAugmenter<AccessCont
 
     private static void BuildOwnableFunctions(ModuleDefinition mod)
     {
-        /*
         // function owner() public view virtual returns (address)
         AddOnce(mod.Functions, f => f.Name == "owner", () => new OwnerFunction().Build());
         // function _checkOwner() internal view virtual 
         AddOnce(mod.Functions, f => f.Name == "_checkOwner", () => new CheckOwnerFunction().Build());
+        /*
         // function renounceOwnership() public virtual onlyOwner
         AddOnce(mod.Functions, f => f.Name == "renounceOwnership", () => new RenounceOwnershipFunction().Build());
         // function transferOwnership(address newOwner) public virtual onlyOwner
