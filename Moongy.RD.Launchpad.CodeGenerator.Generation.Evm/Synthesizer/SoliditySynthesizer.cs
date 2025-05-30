@@ -212,7 +212,27 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
 
         private List<EventModel> GenerateEvents(ModuleDefinition module)
         {
-            throw new NotImplementedException();
+            var result = new List<EventModel>();
+            foreach (var trigger in module.Triggers)
+            {
+                if (trigger.Kind == TriggerKind.Log)
+                {
+                    var paramIdx = 0;
+                    var eventModel = new EventModel()
+                    {
+                        Name = trigger.Name,
+                        Parameters = trigger.Parameters.Select(p => new EventParameterModel
+                        {
+                            Name = p.Name,
+                            Type = ContextTypeReferenceSyntaxHelper.MapToSolidityTypeReference(p.Type),
+                            Index = paramIdx,
+                            Value = p.Value,
+                        }).ToList(),
+                    };
+                    result.Add(eventModel); 
+                }
+            }
+            return result;
         }
 
         private List<ErrorModel> GenerateErrors(ModuleDefinition module)
