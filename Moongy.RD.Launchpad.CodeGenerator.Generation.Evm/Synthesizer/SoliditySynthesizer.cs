@@ -6,6 +6,7 @@ using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Directives;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Imports;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Modules;
+using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Others;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Enums;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels;
@@ -165,7 +166,21 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
 
         private List<ConstructorParameterModel> GenerateConstructorParameters(ModuleDefinition module)
         {
-            throw new NotImplementedException();
+            var result = new List<ConstructorParameterModel>();
+
+            if (module.Fields != null && module.Fields.Any())
+            {
+                foreach (var field in module.Fields)
+                {
+                    var parameter = new ConstructorParameterModel()
+                    {
+                        AssignedTo = 
+                    };
+                    result.Add(parameter);
+                }
+            }
+
+            return result;
         }
 
         private List<BaseFunctionModel> GenerateFunctions(ModuleDefinition module)
@@ -190,7 +205,46 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
 
         private List<StructModel> GenerateStructs(ModuleDefinition module, IEnumerable<ImportDefinition> importDefinitions)
         {
-            throw new NotImplementedException();
+            var result = new List<StructModel>();
+
+            if (module.Structs != null && module.Structs.Any())
+            {
+                foreach (var structDefinition in module.Structs)
+                {
+                    var properties = GenerateStructProperties(structDefinition.Fields);
+
+                    var structModel = new StructModel()
+                    {
+                        Name = structDefinition.Name,
+                        Properties = properties.ToArray()
+                    };
+
+                    result.Add(structModel);
+                }
+            }
+
+            return result;
+        }
+
+        private List<StructPropertyModel> GenerateStructProperties(List<FieldDefinition> fields)
+        {
+            var result = new List<StructPropertyModel>();
+
+            if (fields != null && fields.Any())
+            {
+                foreach (var field in fields)
+                {
+                    var property = new StructPropertyModel()
+                    {
+                        Name = field.Name,
+                        DataType = null //field.Type, problema os tipos não são compatíveis
+                    };
+
+                    result.Add(property);
+                }
+            }
+
+            return result;
         }
 
         private List<EnumModel> GenerateEnums(ModuleDefinition module, IEnumerable<ImportDefinition> importDefinitions)
