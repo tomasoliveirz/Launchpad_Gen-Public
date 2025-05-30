@@ -11,10 +11,10 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
             var parameters = BuildParameters();
             var returnParameters = BuildReturnParameters();
 
-            #region Literals
+            #region Identifiers
             var spenderAddress = new ExpressionDefinition { Identifier = "spender" };
             var valueExpr = new ExpressionDefinition { Identifier = "value" };
-            var msgSender = new ExpressionDefinition { Identifier = "msg.sender" };
+            var msgSender = new ExpressionDefinition { MemberName = "sender", Target = new ExpressionDefinition { Identifier = "msg" } };
             var trueExpr = new ExpressionDefinition { Identifier = "true" };
             #endregion
 

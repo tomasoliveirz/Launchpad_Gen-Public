@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Attributes;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Interfaces;
@@ -209,8 +210,48 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
 
         private List<BaseFunctionModel> GenerateFunctions(ModuleDefinition module)
         {
-            throw new NotImplementedException();
+            var result = new List<BaseFunctionModel>();
+            foreach (var function in module.Functions)
+            {
+                var parameters = function.Parameters.Select((p, index) => new FunctionParameterModel
+                {
+                    Name = p.Name,
+                    Type = ContextTypeReferenceSyntaxHelper.MapToSolidityTypeReference(p.Type),
+                    Index = index, 
+                    Value = p.Value,
+                    Location = SolidityMemoryLocation.None
+                }).ToList();
+
+                var returnParameters = function.ReturnParameters.Select((p, index) => new ReturnParameterModel
+                {
+                    Name = p.Name,
+                    Type = ContextTypeReferenceSyntaxHelper.MapToSolidityTypeReference(p.Type),
+                    Index = index,
+                    Value = p.Value,
+                    Location = SolidityMemoryLocation.None
+                }).ToList();
+
+                var statements = ;
+
+                BaseFunctionModel funcModel = function.Kind switch
+                {
+                    FunctionKind.Fallback => new FallbackFunctionModel(),
+                    FunctionKind.Receive => new ReceiveFunctionModel(),
+                    FunctionKind.Normal => new NormalFunctionModel() { 
+                        Name = function.Name, 
+                        Parameters = parameters, 
+                        Visibility = ContextTypeReferenceSyntaxHelper.MapToSolidityVisibility(function.Visibility),
+                        ReturnParameters = returnParameters,
+                        Statements = statements
+                    },
+                    FunctionKind.Constructor => throw new NotImplementedException(), // Needs to be implemented ?
+                    _ => throw new Exception($"Unsupported function kind: {function.Kind}"),
+                };
+                result.Add(funcModel);
+            }
+            return result;
         }
+
 
         private List<EventModel> GenerateEvents(ModuleDefinition module)
         {
