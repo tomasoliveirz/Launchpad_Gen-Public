@@ -4,6 +4,7 @@ using Moongy.RD.Launchpad.CodeGenerator.Core.Attributes;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Interfaces;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Directives;
+using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Functions;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Imports;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Modules;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Others;
@@ -165,7 +166,43 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
 
         private List<ConstructorParameterModel> GenerateConstructorParameters(ModuleDefinition module)
         {
-            throw new NotImplementedException();
+            var result = new List<ConstructorParameterModel>();
+            int paramIdx = 0;
+            foreach (var function in module.Functions)
+            {
+                if (function.Kind != FunctionKind.Constructor)
+                    continue;
+
+                foreach (var parameter in function.Parameters) 
+                {
+                    string? assignedTo = null;
+
+                    if (!string.IsNullOrEmpty(parameter.Value))
+                    {
+                        var matchedField = module.Fields
+                            .FirstOrDefault(field => field.Name == parameter.Value);
+
+                        if (matchedField != null)
+                        {
+                            assignedTo = matchedField.Name;
+                        }
+                    }
+
+                    var constructorParam = new ConstructorParameterModel
+                    {
+                        Type =ContextTypeReferenceSyntaxHelper.MapToSolidityTypeReference(parameter.Type),
+                        Name = parameter.Name,
+                        Index = paramIdx,
+                        Value = parameter.Value,
+                        Location = SolidityMemoryLocation.None, 
+                        AssignedTo = assignedTo
+                    };
+                    paramIdx++;
+                    result.Add(constructorParam);
+                }
+            }
+
+            return result;
         }
 
         private List<BaseFunctionModel> GenerateFunctions(ModuleDefinition module)
