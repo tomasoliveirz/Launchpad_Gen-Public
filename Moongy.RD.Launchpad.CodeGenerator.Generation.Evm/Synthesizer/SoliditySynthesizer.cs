@@ -188,23 +188,6 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
                             assignedTo = matchedField.Name;
                         }
                     }
-            var result = new List<ConstructorParameterModel>();
-
-            if (module.Fields != null && module.Fields.Any())
-            {
-                foreach (var field in module.Fields)
-                {
-                    var parameter = new ConstructorParameterModel()
-                    {
-                        AssignedTo = 
-                    };
-                    result.Add(parameter);
-                }
-            }
-
-            return result;
-        }
-
 
                     var constructorParam = new ConstructorParameterModel
                     {
@@ -271,12 +254,15 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
             {
                 foreach (var structDefinition in module.Structs)
                 {
-                    var properties = GenerateStructProperties(structDefinition.Fields);
 
                     var structModel = new StructModel()
                     {
                         Name = structDefinition.Name,
-                        Properties = properties.ToArray()
+                        Properties = structDefinition.Fields.Select(field => new StructPropertyModel
+                        {
+                            Name = field.Name,
+                            DataType = ContextTypeReferenceSyntaxHelper.MapToSolidityTypeReference(field.Type)
+                        }).ToList()
                     };
 
                     result.Add(structModel);
@@ -286,26 +272,6 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
             return result;
         }
 
-        private List<StructPropertyModel> GenerateStructProperties(List<FieldDefinition> fields)
-        {
-            var result = new List<StructPropertyModel>();
-
-            if (fields != null && fields.Any())
-            {
-                foreach (var field in fields)
-                {
-                    var property = new StructPropertyModel()
-                    {
-                        Name = field.Name,
-                        DataType = null //field.Type, problema os tipos não são compatíveis
-                    };
-
-                    result.Add(property);
-                }
-            }
-
-            return result;
-        }
 
         private List<EnumModel> GenerateEnums(ModuleDefinition module, IEnumerable<ImportDefinition> importDefinitions)
         {
