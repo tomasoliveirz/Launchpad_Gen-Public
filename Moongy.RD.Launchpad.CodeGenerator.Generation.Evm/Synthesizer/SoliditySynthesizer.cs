@@ -177,16 +177,18 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
                 {
                     string? assignedTo = null;
 
-                    if (!string.IsNullOrEmpty(parameter.Value))
+                    // Not sure if this is the right way to handle this, but it seems like
+                    if (!string.IsNullOrEmpty(parameter.Name))
                     {
                         var matchedField = module.Fields
-                            .FirstOrDefault(field => field.Name == parameter.Value);
+                            .FirstOrDefault(field => field.Value == parameter.Name);
 
                         if (matchedField != null)
                         {
                             assignedTo = matchedField.Name;
                         }
                     }
+
 
                     var constructorParam = new ConstructorParameterModel
                     {
@@ -291,17 +293,62 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
 
         private List<AbstractionImportModel> GenerateBaseContracts(ModuleDefinition module, IEnumerable<ImportDefinition> importDefinitions)
         {
-            throw new NotImplementedException();
+            var result = new List<AbstractionImportModel>();
+
+            foreach (var import in importDefinitions)
+            {
+                if (string.IsNullOrWhiteSpace(import.Name))
+                    continue; 
+
+                var abstraction = new AbstractionImportModel
+                {
+                    Name = import.Name!,
+                    PathName = import.Path,
+                    Alias = import.Alias,
+                    Code = null,
+                    ConstructorParameters = GenerateConstructorParameters(module)
+                };
+
+                result.Add(abstraction);
+            }
+
+            return result;
         }
+
 
         private List<ImportModel> GenerateImports(ModuleDefinition module, IEnumerable<ImportDefinition> importDefinitions)
         {
-            throw new NotImplementedException();
+            var result = new List<ImportModel>();
+
+            foreach (var import in importDefinitions)
+            {
+                var importModel = new ImportModel
+                {
+                    PathName = import.Path,
+                    Alias = import.Alias,
+                    Code = null 
+                };
+
+                result.Add(importModel);
+            }
+
+            return result;
         }
 
+        // TODO Incomplete
         private List<InterfaceImportModel> GenerateInterfaces(ModuleDefinition module)
         {
-            throw new NotImplementedException();
+            var result = new List<InterfaceImportModel>();
+            foreach (var interfaceDefinition in module.Implements)
+            {
+                var interfaceImport = new InterfaceImportModel()
+                {
+                    Name = interfaceDefinition.Name,
+                    
+                };
+                result.Add(interfaceImport);
+            }
+            return result;
         }
         #endregion
 
