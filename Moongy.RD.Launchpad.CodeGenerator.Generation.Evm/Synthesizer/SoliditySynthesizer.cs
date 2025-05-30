@@ -230,7 +230,16 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
                     Location = SolidityMemoryLocation.None
                 }).ToList();
 
-                var statements = ;
+                var statements = function.Body.Select(s => StatementSoliditySyntaxHelper.MapStatement(s))
+                    .ToList();
+                var modifiers = new List<ModifierModel>();
+
+                    foreach (var modifierDefinition in function.Modifiers)
+                    {
+                        var modifierModel = CreateModifierModel(modifierDefinition);
+                        modifiers.Add(modifierModel);
+                    }
+                
 
                 BaseFunctionModel funcModel = function.Kind switch
                 {
@@ -241,7 +250,8 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
                         Parameters = parameters, 
                         Visibility = ContextTypeReferenceSyntaxHelper.MapToSolidityVisibility(function.Visibility),
                         ReturnParameters = returnParameters,
-                        Statements = statements
+                        Statements = statements,
+                        Modifiers = modifiers,
                     },
                     FunctionKind.Constructor => throw new NotImplementedException(), // Needs to be implemented ?
                     _ => throw new Exception($"Unsupported function kind: {function.Kind}"),
