@@ -386,7 +386,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
 
         private string GenerateModifierBody(ModifierDefinition modifierDefinition)
         {
-            return ""; //Not sure how to generate the body yet, placeholder for now
+            return "_;"; //Not sure how to generate the body yet, placeholder for now
         }
 
         private List<ModifierModel> GenerateModifiersFromFunctions(ModuleDefinition module)
