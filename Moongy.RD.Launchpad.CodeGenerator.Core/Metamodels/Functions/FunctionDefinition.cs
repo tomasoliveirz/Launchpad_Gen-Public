@@ -10,5 +10,4 @@ public class FunctionDefinition : FunctionSignature
     public List<ModifierDefinition> Modifiers { get; set; } = [];
     public AccessControlDefinition? AccessControl { get; set; }
     public List<FunctionStatementDefinition> Body { get; set; } = [];
-    public StateMutability Mutability { get; set; } = StateMutability.Mutable;
 }
