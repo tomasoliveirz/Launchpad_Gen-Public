@@ -8,6 +8,7 @@ using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Imports;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Modules;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Others;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Enums;
+using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Enums;
@@ -35,8 +36,6 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
             var result = new SolidityLanguageMetamodel() { FileHeader = fileHeader, Contracts = contracts };
             return result;
         }
-
-        
 
         #region File Header
 
@@ -270,7 +269,20 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
 
         private List<StatePropertyModel> GenerateStateProperties(ModuleDefinition module, IEnumerable<ImportDefinition> importDefinitions)
         {
-            throw new NotImplementedException();
+            var result = new List<StatePropertyModel>();
+            foreach (FieldDefinition fieldDefinition in module.Fields)
+            {
+                var stateVariable = new StatePropertyModel()
+                {
+                    Name = fieldDefinition.Name,
+                    Type = ContextTypeReferenceSyntaxHelper.MapToSolidityTypeReference(fieldDefinition.Type),
+                    Visibility = ContextTypeReferenceSyntaxHelper.MapToSolidityVisibility(fieldDefinition.Visibility),
+                    IsImmutable = fieldDefinition.IsImmutable,
+                    InitialValue = fieldDefinition.Value
+                };
+                result.Add(stateVariable);
+            }
+            return result;
         }
 
         private List<AbstractionImportModel> GenerateBaseContracts(ModuleDefinition module, IEnumerable<ImportDefinition> importDefinitions)
