@@ -3,6 +3,7 @@ using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Modifiers;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Parameters;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.ScribanRenderingModels;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Exceptions;
 
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Processors
@@ -23,7 +24,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Processors
                 Body = model.Body
             };
             if (model.Parameters.Count != model.Parameters.DistinctBy(x => x.Name).Count())
-                throw new Exceptions.DuplicateException("modifier", model.Name, "arguments");
+                throw new DuplicateException("modifier", model.Name, "arguments");
             result.Parameters = TransformParameters(model.Parameters);
             return result;
         }

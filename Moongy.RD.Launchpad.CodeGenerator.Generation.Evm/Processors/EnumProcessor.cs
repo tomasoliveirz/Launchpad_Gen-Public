@@ -1,5 +1,6 @@
 ﻿using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Enums;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.ScribanRenderingModels;
+using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Exceptions;
 
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Processors
@@ -15,7 +16,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Processors
         {
             var result = new EnumRenderingModel() { Name = model.Name, Values = model.Values.ToArray() };
             if (model.Values.Count != model.Values.DistinctBy(x => x).Count())
-                throw new Exceptions.DuplicateException("enum", model.Name, "values");
+                throw new DuplicateException("enum", model.Name, "values");
             return result;
         }
 

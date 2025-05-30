@@ -1,5 +1,4 @@
 ﻿using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Statements;
-using Moongy.RD.Launchpad.ContractGenerator.Generation.Evm.Processors;
 
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Processors
