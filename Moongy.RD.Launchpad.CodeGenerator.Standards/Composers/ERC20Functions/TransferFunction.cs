@@ -14,7 +14,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
             #region Identifiers
             var toAddress = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "to" };
             var valueExpr = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "value" };
-            var msgSender = new ExpressionDefinition { Identifier = "msg.sender" };
+            var msgSender = new ExpressionDefinition { MemberName = "sender", Target = new ExpressionDefinition { Identifier = "msg" } };
             var trueExpr = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "true" };
             #endregion
 

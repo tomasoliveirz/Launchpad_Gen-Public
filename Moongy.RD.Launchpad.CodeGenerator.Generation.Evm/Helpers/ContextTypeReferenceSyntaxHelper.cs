@@ -6,7 +6,7 @@ using SolidityTypeReference = Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.M
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers;
 
-public static class ContextTypeReferenceSyntaxHelper
+public class ContextTypeReferenceSyntaxHelper
 {
     private static readonly Dictionary<PrimitiveType, SolidityDataTypeEnum> PrimitiveToSolidityMapping = new()
     {

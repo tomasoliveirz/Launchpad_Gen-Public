@@ -1,5 +1,5 @@
 ﻿namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Enums;
-public enum ComparisonOperatorEnum
+public enum OperatorEnum
 {
     And,
     Or,
@@ -10,5 +10,10 @@ public enum ComparisonOperatorEnum
     LessThanOrEqualTo,
     Different,
     Equal,
+    Add,
+    Subtract,
+    Multiply,
+    Divide,
+    Modulo,
     None
 }

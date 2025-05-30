@@ -4,7 +4,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Sta
 {
     public abstract class ConditionalStatementBase : StatementModel
     {
-        public required string Condition { get; set; }
+        public string Condition { get; set; }
         public ExpressionModel? ConditionExpression { get; set; }
         
         public override void ProcessProperties(Dictionary<string, object> properties)

@@ -10,88 +10,88 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Sta
     {
         public abstract override string ToString();
         
-        public BinaryExpressionModel Binary(ComparisonOperatorEnum op, ExpressionModel right)
+        public BinaryExpressionModel Binary(OperatorEnum op, ExpressionModel right)
         {
             return new BinaryExpressionModel(this, op, right);
         }
         
-        public BinaryExpressionModel Binary(ComparisonOperatorEnum op, string right)
+        public BinaryExpressionModel Binary(OperatorEnum op, string right)
         {
             return new BinaryExpressionModel(this, op, new LiteralExpressionModel(right));
         }
         
         public BinaryExpressionModel Equal(ExpressionModel right)
         {
-            return Binary(ComparisonOperatorEnum.Equal, right);
+            return Binary(OperatorEnum.Equal, right);
         }
         
         public BinaryExpressionModel Equal(string right)
         {
-            return Binary(ComparisonOperatorEnum.Equal, right);
+            return Binary(OperatorEnum.Equal, right);
         }
         
         public BinaryExpressionModel NotEqual(ExpressionModel right)
         {
-            return Binary(ComparisonOperatorEnum.Different, right);
+            return Binary(OperatorEnum.Different, right);
         }
         
         public BinaryExpressionModel NotEqual(string right)
         {
-            return Binary(ComparisonOperatorEnum.Different, right);
+            return Binary(OperatorEnum.Different, right);
         }
         
         public BinaryExpressionModel GreaterThan(ExpressionModel right)
         {
-            return Binary(ComparisonOperatorEnum.GreaterThan, right);
+            return Binary(OperatorEnum.GreaterThan, right);
         }
         public BinaryExpressionModel GreaterThan(string right)
         {
-            return Binary(ComparisonOperatorEnum.GreaterThan, right);
+            return Binary(OperatorEnum.GreaterThan, right);
         }
         
         public BinaryExpressionModel GreaterOrEqual(ExpressionModel right)
         {
-            return Binary(ComparisonOperatorEnum.GreaterOrEqualTo, right);
+            return Binary(OperatorEnum.GreaterOrEqualTo, right);
         }
         
         public BinaryExpressionModel GreaterOrEqual(string right)
         {
-            return Binary(ComparisonOperatorEnum.GreaterOrEqualTo, right);
+            return Binary(OperatorEnum.GreaterOrEqualTo, right);
         }
 
         public BinaryExpressionModel LessThan(ExpressionModel right)
         {
-            return Binary(ComparisonOperatorEnum.LessThan, right);
+            return Binary(OperatorEnum.LessThan, right);
         }
         
 
         public BinaryExpressionModel LessThan(string right)
         {
-            return Binary(ComparisonOperatorEnum.LessThan, right);
+            return Binary(OperatorEnum.LessThan, right);
         }
 
         public BinaryExpressionModel LessOrEqual(ExpressionModel right)
         {
-            return Binary(ComparisonOperatorEnum.LessThanOrEqualTo, right);
+            return Binary(OperatorEnum.LessThanOrEqualTo, right);
         }
         
         public BinaryExpressionModel LessOrEqual(string right)
         {
-            return Binary(ComparisonOperatorEnum.LessThanOrEqualTo, right);
+            return Binary(OperatorEnum.LessThanOrEqualTo, right);
         }
 
         public BinaryExpressionModel And(ExpressionModel right)
         {
-            return Binary(ComparisonOperatorEnum.And, right);
+            return Binary(OperatorEnum.And, right);
         }
         public BinaryExpressionModel Or(ExpressionModel right)
         {
-            return Binary(ComparisonOperatorEnum.Or, right);
+            return Binary(OperatorEnum.Or, right);
         }
 
         public UnaryExpressionModel Not()
         {
-            return new UnaryExpressionModel(ComparisonOperatorEnum.Not, this);
+            return new UnaryExpressionModel(OperatorEnum.Not, this);
         }
         
         // static factory method to create an expression from a literal string
@@ -105,7 +105,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Sta
         {
             return new BinaryExpressionModel(
                 new LiteralExpressionModel(left),
-                ComparisonOperatorEnum.Equal,
+                OperatorEnum.Equal,
                 new LiteralExpressionModel(right)
             );
         }
@@ -116,7 +116,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Sta
         {
             return new BinaryExpressionModel(
                 new LiteralExpressionModel(left),
-                ComparisonOperatorEnum.Different,
+                OperatorEnum.Different,
                 new LiteralExpressionModel(right)
             );
         }
@@ -127,7 +127,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Sta
         {
             return new BinaryExpressionModel(
                 new LiteralExpressionModel(left),
-                ComparisonOperatorEnum.GreaterThan,
+                OperatorEnum.GreaterThan,
                 new LiteralExpressionModel(right)
             );
         }
@@ -137,7 +137,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Sta
         {
             return new BinaryExpressionModel(
                 new LiteralExpressionModel(left),
-                ComparisonOperatorEnum.GreaterOrEqualTo,
+                OperatorEnum.GreaterOrEqualTo,
                 new LiteralExpressionModel(right)
             );
         }
@@ -148,7 +148,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Sta
         {
             return new BinaryExpressionModel(
                 new LiteralExpressionModel(left),
-                ComparisonOperatorEnum.LessThan,
+                OperatorEnum.LessThan,
                 new LiteralExpressionModel(right)
             );
         }
@@ -158,7 +158,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Sta
         {
             return new BinaryExpressionModel(
                 new LiteralExpressionModel(left),
-                ComparisonOperatorEnum.LessThanOrEqualTo,
+                OperatorEnum.LessThanOrEqualTo,
                 new LiteralExpressionModel(right)
             );
         }
@@ -169,7 +169,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Sta
         {
             return new BinaryExpressionModel(
                 left,
-                ComparisonOperatorEnum.And,
+                OperatorEnum.And,
                 right
             );
         }
@@ -179,7 +179,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Sta
         {
             return new BinaryExpressionModel(
                 left,
-                ComparisonOperatorEnum.Or,
+                OperatorEnum.Or,
                 right
             );
         }
@@ -188,7 +188,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Sta
         // create a logical NOT expression
         public static UnaryExpressionModel Not(ExpressionModel expression)
         {
-            return new UnaryExpressionModel(ComparisonOperatorEnum.Not, expression);
+            return new UnaryExpressionModel(OperatorEnum.Not, expression);
         }
     }
     
@@ -208,17 +208,31 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Sta
         }
     }
     
+    public class IdentifierExpressionModel : ExpressionModel
+    {
+        public string Identifier { get; set; }
+
+        public IdentifierExpressionModel(string identifier)
+        {
+            Identifier = identifier;
+        }
+
+        public override string ToString()
+        {
+            return Identifier;
+        }
+    }
     /// <summary>
     /// Represents a binary expression in Solidity (e.g., left == right).
     /// </summary>
     public class BinaryExpressionModel : ExpressionModel
     {
         public ExpressionModel Left { get; set; }
-        public ComparisonOperatorEnum Operator { get; set; }
+        public OperatorEnum Operator { get; set; }
         public ExpressionModel Right { get; set; }
         
         // creates a new binary expression.
-        public BinaryExpressionModel(ExpressionModel left, ComparisonOperatorEnum op, ExpressionModel right)
+        public BinaryExpressionModel(ExpressionModel left, OperatorEnum op, ExpressionModel right)
         {
             Left = left;
             Operator = op;
@@ -228,15 +242,20 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Sta
         {
             var opString = Operator switch
             {
-                ComparisonOperatorEnum.And => "&&",
-                ComparisonOperatorEnum.Or => "||",
-                ComparisonOperatorEnum.Not => "!",
-                ComparisonOperatorEnum.GreaterThan => ">",
-                ComparisonOperatorEnum.GreaterOrEqualTo => ">=",
-                ComparisonOperatorEnum.LessThan => "<",
-                ComparisonOperatorEnum.LessThanOrEqualTo => "<=",
-                ComparisonOperatorEnum.Different => "!=",
-                ComparisonOperatorEnum.Equal => "==",
+                OperatorEnum.And => "&&",
+                OperatorEnum.Or => "||",
+                OperatorEnum.Not => "!",
+                OperatorEnum.GreaterThan => ">",
+                OperatorEnum.GreaterOrEqualTo => ">=",
+                OperatorEnum.LessThan => "<",
+                OperatorEnum.LessThanOrEqualTo => "<=",
+                OperatorEnum.Different => "!=",
+                OperatorEnum.Equal => "==",
+                OperatorEnum.Add => "+",
+                OperatorEnum.Subtract => "-",
+                OperatorEnum.Multiply => "*",
+                OperatorEnum.Divide => "/",
+                OperatorEnum.Modulo => "%",
                 _ => "=="
             };
             
@@ -249,9 +268,9 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Sta
     /// </summary>
     public class UnaryExpressionModel : ExpressionModel
     {
-        public ComparisonOperatorEnum Operator { get; set; }
+        public OperatorEnum Operator { get; set; }
         public ExpressionModel Operand { get; set; }
-        public UnaryExpressionModel(ComparisonOperatorEnum op, ExpressionModel operand)
+        public UnaryExpressionModel(OperatorEnum op, ExpressionModel operand)
         {
             Operator = op;
             Operand = operand;
@@ -261,7 +280,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Sta
         {
             var opString = Operator switch
             {
-                ComparisonOperatorEnum.Not => "!",
+                OperatorEnum.Not => "!",
                 _ => "!"
             };
             
@@ -269,6 +288,37 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Sta
         }
     }
     
+    public class MemberAccessExpressionModel : ExpressionModel
+    {
+        public ExpressionModel Target { get; set; }
+        public string MemberName { get; set; }
+        public MemberAccessExpressionModel(ExpressionModel target, string memberName)
+        {
+            Target = target;
+            MemberName = memberName;
+        }
+        public override string ToString()
+        {
+            return $"{Target}.{MemberName}";
+        }
+    }
+
+    public class IndexAccessExpressionModel : ExpressionModel
+    {
+        public ExpressionModel Target { get; set; }
+        public ExpressionModel Index { get; set; }
+
+        public IndexAccessExpressionModel(ExpressionModel target, ExpressionModel index)
+        {
+            Target = target;
+            Index = index;
+        }
+
+        public override string ToString()
+        {
+            return $"{Target}[{Index}]";
+        }
+    }
     /// <summary>
     /// Represents a method call expression in Solidity
     /// </summary>

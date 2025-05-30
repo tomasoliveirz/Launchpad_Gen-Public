@@ -3,8 +3,8 @@ using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Modules;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Others;
 using Moongy.RD.Launchpad.CodeGenerator.Extensions.Models;
-/*
 using Moongy.RD.Launchpad.CodeGenerator.Extensions.Augmenters.AccessControl.Ownable;
+/*
 using Moongy.RD.Launchpad.CodeGenerator.Extensions.Augmenters.AccessControl.RoleBased;
 */
 
@@ -64,7 +64,28 @@ public class AccessControlExtensionAugmenter : BaseExtensionAugmenter<AccessCont
 
     private static void BuildOwnableErrors(ModuleDefinition mod)
     {
-        return;
+        //     error OwnableUnauthorizedAccount(address account);
+        AddOnce(mod.Triggers, e => e.Name == "OwnableUnauthorizedAccount", () => new TriggerDefinition
+        {
+            Name = "OwnableUnauthorizedAccount",
+            Kind = TriggerKind.Error,
+            Parameters =
+            [
+                new ParameterDefinition { Name = "account", Type = T(PrimitiveType.Address) }
+            ]
+        });
+        
+        //    error OwnableInvalidOwner(address owner);
+        AddOnce(mod.Triggers, e => e.Name == "OwnableInvalidOwner", () => new TriggerDefinition
+        {
+            Name = "OwnableInvalidOwner",
+            Kind = TriggerKind.Error,
+            Parameters =
+            [
+                new ParameterDefinition { Name = "owner", Type = T(PrimitiveType.Address) }
+            ]
+        });
+
     }
 
     private static void BuildOwnableEvents(ModuleDefinition mod)
@@ -93,7 +114,6 @@ public class AccessControlExtensionAugmenter : BaseExtensionAugmenter<AccessCont
 
     private static void BuildOwnableFunctions(ModuleDefinition mod)
     {
-        /*
         // function owner() public view virtual returns (address)
         AddOnce(mod.Functions, f => f.Name == "owner", () => new OwnerFunction().Build());
         // function _checkOwner() internal view virtual 
@@ -104,7 +124,6 @@ public class AccessControlExtensionAugmenter : BaseExtensionAugmenter<AccessCont
         AddOnce(mod.Functions, f => f.Name == "transferOwnership", () => new TransferOwnershipFunction().Build());
         // function _transferOwnership(address newOwner) internal virtual
         AddOnce(mod.Functions, f => f.Name == "_transferOwnership", () => new InternalTransferOwnershipFunction().Build());
-        */
     }
     
     

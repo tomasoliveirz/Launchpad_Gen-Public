@@ -1,4 +1,6 @@
-﻿namespace Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Others
+﻿using System.Runtime.Serialization;
+
+namespace Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Others
 {
     public class TriggerDefinition
     {
@@ -7,3 +9,5 @@
         public TriggerKind Kind { get; set; }
     }
 }
+
+
