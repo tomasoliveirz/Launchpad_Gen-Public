@@ -238,7 +238,29 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
 
         private List<ErrorModel> GenerateErrors(ModuleDefinition module)
         {
-            throw new NotImplementedException();
+
+            var result = new List<ErrorModel>();
+
+            foreach (var trigger in module.Triggers)
+            {
+                if (trigger.Kind == TriggerKind.Error)
+                {
+                    var errorModel = new ErrorModel()
+                    {
+                        Name = trigger.Name,
+                        Parameters = trigger.Parameters?.Select((p, index) => new ErrorParameterModel
+                        {
+                            Name = p.Name,
+                            Type = ContextTypeReferenceSyntaxHelper.MapToSolidityTypeReference(p.Type),
+                            Index = index, 
+                            Value = p.Value
+                        }).ToList() ?? new List<ErrorParameterModel>()
+                    };
+                    result.Add(errorModel);
+                }
+            }
+
+            return result;
         }
 
         private List<ModifierModel> GenerateModifiers(ModuleDefinition module)
