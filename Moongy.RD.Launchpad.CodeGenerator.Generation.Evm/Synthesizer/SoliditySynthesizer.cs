@@ -227,6 +227,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
                     IsImmutable = fieldDefinition.IsImmutable,
                     InitialValue = fieldDefinition.Value
                 };
+                result.Add(stateVariable);
             }
             return result;
         }
