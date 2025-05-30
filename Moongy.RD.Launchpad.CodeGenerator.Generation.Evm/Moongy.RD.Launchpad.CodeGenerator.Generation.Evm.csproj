@@ -7,8 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Validators\" />
+    <Folder Include="Processors\" />
     <Folder Include="Templates\" />
+    <Folder Include="Validators\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Scriban" Version="6.2.1" />
   </ItemGroup>
 
   <ItemGroup>
