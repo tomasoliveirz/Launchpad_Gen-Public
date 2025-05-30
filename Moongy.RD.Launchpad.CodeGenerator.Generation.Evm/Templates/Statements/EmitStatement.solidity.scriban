@@ -1,0 +1,5 @@
+﻿{{~ if Arguments.size > 0 ~}}
+emit {{EventName}}({{Arguments | array.join ", "}});
+{{~ else ~}}
+emit {{EventName}}();
+{{~ end ~}}

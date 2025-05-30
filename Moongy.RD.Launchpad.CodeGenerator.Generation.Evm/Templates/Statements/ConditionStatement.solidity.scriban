@@ -1,0 +1,14 @@
+﻿{{~ for block in ConditionalBlocks ~}}
+{{~ if for.first ~}}
+
+    if ({{block.Condition}}) {
+{{~ else if block.IsElseBlock ~}}
+    else {
+{{~ else ~}}
+    else if ({{block.Condition}}) {
+{{~ end ~}}
+{{~ for statement in block.Statements ~}}
+        {{statement}}
+{{~ end ~}}
+    }
+{{~ end ~}}

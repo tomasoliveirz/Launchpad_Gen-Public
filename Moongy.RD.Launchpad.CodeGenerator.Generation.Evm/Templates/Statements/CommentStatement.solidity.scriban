@@ -1,0 +1,7 @@
+﻿{{~ if IsMultiLine ~}}
+/*
+ * {{ Text | string.replace "\n" "\n * " }}
+ */
+{{~ else ~}}
+// {{ Text }}
+{{~ end ~}}

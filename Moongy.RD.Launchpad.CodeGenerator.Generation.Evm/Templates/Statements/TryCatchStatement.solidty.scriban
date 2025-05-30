@@ -1,0 +1,26 @@
+﻿try {{ExternalCall}} {{~ if ReturnType ~}}returns ({{ReturnType}} {{ReturnVariable}}){{~ end ~}} {
+{{~ for statement in SuccessStatements ~}}
+    {{statement}}
+{{~ end ~}}
+}
+{{~ for clause in ErrorCatchClauses ~}}
+{{~ if clause.Type == "Error" ~}}
+catch Error(string memory {{clause.Variable}}) {
+{{~ for statement in clause.Statements ~}}
+    {{statement}}
+{{~ end ~}}
+}
+{{~ else if clause.Type == "Panic" ~}}
+catch Panic(uint {{clause.Variable}}) {
+{{~ for statement in clause.Statements ~}}
+    {{statement}}
+{{~ end ~}}
+}
+{{~ else ~}}
+catch (bytes memory {{clause.Variable}}) {
+{{~ for statement in clause.Statements ~}}
+    {{statement}}
+{{~ end ~}}
+}
+{{~ end ~}}
+{{~ end ~}}

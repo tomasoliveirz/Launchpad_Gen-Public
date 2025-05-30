@@ -1,0 +1,1 @@
+﻿{{Type}} {{Visibility}} {{if IsConstant}}constant {{end}}{{if IsImmutable}}immutable {{end}}{{Name}}{{if HasInitialValue}} = {{InitialValue}}{{end}};

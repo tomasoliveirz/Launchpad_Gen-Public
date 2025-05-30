@@ -1,0 +1,13 @@
+﻿
+    if ({{Condition}}) {
+{{~ for statement in ThenStatements ~}}
+    {{statement}}
+{{~ end ~}}
+    }
+{{~ if ElseStatements.size > 0 ~}}
+    else {
+{{~ for statement in ElseStatements ~}}
+        {{statement}}
+{{~ end ~}}
+    }
+{{~ end ~}}

@@ -1,0 +1,23 @@
+﻿fallback() {{ Visibility }}{{- if Mutability != "" }} {{ Mutability }}{{ end -}}
+    {{- if IsVirtual }} virtual{{ end -}}
+    {{- if IsOverride }} override{{ OverrideSpecifier }}{{ end -}}
+    {{- if HasModifiers }}{{ for modifier in Modifiers }} {{ modifier }}{{ end }}{{ end -}}
+    {{- if HasParameters }} returns (bytes memory){{~ end -}}
+    {{- if IsInterface -}};{{- else }} {
+{{- if HasCustomError }}
+    try {
+{{- end }}
+{{- if HasStatements }}
+{{ for statement in Statements }}        {{ statement }}
+{{ end }}
+{{- else }}
+        // Implementation
+{{- end }}
+{{- if HasCustomError }}
+    } catch {
+        emit {{ CustomError }}();
+        return false;
+    }
+    return true;
+{{- end }}
+}{{ end }}
