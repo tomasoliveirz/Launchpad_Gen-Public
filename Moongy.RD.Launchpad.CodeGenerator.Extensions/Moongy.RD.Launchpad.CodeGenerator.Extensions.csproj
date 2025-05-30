@@ -9,10 +9,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Moongy.RD.Launchpad.CodeGenerator.Core\Moongy.RD.Launchpad.CodeGenerator.Core.csproj" />
     <ProjectReference Include="..\Moongy.RD.Launchpad.CodeGenerator.Generation.Evm\Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.csproj" />
+    <ProjectReference Include="..\Moongy.RD.Launchpad.CodeGenerator.Standards\Moongy.RD.Launchpad.CodeGenerator.Standards.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Augmenters\AccessControl\Ownable\" />
     <Folder Include="Augmenters\AccessControl\RoleBased\" />
   </ItemGroup>
 

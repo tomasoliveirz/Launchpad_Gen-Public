@@ -190,7 +190,6 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
                         }
                     }
 
-
                     var constructorParam = new ConstructorParameterModel
                     {
                         Type =ContextTypeReferenceSyntaxHelper.MapToSolidityTypeReference(parameter.Type),
@@ -285,12 +284,203 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
 
         private List<ModifierModel> GenerateModifiers(ModuleDefinition module)
         {
-            throw new NotImplementedException();
+            var result = new List<ModifierModel>();
+
+            if (module.Modifiers != null && module.Modifiers.Any())
+            {
+                foreach (var modifierDefinition in module.Modifiers)
+                {
+                    var modifierModel = CreateModifierModel(modifierDefinition);
+                    result.Add(modifierModel);
+                }
+            }
+
+            return result;
+        }
+
+        private ModifierModel CreateModifierModel(ModifierDefinition modifierDefinition)
+        {
+            if (string.IsNullOrWhiteSpace(modifierDefinition.Name))
+            {
+                throw new ArgumentException("Modifier definition must have a valid name", nameof(modifierDefinition));
+            }
+
+            var parameters = GenerateModifierParameters(modifierDefinition.Arguments);
+            var arguments = ExtractArgumentNames(modifierDefinition.Arguments);
+
+            var modifierModel = new ModifierModel()
+            {
+                Name = modifierDefinition.Name,
+                Parameters = parameters,
+                Arguments = arguments,
+                Body = GenerateModifierBody(modifierDefinition)
+            };
+
+            return modifierModel;
+        }
+
+        private List<ModifierParameterModel> GenerateModifierParameters(List<ParameterDefinition> parameterDefinitions)
+        {
+            var result = new List<ModifierParameterModel>();
+
+            if (parameterDefinitions != null && parameterDefinitions.Any())
+            {
+                for (int i = 0; i < parameterDefinitions.Count; i++)
+                {
+                    var paramDef = parameterDefinitions[i];
+
+                    if (string.IsNullOrWhiteSpace(paramDef.Name))
+                    {
+                        throw new ArgumentException($"Parameter at index {i} must have a valid name");
+                    }
+
+                    if (paramDef.Type == null)
+                    {
+                        throw new ArgumentException($"Parameter '{paramDef.Name}' must have a valid type");
+                    }
+
+                    try
+                    {
+                        var modifierParameter = new ModifierParameterModel
+                        {
+                            Name = paramDef.Name,
+                            Type = ContextTypeReferenceSyntaxHelper.MapToSolidityTypeReference(paramDef.Type),
+                            Index = i,
+                            Value = paramDef.Value,
+                            Location = DetermineMemoryLocation(paramDef.Type)
+                        };
+
+                        result.Add(modifierParameter);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new InvalidOperationException($"Failed to map parameter '{paramDef.Name}' in modifier: {ex.Message}", ex);
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private List<string> ExtractArgumentNames(List<ParameterDefinition> parameterDefinitions)
+        {
+            var result = new List<string>();
+
+            if (parameterDefinitions != null && parameterDefinitions.Any())
+            {
+                foreach (var paramDef in parameterDefinitions)
+                {
+                    if (!string.IsNullOrWhiteSpace(paramDef.Name))
+                    {
+                        result.Add(paramDef.Name);
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private SolidityMemoryLocation DetermineMemoryLocation(TypeReference typeReference)
+        {
+            return typeReference.Kind switch
+            {
+                TypeReferenceKind.Simple => SolidityMemoryLocation.None,
+                TypeReferenceKind.Array => SolidityMemoryLocation.Memory,
+                TypeReferenceKind.Mapping => SolidityMemoryLocation.Storage,
+                TypeReferenceKind.Custom => DetermineCustomTypeLocation(typeReference),
+                TypeReferenceKind.Tuple => SolidityMemoryLocation.Memory,
+                _ => SolidityMemoryLocation.None
+            };
+        }
+
+        private SolidityMemoryLocation DetermineCustomTypeLocation(TypeReference typeReference)
+        {
+            if (!string.IsNullOrEmpty(typeReference.TypeName))
+            {
+                return SolidityMemoryLocation.Memory;
+            }
+
+            return SolidityMemoryLocation.None;
+        }
+
+        private string GenerateModifierBody(ModifierDefinition modifierDefinition)
+        {
+            return ""; //Not sure how to generate the body yet, placeholder for now
+        }
+
+        private List<ModifierModel> GenerateModifiersFromFunctions(ModuleDefinition module)
+        {
+            var result = new List<ModifierModel>();
+            var distinctModifiers = new HashSet<string>();
+
+            foreach (var function in module.Functions)
+            {
+                if (function.Modifiers != null && function.Modifiers.Any())
+                {
+                    foreach (var modifierUsage in function.Modifiers)
+                    {
+                        if (!string.IsNullOrWhiteSpace(modifierUsage.Name) &&
+                            distinctModifiers.Add(modifierUsage.Name))
+                        {
+                            var modifierModel = new ModifierModel()
+                            {
+                                Name = modifierUsage.Name,
+                                Parameters = GenerateModifierParameters(modifierUsage.Arguments),
+                                Arguments = ExtractArgumentNames(modifierUsage.Arguments),
+                                Body = $"// Modifier {modifierUsage.Name} implementation\n_;"
+                            };
+
+                            result.Add(modifierModel);
+                        }
+                    }
+                }
+            }
+
+            return result;
         }
 
         private List<StructModel> GenerateStructs(ModuleDefinition module, IEnumerable<ImportDefinition> importDefinitions)
         {
-            throw new NotImplementedException();
+            var result = new List<StructModel>();
+
+            if (module.Structs != null && module.Structs.Any())
+            {
+                foreach (var structDefinition in module.Structs)
+                {
+                    var properties = GenerateStructProperties(structDefinition.Fields);
+
+                    var structModel = new StructModel()
+                    {
+                        Name = structDefinition.Name,
+                        Properties = properties.ToArray()
+                    };
+
+                    result.Add(structModel);
+                }
+            }
+
+            return result;
+        }
+
+        private List<StructPropertyModel> GenerateStructProperties(List<FieldDefinition> fields)
+        {
+            var result = new List<StructPropertyModel>();
+
+            if (fields != null && fields.Any())
+            {
+                foreach (var field in fields)
+                {
+                    var property = new StructPropertyModel()
+                    {
+                        Name = field.Name,
+                        DataType = ContextTypeReferenceSyntaxHelper.MapToSolidityTypeReference(field.Type)
+                    };
+
+                    result.Add(property);
+                }
+            }
+
+            return result;
         }
 
         private List<EnumModel> GenerateEnums(ModuleDefinition module, IEnumerable<ImportDefinition> importDefinitions)
