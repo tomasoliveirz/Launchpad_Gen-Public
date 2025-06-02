@@ -4,7 +4,6 @@ using Moongy.RD.Launchpad.CodeGenerator.Core.Interfaces;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Functions;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Others;
-using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.TypeReferences;
 using ModuleDefinition = Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Modules.ModuleDefinition;
 using TypeReference = Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Others.TypeReference;
 

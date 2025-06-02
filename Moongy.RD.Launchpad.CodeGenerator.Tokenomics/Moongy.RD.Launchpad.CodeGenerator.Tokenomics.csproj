@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Moongy.RD.Launchpad.CodeGenerator.Core\Moongy.RD.Launchpad.CodeGenerator.Core.csproj" />
-    <ProjectReference Include="..\Moongy.RD.Launchpad.CodeGenerator.Generation.Evm\Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.csproj" />
   </ItemGroup>
 
 </Project>
