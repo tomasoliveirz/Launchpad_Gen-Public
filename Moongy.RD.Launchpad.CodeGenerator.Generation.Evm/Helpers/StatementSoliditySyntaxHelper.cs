@@ -16,7 +16,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers
                 FunctionStatementKind.Expression => MapExpression(statement.Expression),
                 FunctionStatementKind.Condition => MapCondition(statement.ConditionBranches),
                 FunctionStatementKind.ConditionLoop => MapConditionLoop(statement.LoopCondition, statement.LoopBody),
-                FunctionStatementKind.RangeLoop => MapRangeLoop(statement.RangeStart, statement.RangeEnd, statement.Iterator,, statement.LoopBody),
+                FunctionStatementKind.RangeLoop => MapRangeLoop(statement.RangeStart, statement.RangeEnd, statement.Iterator, statement.LoopBody),
                 FunctionStatementKind.Trigger => MapTrigger(statement.Trigger, statement.TriggerArguments),
                 FunctionStatementKind.Return => MapReturn(statement.ReturnValues),
                 _ => throw new NotSupportedException($"StatementKind '{statement.Kind}' is not supported for Solidity mapping")
@@ -28,9 +28,9 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers
                                            ExpressionSoliditySyntaxHelper.MapExpression(functionStatementDefinition.Right));
 
         }
-        private static ExpressionModel MapExpression(ExpressionDefinition functionStatementDefinition)
+        private static RawStatementModel MapExpression(ExpressionDefinition functionStatementDefinition)
         {
-            return ExpressionSoliditySyntaxHelper.MapExpression(functionStatementDefinition);
+            return new RawStatementModel{ Code = ExpressionSoliditySyntaxHelper.MapExpression(functionStatementDefinition).ToString()};
         }
         private static ConditionStatementModel MapCondition(List<ConditionBranch> conditionBranches)
         {

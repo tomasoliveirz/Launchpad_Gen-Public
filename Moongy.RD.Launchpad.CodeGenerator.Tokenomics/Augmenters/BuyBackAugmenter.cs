@@ -143,16 +143,22 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Tokenomics.Augmenters
                 {
                     Callee = _require,
                     Kind = ExpressionKind.FunctionCall,
-                    Arguments = [ new() {
-                        Kind = ExpressionKind.Binary,
-                        Operator = BinaryOperator.NotEqual,
-                        Left = new(){Kind = ExpressionKind.MemberAccess, MemberName= def.Parameters.FirstOrDefault()!.Name },
-                        Right = new(){Kind = ExpressionKind.Literal, LiteralValue=MAX_FEE.ToString()}
-                    },
-                    new() { Kind= ExpressionKind.Literal, LiteralValue = "Router cannot be zero"}
+                    Arguments =
+                    [
+                        new()
+                        {
+                            Kind = ExpressionKind.Binary,
+                            Operator = BinaryOperator.NotEqual,
+                            Left = new()
+                            {
+                                Kind = ExpressionKind.MemberAccess, MemberName = def.Parameters.FirstOrDefault()!.Name
+                            },
+                            Right = new() { Kind = ExpressionKind.Literal, LiteralValue = MAX_FEE.ToString() }
+                        },
+                        new() { Kind = ExpressionKind.Literal, LiteralValue = "Router cannot be zero" }
                     ]
                 }
-            }
+            };
             def.Body.Add(require);
 
             AddFieldAssignment(def, field);
