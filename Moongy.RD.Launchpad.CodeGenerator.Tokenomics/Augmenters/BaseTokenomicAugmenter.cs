@@ -25,6 +25,12 @@ public abstract class BaseTokenomicAugmenter<TModel> : IAugmenter<TModel>
     protected static FunctionDefinition TransferFn(ModuleDefinition m) =>
         m.Functions.First(f => f.Name is "_transfer");
     
+    protected static void OverrideFunction(ModuleDefinition mod, FunctionDefinition existing, FunctionDefinition replacement)
+    {
+        if (existing == null) return;
+        mod.Functions.Remove(existing);
+        mod.Functions.Add(replacement);
+    }
     protected static void AddOnce<T>(ICollection<T> list, Func<T, bool> exists, Func<T> factory)
     {
         if (list.Any(exists)) return;
