@@ -44,7 +44,6 @@ public class TaxTokenomicAugmenter : BaseTokenomicAugmenter<TaxTokenomicModel>
 
         // function getTaxFee() public view returns (uint256)
         AddOnce(mod.Functions, f => f.Name == "getTaxFee", () => new GetTaxFeeFunction().Build());
-        throw new NotImplementedException();
     }
 
     private void ModifyTransferFunction(ModuleDefinition mod)
