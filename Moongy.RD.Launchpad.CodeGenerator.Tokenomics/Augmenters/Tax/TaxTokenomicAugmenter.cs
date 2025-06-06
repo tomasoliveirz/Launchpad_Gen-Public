@@ -1,3 +1,4 @@
+using System.Diagnostics.Contracts;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Enums;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Modules;
@@ -10,46 +11,136 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Tokenomics.Augmenters.Tax;
 
 public class TaxTokenomicAugmenter : BaseTokenomicAugmenter<TaxTokenomicModel>
 {
-    public override IReadOnlyCollection<FeatureKind> Requires => new[] { FeatureKind.AccessControl };
-
-    public override IReadOnlyCollection<FeatureKind> Provides => new[] { FeatureKind.Tax };
-
+    // uint256 private taxFee;
+    private FieldDefinition _taxFeeField = new() 
+    {
+        Name = "taxFee",
+        Type = T(PrimitiveType.Uint256),
+        Visibility = Visibility.Private
+    };
+    // address[] private _taxRecipients;
+    private FieldDefinition _taxRecipientsField = new()
+    {
+        Name = "_taxRecipients",
+        Type = new TypeReference
+        {
+            Kind = TypeReferenceKind.Array,
+            ElementType = new TypeReference { Kind = TypeReferenceKind.Simple, Primitive = PrimitiveType.Address }
+        },        
+        Visibility = Visibility.Private
+    };
+    
     public override void Augment(ContextMetamodel ctx, TaxTokenomicModel model)
     {
         var mod = Main(ctx);
-        
-        BuildTaxStorage(mod, model);
-        BuildTaxFunctions(mod);
+        // first we add needed state variables
+        AddStateVariables(mod);
+        // then initialize variables in the constructor if needed
+        InitializeVariables(ctx, model);
+        // add getter and setter functions
+        AddAccessFunctions(mod);
         ModifyTransferFunction(mod);
     }
-
-
-    private void BuildTaxStorage(ModuleDefinition mod, TaxTokenomicModel model)
+    
+    // add fields to the contract
+    // uint256 private taxFee;
+    // address[] private _taxRecipients;
+    private void AddStateVariables(ModuleDefinition contract)
     {
-        // uint256 private taxFee;
-        AddOnce(mod.Fields, f => f.Name == "taxFee", () => new FieldDefinition
-            {
-                Name = "taxFee",
-                Type = T(PrimitiveType.Uint256),
-                Visibility = Visibility.Private,
-                Value = model.TaxFee.ToString()
-            }
-        );
+        AddOnce(contract.Fields, f => f.Name == "taxFee", () => _taxFeeField);
+        AddOnce(contract.Fields, f => f.Name == "_taxRecipients", () => _taxRecipientsField);
     }
     
-    private void BuildTaxFunctions(ModuleDefinition mod)
+    // modifies the constructor or creates it if it doesn't exist
+    // taxFee = model.TaxFee;
+    // _taxRecipients = model.TaxRecipients;
+    private void InitializeVariables(ContextMetamodel ctx, TaxTokenomicModel model)
     {
-        // function setTaxFee(uint256 newTaxFee) public onlyOwner 
-        AddOnce(mod.Functions, f => f.Name == "setTaxFee", () => new SetTaxFeeFunction().Build());
+        var contract = Main(ctx);
+        var constructor = contract.Functions.FirstOrDefault(f => f.Name == "constructor");
+        if (constructor == null)
+        {
+            constructor = new FunctionDefinition
+            {
+                Kind = FunctionKind.Constructor,
+                Name = "constructor",
+                Visibility = Visibility.Public,
+                Body = new List<FunctionStatementDefinition>()
+            };
+            contract.Functions.Add(constructor);
+        }
 
-        // function getTaxFee() public view returns (uint256)
-        AddOnce(mod.Functions, f => f.Name == "getTaxFee", () => new GetTaxFeeFunction().Build());
+        var taxFeeAssignment = new FunctionStatementDefinition
+        {
+            Kind = FunctionStatementKind.Assignment,
+            ParameterAssignment = new AssignmentDefinition
+            {
+                Left = new ExpressionDefinition
+                {
+                    Kind = ExpressionKind.Identifier,
+                    Identifier = "taxFee"
+                },
+                Right = new ExpressionDefinition
+                {
+                    Kind = ExpressionKind.Literal,
+                    LiteralValue = model.TaxFee.ToString()
+                }
+            }
+        };
+        
+        constructor.Body.Add(taxFeeAssignment);
+
+        if (model.TaxRecipients?.Any() == true)
+        {
+            foreach (var recipient in model.TaxRecipients)
+            {
+                var recipientAssignment = new FunctionStatementDefinition
+                {
+                    Kind = FunctionStatementKind.Expression,
+                    Expression = new ExpressionDefinition
+                    {
+                        Kind = ExpressionKind.FunctionCall,
+                        Callee = new ExpressionDefinition { Kind = ExpressionKind.MemberAccess, MemberName = "_taxRecipients.push" },
+                        Arguments = new List<ExpressionDefinition>
+                        {
+                            new ExpressionDefinition { Kind = ExpressionKind.Literal, LiteralValue = $"\"{recipient.Address}\"" }
+                        }
+                    }
+                };
+                constructor.Body.Add(recipientAssignment);
+            }
+        }
+    }
+    // function getTaxFee() public view returns (uint256) {
+    //     return taxFee;
+    // }
+    // 
+    // function setTaxFee(uint256 newTaxFee) public onlyOwner {
+    //     require(newTaxFee <= 100, "Tax fee cannot exceed 100%");
+    //     taxFee = newTaxFee;
+    private void AddAccessFunctions(ModuleDefinition contract)
+    {
+        var ownerModifier = contract.Modifiers.FirstOrDefault(m => m.Name == "onlyOwner");
+        
+        var getTaxFeeFunction = new GetTaxFeeFunction().Build();
+        AddOnce(contract.Functions, f => f.Name == "getTaxFee", () => getTaxFeeFunction);
+        
+        var setTaxFeeFunction = new SetTaxFeeFunction().Build();
+        if (ownerModifier != null && !setTaxFeeFunction.Modifiers.Any(m => m.Name == "onlyOwner"))
+        {
+            setTaxFeeFunction.Modifiers.Add(ownerModifier);
+        }
+        AddOnce(contract.Functions, f => f.Name == "setTaxFee", () => setTaxFeeFunction);
     }
 
     private void ModifyTransferFunction(ModuleDefinition mod)
     {
-        var existingTransfer = TransferFn(mod);
-        var updatedTransfer = new ModifiedTransferFunction().Build();
-        OverrideFunction(mod, existingTransfer, updatedTransfer);
+        var transferFunction = mod.Functions.FirstOrDefault(f => f.Name == "_transfer");
+        if (transferFunction != null)
+        {
+            var modifier = new TransferFunctionModifier();
+            modifier.ModifyForTax(transferFunction);
+        }
+
     }
 }
