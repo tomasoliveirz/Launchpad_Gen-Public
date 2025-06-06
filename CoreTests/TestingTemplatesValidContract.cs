@@ -44,7 +44,7 @@ namespace CoreTests
     new ConstructorParameterModel
     {
         Name = "initialSupply",
-        Type = new SimpleTypeReference(SolidityDataTypeEnum.Uint256), // Fixed: Changed from Int8 to Uint256
+        Type = new SimpleTypeReference(SolidityDataTypeEnum.Uint256),
     },
     new ConstructorParameterModel
     {
@@ -219,7 +219,7 @@ namespace CoreTests
     new ModifierModel
     {
         Name = "onlyOwner",
-        Parameters = new List<ModifierParameterModel>(), // Fixed: Empty parameters for this modifier
+        Parameters = new List<ModifierParameterModel>(),
         Arguments = new List<string>(),
         Body = "require(msg.sender == owner, \"Caller is not the owner\");"
     },
@@ -277,7 +277,6 @@ namespace CoreTests
             var functions = new List<BaseFunctionModel>
 {
     
-    // Transfer function
     new NormalFunctionModel
     {
         Name = "transfer",
@@ -335,13 +334,7 @@ namespace CoreTests
                 .AddStringArgument("msg.sender")
                 .AddStringArgument("to")
                 .AddStringArgument("amount"),
-            new ReturnStatement
-            {
-                ValueExpressions = new List<ExpressionModel>
-                {
-                    new LiteralExpressionModel("true")
-                }
-            }
+            new ReturnStatement(new LiteralExpressionModel("true"))
         }
     },
     
@@ -368,13 +361,7 @@ namespace CoreTests
         Mutability = SolidityFunctionMutabilityEnum.View,
         Statements = new List<StatementModel>
         {
-            new ReturnStatement
-            {
-                ValueExpressions = new List<ExpressionModel>
-                {
-                    new IdentifierExpressionModel("balances[account]")
-                }
-            }
+            new ReturnStatement(new IdentifierExpressionModel("balances[account]"))
         }
     }
 };
