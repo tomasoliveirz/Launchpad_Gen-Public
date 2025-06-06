@@ -221,7 +221,7 @@ namespace CoreTests
         Name = "onlyOwner",
         Parameters = new List<ModifierParameterModel>(), // Fixed: Empty parameters for this modifier
         Arguments = new List<string>(),
-        Body = "require(msg.sender == owner, \"Caller is not the owner\"); _;"
+        Body = "require(msg.sender == owner, \"Caller is not the owner\");"
     },
     new ModifierModel
     {
@@ -235,7 +235,7 @@ namespace CoreTests
             }
         },
         Arguments = new List<string>(),
-        Body = "require(balances[msg.sender] >= amount, \"Insufficient balance\"); _;"
+        Body = "require(balances[msg.sender] >= amount, \"Insufficient balance\");"
     }
 };
             #endregion
@@ -313,23 +313,24 @@ namespace CoreTests
                 Message = "Cannot transfer to zero address"
             },
             new AssignmentStatement
-            {
-                TargetExpression = new IdentifierExpressionModel("balances[msg.sender]"),
-                ValueExpression = new BinaryExpressionModel(
-                    left: new IdentifierExpressionModel("balances[msg.sender]"),
-                    right: new IdentifierExpressionModel("amount"),
-                    op: OperatorEnum.Subtract 
+            (
+                new IdentifierExpressionModel("balances[msg.sender]"),
+                new BinaryExpressionModel(
+                    new IdentifierExpressionModel("balances[msg.sender]"),
+                    OperatorEnum.Subtract,
+                    new IdentifierExpressionModel("amount") 
                 )
-            },
+            ),
             new AssignmentStatement
-            {
-                TargetExpression = new IdentifierExpressionModel("balances[to]"),
-                ValueExpression = new BinaryExpressionModel(
-                    left: new IdentifierExpressionModel("balances[to]"),
-                    right: new IdentifierExpressionModel("amount"),
-                    op: OperatorEnum.Add
+            (
+                new IdentifierExpressionModel("balances[to]"),
+                new BinaryExpressionModel(
+                    new IdentifierExpressionModel("balances[to]"),
+                    OperatorEnum.Add,
+                    new IdentifierExpressionModel("amount")
                 )
-            },
+            ),
+
             new EmitStatement("Transfer")
                 .AddStringArgument("msg.sender")
                 .AddStringArgument("to")
