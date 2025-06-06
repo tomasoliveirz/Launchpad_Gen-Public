@@ -7,8 +7,83 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Templates\ContractConstructor.solidity.scriban" />
+    <None Remove="Templates\ContractHeader.solidity.scriban" />
+    <None Remove="Templates\Enum.solidity.scriban" />
+    <None Remove="Templates\Error.solidity.scriban" />
+    <None Remove="Templates\Event.solidity.scriban" />
+    <None Remove="Templates\Fallback.solidity.scriban" />
+    <None Remove="Templates\FileHeader.solidity.scriban" />
+    <None Remove="Templates\Function.solidity.scriban" />
+    <None Remove="Templates\Imports.solidity.scriban" />
+    <None Remove="Templates\Modifier.solidity.scriban" />
+    <None Remove="Templates\Receive.solidity.scriban" />
+    <None Remove="Templates\Statements\AssemblyStatement.solidity.scriban" />
+    <None Remove="Templates\Statements\AssertStatement.solidity.scriban" />
+    <None Remove="Templates\Statements\AssignmentStatement.solidity.scriban" />
+    <None Remove="Templates\Statements\BreakStatement.solidity.scriban" />
+    <None Remove="Templates\Statements\CommentStatement.solidity.scriban" />
+    <None Remove="Templates\Statements\ConditionStatement.solidity.scriban" />
+    <None Remove="Templates\Statements\ContinueStatement.solidity.scriban" />
+    <None Remove="Templates\Statements\DeleteStatement.solidity.scriban" />
+    <None Remove="Templates\Statements\DoWhileStatement.solidity.scriban" />
+    <None Remove="Templates\Statements\EmitStatement.solidity.scriban" />
+    <None Remove="Templates\Statements\ExpressionStatement.solidity.scriban" />
+    <None Remove="Templates\Statements\ForStatement.solidity.scriban" />
+    <None Remove="Templates\Statements\IfStatement.solidity.scriban" />
+    <None Remove="Templates\Statements\RawStatement.solidity.scriban" />
+    <None Remove="Templates\Statements\RequireStatement.solidity.scriban" />
+    <None Remove="Templates\Statements\ReturnStatement.solidity.scriban" />
+    <None Remove="Templates\Statements\RevertStatement.solidity.scriban" />
+    <None Remove="Templates\Statements\TryCatchStatement.solidty.scriban" />
+    <None Remove="Templates\Statements\UncheckedStatement.solidity.scriban" />
+    <None Remove="Templates\Statements\VariableDeclarationStatement.solidity.scriban" />
+    <None Remove="Templates\Statements\WhileStatement.solidity.scriban" />
+    <None Remove="Templates\StateProperty.solidity.scriban" />
+    <None Remove="Templates\Struct.solidity.scriban" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\ContractConstructor.solidity.scriban" />
+    <EmbeddedResource Include="Templates\ContractHeader.solidity.scriban">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Templates\Enum.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Error.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Event.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Fallback.solidity.scriban" />
+    <EmbeddedResource Include="Templates\FileHeader.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Function.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Imports.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Modifier.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Receive.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Statements\AssemblyStatement.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Statements\AssertStatement.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Statements\AssignmentStatement.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Statements\BreakStatement.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Statements\CommentStatement.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Statements\ConditionStatement.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Statements\ContinueStatement.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Statements\DeleteStatement.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Statements\DoWhileStatement.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Statements\EmitStatement.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Statements\ExpressionStatement.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Statements\ForStatement.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Statements\IfStatement.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Statements\RawStatement.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Statements\RequireStatement.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Statements\ReturnStatement.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Statements\RevertStatement.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Statements\TryCatchStatement.solidty.scriban" />
+    <EmbeddedResource Include="Templates\Statements\UncheckedStatement.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Statements\VariableDeclarationStatement.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Statements\WhileStatement.solidity.scriban" />
+    <EmbeddedResource Include="Templates\StateProperty.solidity.scriban" />
+    <EmbeddedResource Include="Templates\Struct.solidity.scriban" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Processors\" />
-    <Folder Include="Templates\" />
     <Folder Include="Validators\" />
   </ItemGroup>
 
