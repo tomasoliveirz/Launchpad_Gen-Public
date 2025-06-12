@@ -11,14 +11,13 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Tokenomics.Augmenters.Tax;
 
 public class TaxTokenomicAugmenter : BaseTokenomicAugmenter<TaxTokenomicModel>
 {
-    // uint256 private taxFee;
     private FieldDefinition _taxFeeField = new() 
     {
         Name = "taxFee",
         Type = T(PrimitiveType.Uint256),
         Visibility = Visibility.Private
     };
-    // address[] private _taxRecipients;
+    
     private FieldDefinition _taxRecipientsField = new()
     {
         Name = "_taxRecipients",
@@ -33,31 +32,23 @@ public class TaxTokenomicAugmenter : BaseTokenomicAugmenter<TaxTokenomicModel>
     public override void Augment(ContextMetamodel ctx, TaxTokenomicModel model)
     {
         var mod = Main(ctx);
-        // first we add needed state variables
         AddStateVariables(mod);
-        // then initialize variables in the constructor if needed
         InitializeVariables(ctx, model);
-        // add getter and setter functions
         AddAccessFunctions(mod);
         ModifyTransferFunction(mod);
     }
     
-    // add fields to the contract
-    // uint256 private taxFee;
-    // address[] private _taxRecipients;
     private void AddStateVariables(ModuleDefinition contract)
     {
         AddOnce(contract.Fields, f => f.Name == "taxFee", () => _taxFeeField);
         AddOnce(contract.Fields, f => f.Name == "_taxRecipients", () => _taxRecipientsField);
     }
     
-    // modifies the constructor or creates it if it doesn't exist
-    // taxFee = model.TaxFee;
-    // _taxRecipients = model.TaxRecipients;
     private void InitializeVariables(ContextMetamodel ctx, TaxTokenomicModel model)
     {
         var contract = Main(ctx);
-        var constructor = contract.Functions.FirstOrDefault(f => f.Name == "constructor");
+        var constructor = contract.Functions.FirstOrDefault(f => f.Kind == FunctionKind.Constructor);
+        
         if (constructor == null)
         {
             constructor = new FunctionDefinition
@@ -65,6 +56,7 @@ public class TaxTokenomicAugmenter : BaseTokenomicAugmenter<TaxTokenomicModel>
                 Kind = FunctionKind.Constructor,
                 Name = "constructor",
                 Visibility = Visibility.Public,
+                Parameters = new List<ParameterDefinition>(),
                 Body = new List<FunctionStatementDefinition>()
             };
             contract.Functions.Add(constructor);
@@ -100,10 +92,23 @@ public class TaxTokenomicAugmenter : BaseTokenomicAugmenter<TaxTokenomicModel>
                     Expression = new ExpressionDefinition
                     {
                         Kind = ExpressionKind.FunctionCall,
-                        Callee = new ExpressionDefinition { Kind = ExpressionKind.MemberAccess, MemberName = "_taxRecipients.push" },
+                        Callee = new ExpressionDefinition
+                        {
+                            Kind = ExpressionKind.MemberAccess,
+                            Target = new ExpressionDefinition 
+                            { 
+                                Kind = ExpressionKind.Identifier, 
+                                Identifier = "_taxRecipients" 
+                            },
+                            MemberName = "push"
+                        },
                         Arguments = new List<ExpressionDefinition>
                         {
-                            new ExpressionDefinition { Kind = ExpressionKind.Literal, LiteralValue = $"\"{recipient.Address}\"" }
+                            new ExpressionDefinition 
+                            { 
+                                Kind = ExpressionKind.Literal, 
+                                LiteralValue = $"\"{recipient.Address}\"" 
+                            }
                         }
                     }
                 };
@@ -111,13 +116,7 @@ public class TaxTokenomicAugmenter : BaseTokenomicAugmenter<TaxTokenomicModel>
             }
         }
     }
-    // function getTaxFee() public view returns (uint256) {
-    //     return taxFee;
-    // }
-    // 
-    // function setTaxFee(uint256 newTaxFee) public onlyOwner {
-    //     require(newTaxFee <= 100, "Tax fee cannot exceed 100%");
-    //     taxFee = newTaxFee;
+
     private void AddAccessFunctions(ModuleDefinition contract)
     {
         var ownerModifier = contract.Modifiers.FirstOrDefault(m => m.Name == "onlyOwner");
@@ -141,6 +140,5 @@ public class TaxTokenomicAugmenter : BaseTokenomicAugmenter<TaxTokenomicModel>
             var modifier = new TransferFunctionModifier();
             modifier.ModifyForTax(transferFunction);
         }
-
     }
 }

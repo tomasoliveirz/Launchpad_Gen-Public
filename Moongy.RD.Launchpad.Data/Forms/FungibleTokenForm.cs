@@ -19,7 +19,7 @@ public class FungibleTokenForm
     public required string Symbol { get; set; }
 
     [StandardProperty(Source = StandardEnum.FungibleToken, Name =(nameof(FungibleTokenModel.Premint)))]
-    public long Premint { get; set; }
+    public ulong Premint { get; set; }
     
     [StandardProperty(Source = StandardEnum.FungibleToken, Name =(nameof(FungibleTokenModel.Decimals)))]
     public byte Decimals { get; set; }

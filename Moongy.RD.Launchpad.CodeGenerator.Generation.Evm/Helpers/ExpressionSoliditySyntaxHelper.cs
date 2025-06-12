@@ -8,33 +8,59 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers
     {
         public static ExpressionModel MapExpression(ExpressionDefinition expression)
         {
-            return expression.Kind switch
+            if (expression == null)
             {
-                ExpressionKind.Literal => MapLiteral(expression),
-                ExpressionKind.Identifier => MapIdentifier(expression),
-                ExpressionKind.FunctionCall => MapFunctionCall(expression),
-                ExpressionKind.Binary => MapBinaryOperation(expression),
-                ExpressionKind.MemberAccess => MapMemberAccess(expression),
-                ExpressionKind.IndexAccess => MapIndexAccess(expression),
-                _ => throw new NotSupportedException($"ExpressionKind '{expression.Kind}' is not supported for Solidity mapping")
-            };
+                throw new ArgumentNullException(nameof(expression), "Expression cannot be null");
+            }
+
+            try
+            {
+                return expression.Kind switch
+                {
+                    ExpressionKind.Literal => MapLiteral(expression),
+                    ExpressionKind.Identifier => MapIdentifier(expression),
+                    ExpressionKind.FunctionCall => MapFunctionCall(expression),
+                    ExpressionKind.Binary => MapBinaryOperation(expression),
+                    ExpressionKind.MemberAccess => MapMemberAccess(expression),
+                    ExpressionKind.IndexAccess => MapIndexAccess(expression),
+                    _ => throw new NotSupportedException($"ExpressionKind '{expression.Kind}' is not supported for Solidity mapping")
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Failed to map expression of kind '{expression.Kind}': {ex.Message}", ex);
+            }
         }
+
         private static LiteralExpressionModel MapLiteral(ExpressionDefinition expression)
         {
             return new LiteralExpressionModel(expression.LiteralValue);
         }
+
         private static IdentifierExpressionModel MapIdentifier(ExpressionDefinition expression)
         {
+            if (string.IsNullOrEmpty(expression.Identifier))
+            {
+                throw new ArgumentException("Identifier expression must have a valid identifier", nameof(expression));
+            }
             return new IdentifierExpressionModel(expression.Identifier);
         }
+
         private static MethodCallExpressionModel MapFunctionCall(ExpressionDefinition expression)
         {
-            var calleeExpression = MapExpression(expression.Callee!);
+            if (expression.Callee == null)
+            {
+                throw new ArgumentException("Function call expression must have a Callee", nameof(expression));
+            }
+
+            var calleeExpression = MapExpression(expression.Callee);
+            
             string methodName = calleeExpression switch
             {
-                LiteralExpressionModel lit => lit.Value ?? throw new Exception("Callee literal has no value"),
+                LiteralExpressionModel lit => HandleLiteralCallee(lit, expression.Callee),
                 IdentifierExpressionModel id => id.Identifier,
-                _ => throw new NotSupportedException("Unsupported callee expression type for method call")
+                MemberAccessExpressionModel member => HandleMemberAccessCallee(member),
+                _ => throw new NotSupportedException($"Unsupported callee expression type: {calleeExpression.GetType().Name}")
             };
 
             var mappedArgs = new List<ExpressionModel>();
@@ -42,17 +68,62 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers
             {
                 foreach (var arg in expression.Arguments)
                 {
-                    mappedArgs.Add(MapExpression(arg));
+                    if (arg != null)
+                    {
+                        mappedArgs.Add(MapExpression(arg));
+                    }
                 }
             }
 
             return new MethodCallExpressionModel(methodName, mappedArgs.ToArray());
         }
 
+        private static string HandleLiteralCallee(LiteralExpressionModel lit, ExpressionDefinition originalCallee)
+        {
+            if (!string.IsNullOrEmpty(lit.Value))
+            {
+                return lit.Value;
+            }
+
+            if (!string.IsNullOrEmpty(originalCallee.Identifier))
+            {
+                return originalCallee.Identifier;
+            }
+
+            if (!string.IsNullOrEmpty(originalCallee.MemberName))
+            {
+                return originalCallee.MemberName;
+            }
+
+            throw new Exception($"Callee literal has no value and no fallback available. " +
+                              $"LiteralValue='{originalCallee.LiteralValue}', " +
+                              $"Identifier='{originalCallee.Identifier}', " +
+                              $"MemberName='{originalCallee.MemberName}'");
+        }
+
+        private static string HandleMemberAccessCallee(MemberAccessExpressionModel member)
+        {
+            if (member.Target is IdentifierExpressionModel identifier)
+            {
+                return $"{identifier.Identifier}.{member.MemberName}";
+            }
+            
+            return member.MemberName ?? throw new Exception("Member access has no member name");
+        }
+
         private static BinaryExpressionModel MapBinaryOperation(ExpressionDefinition expression)
         {
-            var left = MapExpression(expression.Left!);
-            var right = MapExpression(expression.Right!);
+            if (expression.Left == null)
+            {
+                throw new ArgumentException("Binary operation must have a left operand", nameof(expression));
+            }
+            if (expression.Right == null)
+            {
+                throw new ArgumentException("Binary operation must have a right operand", nameof(expression));
+            }
+
+            var left = MapExpression(expression.Left);
+            var right = MapExpression(expression.Right);
             return new BinaryExpressionModel(left, MapBinaryOperator(expression.Operator), right);
         }
 
@@ -76,16 +147,45 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers
                 _ => throw new NotSupportedException($"Binary operator '{binaryOperator}' is not supported for Solidity mapping")
             };
         }
+
         private static MemberAccessExpressionModel MapMemberAccess(ExpressionDefinition expression)
         {
-            var target = MapExpression(expression.Target!);
+            if (expression.Target == null)
+            {
+                throw new ArgumentException("Member access expression must have a target", nameof(expression));
+            }
+            if (string.IsNullOrEmpty(expression.MemberName))
+            {
+                throw new ArgumentException("Member access expression must have a member name", nameof(expression));
+            }
+
+            var target = MapExpression(expression.Target);
             return new MemberAccessExpressionModel(target, expression.MemberName);
         }
+
         private static IndexAccessExpressionModel MapIndexAccess(ExpressionDefinition expression)
         {
-            var target = MapExpression(expression.Target!);
-            var index = MapExpression(expression.Index!);
-            return new IndexAccessExpressionModel(target, index);
+            if (expression.Index == null)
+            {
+                throw new ArgumentException("Index access expression must have an index", nameof(expression));
+            }
+
+            var targetExpression = expression.Target ?? expression.IndexCollection;
+            if (targetExpression == null)
+            {
+                throw new ArgumentException("Index access expression must have a target or index collection", nameof(expression));
+            }
+
+            try
+            {
+                var target = MapExpression(targetExpression);
+                var index = MapExpression(expression.Index);
+                return new IndexAccessExpressionModel(target, index);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Failed to map index access: {ex.Message}", ex);
+            }
         }
     }
 }

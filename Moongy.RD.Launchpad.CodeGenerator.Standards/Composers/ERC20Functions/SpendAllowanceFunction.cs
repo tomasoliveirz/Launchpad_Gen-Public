@@ -1,7 +1,6 @@
 ﻿using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Functions;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Others;
 using Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Base;
-using Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Helpers;
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
 {
@@ -11,20 +10,43 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
         {
             var parameters = BuildParameters();
 
-            #region Literals
-            var ownerAddress = new ExpressionDefinition { Identifier = "owner" };
-            var spenderAddress = new ExpressionDefinition { Identifier = "spender" };
-            var valueExpr = new ExpressionDefinition { Identifier = "value" };
-            var currentAllowanceExpr = new ExpressionDefinition { Identifier = "currentAllowance" };
-            var falseExpr = new ExpressionDefinition { Identifier = "false" };
-            var typeUint256Max = new ExpressionDefinition { Identifier = "type(uint256).max" };
+            #region Identifiers
+            var ownerAddress = new ExpressionDefinition 
+            { 
+                Kind = ExpressionKind.Identifier,
+                Identifier = "owner" 
+            };
+            var spenderAddress = new ExpressionDefinition 
+            { 
+                Kind = ExpressionKind.Identifier,
+                Identifier = "spender" 
+            };
+            var valueExpr = new ExpressionDefinition 
+            { 
+                Kind = ExpressionKind.Identifier,
+                Identifier = "value" 
+            };
+            var currentAllowanceExpr = new ExpressionDefinition 
+            { 
+                Kind = ExpressionKind.Identifier,
+                Identifier = "currentAllowance" 
+            };
+            var typeUint256Max = new ExpressionDefinition 
+            { 
+                Kind = ExpressionKind.Literal,
+                LiteralValue = "type(uint256).max" 
+            };
             #endregion
 
             #region Variable Declaration
             var allowanceCall = new ExpressionDefinition
             {
                 Kind = ExpressionKind.FunctionCall,
-                Callee = new ExpressionDefinition { Identifier = "allowance" },
+                Callee = new ExpressionDefinition 
+                { 
+                    Kind = ExpressionKind.Identifier,
+                    Identifier = "allowance" 
+                },
                 Arguments = new List<ExpressionDefinition> { ownerAddress, spenderAddress }
             };
 
@@ -34,32 +56,67 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
                 LocalParameter = new ParameterDefinition
                 {
                     Name = "currentAllowance",
-                    Type = DataTypeReference.Uint256,
-                    Value = allowanceCall.ToString()
+                    Type = DataTypeReference.Uint256
+                }
+            };
+
+            var currentAllowanceAssignment = new FunctionStatementDefinition
+            {
+                Kind = FunctionStatementKind.Assignment,
+                ParameterAssignment = new AssignmentDefinition
+                {
+                    Left = currentAllowanceExpr,
+                    Right = allowanceCall
                 }
             };
             #endregion
 
             #region Inner If Statement
-
-            var revertParameters = new List<ParameterDefinition>
+            var insufficientAllowanceCondition = new ExpressionDefinition
             {
-                new ParameterDefinition { Name = "spender", Type = DataTypeReference.Address },
-                new ParameterDefinition { Name = "currentAllowance", Type = DataTypeReference.Uint256 },
-                new ParameterDefinition { Name = "value", Type = DataTypeReference.Uint256 }
+                Kind = ExpressionKind.Binary,
+                Left = currentAllowanceExpr,
+                Operator = BinaryOperator.LessThan,
+                Right = valueExpr
             };
 
-            var errorHelper = new IfRevertHelper(
-                  condition: new ExpressionDefinition
-                  {
-                      Kind = ExpressionKind.Binary,
-                      Left = currentAllowanceExpr,
-                      Operator = BinaryOperator.LessThan,
-                      Right = valueExpr
-                  },
-                  errorName: "ERC20InvalidSender",
-                  revertParameters: revertParameters
-              ).Build();
+            var revertStatement = new FunctionStatementDefinition
+            {
+                Kind = FunctionStatementKind.Trigger,
+                Trigger = new TriggerDefinition
+                {
+                    Kind = TriggerKind.Error,
+                    Name = "ERC20InsufficientAllowance",
+                    Parameters = new List<ParameterDefinition>
+                    {
+                        new() { Name = "spender", Type = DataTypeReference.Address },
+                        new() { Name = "allowance", Type = DataTypeReference.Uint256 },
+                        new() { Name = "needed", Type = DataTypeReference.Uint256 }
+                    }
+                },
+                TriggerArguments = new List<ExpressionDefinition>
+                {
+                    spenderAddress,
+                    currentAllowanceExpr,
+                    valueExpr
+                }
+            };
+
+            var innerIfStatement = new FunctionStatementDefinition
+            {
+                Kind = FunctionStatementKind.Condition,
+                ConditionBranches = new List<ConditionBranch>
+                {
+                    new ConditionBranch
+                    {
+                        Condition = insufficientAllowanceCondition,
+                        Body = new List<FunctionStatementDefinition>
+                        {
+                            revertStatement
+                        }
+                    }
+                }
+            };
             #endregion
 
             #region Outer If Statement
@@ -81,7 +138,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
                         Condition = notMaxCondition,
                         Body = new List<FunctionStatementDefinition>
                         {
-                            errorHelper
+                            innerIfStatement
                         }
                     }
                 }
@@ -98,6 +155,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
                 Body = new List<FunctionStatementDefinition>
                 {
                     currentAllowanceDeclaration,
+                    currentAllowanceAssignment,
                     outerIfStatement
                 }
             };

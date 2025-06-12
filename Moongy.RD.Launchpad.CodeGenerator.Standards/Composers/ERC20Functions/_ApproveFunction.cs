@@ -1,17 +1,17 @@
-﻿using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Functions;
+using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Functions;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Others;
 using Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Base;
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
 {
-    public class _TransferFunction
+    public class _ApproveFunction
     {
         public FunctionDefinition Build()
         {
             var parameters = BuildParameters();
 
-            #region Basic Validation
-            var fromNotZeroRequire = new FunctionStatementDefinition
+            #region Validation
+            var ownerNotZeroRequire = new FunctionStatementDefinition
             {
                 Kind = FunctionStatementKind.Expression,
                 Expression = new ExpressionDefinition
@@ -30,7 +30,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
                             Left = new ExpressionDefinition 
                             { 
                                 Kind = ExpressionKind.Identifier,
-                                Identifier = "from" 
+                                Identifier = "owner" 
                             },
                             Operator = BinaryOperator.NotEqual,
                             Right = new ExpressionDefinition
@@ -54,13 +54,13 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
                         new ExpressionDefinition 
                         { 
                             Kind = ExpressionKind.Literal,
-                            LiteralValue = "\"Transfer from zero address\"" 
+                            LiteralValue = "\"Approve from zero address\"" 
                         }
                     }
                 }
             };
 
-            var toNotZeroRequire = new FunctionStatementDefinition
+            var spenderNotZeroRequire = new FunctionStatementDefinition
             {
                 Kind = FunctionStatementKind.Expression,
                 Expression = new ExpressionDefinition
@@ -79,7 +79,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
                             Left = new ExpressionDefinition 
                             { 
                                 Kind = ExpressionKind.Identifier,
-                                Identifier = "to" 
+                                Identifier = "spender" 
                             },
                             Operator = BinaryOperator.NotEqual,
                             Right = new ExpressionDefinition
@@ -103,15 +103,15 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
                         new ExpressionDefinition 
                         { 
                             Kind = ExpressionKind.Literal,
-                            LiteralValue = "\"Transfer to zero address\"" 
+                            LiteralValue = "\"Approve to zero address\"" 
                         }
                     }
                 }
             };
             #endregion
 
-            #region Basic Transfer Logic
-            var fromBalanceUpdate = new FunctionStatementDefinition
+            #region Set Allowance
+            var setAllowance = new FunctionStatementDefinition
             {
                 Kind = FunctionStatementKind.Assignment,
                 ParameterAssignment = new AssignmentDefinition
@@ -119,101 +119,47 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
                     Left = new ExpressionDefinition
                     {
                         Kind = ExpressionKind.IndexAccess,
-                        Target = new ExpressionDefinition 
-                        { 
-                            Kind = ExpressionKind.Identifier,
-                            Identifier = "_balances" 
-                        },
-                        Index = new ExpressionDefinition 
-                        { 
-                            Kind = ExpressionKind.Identifier,
-                            Identifier = "from" 
-                        }
-                    },
-                    Right = new ExpressionDefinition
-                    {
-                        Kind = ExpressionKind.Binary,
-                        Left = new ExpressionDefinition
+                        Target = new ExpressionDefinition
                         {
                             Kind = ExpressionKind.IndexAccess,
                             Target = new ExpressionDefinition 
                             { 
                                 Kind = ExpressionKind.Identifier,
-                                Identifier = "_balances" 
+                                Identifier = "_allowances" 
                             },
                             Index = new ExpressionDefinition 
                             { 
                                 Kind = ExpressionKind.Identifier,
-                                Identifier = "from" 
+                                Identifier = "owner" 
                             }
-                        },
-                        Operator = BinaryOperator.Subtract,
-                        Right = new ExpressionDefinition 
-                        { 
-                            Kind = ExpressionKind.Identifier,
-                            Identifier = "value"
-                        }
-                    }
-                }
-            };
-
-            var toBalanceUpdate = new FunctionStatementDefinition
-            {
-                Kind = FunctionStatementKind.Assignment,
-                ParameterAssignment = new AssignmentDefinition
-                {
-                    Left = new ExpressionDefinition
-                    {
-                        Kind = ExpressionKind.IndexAccess,
-                        Target = new ExpressionDefinition 
-                        { 
-                            Kind = ExpressionKind.Identifier,
-                            Identifier = "_balances" 
                         },
                         Index = new ExpressionDefinition 
                         { 
                             Kind = ExpressionKind.Identifier,
-                            Identifier = "to" 
+                            Identifier = "spender" 
                         }
                     },
-                    Right = new ExpressionDefinition
-                    {
-                        Kind = ExpressionKind.Binary,
-                        Left = new ExpressionDefinition
-                        {
-                            Kind = ExpressionKind.IndexAccess,
-                            Target = new ExpressionDefinition 
-                            { 
-                                Kind = ExpressionKind.Identifier,
-                                Identifier = "_balances" 
-                            },
-                            Index = new ExpressionDefinition 
-                            { 
-                                Kind = ExpressionKind.Identifier,
-                                Identifier = "to" 
-                            }
-                        },
-                        Operator = BinaryOperator.Add,
-                        Right = new ExpressionDefinition 
-                        { 
-                            Kind = ExpressionKind.Identifier,
-                            Identifier = "value"
-                        }
+                    Right = new ExpressionDefinition 
+                    { 
+                        Kind = ExpressionKind.Identifier,
+                        Identifier = "value" 
                     }
                 }
             };
+            #endregion
 
-            var transferEvent = new FunctionStatementDefinition
+            #region Approval Event
+            var approvalEvent = new FunctionStatementDefinition
             {
                 Kind = FunctionStatementKind.Trigger,
                 Trigger = new TriggerDefinition
                 {
                     Kind = TriggerKind.Log,
-                    Name = "Transfer",
+                    Name = "Approval",
                     Parameters = new List<ParameterDefinition>
                     {
-                        new() { Name = "from", Type = DataTypeReference.Address },
-                        new() { Name = "to", Type = DataTypeReference.Address },
+                        new() { Name = "owner", Type = DataTypeReference.Address },
+                        new() { Name = "spender", Type = DataTypeReference.Address },
                         new() { Name = "value", Type = DataTypeReference.Uint256 }
                     }
                 },
@@ -222,12 +168,12 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
                     new ExpressionDefinition 
                     { 
                         Kind = ExpressionKind.Identifier,
-                        Identifier = "from" 
+                        Identifier = "owner" 
                     },
                     new ExpressionDefinition 
                     { 
                         Kind = ExpressionKind.Identifier,
-                        Identifier = "to" 
+                        Identifier = "spender" 
                     },
                     new ExpressionDefinition 
                     { 
@@ -241,17 +187,16 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
             #region Function Definition
             var res = new FunctionDefinition
             {
-                Name = "_transfer",
+                Name = "_approve",
                 Kind = FunctionKind.Normal,
                 Visibility = Visibility.Internal,
                 Parameters = parameters,
                 Body = new List<FunctionStatementDefinition>
                 {
-                    fromNotZeroRequire,
-                    toNotZeroRequire,
-                    fromBalanceUpdate,
-                    toBalanceUpdate,
-                    transferEvent
+                    ownerNotZeroRequire,
+                    spenderNotZeroRequire,
+                    setAllowance,
+                    approvalEvent
                 }
             };
             #endregion
@@ -261,14 +206,14 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
 
         private List<ParameterDefinition> BuildParameters()
         {
-            var from = new ParameterDefinition
+            var owner = new ParameterDefinition
             {
-                Name = "from",
+                Name = "owner",
                 Type = DataTypeReference.Address
             };
-            var to = new ParameterDefinition
+            var spender = new ParameterDefinition
             {
-                Name = "to",
+                Name = "spender",
                 Type = DataTypeReference.Address
             };
             var value = new ParameterDefinition
@@ -277,7 +222,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
                 Type = DataTypeReference.Uint256
             };
 
-            return new List<ParameterDefinition> { from, to, value };
+            return new List<ParameterDefinition> { owner, spender, value };
         }
     }
 }

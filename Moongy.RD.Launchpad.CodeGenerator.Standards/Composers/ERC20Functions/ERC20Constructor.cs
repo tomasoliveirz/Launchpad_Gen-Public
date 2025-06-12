@@ -25,35 +25,40 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
             var nameAssignment = new FunctionStatementDefinition
             {
                 Kind = FunctionStatementKind.Assignment,
-                ParameterAssignment = { Left = _name, Right = nameExpr },
-                Expression = nameExpr
+                ParameterAssignment = new AssignmentDefinition
+                {
+                    Left = _name,
+                    Right = nameExpr
+                }
             };
-            #endregion
-            
-            #region FunctionBody
+
             var symbolAssignment = new FunctionStatementDefinition
             {
                 Kind = FunctionStatementKind.Assignment,
-                ParameterAssignment = { Left = _symbol, Right = symbolExpr },
-                Expression = symbolExpr
+                ParameterAssignment = new AssignmentDefinition
+                {
+                    Left = _symbol,
+                    Right = symbolExpr
+                }
             };
             #endregion
 
             #region Function
             var res = new FunctionDefinition
             {
-                Name = "",
+                Name = "constructor",
+                Kind = FunctionKind.Constructor,
+                Visibility = Visibility.Public,
                 Parameters = parameters,
                 Body = new List<FunctionStatementDefinition>
-            {
-                nameAssignment,
-                symbolAssignment
-            }
+                {
+                    nameAssignment,
+                    symbolAssignment
+                }
             };
             #endregion
 
             return res;
         }
     }
-
 }

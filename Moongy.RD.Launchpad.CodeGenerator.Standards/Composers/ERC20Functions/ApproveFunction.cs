@@ -12,17 +12,42 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
             var returnParameters = BuildReturnParameters();
 
             #region Identifiers
-            var spenderAddress = new ExpressionDefinition { Identifier = "spender" };
-            var valueExpr = new ExpressionDefinition { Identifier = "value" };
-            var msgSender = new ExpressionDefinition { MemberName = "sender", Target = new ExpressionDefinition { Identifier = "msg" } };
-            var trueExpr = new ExpressionDefinition { Identifier = "true" };
+            var spenderAddress = new ExpressionDefinition 
+            { 
+                Kind = ExpressionKind.Identifier,
+                Identifier = "spender" 
+            };
+            var valueExpr = new ExpressionDefinition 
+            { 
+                Kind = ExpressionKind.Identifier,
+                Identifier = "value" 
+            };
+            var msgSender = new ExpressionDefinition 
+            { 
+                Kind = ExpressionKind.MemberAccess,
+                Target = new ExpressionDefinition 
+                { 
+                    Kind = ExpressionKind.Identifier,
+                    Identifier = "msg" 
+                },
+                MemberName = "sender"
+            };
+            var trueExpr = new ExpressionDefinition 
+            { 
+                Kind = ExpressionKind.Literal, 
+                LiteralValue = "true" 
+            };
             #endregion
 
             #region Function Calls
             var approveCall = new ExpressionDefinition
             {
                 Kind = ExpressionKind.FunctionCall,
-                Callee = new ExpressionDefinition { Identifier = "_approve" },
+                Callee = new ExpressionDefinition 
+                { 
+                    Kind = ExpressionKind.Identifier,
+                    Identifier = "_approve" 
+                },
                 Arguments = new List<ExpressionDefinition> { msgSender, spenderAddress, valueExpr }
             };
 
@@ -37,7 +62,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
             var returnStatement = new FunctionStatementDefinition
             {
                 Kind = FunctionStatementKind.Return,
-                Expression = trueExpr
+                ReturnValues = new List<ExpressionDefinition> { trueExpr }
             };
             #endregion
 

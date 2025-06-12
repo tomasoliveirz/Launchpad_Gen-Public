@@ -1,3 +1,4 @@
+using System.Collections;
 using Moongy.RD.Launchpad.CodeGenerator.Extensions.Models;
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Extensions.Extractors;
@@ -11,14 +12,18 @@ public class AccessControlExtensionExtractor : BaseExtensionExtractor<AccessCont
     // and uses a pattern matching is IEnumerable<string> to convert the roles to a list
     public override AccessControlExtensionModel Extract(object extensionFormSection)
     {
-        var model = base.Extract(extensionFormSection);
+        var model = base.Extract(extensionFormSection) ?? new AccessControlExtensionModel();
+
+        var rolesProp  = extensionFormSection.GetType().GetProperty("Roles");
+        var rawRoles   = rolesProp?.GetValue(extensionFormSection) as IEnumerable;
         
-        var rolesProp = extensionFormSection.GetType().GetProperty("Roles");
+        if (rawRoles != null)
+            model.Roles = rawRoles.Cast<string>().ToList();
         
-        if (model.HasRoles && rolesProp?.GetValue(extensionFormSection) is IEnumerable<string> roles)
-        {
-            model.Roles = roles.ToList();
-        }
+        if (model.Roles.Any())
+            model.HasRoles = true;        
+
         return model;
     }
+
 }

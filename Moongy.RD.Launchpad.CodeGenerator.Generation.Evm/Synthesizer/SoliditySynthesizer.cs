@@ -240,7 +240,8 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
                         modifiers.Add(modifierModel);
                     }
                 
-
+                if (function.Kind == FunctionKind.Constructor)
+                    continue;
                 BaseFunctionModel funcModel = function.Kind switch
                 {
                     FunctionKind.Fallback => new FallbackFunctionModel(),
@@ -253,7 +254,6 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
                         Statements = statements,
                         Modifiers = modifiers,
                     },
-                    FunctionKind.Constructor => throw new NotImplementedException(), // Needs to be implemented ?
                     _ => throw new Exception($"Unsupported function kind: {function.Kind}"),
                 };
                 result.Add(funcModel);

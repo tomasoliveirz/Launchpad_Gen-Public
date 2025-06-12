@@ -32,13 +32,15 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
                             new ExpressionDefinition
                             {
                                 Kind = ExpressionKind.IndexAccess,
-                                IndexCollection = new ExpressionDefinition
+                                Target = new ExpressionDefinition
                                 {
-                                    Identifier = "_balances",
+                                    Kind = ExpressionKind.Identifier,
+                                    Identifier = "_balances"
                                 },
                                 Index = new ExpressionDefinition
                                 {
-                                    Identifier = "account",
+                                    Kind = ExpressionKind.Identifier,
+                                    Identifier = "account"
                                 }
                             }
                         }

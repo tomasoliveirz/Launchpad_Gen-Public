@@ -2,7 +2,7 @@
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Others;
 using Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Base;
 
-namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
+namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
 {
     public class TransferFromFunction
     {
@@ -12,18 +12,47 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
             var returnParameters = BuildReturnParameters();
 
             #region Identifiers
-            var fromAddress = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "from" };
-            var toAddress = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "to" };
-            var valueExpr = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "value" };
-            var msgSender = new ExpressionDefinition { MemberName = "sender", Target = new ExpressionDefinition { Identifier = "msg" } };
-            var trueExpr = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "true" };
+            var fromAddress = new ExpressionDefinition 
+            { 
+                Kind = ExpressionKind.Identifier,
+                Identifier = "from" 
+            };
+            var toAddress = new ExpressionDefinition 
+            { 
+                Kind = ExpressionKind.Identifier,
+                Identifier = "to" 
+            };
+            var valueExpr = new ExpressionDefinition 
+            { 
+                Kind = ExpressionKind.Identifier,
+                Identifier = "value" 
+            };
+            var msgSender = new ExpressionDefinition 
+            { 
+                Kind = ExpressionKind.MemberAccess,
+                Target = new ExpressionDefinition 
+                { 
+                    Kind = ExpressionKind.Identifier,
+                    Identifier = "msg" 
+                },
+                MemberName = "sender"
+            };
+            var trueExpr = new ExpressionDefinition 
+            { 
+                Kind = ExpressionKind.Literal,
+                LiteralValue = "true" 
+            };
             #endregion
 
             #region Function Calls
             var spendAllowanceCall = new ExpressionDefinition
             {
                 Kind = ExpressionKind.FunctionCall,
-                Callee = new ExpressionDefinition { Identifier = "_spendAllowance" },
+                Callee = new ExpressionDefinition 
+                { 
+                    Kind = ExpressionKind.Identifier,
+                    Identifier = "_spendAllowance" 
+                },
                 Arguments = new List<ExpressionDefinition> { fromAddress, msgSender, valueExpr }
             };
 
@@ -36,7 +65,11 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
             var transferCall = new ExpressionDefinition
             {
                 Kind = ExpressionKind.FunctionCall,
-                Callee = new ExpressionDefinition { Identifier = "_transfer" },
+                Callee = new ExpressionDefinition 
+                { 
+                    Kind = ExpressionKind.Identifier,
+                    Identifier = "_transfer" 
+                },
                 Arguments = new List<ExpressionDefinition> { fromAddress, toAddress, valueExpr }
             };
 
@@ -51,7 +84,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
             var returnStatement = new FunctionStatementDefinition
             {
                 Kind = FunctionStatementKind.Return,
-                Expression = trueExpr
+                ReturnValues = new List<ExpressionDefinition> { trueExpr }
             };
             #endregion
 
@@ -93,13 +126,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
                 Type = DataTypeReference.Uint256
             };
 
-            var parameters = new List<ParameterDefinition>
-            {
-                from,
-                to,
-                value
-            };
-            return parameters;
+            return new List<ParameterDefinition> { from, to, value };
         }
 
         private List<ParameterDefinition> BuildReturnParameters()

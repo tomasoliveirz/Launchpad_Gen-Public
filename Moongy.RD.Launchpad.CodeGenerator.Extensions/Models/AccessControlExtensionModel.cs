@@ -10,5 +10,6 @@ public class AccessControlExtensionModel
     public bool HasRoles { get; set; }
     
     // this does not go directly to the context -- the augmenter will probably convert it to a mapping
-    public List<string> Roles { get; set; }
+    public List<string> Roles { get; set; } = new();
+    
 }

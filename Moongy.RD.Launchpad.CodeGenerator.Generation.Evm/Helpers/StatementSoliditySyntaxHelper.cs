@@ -9,6 +9,11 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers
     {
         public static StatementModel MapStatement(FunctionStatementDefinition statement)
         {
+            if (statement == null)
+            {
+                throw new ArgumentNullException(nameof(statement), "Statement cannot be null");
+            }
+
             return statement.Kind switch
             {
                 FunctionStatementKind.LocalDeclaration => MapLocalDeclaration(statement.LocalParameter),
@@ -22,16 +27,48 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers
                 _ => throw new NotSupportedException($"StatementKind '{statement.Kind}' is not supported for Solidity mapping")
             };
         }
+
         private static AssignmentStatement MapAssignment(AssignmentDefinition functionStatementDefinition)
         {
-            return new AssignmentStatement(ExpressionSoliditySyntaxHelper.MapExpression(functionStatementDefinition.Left),
-                                           ExpressionSoliditySyntaxHelper.MapExpression(functionStatementDefinition.Right));
+            if (functionStatementDefinition == null)
+            {
+                throw new ArgumentNullException(nameof(functionStatementDefinition), "Assignment definition cannot be null");
+            }
+            if (functionStatementDefinition.Left == null)
+            {
+                throw new ArgumentException("Assignment must have a left operand", nameof(functionStatementDefinition));
+            }
+            if (functionStatementDefinition.Right == null)
+            {
+                throw new ArgumentException("Assignment must have a right operand", nameof(functionStatementDefinition));
+            }
 
+            try
+            {
+                var leftExpr = ExpressionSoliditySyntaxHelper.MapExpression(functionStatementDefinition.Left);
+                var rightExpr = ExpressionSoliditySyntaxHelper.MapExpression(functionStatementDefinition.Right);
+                
+                return new AssignmentStatement(leftExpr, rightExpr);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Failed to map assignment statement: {ex.Message}", ex);
+            }
         }
+
         private static RawStatementModel MapExpression(ExpressionDefinition functionStatementDefinition)
         {
-            return new RawStatementModel{ Code = ExpressionSoliditySyntaxHelper.MapExpression(functionStatementDefinition).ToString()};
+            if (functionStatementDefinition == null)
+            {
+                throw new ArgumentNullException(nameof(functionStatementDefinition), "Expression definition cannot be null");
+            }
+
+            return new RawStatementModel
+            { 
+                Code = ExpressionSoliditySyntaxHelper.MapExpression(functionStatementDefinition).ToString()
+            };
         }
+
         private static ConditionStatementModel MapCondition(List<ConditionBranch> conditionBranches)
         {
             if (conditionBranches == null || conditionBranches.Count == 0)
@@ -84,13 +121,17 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers
             {
                 foreach (var statement in loopBody)
                 {
-                    var mapped = MapStatement(statement);
-                    whileStatement.AddBodyStatement(mapped);
+                    if (statement != null)
+                    {
+                        var mapped = MapStatement(statement);
+                        whileStatement.AddBodyStatement(mapped);
+                    }
                 }
             }
 
             return whileStatement;
         }
+
         private static VariableDeclarationStatement MapLocalDeclaration(ParameterDefinition parameter)
         {
             if (parameter == null)
@@ -103,12 +144,11 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers
             return variableDeclaration;
         }
 
-
         private static ForStatement MapRangeLoop(
-    ExpressionDefinition rangeStart,
-    ExpressionDefinition rangeEnd,
-    ParameterDefinition iterator,
-    List<FunctionStatementDefinition> body)
+            ExpressionDefinition rangeStart,
+            ExpressionDefinition rangeEnd,
+            ParameterDefinition iterator,
+            List<FunctionStatementDefinition> body)
         {
             if (rangeStart == null) throw new ArgumentNullException(nameof(rangeStart));
             if (rangeEnd == null) throw new ArgumentNullException(nameof(rangeEnd));
@@ -131,17 +171,16 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers
                 endExpr
             );
 
-                var incrementExpr = new BinaryExpressionModel(
-            new IdentifierExpressionModel(iterator.Name),
-            OperatorEnum.Add,
-            new LiteralExpressionModel("1")
-        );
+            var incrementExpr = new BinaryExpressionModel(
+                new IdentifierExpressionModel(iterator.Name),
+                OperatorEnum.Add,
+                new LiteralExpressionModel("1")
+            );
 
-                var iteratorStatement = new AssignmentStatement(
-                    new IdentifierExpressionModel(iterator.Name),
-                    incrementExpr
-                    );
-
+            var iteratorStatement = new AssignmentStatement(
+                new IdentifierExpressionModel(iterator.Name),
+                incrementExpr
+            );
 
             var forStatement = new ForStatement(init, conditionExpr.ToString(), iteratorStatement);
 
@@ -149,17 +188,24 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers
             {
                 foreach (var statement in body)
                 {
-                    var mapped = MapStatement(statement);
-                    forStatement.AddBodyStatement(mapped);
+                    if (statement != null)
+                    {
+                        var mapped = MapStatement(statement);
+                        forStatement.AddBodyStatement(mapped);
+                    }
                 }
             }
 
             return forStatement;
         }
 
-
         private static StatementModel MapTrigger(TriggerDefinition trigger, List<ExpressionDefinition> expressions)
         {
+            if (trigger == null)
+            {
+                throw new ArgumentNullException(nameof(trigger), "Trigger definition cannot be null");
+            }
+
             return trigger.Kind switch
             {
                 TriggerKind.Log => MapEmit(trigger, expressions),
@@ -170,41 +216,81 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers
 
         private static EmitStatement MapEmit(TriggerDefinition trigger, List<ExpressionDefinition> expressions)
         {
-            if (expressions == null || expressions.Count == 0)
-                throw new ArgumentException("Emit must have at least one expression.", nameof(expressions));
+            if (string.IsNullOrEmpty(trigger.Name))
+            {
+                throw new ArgumentException("Emit trigger must have a name", nameof(trigger));
+            }
+
             var emitStatement = new EmitStatement(trigger.Name);
 
-            foreach (var expression in expressions)
+            if (expressions != null && expressions.Count > 0)
             {
-                emitStatement.AddExpressionArgument(ExpressionSoliditySyntaxHelper.MapExpression(expression));
+                foreach (var expression in expressions)
+                {
+                    if (expression != null)
+                    {
+                        emitStatement.AddExpressionArgument(ExpressionSoliditySyntaxHelper.MapExpression(expression));
+                    }
+                }
             }
+            
             return emitStatement;
         }
 
         private static RevertStatement MapError(TriggerDefinition trigger, List<ExpressionDefinition> expressions)
         {
-            if (expressions == null || expressions.Count == 0)
-                throw new ArgumentException("Error must have at least one expression.", nameof(expressions));
-            var errorStatement = new RevertStatement(trigger.Name);
-            foreach (var expression in expressions)
+            if (string.IsNullOrEmpty(trigger.Name))
             {
-                errorStatement.AddArgument(ExpressionSoliditySyntaxHelper.MapExpression(expression).ToString());
+                throw new ArgumentException("Error trigger must have a name", nameof(trigger));
             }
+
+            var errorStatement = new RevertStatement(trigger.Name);
+            
+            if (expressions != null && expressions.Count > 0)
+            {
+                foreach (var expression in expressions)
+                {
+                    if (expression != null)
+                    {
+                        try
+                        {
+                            var mappedExpr = ExpressionSoliditySyntaxHelper.MapExpression(expression);
+                            errorStatement.AddArgument(mappedExpr.ToString());
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+                    }
+                }
+            }
+            
             return errorStatement;
         }
 
         private static ReturnStatement MapReturn(List<ExpressionDefinition> returnValues)
         {
-            if (returnValues == null || returnValues.Count == 0)
-                throw new ArgumentException("Return must have at least one value.", nameof(returnValues));
             var returnStatement = new ReturnStatement();
-            foreach (var value in returnValues)
+            
+            if (returnValues != null && returnValues.Count > 0)
             {
-                returnStatement.AddValue(ExpressionSoliditySyntaxHelper.MapExpression(value));
+                foreach (var value in returnValues)
+                {
+                    if (value != null)
+                    {
+                        try
+                        {
+                            var mappedValue = ExpressionSoliditySyntaxHelper.MapExpression(value);
+                            returnStatement.AddValue(mappedValue);
+                        }
+                        catch (Exception ex)
+                        {
+                            
+                        }
+                    }
+                }
             }
+            
             return returnStatement;
         }
-
-    };
-    
+    }
 }

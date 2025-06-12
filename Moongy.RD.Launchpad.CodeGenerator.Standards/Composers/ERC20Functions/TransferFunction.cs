@@ -14,15 +14,28 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
             #region Identifiers
             var toAddress = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "to" };
             var valueExpr = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "value" };
-            var msgSender = new ExpressionDefinition { MemberName = "sender", Target = new ExpressionDefinition { Identifier = "msg" } };
-            var trueExpr = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "true" };
+            var msgSender = new ExpressionDefinition 
+            { 
+                Kind = ExpressionKind.MemberAccess,
+                Target = new ExpressionDefinition 
+                { 
+                    Kind = ExpressionKind.Identifier,
+                    Identifier = "msg" 
+                },
+                MemberName = "sender"
+            };
+            var trueExpr = new ExpressionDefinition { Kind = ExpressionKind.Literal, LiteralValue = "true" };
             #endregion
 
             #region Function Calls
             var transferCall = new ExpressionDefinition
             {
                 Kind = ExpressionKind.FunctionCall,
-                Callee = new ExpressionDefinition { Identifier = "_transfer" },
+                Callee = new ExpressionDefinition 
+                { 
+                    Kind = ExpressionKind.Identifier,
+                    Identifier = "_transfer" 
+                },
                 Arguments = new List<ExpressionDefinition> { msgSender, toAddress, valueExpr }
             };
 
@@ -37,7 +50,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
             var returnStatement = new FunctionStatementDefinition
             {
                 Kind = FunctionStatementKind.Return,
-                Expression = trueExpr
+                ReturnValues = new List<ExpressionDefinition> { trueExpr }
             };
             #endregion
 

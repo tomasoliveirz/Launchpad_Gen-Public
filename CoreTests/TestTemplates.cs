@@ -1,3 +1,4 @@
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Enums;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Generators;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models;
