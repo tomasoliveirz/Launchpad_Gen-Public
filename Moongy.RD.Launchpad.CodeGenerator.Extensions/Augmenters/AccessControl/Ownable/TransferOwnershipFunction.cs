@@ -46,16 +46,9 @@ public class TransferOwnershipFunction
             Right = zeroAddress
         };
 
-        var revertParams = new List<ParameterDefinition>
-        {
-            new ParameterDefinition
-            {
-                Name = "address(0)",
-                Type = DataTypeReference.Address
-            }
-        };
         
-        var errorHelper = new IfRevertHelper(condition, "OwnableInvalidOwner", revertParams);
+        
+        var errorHelper = new IfRevertHelper(condition, "OwnableInvalidOwner", new List<ExpressionDefinition> { zeroAddress});
 
         var transferCall = new ExpressionDefinition
         {

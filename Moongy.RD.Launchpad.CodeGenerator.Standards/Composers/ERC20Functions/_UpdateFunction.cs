@@ -122,7 +122,8 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
                 Left = balancesFrom,
                 Right = value
             };
-            var insufficientBalanceError = new IfRevertHelper(insufficientBalanceCondition, "ERC20InsufficientBalance", new List<ParameterDefinition> { fromParameter, fromBalanceParameter, valueParameter });
+            var insufficientBalanceError = new IfRevertHelper(insufficientBalanceCondition, "ERC20InsufficientBalance", new List<ExpressionDefinition> { from, fromBalance, value });
+
             var emitTransferEvent = new FunctionStatementDefinition
             {
                 Kind = FunctionStatementKind.Trigger,

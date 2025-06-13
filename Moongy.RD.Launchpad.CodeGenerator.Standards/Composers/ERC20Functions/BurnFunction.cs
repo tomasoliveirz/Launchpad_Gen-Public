@@ -18,12 +18,12 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
             #endregion
 
             #region Errors
-            var revertParameters = new List<ParameterDefinition>
+            var revertParameters = new List<ExpressionDefinition>
             {
-                new ParameterDefinition
+                new ExpressionDefinition
                 {
-                    Name = "address(0)",
-                    Type = DataTypeReference.Address
+                    Identifier = "address(0)",
+                    Kind = ExpressionKind.Identifier
                 }
             };
 

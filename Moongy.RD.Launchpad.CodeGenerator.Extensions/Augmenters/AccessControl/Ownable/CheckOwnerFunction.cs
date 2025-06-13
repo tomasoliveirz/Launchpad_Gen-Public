@@ -38,12 +38,8 @@ public class CheckOwnerFunction
             Right = msgSenderCall
         };
 
-        var revertParams = new List<ParameterDefinition>
-        {
-            new() { Name = "msg.sender", Type = DataTypeReference.Address },
-        };
         
-        var errorHelper = new IfRevertHelper(condition, "OwnableUnauthorizedAccount", revertParams);
+        var errorHelper = new IfRevertHelper(condition, "OwnableUnauthorizedAccount", new List<ExpressionDefinition> { msgSenderCall });
 
         return new FunctionDefinition
         {
