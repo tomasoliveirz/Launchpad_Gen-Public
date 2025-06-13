@@ -8,7 +8,7 @@ public class BurnExtensionExtractor : BaseExtensionExtractor<BurnExtensionModel>
     public override BurnExtensionModel? Extract(object form)
     {
         var model = base.Extract(form);
-        var hasMint = form.IsExtensionActive(Enums.ExtensionEnum.Burn);
-        return model != null ? model: hasMint ? new BurnExtensionModel() : null;
+        var hasBurn = form.IsExtensionActive(Enums.ExtensionEnum.Burn);
+        return model != null ? model: hasBurn ? new BurnExtensionModel() : null;
     }
 }

@@ -4,7 +4,9 @@ public enum FeatureKind
 {
     // extensions
     AccessControl,
-    
+    Burnable,
+    Mintable,
+
     // tokenomics
     Tax
 }

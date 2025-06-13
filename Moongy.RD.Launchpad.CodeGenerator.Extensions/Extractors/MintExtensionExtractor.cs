@@ -10,6 +10,5 @@ public class MintExtensionExtractor : BaseExtensionExtractor<MintExtensionModel>
         var model = base.Extract(form);
         var hasMint = form.IsExtensionActive(Enums.ExtensionEnum.Mint);
         return model != null ? model : hasMint ? new MintExtensionModel() : null;
-
     }
 }
