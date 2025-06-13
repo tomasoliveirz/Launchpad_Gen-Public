@@ -257,6 +257,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
             {
                 Name = "_update",
                 Visibility = Visibility.Internal,
+                Kind = FunctionKind.Normal,
                 Parameters = parameters,
                 Body = new List<FunctionStatementDefinition>
                 {

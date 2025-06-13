@@ -241,8 +241,9 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers
                 throw new ArgumentException("Error trigger must have a name", nameof(trigger));
             }
 
-            var errorStatement = new RevertStatement(trigger.Name);
-            
+            var errorStatement = new RevertStatement();
+            errorStatement.Name = trigger.Name;
+
             if (expressions != null && expressions.Count > 0)
             {
                 foreach (var expression in expressions)

@@ -74,12 +74,10 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
             module.Triggers.Add(approvalEvent);
         }
     }
-    // TODO: ADD BURN AND MINT FUNCTIONS -- HANDLING AND THEN CALL HERE
     private void AddERC20Functions(ModuleFileDefinition moduleFile, FungibleTokenModel standard)
     {
         var mainModule = moduleFile.Modules.FirstOrDefault();
         if (mainModule == null) return;
-        // TODO REVIEW THIS FUNCTIONS
         mainModule.Functions.Add(ConstructorDefinition());
         mainModule.Functions.Add(NameFunctionDefinition());
         mainModule.Functions.Add(SymbolFunctionDefinition());
