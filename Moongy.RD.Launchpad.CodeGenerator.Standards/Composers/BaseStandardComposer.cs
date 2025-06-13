@@ -31,6 +31,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers
             var fields = new List<FieldDefinition>();
             foreach (var prop in typeof(T).GetProperties())
             {
+                Console.WriteLine($"Processing property: {prop.Name}, Type: {prop.PropertyType.Name}, Value: {prop.GetValue(standard)}");
                 var attr = prop.GetCustomAttribute<ContextPropertyAttribute>(inherit: true);
                 if (attr == null) continue;
                 var field = new FieldDefinition

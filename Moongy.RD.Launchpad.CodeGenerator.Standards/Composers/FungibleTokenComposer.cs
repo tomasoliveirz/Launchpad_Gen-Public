@@ -27,12 +27,13 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
     {
         var mainModule = moduleFile.Modules.FirstOrDefault();
         if (mainModule == null) return;
-
+        
         mainModule.Fields.Add(TokenBalancesDefinition());
         mainModule.Fields.Add(TokenAllowancesDefinition());
         mainModule.Fields.Add(TokenTotalSupplyDefinition());
         
         AddERC20Events(mainModule);
+        AddERC20Errors(mainModule);
     }
 
     private void AddERC20Events(ModuleDefinition module)
@@ -71,6 +72,104 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
             module.Triggers.Add(approvalEvent);
         }
     }
+
+    private void AddERC20Errors(ModuleDefinition module)
+    {
+        var insufficientBalanceError = new TriggerDefinition
+        {
+            Name = "ERC20InsufficientBalance",
+            Kind = TriggerKind.Error,
+            Parameters = new List<ParameterDefinition>
+            {
+                new() { Name = "sender", Type = DataTypeReference.Address },
+                new() { Name = "balance", Type = DataTypeReference.Uint256 },
+                new() { Name = "needed", Type = DataTypeReference.Uint256 }
+            }
+        };
+
+        var invalidApproverError = new TriggerDefinition
+        {
+            Name = "ERC20InvalidApprover",
+            Kind = TriggerKind.Error,
+            Parameters = new List<ParameterDefinition>
+            {
+                new() { Name = "approver", Type = DataTypeReference.Address }
+            }
+        };
+
+        var invalidSpenderError = new TriggerDefinition
+        {
+            Name = "ERC20InvalidSpender",
+            Kind = TriggerKind.Error,
+            Parameters = new List<ParameterDefinition>
+            {
+                new() { Name = "spender", Type = DataTypeReference.Address }
+            }
+        };
+
+        var insufficientAllowanceError = new TriggerDefinition
+        {
+            Name = "ERC20InsufficientAllowance",
+            Kind = TriggerKind.Error,
+            Parameters = new List<ParameterDefinition>
+            {
+                new() { Name = "spender", Type = DataTypeReference.Address },
+                new() { Name = "allowance", Type = DataTypeReference.Uint256 },
+                new() { Name = "needed", Type = DataTypeReference.Uint256 }
+            }
+        };
+
+        var invalidSenderError = new TriggerDefinition
+        {
+            Name = "ERC20InvalidSender",
+            Kind = TriggerKind.Error,
+            Parameters = new List<ParameterDefinition>
+            {
+                new() { Name = "sender", Type = DataTypeReference.Address }
+            }
+        };
+
+        var invalidReceiverError = new TriggerDefinition
+        {
+            Name = "ERC20InvalidReceiver",
+            Kind = TriggerKind.Error,
+            Parameters = new List<ParameterDefinition>
+            {
+                new() { Name = "receiver", Type = DataTypeReference.Address }
+            }
+        };
+
+        if (!module.Triggers.Any(t => t.Name == "ERC20InsufficientBalance"))
+        {
+            module.Triggers.Add(insufficientBalanceError);
+        }
+
+        if (!module.Triggers.Any(t => t.Name == "ERC20InvalidApprover"))
+        {
+            module.Triggers.Add(invalidApproverError);
+        }
+
+        if (!module.Triggers.Any(t => t.Name == "ERC20InvalidSpender"))
+        {
+            module.Triggers.Add(invalidSpenderError);
+        }
+
+        if (!module.Triggers.Any(t => t.Name == "ERC20InsufficientAllowance"))
+        {
+            module.Triggers.Add(insufficientAllowanceError);
+        }
+
+        if (!module.Triggers.Any(t => t.Name == "ERC20InvalidSender"))
+        {
+            module.Triggers.Add(invalidSenderError);
+        }
+
+        if (!module.Triggers.Any(t => t.Name == "ERC20InvalidReceiver"))
+        {
+            module.Triggers.Add(invalidReceiverError);
+        }
+    }
+
     private void AddERC20Functions(ModuleFileDefinition moduleFile, FungibleTokenModel standard)
     {
         var mainModule = moduleFile.Modules.FirstOrDefault();

@@ -33,7 +33,7 @@ public class RenounceOwnershipFunction
 
         return new FunctionDefinition
         {
-            Name = "renoounceOwnership",
+            Name = "renounceOwnership",
             Visibility = Visibility.Public,
             Modifiers = [new ModifierDefinition { Name = "onlyOwner" }],
             Body = [transferStatement],
