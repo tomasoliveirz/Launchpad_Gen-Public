@@ -234,7 +234,7 @@ public class SimpleContractExample
                         }
                     },
                     Arguments = new List<string> { "msg.sender" },
-                    Body = "require(caller == owner, \"Caller is not the owner\"); _;"
+                    Body = "require(caller == owner, \"Caller is not the owner\");"
                 },
                 new ModifierModel
                 {
@@ -248,7 +248,7 @@ public class SimpleContractExample
                         }
                     },
                     Arguments = new List<string> { "balances[msg.sender]" },
-                    Body = "require(balances[msg.sender] >= amount, \"Insufficient balance\"); _;"
+                    Body = "require(balances[msg.sender] >= amount, \"Insufficient balance\");"
                 }
             };
             #endregion
