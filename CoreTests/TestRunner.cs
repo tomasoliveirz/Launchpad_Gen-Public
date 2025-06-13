@@ -1,5 +1,4 @@
 using Moongy.RD.Launchpad.CodeGenerator.Engine.Services;
-using Moongy.RD.Launchpad.CodeGenerator.Engine;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Generators;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer;
 using Moongy.RD.Launchpad.CodeGenerator.Standards.Composers;
@@ -8,6 +7,8 @@ using Moongy.RD.Launchpad.CodeGenerator.Extensions.Augmenters.AccessControl;
 using Moongy.RD.Launchpad.Data.Forms;
 using Moongy.RD.Launchpad.Data.Forms.Extensions;
 using Moongy.RD.Launchpad.Data.Forms.Tokenomics;
+using Moongy.RD.Launchpad.CodeGenerator.Extensions.Augmenters;
+using Engine.Services;
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Engine.Test
 {
@@ -81,7 +82,9 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Engine.Test
             var compositionService = new CompositionService(new FungibleTokenComposer());
             var augmentationService = new AugmentationService(
                 new TaxTokenomicAugmenter(),
-                new AccessControlExtensionAugmenter()
+                new AccessControlExtensionAugmenter(),
+                new BurnableExtensionAugmenter(),
+                new MintExtensionAugmenter()
             );
             var synthesizer = new SoliditySynthesizer();
             var generator = new SolidityCodeGenerator();

@@ -67,7 +67,6 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Engine.Services
             var accessControlModel = ExtractExtension(form, "AccessControl");
             if (accessControlModel != null) extensions.Add(accessControlModel);
 
-
             var burnableModel = ExtractExtension(form, "HasBurning");
             if (burnableModel != null) extensions.Add(burnableModel);
 
@@ -94,13 +93,13 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Engine.Services
 
         private object? ExtractExtension<TForm>(TForm form, string extractorName) where TForm : class
         {
-            var extractorValue = form.GetType().GetProperty(extractorName)?.GetValue(form);
-            if (extractorValue is null) return null;
+            var extractorProperty = form.GetType().GetProperty(extractorName)?.GetValue(form);
+            if (extractorProperty is null) return null;
             return extractorName switch
             {
-                "AccessControl" => _accessControlExtractor.Extract(extractorValue),
-                "HasBurning" => _burnExtensionExtractor.Extract(extractorValue),
-                "HasMinting" => _mintExtensionExtractor.Extract(extractorValue),
+                "AccessControl" => _accessControlExtractor.Extract(form),
+                "HasBurning" => _burnExtensionExtractor.Extract(form),
+                "HasMinting" => _mintExtensionExtractor.Extract(form),
                 _ => throw new NotSupportedException($"Extension extractor {extractorName} not supported"),
             };
         }

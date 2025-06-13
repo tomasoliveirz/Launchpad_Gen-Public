@@ -58,14 +58,11 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers
 
         private static RawStatementModel MapExpression(ExpressionDefinition functionStatementDefinition)
         {
-            if (functionStatementDefinition == null)
-            {
-                throw new ArgumentNullException(nameof(functionStatementDefinition), "Expression definition cannot be null");
-            }
+            var exprModel = ExpressionSoliditySyntaxHelper.MapExpression(functionStatementDefinition);
 
             return new RawStatementModel
-            { 
-                Code = ExpressionSoliditySyntaxHelper.MapExpression(functionStatementDefinition).ToString()
+            {
+                Code = exprModel.ToString() + ";"
             };
         }
 

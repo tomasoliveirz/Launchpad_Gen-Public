@@ -59,6 +59,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
             var res = new FunctionDefinition
                 {
                     Name = "_mint",
+                    Kind = FunctionKind.Normal,
                     Visibility = Visibility.Internal,
                     Parameters = parameters,
                     Body = new List<FunctionStatementDefinition> { errorHelper, updateStatement }
