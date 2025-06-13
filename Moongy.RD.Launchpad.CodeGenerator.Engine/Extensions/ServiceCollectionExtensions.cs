@@ -6,6 +6,8 @@ using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer;
 using Moongy.RD.Launchpad.CodeGenerator.Standards.Composers;
 using Moongy.RD.Launchpad.CodeGenerator.Tokenomics.Augmenters.Tax;
 using Moongy.RD.Launchpad.CodeGenerator.Extensions.Augmenters.AccessControl;
+using Engine.Services;
+using Moongy.RD.Launchpad.CodeGenerator.Extensions.Augmenters;
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Engine.Extensions
 {
@@ -31,7 +33,9 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Engine.Extensions
             
             // extension augmenters
             services.AddScoped<AccessControlExtensionAugmenter>();
-            
+            services.AddScoped<BurnableExtensionAugmenter>();
+            services.AddScoped<MintExtensionAugmenter>();
+
             // tokenomics augmenters
             services.AddScoped<TaxTokenomicAugmenter>();
 

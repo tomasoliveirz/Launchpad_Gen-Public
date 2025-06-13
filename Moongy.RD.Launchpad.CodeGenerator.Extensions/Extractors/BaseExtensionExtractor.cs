@@ -20,7 +20,7 @@ public abstract class BaseExtensionExtractor<TModel> : IExtensionExtractor<TMode
 
             var value = prop.GetValue(extensionFormSection);
             if (value != null) dest.SetValue(model, value);
-            if(!modelExists)modelExists = true;
+            if(!modelExists) modelExists = true;
         }
         return modelExists ? model : null;
     }

@@ -9,6 +9,19 @@ public class BurnExtensionExtractor : BaseExtensionExtractor<BurnExtensionModel>
     {
         var model = base.Extract(form);
         var hasBurn = form.IsExtensionActive(Enums.ExtensionEnum.Burn);
-        return model != null ? model: hasBurn ? new BurnExtensionModel() : null;
+
+        if (model != null)
+            return model;
+
+        if (hasBurn)
+        {
+            var hasBurningProperty = form.GetType().GetProperty("HasBurning");
+            var hasBurningValue = hasBurningProperty?.GetValue(form);
+
+            if (hasBurningValue is bool burning && burning)
+                return new BurnExtensionModel();
+        }
+
+        return null;
     }
 }

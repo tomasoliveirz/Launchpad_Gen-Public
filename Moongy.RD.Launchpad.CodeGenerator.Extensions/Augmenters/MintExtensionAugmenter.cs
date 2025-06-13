@@ -3,6 +3,7 @@
 using Moongy.RD.Launchpad.CodeGenerator.Core.Enums;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels;
 using Moongy.RD.Launchpad.CodeGenerator.Extensions.Models;
+using Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator;
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Extensions.Augmenters
 {
@@ -15,7 +16,8 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Extensions.Augmenters
         {
             var mod = Main(ctx);
 
-
+            var mintFunc = new MintFunction().Build();
+            mod.Functions.Add(mintFunc);
         }
     }
 }
