@@ -11,6 +11,8 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Engine.Services
     {
         private readonly TaxTokenomicAugmenter _taxAugmenter;
         private readonly AccessControlExtensionAugmenter _accessControlAugmenter;
+        private readonly BurnableExtensionAugmenter _burnableAugmenter;
+        private readonly MintExtensionAugmenter _mintableAugmenter;
 
         public AugmentationService(
             TaxTokenomicAugmenter taxAugmenter, 
@@ -18,6 +20,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Engine.Services
         {
             _taxAugmenter = taxAugmenter;
             _accessControlAugmenter = accessControlAugmenter;
+            _burnableAugmenter 
         }
 
         public async Task AugmentAsync(ContextMetamodel context, ExtractedModels models)
@@ -58,7 +61,14 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Engine.Services
                 case AccessControlExtensionModel accessControl:
                     _accessControlAugmenter.Augment(context, accessControl);
                     break;
-                    
+                case BurnExtensionModel burn:
+                    _burnableAugmenter.Augment(context, burn);
+                    break;
+
+                case MintExtensionModel mint:
+                    _mintableAugmenter.Augment(context, mint);
+                    break;
+
                 default:
                     throw new NotSupportedException($"Extension type {model.GetType().Name} not supported");
             }
