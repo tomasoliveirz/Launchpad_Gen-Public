@@ -3,6 +3,7 @@ using Moongy.RD.Launchpad.CodeGenerator.Standards.Extractors;
 using Moongy.RD.Launchpad.CodeGenerator.Standards.Enums;
 using Moongy.RD.Launchpad.CodeGenerator.Tokenomics.Extractors.Tax;
 using Moongy.RD.Launchpad.CodeGenerator.Extensions.Extractors;
+using Moongy.RD.Launchpad.Data.Forms.Extensions;
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Engine.Services
 {
@@ -10,11 +11,14 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Engine.Services
     {
         private readonly TaxTokenomicExtractor _taxExtractor;
         private readonly AccessControlExtensionExtractor _accessControlExtractor;
-
+        private readonly MintExtensionExtractor _mintExtensionExtractor;
+        private readonly BurnExtensionExtractor _burnExtensionExtractor;
         public ExtractionService()
         {
             _taxExtractor = new TaxTokenomicExtractor();
             _accessControlExtractor = new AccessControlExtensionExtractor();
+            _mintExtensionExtractor = new MintExtensionExtractor();
+            _burnExtensionExtractor = new BurnExtensionExtractor();
         }
 
         public async Task<ExtractedModels> ExtractAsync<TForm>(TForm form) where TForm : class
@@ -60,9 +64,16 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Engine.Services
         {
             var extensions = new List<object>();
 
-            var accessControlModel = ExtractAccessControl(form);
+            var accessControlModel = ExtractExtension(form, "AccessControl");
             if (accessControlModel != null) extensions.Add(accessControlModel);
-            
+
+
+            var burnableModel = ExtractExtension(form, "HasBurning");
+            if (burnableModel != null) extensions.Add(burnableModel);
+
+            var mintableModel = ExtractExtension(form, "HasMinting");
+            if (mintableModel != null) extensions.Add(mintableModel);
+
             return extensions;
         }
 
@@ -81,14 +92,17 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Engine.Services
 
         #region Extensions Extractors
 
-        private object? ExtractAccessControl<TForm>(TForm form) where TForm : class
+        private object? ExtractExtension<TForm>(TForm form, string extractorName) where TForm : class
         {
-            var accessControlProperty = form.GetType().GetProperty("AccessControl");
-            if (accessControlProperty?.GetValue(form) is object accessControlForm)
+            var extractorValue = form.GetType().GetProperty(extractorName)?.GetValue(form);
+            if (extractorValue is null) return null;
+            return extractorName switch
             {
-                return _accessControlExtractor.Extract(accessControlForm);
-            }
-            return null;
+                "AccessControl" => _accessControlExtractor.Extract(extractorValue),
+                "HasBurning" => _burnExtensionExtractor.Extract(extractorValue),
+                "HasMinting" => _mintExtensionExtractor.Extract(extractorValue),
+                _ => throw new NotSupportedException($"Extension extractor {extractorName} not supported"),
+            };
         }
 
         #endregion
