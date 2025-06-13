@@ -49,14 +49,6 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
                 {
                     approveStatement
                 },
-                ReturnParameters = new List<ParameterDefinition>
-                {
-                    new ParameterDefinition
-                    {
-                        Name = "",
-                        Type = DataTypeReference.Bool,
-                    }
-                },
             };
             #endregion
 

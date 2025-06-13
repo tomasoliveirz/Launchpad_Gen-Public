@@ -31,6 +31,28 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
     {
         private readonly VersionModel _defaultVersion = new VersionModel() { Minimum = new() { Major=0, Minor=8, Revision = 20 } };
 
+        private readonly Dictionary<string, (SolidityFunctionMutabilityEnum State, bool Virtual)> _functionConfig = new()
+        {
+            { "name", (SolidityFunctionMutabilityEnum.View, true) },
+            { "symbol", (SolidityFunctionMutabilityEnum.View, true) },
+            { "decimals", (SolidityFunctionMutabilityEnum.View, true) },
+            { "totalSupply", (SolidityFunctionMutabilityEnum.View, true) },
+            { "balanceOf", (SolidityFunctionMutabilityEnum.View, true) },
+            { "allowance", (SolidityFunctionMutabilityEnum.View, true) },
+            { "transfer", (SolidityFunctionMutabilityEnum.None, true) },
+            { "transferFrom", (SolidityFunctionMutabilityEnum.None, true) },
+            { "approve", (SolidityFunctionMutabilityEnum.None, true) },
+            { "owner", (SolidityFunctionMutabilityEnum.View, true) },
+            { "_transfer", (SolidityFunctionMutabilityEnum.None, false) },
+            { "_spendAllowance", (SolidityFunctionMutabilityEnum.None, false) }
+        };
+
+        private readonly Dictionary<string, (SolidityFunctionMutabilityEnum State, bool Virtual)> _functionOverloadConfig = new()
+        {
+            { "_approve:3", (SolidityFunctionMutabilityEnum.None, false) },
+            { "_approve:4", (SolidityFunctionMutabilityEnum.None, true) },
+        };
+
         public SolidityLanguageMetamodel Synthesize(ContextMetamodel file)
         {
             var fileHeader = GenerateFileHeader(file);
@@ -81,7 +103,6 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
 
             return SpdxLicense.MIT;
         }
-
 
         private SoftwareVersion ParseVersion(string versionString)
         {
@@ -165,69 +186,73 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
             return result;
         }
 
-    private List<ConstructorParameterModel> GenerateConstructorParameters(ModuleDefinition module)
-    {
-        var result = new List<ConstructorParameterModel>();
-        int paramIdx = 0;
-        
-        foreach (var function in module.Functions)
+        private List<ConstructorParameterModel> GenerateConstructorParameters(ModuleDefinition module)
         {
-            if (function.Kind != FunctionKind.Constructor)
-                continue;
-
-            foreach (var parameter in function.Parameters)
+            var result = new List<ConstructorParameterModel>();
+            int paramIdx = 0;
+            
+            foreach (var function in module.Functions)
             {
-                
-                string? assignedTo = null;
+                if (function.Kind != FunctionKind.Constructor)
+                    continue;
 
-                if (!string.IsNullOrEmpty(parameter.Name) && function.Body != null)
+                foreach (var parameter in function.Parameters)
                 {
-                    foreach (var statement in function.Body)
+                    
+                    string? assignedTo = null;
+
+                    if (!string.IsNullOrEmpty(parameter.Name) && function.Body != null)
                     {
-                        if (statement.Kind == FunctionStatementKind.Assignment && 
-                            statement.ParameterAssignment != null)
+                        foreach (var statement in function.Body)
                         {
-                            var assignment = statement.ParameterAssignment;
-                            
-                            if (assignment.Right != null && 
-                                assignment.Right.Kind == ExpressionKind.Identifier &&
-                                assignment.Right.Identifier == parameter.Name)
+                            if (statement.Kind == FunctionStatementKind.Assignment && 
+                                statement.ParameterAssignment != null)
                             {
-                                if (assignment.Left != null && 
-                                    assignment.Left.Kind == ExpressionKind.Identifier)
+                                var assignment = statement.ParameterAssignment;
+                                
+                                if (assignment.Right != null && 
+                                    assignment.Right.Kind == ExpressionKind.Identifier &&
+                                    assignment.Right.Identifier == parameter.Name)
                                 {
-                                    assignedTo = assignment.Left.Identifier;
-                                    break; 
+                                    if (assignment.Left != null && 
+                                        assignment.Left.Kind == ExpressionKind.Identifier)
+                                    {
+                                        assignedTo = assignment.Left.Identifier;
+                                        break; 
+                                    }
                                 }
                             }
                         }
                     }
+                    
+                    var constructorParam = new ConstructorParameterModel
+                    {
+                        Type = ContextTypeReferenceSyntaxHelper.MapToSolidityTypeReference(parameter.Type),
+                        Name = parameter.Name,
+                        Index = paramIdx,
+                        Value = parameter.Value,
+                        Location = SolidityMemoryLocation.Memory,
+                        AssignedTo = assignedTo
+                    };
+                    
+                    paramIdx++;
+                    result.Add(constructorParam);
+                    
+                    Console.WriteLine($"Parameter '{parameter.Name}' mapped to field '{assignedTo}'");
                 }
-                
-                var constructorParam = new ConstructorParameterModel
-                {
-                    Type = ContextTypeReferenceSyntaxHelper.MapToSolidityTypeReference(parameter.Type),
-                    Name = parameter.Name,
-                    Index = paramIdx,
-                    Value = parameter.Value,
-                    Location = SolidityMemoryLocation.Memory,
-                    AssignedTo = assignedTo
-                };
-                
-                paramIdx++;
-                result.Add(constructorParam);
-                
-                Console.WriteLine($"Parameter '{parameter.Name}' mapped to field '{assignedTo}'");
             }
+
+            return result;
         }
 
-        return result;
-    }
         private List<BaseFunctionModel> GenerateFunctions(ModuleDefinition module)
         {
             var result = new List<BaseFunctionModel>();
             foreach (var function in module.Functions)
             {
+                if (function.Kind == FunctionKind.Constructor)
+                    continue;
+
                 var parameters = function.Parameters.Select((p, index) => new FunctionParameterModel
                 {
                     Name = p.Name,
@@ -250,14 +275,15 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
                     .ToList();
                 var modifiers = new List<ModifierModel>();
 
-                    foreach (var modifierDefinition in function.Modifiers)
-                    {
-                        var modifierModel = CreateModifierModel(modifierDefinition);
-                        modifiers.Add(modifierModel);
-                    }
-                
-                if (function.Kind == FunctionKind.Constructor)
-                    continue;
+                foreach (var modifierDefinition in function.Modifiers)
+                {
+                    var modifierModel = CreateModifierModel(modifierDefinition);
+                    modifiers.Add(modifierModel);
+                }
+
+                var stateModifier = DetermineFunctionStateModifier(function);
+                var isVirtual = DetermineFunctionVirtual(function);
+
                 BaseFunctionModel funcModel = function.Kind switch
                 {
                     FunctionKind.Fallback => new FallbackFunctionModel(),
@@ -266,6 +292,8 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
                         Name = function.Name, 
                         Parameters = parameters, 
                         Visibility = ContextTypeReferenceSyntaxHelper.MapToSolidityVisibility(function.Visibility),
+                        Mutability = stateModifier,  
+                        IsVirtual = isVirtual,         
                         ReturnParameters = returnParameters,
                         Statements = statements,
                         Modifiers = modifiers,
@@ -277,6 +305,17 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
             return result;
         }
 
+        private bool DetermineFunctionVirtual(FunctionDefinition function)
+        {
+            var overloadKey = $"{function.Name}:{function.Parameters.Count}";
+            if (_functionOverloadConfig.TryGetValue(overloadKey, out var overloadConfig))
+                return overloadConfig.Virtual;
+            
+            if (_functionConfig.TryGetValue(function.Name, out var config))
+                return config.Virtual;
+
+            return function.Visibility == Visibility.Public;
+        }
 
         private List<EventModel> GenerateEvents(ModuleDefinition module)
         {
@@ -428,6 +467,65 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
             return result;
         }
 
+        private SolidityFunctionMutabilityEnum DetermineFunctionStateModifier(FunctionDefinition function)
+        {
+            var overloadKey = $"{function.Name}:{function.Parameters.Count}";
+            if (_functionOverloadConfig.TryGetValue(overloadKey, out var overloadConfig))
+                return overloadConfig.State;
+            
+            if (_functionConfig.TryGetValue(function.Name, out var config))
+                return config.State;
+    
+            return DetermineAutomaticStateModifier(function);
+        }
+
+        private SolidityFunctionMutabilityEnum DetermineAutomaticStateModifier(FunctionDefinition function)
+        {
+            bool hasStateChanges = HasStateChanges(function);
+            bool hasReads = HasStateReads(function);
+
+            if (!hasStateChanges && !hasReads)
+                return SolidityFunctionMutabilityEnum.Pure;
+            if (!hasStateChanges && hasReads)
+                return SolidityFunctionMutabilityEnum.View;
+    
+            return SolidityFunctionMutabilityEnum.None;
+        }
+
+        private bool HasStateChanges(FunctionDefinition function)
+        {
+            return function.Body.Any(stmt => 
+                stmt.Kind == FunctionStatementKind.Assignment ||
+                stmt.Kind == FunctionStatementKind.Trigger && stmt.Trigger?.Kind == TriggerKind.Log);
+        }
+
+        private bool HasStateReads(FunctionDefinition function)
+        {
+            return function.Body.Any(stmt => 
+                stmt.Kind == FunctionStatementKind.Return ||
+                ContainsFieldAccess(stmt));
+        }
+
+        private bool ContainsFieldAccess(FunctionStatementDefinition statement)
+        {
+            return statement.Kind == FunctionStatementKind.Return && 
+                   statement.ReturnValues?.Any(expr => ContainsIdentifierAccess(expr)) == true;
+        }
+
+        private bool ContainsIdentifierAccess(ExpressionDefinition expression)
+        {
+            if (expression.Kind == ExpressionKind.Identifier && 
+                (expression.Identifier?.StartsWith("_") == true || 
+                 expression.Identifier?.EndsWith("Supply") == true ||
+                 expression.Identifier?.EndsWith("balances") == true))
+                return true;
+
+            if (expression.Kind == ExpressionKind.IndexAccess)
+                return true;
+
+            return false;
+        }
+        
         private SolidityMemoryLocation DetermineMemoryLocation(TypeReference typeReference)
         {
             return typeReference.Kind switch
@@ -594,7 +692,6 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
             return result;
         }
 
-
         private List<ImportModel> GenerateImports(ModuleDefinition module, IEnumerable<ImportDefinition> importDefinitions)
         {
             var result = new List<ImportModel>();
@@ -614,7 +711,6 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
             return result;
         }
 
-        // TODO Incomplete
         private List<InterfaceImportModel> GenerateInterfaces(ModuleDefinition module)
         {
             var result = new List<InterfaceImportModel>();
