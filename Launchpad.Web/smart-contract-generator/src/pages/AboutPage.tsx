@@ -1,5 +1,6 @@
 ﻿import React from 'react';
 import type { NavigationProps } from '../types';
+import ScrollToTop from '../componnents/layout/ScrollToTop';
 
 const AboutPage: React.FC<NavigationProps> = ({ onNavigate }) => {
     return (
@@ -48,27 +49,24 @@ const AboutPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                             <p className="mb-4">This project was brought to life by a passionate team of developers:</p>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="bg-slate-700/50 rounded-lg p-4 border border-slate-600">
-                                    <h3 className="text-lg font-semibold text-blue-400 mb-2">Your Name Here</h3>
-                                    <p className="text-sm text-slate-400">Lead Developer & Project Creator</p>
-                                    <p className="text-sm mt-2">Specialized in blockchain development and smart contract architecture.</p>
-                                </div>
-
-                                <div className="bg-slate-700/50 rounded-lg p-4 border border-slate-600">
-                                    <h3 className="text-lg font-semibold text-purple-400 mb-2">Co-Creator Name</h3>
+                                    <h3 className="text-lg font-semibold text-blue-400 mb-2">Fábio Jesus</h3>
                                     <p className="text-sm text-slate-400">Advisor at MoOngy S.A.</p>
                                     <p className="text-sm mt-2">Responsible for technical guidance and business integration.</p>
                                 </div>
 
                                 <div className="bg-slate-700/50 rounded-lg p-4 border border-slate-600">
-                                    <h3 className="text-lg font-semibold text-green-400 mb-2">Another Creator</h3>
-                                    <p className="text-sm text-slate-400">Smart Contract Security Analyst</p>
-                                    <p className="text-sm mt-2">Ensures all generated contracts meet the highest security standards.</p>
+                                    <h3 className="text-lg font-semibold text-green-400 mb-2">Diogo Ferreira</h3>
+                                    <p className="text-sm text-slate-400">Informatics and Computing Engineering Student @ FEUP</p>
                                 </div>
 
                                 <div className="bg-slate-700/50 rounded-lg p-4 border border-slate-600">
-                                    <h3 className="text-lg font-semibold text-yellow-400 mb-2">Team Member</h3>
-                                    <p className="text-sm text-slate-400">DevOps & Infrastructure</p>
-                                    <p className="text-sm mt-2">Manages deployment, scaling, and platform reliability.</p>
+                                    <h3 className="text-lg font-semibold text-green-400 mb-2">Pedro Marinho</h3>
+                                    <p className="text-sm text-slate-400">Informatics and Computing Engineering Student @ FEUP</p>
+                                </div>
+
+                                <div className="bg-slate-700/50 rounded-lg p-4 border border-slate-600">
+                                    <h3 className="text-lg font-semibold text-green-400 mb-2">Tomás Oliveira</h3>
+                                    <p className="text-sm text-slate-400">Informatics and Computing Engineering Student @ FEUP</p>
                                 </div>
                             </div>
                             <div className="mt-4 pt-4 border-t border-slate-600">
@@ -88,6 +86,8 @@ const AboutPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                     </div>
                 </div>
             </div>
+
+            <ScrollToTop />
         </div>
     );
 };

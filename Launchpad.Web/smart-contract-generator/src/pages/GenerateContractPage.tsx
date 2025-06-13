@@ -5,6 +5,7 @@ import { useContractConfig } from '../hooks/useContractConfig';
 import { validateContractConfig, formatError } from '../utils/validation';
 import { generateSolidityContract, downloadContract } from '../utils/contractGenerator';
 import { copyToClipboard } from '../utils/clipboard';
+import ScrollToTop from '../componnents/layout/ScrollToTop';
 
 const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
     const {
@@ -439,6 +440,8 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                     </div>
                 </div>
             )}
+
+            <ScrollToTop />
         </div>
     );
 };
