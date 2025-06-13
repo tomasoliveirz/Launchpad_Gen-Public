@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Moongy.RD.Launchpad.CodeGenerator.Core\Moongy.RD.Launchpad.CodeGenerator.Core.csproj" />
+    <ProjectReference Include="..\Moongy.RD.Launchpad.CodeGenerator.Generation.Evm\Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.csproj" />
+    <ProjectReference Include="..\Moongy.RD.Launchpad.CodeGenerator.Tokenomics\Moongy.RD.Launchpad.CodeGenerator.Tokenomics.csproj" />
+    <ProjectReference Include="..\Moongy.RD.Launchpad.CodeGenerator.Standards\Moongy.RD.Launchpad.CodeGenerator.Standards.csproj" />
+    <ProjectReference Include="..\Moongy.RD.Launchpad.CodeGenerator.Engine\Moongy.RD.Launchpad.CodeGenerator.Engine.csproj" />
+
+    <ProjectReference Include="..\Moongy.RD.Launchpad.Data\Moongy.RD.Launchpad.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\index.html" />
+  </ItemGroup>
+
+</Project>
