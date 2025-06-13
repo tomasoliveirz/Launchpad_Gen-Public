@@ -76,7 +76,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
             };
             var fromBalanceParameter = new ParameterDefinition
             {
-                Name = "_balances[from]",
+                Name = "fromBalance",
                 Type = DataTypeReference.Uint256,
             };
             var parameters = new List<ParameterDefinition>
@@ -86,6 +86,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
                     valueParameter,
                 };
             #endregion
+           
 
             #region BinaryExpressions
             var totalSupplySum =
@@ -131,12 +132,12 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
                 {
                     Kind = TriggerKind.Log,
                     Name = "Transfer",
-                    Parameters = new List<ParameterDefinition>
-                    {
-                        fromParameter,
-                        toParameter,
-                        valueParameter
-                    }
+                },
+                TriggerArguments = new List<ExpressionDefinition>
+                {
+                    from,
+                    to,
+                    value
                 }
             };
             #endregion
@@ -173,9 +174,26 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
                             Condition = null,
                             Body = new List<FunctionStatementDefinition>
                             {
+                                
+                                new FunctionStatementDefinition()
+                                {
+                                    Kind = FunctionStatementKind.LocalDeclaration,
+                                    LocalParameter = fromBalanceParameter
+                                },
+                                new FunctionStatementDefinition()
+                                {
+                                    Kind = FunctionStatementKind.Assignment,
+                                    ParameterAssignment = 
+                                    new AssignmentDefinition()
+                                    {
+                                        Left = fromBalance,
+                                        Right = balancesFrom
+                                    }
+                                },
                                 insufficientBalanceError.Build(),
                                 new FunctionStatementDefinition()
                                 {
+
                                     Kind = FunctionStatementKind.Assignment,
                                     ParameterAssignment = new AssignmentDefinition
                                     {
@@ -263,8 +281,10 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
                 {
                     firstIfStatement,
                     secondIfStatement,
-                    emitTransferEvent
+                    emitTransferEvent,
+                    
                 },
+                
             };
             return result;
         }

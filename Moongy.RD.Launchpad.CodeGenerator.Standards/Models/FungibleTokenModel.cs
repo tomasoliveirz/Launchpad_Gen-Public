@@ -6,13 +6,13 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Models;
 public class FungibleTokenModel:BaseContractModel
 {
     [Required(Name="Symbol")]
-    [ContextProperty(Name="symbol", Type =PrimitiveType.String, Visibility =Visibility.Public, HasDefaultValue=true)]
+    [ContextProperty(Name="_symbol", Type =PrimitiveType.String, Visibility =Visibility.Private, HasDefaultValue=true)]
     public string? Symbol { get; set; }
 
-    [ContextProperty(Name= "decimals", Type =PrimitiveType.String, Visibility =Visibility.Public, HasDefaultValue =true)]
+    [ContextProperty(Name= "_decimals", Type =PrimitiveType.Uint8, Visibility =Visibility.Private, HasDefaultValue =true)]
     public byte Decimals { get; set; } = 18;
 
-    [ContextProperty(Name = "max_supply", Type = PrimitiveType.Uint256, Visibility = Visibility.Public, HasDefaultValue = true)]
+    [ContextProperty(Name = "_max_supply", Type = PrimitiveType.Uint256, Visibility = Visibility.Private, HasDefaultValue = true)]
     public ulong MaxSupply { get; set; } = 0;
 
     public ulong Premint { get; set; } = 0;

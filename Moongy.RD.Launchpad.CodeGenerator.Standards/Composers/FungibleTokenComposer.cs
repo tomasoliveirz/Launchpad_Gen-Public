@@ -31,9 +31,6 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
         mainModule.Fields.Add(TokenBalancesDefinition());
         mainModule.Fields.Add(TokenAllowancesDefinition());
         mainModule.Fields.Add(TokenTotalSupplyDefinition());
-        mainModule.Fields.Add(TokenNameDefinition());
-        mainModule.Fields.Add(TokenSymbolDefinition());
-        mainModule.Fields.Add(TokenDecimalsDefinition());
         
         AddERC20Events(mainModule);
     }
@@ -112,25 +109,7 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
         var totalSupply = new TokenTotalSupplyField();
         return totalSupply.Build();
     }
-
-    private FieldDefinition TokenNameDefinition()
-    {
-        var tokenName = new TokenNameField();
-        return tokenName.Build();
-    }
-
-    private FieldDefinition TokenSymbolDefinition()
-    {
-        var tokenSymbol = new TokenSymbolField();
-        return tokenSymbol.Build();
-    }
-
-    private FieldDefinition TokenDecimalsDefinition()
-    {
-        var tokenDecimals = new TokenDecimalsField();
-        return tokenDecimals.Build();
-    }
-
+   
     private FunctionDefinition TotalSupplyFunctionDefinition()
     {
         var totalSupply = new TotalSupplyFunction();
