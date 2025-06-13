@@ -49,18 +49,6 @@ public class TaxTokenomicAugmenter : BaseTokenomicAugmenter<TaxTokenomicModel>
         var contract = Main(ctx);
         var constructor = contract.Functions.FirstOrDefault(f => f.Kind == FunctionKind.Constructor);
         
-        if (constructor == null)
-        {
-            constructor = new FunctionDefinition
-            {
-                Kind = FunctionKind.Constructor,
-                Name = "constructor",
-                Visibility = Visibility.Public,
-                Parameters = new List<ParameterDefinition>(),
-                Body = new List<FunctionStatementDefinition>()
-            };
-            contract.Functions.Add(constructor);
-        }
 
         var taxFeeAssignment = new FunctionStatementDefinition
         {

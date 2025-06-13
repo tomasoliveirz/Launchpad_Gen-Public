@@ -165,48 +165,64 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
             return result;
         }
 
-        private List<ConstructorParameterModel> GenerateConstructorParameters(ModuleDefinition module)
+    private List<ConstructorParameterModel> GenerateConstructorParameters(ModuleDefinition module)
+    {
+        var result = new List<ConstructorParameterModel>();
+        int paramIdx = 0;
+        
+        foreach (var function in module.Functions)
         {
-            var result = new List<ConstructorParameterModel>();
-            int paramIdx = 0;
-            foreach (var function in module.Functions)
+            if (function.Kind != FunctionKind.Constructor)
+                continue;
+
+            foreach (var parameter in function.Parameters)
             {
-                if (function.Kind != FunctionKind.Constructor)
-                    continue;
+                
+                string? assignedTo = null;
 
-                foreach (var parameter in function.Parameters) 
+                if (!string.IsNullOrEmpty(parameter.Name) && function.Body != null)
                 {
-                    string? assignedTo = null;
-
-                    // Not sure if this is the right way to handle this, but it seems like
-                    if (!string.IsNullOrEmpty(parameter.Name))
+                    foreach (var statement in function.Body)
                     {
-                        var matchedField = module.Fields
-                            .FirstOrDefault(field => field.Value == parameter.Name);
-
-                        if (matchedField != null)
+                        if (statement.Kind == FunctionStatementKind.Assignment && 
+                            statement.ParameterAssignment != null)
                         {
-                            assignedTo = matchedField.Name;
+                            var assignment = statement.ParameterAssignment;
+                            
+                            if (assignment.Right != null && 
+                                assignment.Right.Kind == ExpressionKind.Identifier &&
+                                assignment.Right.Identifier == parameter.Name)
+                            {
+                                if (assignment.Left != null && 
+                                    assignment.Left.Kind == ExpressionKind.Identifier)
+                                {
+                                    assignedTo = assignment.Left.Identifier;
+                                    break; 
+                                }
+                            }
                         }
                     }
-
-                    var constructorParam = new ConstructorParameterModel
-                    {
-                        Type =ContextTypeReferenceSyntaxHelper.MapToSolidityTypeReference(parameter.Type),
-                        Name = parameter.Name,
-                        Index = paramIdx,
-                        Value = parameter.Value,
-                        Location = SolidityMemoryLocation.None, 
-                        AssignedTo = assignedTo
-                    };
-                    paramIdx++;
-                    result.Add(constructorParam);
                 }
+                
+                var constructorParam = new ConstructorParameterModel
+                {
+                    Type = ContextTypeReferenceSyntaxHelper.MapToSolidityTypeReference(parameter.Type),
+                    Name = parameter.Name,
+                    Index = paramIdx,
+                    Value = parameter.Value,
+                    Location = SolidityMemoryLocation.Memory,
+                    AssignedTo = assignedTo
+                };
+                
+                paramIdx++;
+                result.Add(constructorParam);
+                
+                Console.WriteLine($"Parameter '{parameter.Name}' mapped to field '{assignedTo}'");
             }
-
-            return result;
         }
 
+        return result;
+    }
         private List<BaseFunctionModel> GenerateFunctions(ModuleDefinition module)
         {
             var result = new List<BaseFunctionModel>();
@@ -568,7 +584,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
                     Name = import.Name!,
                     PathName = import.Path,
                     Alias = import.Alias,
-                    Code = null,
+                    Code = null, 
                     ConstructorParameters = GenerateConstructorParameters(module)
                 };
 

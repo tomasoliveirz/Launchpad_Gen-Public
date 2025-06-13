@@ -52,6 +52,16 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"DEBUG MapAssignment failed:");
+                Console.WriteLine($"   Left.Kind: {functionStatementDefinition.Left?.Kind}");
+                Console.WriteLine($"   Left.Identifier: {functionStatementDefinition.Left?.Identifier ?? "null"}");
+                Console.WriteLine($"   Left.Target: {functionStatementDefinition.Left?.Target != null}");
+                Console.WriteLine($"   Left.IndexCollection: {functionStatementDefinition.Left?.IndexCollection != null}");
+                Console.WriteLine($"   Left.Index: {functionStatementDefinition.Left?.Index != null}");
+                Console.WriteLine($"   Right.Kind: {functionStatementDefinition.Right?.Kind}");
+                Console.WriteLine($"   Right.Identifier: {functionStatementDefinition.Right?.Identifier ?? "null"}");
+                Console.WriteLine($"   Error: {ex.Message}");
+                
                 throw new Exception($"Failed to map assignment statement: {ex.Message}", ex);
             }
         }
@@ -257,6 +267,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers
                         }
                         catch (Exception ex)
                         {
+                            Console.WriteLine($"    Warning: Failed to map error argument: {ex.Message}");
                         }
                     }
                 }
@@ -282,7 +293,10 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers
                         }
                         catch (Exception ex)
                         {
-                            
+                            Console.WriteLine($"Warning: Failed to map return value: {ex.Message}");
+                            Console.WriteLine($"Expression Kind: {value.Kind}");
+                            Console.WriteLine($"Expression Details: Target={value.Target != null}, Index={value.Index != null}, IndexCollection={value.IndexCollection != null}");
+
                         }
                     }
                 }

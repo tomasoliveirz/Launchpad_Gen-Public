@@ -1,8 +1,8 @@
 ﻿namespace Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Functions;
 public enum FunctionKind
-{
-    Constructor,
+{   
     Normal,
+    Constructor,
     Fallback,
     Receive
 }

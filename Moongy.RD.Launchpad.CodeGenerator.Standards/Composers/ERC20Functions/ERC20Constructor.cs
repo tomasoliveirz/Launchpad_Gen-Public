@@ -57,7 +57,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
                 }
             };
             #endregion
-
+            Console.WriteLine("Constructor function built with parameters: " + string.Join(", ", parameters.Select(p => p.Name)));
             return res;
         }
     }

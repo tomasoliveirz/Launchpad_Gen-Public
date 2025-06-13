@@ -14,6 +14,5 @@ public class ContextMetamodel : ModuleFileDefinition
         Modules    = src.Modules;
     }
 
-    // (opcional) Fábrica estática, se preferir:
     public static ContextMetamodel From(ModuleFileDefinition src) => new(src);
 }

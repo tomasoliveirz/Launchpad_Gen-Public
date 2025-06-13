@@ -131,6 +131,35 @@ contract TestToken {
 
 	}
 
+	function _update(address from, address to, uint256 value)
+	    internal {
+    
+	    if (from == address(0)) {
+	        _totalSupply = _totalSupply + value;
+	    }
+	    else {
+
+	            if (_balances[from] < value) {
+	                revert ();
+
+	            }
+
+	        _balances[from] = fromBalance - value;
+	    }
+
+    
+	    if (to == address(0)) {
+	        _totalSupply = _totalSupply - value;
+	    }
+	    else {
+	        _balances[to] = _balances[to] + value;
+	    }
+
+	    emit Transfer();
+
+
+	}
+
 	function _spendAllowance(address owner, address spender, uint256 value)
 	    internal {
 	    uint256  currentAllowance= ;

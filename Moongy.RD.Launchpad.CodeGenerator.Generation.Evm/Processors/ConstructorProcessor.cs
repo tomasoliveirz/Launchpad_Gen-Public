@@ -111,34 +111,13 @@ public class ConstructorProcessor() : BaseSolidityTemplateProcessor<SolidityCont
 
     private static string DetermineMemoryLocation(ConstructorParameterModel param)
     {
-        if (RequiresMemoryLocation(param.Type))
+        return param.Location switch
         {
-            return " memory";
-        }
-
-        return "";
-    }
-
-    private static bool RequiresMemoryLocation(TypeReference type)
-    {
-        if (type is MappingTypeReference)
-            return false;
-
-        if (type is ArrayTypeReference)
-            return true;
-
-        if (type is SimpleTypeReference simpleType)
-        {
-            return simpleType.BaseType == SolidityDataTypeEnum.String ||
-                   simpleType.BaseType == SolidityDataTypeEnum.Bytes;
-        }
-
-        if (type is CustomTypeReference)
-        {
-            return true;
-        }
-
-        return false;
+            SolidityMemoryLocation.Memory => " memory",
+            SolidityMemoryLocation.Calldata => " calldata",
+            SolidityMemoryLocation.Storage => " storage",
+            _ => ""
+        };
     }
 
     private static List<string> TransformArguments(SolidityContractModel model)
@@ -214,22 +193,63 @@ public class ConstructorProcessor() : BaseSolidityTemplateProcessor<SolidityCont
 
     private void ValidateDataLocation(ConstructorParameterModel param)
     {
+
         if (param.Type is MappingTypeReference)
         {
             throw new ArgumentException($"Constructor parameter '{param.Name}' cannot be mapping type.");
         }
 
-        if (RequiresMemoryLocation(param.Type))
+        bool requiresLocation = RequiresMemoryLocation(param.Type);
+
+        if (requiresLocation)
         {
-            if (param.Location.HasValue && param.Location != SolidityMemoryLocation.Memory)
+            if (!param.Location.HasValue || param.Location == SolidityMemoryLocation.None)
             {
-                throw new ArgumentException($"Parameter '{param.Name}' must use 'memory' in constructor.");
+                if (param.Type is SimpleTypeReference simpleType)
+                {
+                    Console.WriteLine($"   SimpleType BaseType: {simpleType.BaseType}");
+                }
+                
+                throw new ArgumentException($"Parameter '{param.Name}' must specify a memory location.");
+            }
+            
+            if (param.Location != SolidityMemoryLocation.Memory && param.Location != SolidityMemoryLocation.Calldata)
+            {
+                throw new ArgumentException($"Constructor parameter '{param.Name}' must use 'memory' or 'calldata'.");
             }
         }
         else if (param.Location.HasValue && param.Location.Value != SolidityMemoryLocation.None)
         {
             throw new ArgumentException($"Parameter '{param.Name}' is a value type and should not specify memory location.");
         }
+
+    }
+
+    private static bool RequiresMemoryLocation(TypeReference type)
+    {
+        if (type is MappingTypeReference)
+        {
+            return false;
+        }
+
+        if (type is ArrayTypeReference)
+        {
+            return true;
+        }
+
+        if (type is SimpleTypeReference simpleType)
+        {
+            bool result = simpleType.BaseType == SolidityDataTypeEnum.String ||
+                          simpleType.BaseType == SolidityDataTypeEnum.Bytes;
+            return result;
+        }
+
+        if (type is CustomTypeReference)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     private bool TypesAreCompatible(TypeReference sourceType, TypeReference targetType)

@@ -74,6 +74,7 @@ public class SetTaxFeeFunction
         var result = new FunctionDefinition
         {
             Name = "setTaxFee",
+            Kind = FunctionKind.Normal,
             Visibility = Visibility.Public,
             Modifiers = new List<ModifierDefinition>
             {

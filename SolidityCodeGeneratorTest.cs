@@ -221,7 +221,7 @@ public static class SolidityCodeGeneratorTest
 
     private static void ValidateOutput(string solidityCode)
     {
-        Console.WriteLine("🔍 Validando saída...");
+        Console.WriteLine("  Validando saída...");
 
         var checks = new List<(string description, Func<string, bool> check)>
         {
