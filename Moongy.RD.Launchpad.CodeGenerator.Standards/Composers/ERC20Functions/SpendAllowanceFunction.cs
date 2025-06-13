@@ -56,7 +56,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
                 LocalParameter = new ParameterDefinition
                 {
                     Name = "currentAllowance",
-                    Type = DataTypeReference.Uint256
+                    Type = DataTypeReference.Uint256,
                 }
             };
 
@@ -86,13 +86,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
                 Trigger = new TriggerDefinition
                 {
                     Kind = TriggerKind.Error,
-                    Name = "ERC20InsufficientAllowance",
-                    Parameters = new List<ParameterDefinition>
-                    {
-                        new() { Name = "spender", Type = DataTypeReference.Address },
-                        new() { Name = "allowance", Type = DataTypeReference.Uint256 },
-                        new() { Name = "needed", Type = DataTypeReference.Uint256 }
-                    }
+                    Name = "ERC20InsufficientAllowance"
                 },
                 TriggerArguments = new List<ExpressionDefinition>
                 {

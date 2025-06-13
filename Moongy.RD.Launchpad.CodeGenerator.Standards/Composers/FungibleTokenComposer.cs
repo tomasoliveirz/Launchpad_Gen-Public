@@ -28,12 +28,12 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
         var mainModule = moduleFile.Modules.FirstOrDefault();
         if (mainModule == null) return;
 
+        mainModule.Fields.Add(TokenBalancesDefinition());
+        mainModule.Fields.Add(TokenAllowancesDefinition());
+        mainModule.Fields.Add(TokenTotalSupplyDefinition());
         mainModule.Fields.Add(TokenNameDefinition());
         mainModule.Fields.Add(TokenSymbolDefinition());
         mainModule.Fields.Add(TokenDecimalsDefinition());
-        mainModule.Fields.Add(TokenTotalSupplyDefinition());
-        mainModule.Fields.Add(TokenBalancesDefinition());
-        mainModule.Fields.Add(TokenAllowancesDefinition());
         
         AddERC20Events(mainModule);
     }
@@ -79,22 +79,24 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
     {
         var mainModule = moduleFile.Modules.FirstOrDefault();
         if (mainModule == null) return;
-
+        // TODO REVIEW THIS FUNCTIONS
         mainModule.Functions.Add(ConstructorDefinition());
         mainModule.Functions.Add(NameFunctionDefinition());
         mainModule.Functions.Add(SymbolFunctionDefinition());
         mainModule.Functions.Add(DecimalsFunctionDefinition());
         mainModule.Functions.Add(TotalSupplyFunctionDefinition());
         mainModule.Functions.Add(BalanceOfFunctionDefinition());
-        mainModule.Functions.Add(AllowanceFunctionDefinition());
         mainModule.Functions.Add(TransferFunctionDefinition());
-        mainModule.Functions.Add(TransferFromFunctionDefinition());
+        mainModule.Functions.Add(AllowanceFunctionDefinition());
         mainModule.Functions.Add(ApproveFunctionDefinition());
+        mainModule.Functions.Add(TransferFromFunctionDefinition());
         mainModule.Functions.Add(_TransferFunctionDefinition());
-        mainModule.Functions.Add(_ApproveFunction());
         mainModule.Functions.Add(_UpdateFunctionDefinition());
+        mainModule.Functions.Add(MintFunctionDefinition());
+        mainModule.Functions.Add(BurnFunctionDefinition());
+        mainModule.Functions.Add(FirstApproveFunctionDefinition());
+        mainModule.Functions.Add(_ApproveFunction());
         mainModule.Functions.Add(SpendAllowanceDefinition());
-        
     }
 
     private FunctionDefinition MintFunctionDefinition()
@@ -214,12 +216,6 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
     private FunctionDefinition FirstApproveFunctionDefinition()
     {
         var approve = new FirstApproveFunction();
-        return approve.Build();
-    }
-
-    private FunctionDefinition SecondApproveFunctionDefinition()
-    {
-        var approve = new SecondApproveFunction();
         return approve.Build();
     }
 

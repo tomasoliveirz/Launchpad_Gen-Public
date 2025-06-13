@@ -1,5 +1,5 @@
 ﻿{{- if Location -}}
-{{ Type }} {{ Location }} {{ Name }}{{- if InitialValue -}} = {{ InitialValue }}{{- end -}};
+{{ Type }} {{ Location }} {{ Name }}{{- if Value -}} = {{ Value }}{{- end -}};
 {{- else -}}
-{{ Type }} {{ Name }}{{- if InitialValue -}} = {{ InitialValue }}{{- end -}};
+{{ Type }} {{ Name }}{{- if Value -}} = {{ Value }}{{- end -}};
 {{- end -}}
