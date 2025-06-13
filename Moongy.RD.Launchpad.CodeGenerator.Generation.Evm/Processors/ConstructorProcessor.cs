@@ -67,6 +67,11 @@ public class ConstructorProcessor() : BaseSolidityTemplateProcessor<SolidityCont
             assignments.Add($"{param.AssignedTo} = {param.Name};");
         }
 
+        if (model.ConstructorStatements != null)
+        {
+            assignments.AddRange(model.ConstructorStatements);
+        }
+
         return assignments;
     }
 

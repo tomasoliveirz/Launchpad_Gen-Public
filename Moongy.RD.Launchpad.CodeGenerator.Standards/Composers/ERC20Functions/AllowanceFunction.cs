@@ -17,7 +17,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
                 {
                     new ParameterDefinition
                     {
-                        Name = "owner",
+                        Name = "ownerAddr",
                         Type = DataTypeReference.Address,
                     },
                     new ParameterDefinition
@@ -47,7 +47,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
                                     Index = new ExpressionDefinition
                                     {
                                         Kind = ExpressionKind.Identifier,
-                                        Identifier = "owner"
+                                        Identifier = "ownerAddr"
                                     }
                                 },
                                 Index = new ExpressionDefinition

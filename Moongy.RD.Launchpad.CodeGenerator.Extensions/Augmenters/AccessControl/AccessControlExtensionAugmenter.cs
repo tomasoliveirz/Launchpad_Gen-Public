@@ -1,12 +1,10 @@
 using Moongy.RD.Launchpad.CodeGenerator.Core.Enums;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels;
+using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Functions;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Modules;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Others;
 using Moongy.RD.Launchpad.CodeGenerator.Extensions.Models;
 using Moongy.RD.Launchpad.CodeGenerator.Extensions.Augmenters.AccessControl.Ownable;
-/*
-using Moongy.RD.Launchpad.CodeGenerator.Extensions.Augmenters.AccessControl.RoleBased;
-*/
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Extensions.Augmenters.AccessControl;
 
@@ -40,8 +38,6 @@ public class AccessControlExtensionAugmenter : BaseExtensionAugmenter<AccessCont
         };
     }
 
-    //                          ownable access control 
-
     private static void BuildOwnableAccessControl(ModuleDefinition mod, AccessControlExtensionModel model)
     {
         BuildOwnableStorage(mod);
@@ -49,11 +45,11 @@ public class AccessControlExtensionAugmenter : BaseExtensionAugmenter<AccessCont
         BuildOwnableErrors(mod);
         BuildOwnableModifiers(mod);
         BuildOwnableFunctions(mod);
+        InitializeOwnerInConstructor(mod, model);
     }
     
     private static void BuildOwnableStorage(ModuleDefinition mod)
     {
-        // address private _owner;
         AddOnce(mod.Fields, f => f.Name == "_owner", () => new FieldDefinition
         {
             Name = "_owner",
@@ -62,9 +58,51 @@ public class AccessControlExtensionAugmenter : BaseExtensionAugmenter<AccessCont
         });
     }
 
+    private static void InitializeOwnerInConstructor(ModuleDefinition mod, AccessControlExtensionModel model)
+    {
+        var constructor = mod.Functions.FirstOrDefault(f => f.Kind == FunctionKind.Constructor);
+        
+        if (constructor == null)
+        {
+            constructor = new FunctionDefinition
+            {
+                Kind = FunctionKind.Constructor,
+                Name = "constructor",
+                Visibility = Visibility.Public,
+                Parameters = new List<ParameterDefinition>(),
+                Body = new List<FunctionStatementDefinition>()
+            };
+            mod.Functions.Add(constructor);
+        }
+
+        var ownerInitialization = new FunctionStatementDefinition
+        {
+            Kind = FunctionStatementKind.Assignment,
+            ParameterAssignment = new AssignmentDefinition
+            {
+                Left = new ExpressionDefinition
+                {
+                    Kind = ExpressionKind.Identifier,
+                    Identifier = "_owner"
+                },
+                Right = new ExpressionDefinition
+                {
+                    Kind = ExpressionKind.MemberAccess,
+                    Target = new ExpressionDefinition
+                    {
+                        Kind = ExpressionKind.Identifier,
+                        Identifier = "msg"
+                    },
+                    MemberName = "sender"
+                }
+            }
+        };
+
+        constructor.Body.Add(ownerInitialization);
+    }
+
     private static void BuildOwnableErrors(ModuleDefinition mod)
     {
-        //     error OwnableUnauthorizedAccount(address account);
         AddOnce(mod.Triggers, e => e.Name == "OwnableUnauthorizedAccount", () => new TriggerDefinition
         {
             Name = "OwnableUnauthorizedAccount",
@@ -75,7 +113,6 @@ public class AccessControlExtensionAugmenter : BaseExtensionAugmenter<AccessCont
             ]
         });
         
-        //    error OwnableInvalidOwner(address owner);
         AddOnce(mod.Triggers, e => e.Name == "OwnableInvalidOwner", () => new TriggerDefinition
         {
             Name = "OwnableInvalidOwner",
@@ -90,7 +127,6 @@ public class AccessControlExtensionAugmenter : BaseExtensionAugmenter<AccessCont
 
     private static void BuildOwnableEvents(ModuleDefinition mod)
     {
-        // event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
         AddOnce(mod.Triggers, e => e.Name == "OwnershipTransferred", () => new TriggerDefinition
         {
             Name = "OwnershipTransferred",
@@ -105,7 +141,6 @@ public class AccessControlExtensionAugmenter : BaseExtensionAugmenter<AccessCont
     
     private static void BuildOwnableModifiers(ModuleDefinition mod)
     {
-        // modifier onlyOwner()
         AddOnce(mod.Modifiers, m => m.Name == "onlyOwner", () => new ModifierDefinition
         {
             Name = "onlyOwner"
@@ -114,21 +149,13 @@ public class AccessControlExtensionAugmenter : BaseExtensionAugmenter<AccessCont
 
     private static void BuildOwnableFunctions(ModuleDefinition mod)
     {
-        // function owner() public view virtual returns (address)
         AddOnce(mod.Functions, f => f.Name == "owner", () => new OwnerFunction().Build());
-        // function _checkOwner() internal view virtual 
         AddOnce(mod.Functions, f => f.Name == "_checkOwner", () => new CheckOwnerFunction().Build());
-        // function renounceOwnership() public virtual onlyOwner
         AddOnce(mod.Functions, f => f.Name == "renounceOwnership", () => new RenounceOwnershipFunction().Build());
-        // function transferOwnership(address newOwner) public virtual onlyOwner
         AddOnce(mod.Functions, f => f.Name == "transferOwnership", () => new TransferOwnershipFunction().Build());
-        // function _transferOwnership(address newOwner) internal virtual
         AddOnce(mod.Functions, f => f.Name == "_transferOwnership", () => new InternalTransferOwnershipFunction().Build());
     }
     
-    
-    
-    //                          role-based access control
     private static void BuildRoleBasedAccessControl(ModuleDefinition mod, AccessControlExtensionModel model)
     {
         BuildRoleBasedStructs(mod);
@@ -142,7 +169,6 @@ public class AccessControlExtensionAugmenter : BaseExtensionAugmenter<AccessCont
 
     private static void BuildRoleBasedStructs(ModuleDefinition mod)
     {
-        // struct RoleData { mapping(address account => bool) hasRole; bytes32 adminRole; }
         AddOnce(mod.Structs, s => s.Name == "RoleData", () => new StructDefinition
         {
             Name = "RoleData",
@@ -171,7 +197,6 @@ public class AccessControlExtensionAugmenter : BaseExtensionAugmenter<AccessCont
 
     private static void BuildRoleBasedStorage(ModuleDefinition mod)
     {
-        // mapping(bytes32 role => RoleData) private _roles;
         AddOnce(mod.Fields, f => f.Name == "_roles", () => new FieldDefinition
         {
             Name = "_roles",
@@ -187,7 +212,7 @@ public class AccessControlExtensionAugmenter : BaseExtensionAugmenter<AccessCont
             },
             Visibility = Visibility.Private
         });
-        // bytes32 public constant DEFAULT_ADMIN_ROLE = 0x00;
+        
         AddOnce(mod.Fields, f => f.Name == "DEFAULT_ADMIN_ROLE", () => new FieldDefinition
         {
             Name = "DEFAULT_ADMIN_ROLE",
@@ -220,7 +245,7 @@ public class AccessControlExtensionAugmenter : BaseExtensionAugmenter<AccessCont
                 [
                     new() { Name = "role", Type = T(PrimitiveType.Bytes) },
                     new() { Name = "account", Type = T(PrimitiveType.Address) },
-                    new() { Name = "msg.sender", Type = T(PrimitiveType.Address) }
+                    new() { Name = "sender", Type = T(PrimitiveType.Address) }
                 ]
             },
             new TriggerDefinition
@@ -231,7 +256,7 @@ public class AccessControlExtensionAugmenter : BaseExtensionAugmenter<AccessCont
                 [
                     new() { Name = "role", Type = T(PrimitiveType.Bytes) },
                     new() { Name = "account", Type = T(PrimitiveType.Address) },
-                    new() { Name = "msg.sender", Type = T(PrimitiveType.Address) }
+                    new() { Name = "sender", Type = T(PrimitiveType.Address) }
                 ]
             }
         };
@@ -244,7 +269,6 @@ public class AccessControlExtensionAugmenter : BaseExtensionAugmenter<AccessCont
 
     private static void BuildRoleBasedModifiers(ModuleDefinition mod)
     {
-        // modifier onlyRole(bytes32 role)
         AddOnce(mod.Modifiers, m => m.Name == "onlyRole", () => new ModifierDefinition
         {
             Name = "onlyRole",

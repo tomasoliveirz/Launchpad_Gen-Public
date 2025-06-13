@@ -39,17 +39,6 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
             #endregion
 
             #region Variable Declaration
-            var allowanceCall = new ExpressionDefinition
-            {
-                Kind = ExpressionKind.FunctionCall,
-                Callee = new ExpressionDefinition 
-                { 
-                    Kind = ExpressionKind.Identifier,
-                    Identifier = "allowance" 
-                },
-                Arguments = new List<ExpressionDefinition> { ownerAddress, spenderAddress }
-            };
-
             var currentAllowanceDeclaration = new FunctionStatementDefinition
             {
                 Kind = FunctionStatementKind.LocalDeclaration,
@@ -66,12 +55,34 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
                 ParameterAssignment = new AssignmentDefinition
                 {
                     Left = currentAllowanceExpr,
-                    Right = allowanceCall
+                    Right = new ExpressionDefinition
+                    {
+                        Kind = ExpressionKind.IndexAccess,
+                        Target = new ExpressionDefinition
+                        {
+                            Kind = ExpressionKind.IndexAccess,
+                            Target = new ExpressionDefinition 
+                            { 
+                                Kind = ExpressionKind.Identifier,
+                                Identifier = "_allowances" 
+                            },
+                            Index = ownerAddress
+                        },
+                        Index = spenderAddress
+                    }
                 }
             };
             #endregion
 
-            #region Inner If Statement
+            #region Check and Update Allowance
+            var notMaxCondition = new ExpressionDefinition
+            {
+                Kind = ExpressionKind.Binary,
+                Left = currentAllowanceExpr,
+                Operator = BinaryOperator.NotEqual,
+                Right = typeUint256Max
+            };
+
             var insufficientAllowanceCondition = new ExpressionDefinition
             {
                 Kind = ExpressionKind.Binary,
@@ -96,33 +107,61 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
                 }
             };
 
-            var innerIfStatement = new FunctionStatementDefinition
+            // Update allowance after successful check
+            var updateAllowance = new FunctionStatementDefinition
             {
-                Kind = FunctionStatementKind.Condition,
-                ConditionBranches = new List<ConditionBranch>
+                Kind = FunctionStatementKind.Assignment,
+                ParameterAssignment = new AssignmentDefinition
                 {
-                    new ConditionBranch
+                    Left = new ExpressionDefinition
                     {
-                        Condition = insufficientAllowanceCondition,
-                        Body = new List<FunctionStatementDefinition>
+                        Kind = ExpressionKind.IndexAccess,
+                        Target = new ExpressionDefinition
                         {
-                            revertStatement
-                        }
+                            Kind = ExpressionKind.IndexAccess,
+                            Target = new ExpressionDefinition 
+                            { 
+                                Kind = ExpressionKind.Identifier,
+                                Identifier = "_allowances" 
+                            },
+                            Index = ownerAddress
+                        },
+                        Index = spenderAddress
+                    },
+                    Right = new ExpressionDefinition
+                    {
+                        Kind = ExpressionKind.Binary,
+                        Left = currentAllowanceExpr,
+                        Operator = BinaryOperator.Subtract,
+                        Right = valueExpr
                     }
                 }
             };
-            #endregion
 
-            #region Outer If Statement
-            var notMaxCondition = new ExpressionDefinition
+            // Emit Approval event with updated allowance
+            var approvalEvent = new FunctionStatementDefinition
             {
-                Kind = ExpressionKind.Binary,
-                Left = currentAllowanceExpr,
-                Operator = BinaryOperator.LessThan,
-                Right = typeUint256Max
+                Kind = FunctionStatementKind.Trigger,
+                Trigger = new TriggerDefinition
+                {
+                    Kind = TriggerKind.Log,
+                    Name = "Approval"
+                },
+                TriggerArguments = new List<ExpressionDefinition>
+                {
+                    ownerAddress,
+                    spenderAddress,
+                    new ExpressionDefinition
+                    {
+                        Kind = ExpressionKind.Binary,
+                        Left = currentAllowanceExpr,
+                        Operator = BinaryOperator.Subtract,
+                        Right = valueExpr
+                    }
+                }
             };
 
-            var outerIfStatement = new FunctionStatementDefinition
+            var checkAndUpdateBlock = new FunctionStatementDefinition
             {
                 Kind = FunctionStatementKind.Condition,
                 ConditionBranches = new List<ConditionBranch>
@@ -132,7 +171,20 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
                         Condition = notMaxCondition,
                         Body = new List<FunctionStatementDefinition>
                         {
-                            innerIfStatement
+                            new FunctionStatementDefinition
+                            {
+                                Kind = FunctionStatementKind.Condition,
+                                ConditionBranches = new List<ConditionBranch>
+                                {
+                                    new ConditionBranch
+                                    {
+                                        Condition = insufficientAllowanceCondition,
+                                        Body = new List<FunctionStatementDefinition> { revertStatement }
+                                    }
+                                }
+                            },
+                            updateAllowance,
+                            approvalEvent
                         }
                     }
                 }
@@ -150,7 +202,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
                 {
                     currentAllowanceDeclaration,
                     currentAllowanceAssignment,
-                    outerIfStatement
+                    checkAndUpdateBlock
                 }
             };
             #endregion
@@ -176,13 +228,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
                 Type = DataTypeReference.Uint256
             };
 
-            var parameters = new List<ParameterDefinition>
-            {
-                owner,
-                spender,
-                value
-            };
-            return parameters;
+            return new List<ParameterDefinition> { owner, spender, value };
         }
     }
 }

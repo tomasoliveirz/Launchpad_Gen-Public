@@ -1,51 +1,86 @@
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Functions;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Others;
 using Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Base;
-using Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Helpers;
 
-namespace Moongy.RD.Launchpad.CodeGenerator.Extensions.Augmenters.AccessControl.Ownable;
-
-/*
-     function _checkOwner() internal view virtual {
-       if (owner() != _msgSender()) {
-           revert OwnableUnauthorizedAccount(_msgSender());
-       }
-   }
-*/
-public class CheckOwnerFunction
+namespace Moongy.RD.Launchpad.CodeGenerator.Extensions.Augmenters.AccessControl.Ownable
 {
-    public FunctionDefinition Build()
+    public class CheckOwnerFunction
     {
-        var ownerCall = new ExpressionDefinition
+        public FunctionDefinition Build()
         {
-            Kind = ExpressionKind.FunctionCall,
-            Callee = new ExpressionDefinition { Identifier = "owner" },
-            Arguments = []
-        };
+            //  _owner field directly instead of calling owner() function
+            var ownerField = new ExpressionDefinition
+            {
+                Kind = ExpressionKind.Identifier,
+                Identifier = "_owner"
+            };
 
-        var msgSenderCall = new ExpressionDefinition
-        {
-            Kind = ExpressionKind.FunctionCall,
-            Callee = new ExpressionDefinition { Identifier = "msg.sender" },
-            Arguments = []
-        };
+            var msgSender = new ExpressionDefinition
+            {
+                Kind = ExpressionKind.MemberAccess,
+                Target = new ExpressionDefinition
+                {
+                    Kind = ExpressionKind.Identifier,
+                    Identifier = "msg"
+                },
+                MemberName = "sender"
+            };
 
-        var condition = new ExpressionDefinition
-        {
-            Kind = ExpressionKind.Binary,
-            Operator = BinaryOperator.NotEqual,
-            Left = ownerCall,
-            Right = msgSenderCall
-        };
+            // if _owner != msg.sender
+            var condition = new ExpressionDefinition
+            {
+                Kind = ExpressionKind.Binary,
+                Left = ownerField,
+                Operator = BinaryOperator.NotEqual,
+                Right = msgSender
+            };
 
-        
-        var errorHelper = new IfRevertHelper(condition, "OwnableUnauthorizedAccount", new List<ExpressionDefinition> { msgSenderCall });
+            var revertStatement = new FunctionStatementDefinition
+            {
+                Kind = FunctionStatementKind.Trigger,
+                Trigger = new TriggerDefinition
+                {
+                    Kind = TriggerKind.Error,
+                    Name = "OwnableUnauthorizedAccount",
+                    Parameters = new List<ParameterDefinition>
+                    {
+                        new() { Name = "account", Type = DataTypeReference.Address }
+                    }
+                },
+                TriggerArguments = new List<ExpressionDefinition>
+                {
+                    msgSender
+                }
+            };
 
-        return new FunctionDefinition
-        {
-            Name = "_checkOwner",
-            Visibility = Visibility.Internal,
-            Body = [errorHelper.Build()]
-        };
+            var ifStatement = new FunctionStatementDefinition
+            {
+                Kind = FunctionStatementKind.Condition,
+                ConditionBranches = new List<ConditionBranch>
+                {
+                    new ConditionBranch
+                    {
+                        Condition = condition,
+                        Body = new List<FunctionStatementDefinition>
+                        {
+                            revertStatement
+                        }
+                    }
+                }
+            };
+
+            return new FunctionDefinition
+            {
+                Name = "_checkOwner",
+                Kind = FunctionKind.Normal,
+                Visibility = Visibility.Internal,
+                Parameters = new List<ParameterDefinition>(),
+                ReturnParameters = new List<ParameterDefinition>(),
+                Body = new List<FunctionStatementDefinition>
+                {
+                    ifStatement
+                }
+            };
+        }
     }
 }

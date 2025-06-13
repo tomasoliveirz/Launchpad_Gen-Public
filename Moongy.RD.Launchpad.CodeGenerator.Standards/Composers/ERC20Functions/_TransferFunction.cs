@@ -10,231 +10,40 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
         {
             var parameters = BuildParameters();
 
-            #region Basic Validation
-            var fromNotZeroRequire = new FunctionStatementDefinition
-            {
-                Kind = FunctionStatementKind.Expression,
-                Expression = new ExpressionDefinition
-                {
-                    Kind = ExpressionKind.FunctionCall,
-                    Callee = new ExpressionDefinition 
-                    { 
-                        Kind = ExpressionKind.Identifier,
-                        Identifier = "require" 
-                    },
-                    Arguments = new List<ExpressionDefinition>
-                    {
-                        new ExpressionDefinition
-                        {
-                            Kind = ExpressionKind.Binary,
-                            Left = new ExpressionDefinition 
-                            { 
-                                Kind = ExpressionKind.Identifier,
-                                Identifier = "from" 
-                            },
-                            Operator = BinaryOperator.NotEqual,
-                            Right = new ExpressionDefinition
-                            {
-                                Kind = ExpressionKind.FunctionCall,
-                                Callee = new ExpressionDefinition 
-                                { 
-                                    Kind = ExpressionKind.Identifier,
-                                    Identifier = "address" 
-                                },
-                                Arguments = new List<ExpressionDefinition>
-                                {
-                                    new ExpressionDefinition 
-                                    { 
-                                        Kind = ExpressionKind.Literal,
-                                        LiteralValue = "0" 
-                                    }
-                                }
-                            }
-                        },
-                        new ExpressionDefinition 
-                        { 
-                            Kind = ExpressionKind.Literal,
-                            LiteralValue = "\"Transfer from zero address\"" 
-                        }
-                    }
-                }
+            #region Identifiers
+            var fromExpr = new ExpressionDefinition 
+            { 
+                Kind = ExpressionKind.Identifier,
+                Identifier = "from" 
             };
-
-            var toNotZeroRequire = new FunctionStatementDefinition
-            {
-                Kind = FunctionStatementKind.Expression,
-                Expression = new ExpressionDefinition
-                {
-                    Kind = ExpressionKind.FunctionCall,
-                    Callee = new ExpressionDefinition 
-                    { 
-                        Kind = ExpressionKind.Identifier,
-                        Identifier = "require" 
-                    },
-                    Arguments = new List<ExpressionDefinition>
-                    {
-                        new ExpressionDefinition
-                        {
-                            Kind = ExpressionKind.Binary,
-                            Left = new ExpressionDefinition 
-                            { 
-                                Kind = ExpressionKind.Identifier,
-                                Identifier = "to" 
-                            },
-                            Operator = BinaryOperator.NotEqual,
-                            Right = new ExpressionDefinition
-                            {
-                                Kind = ExpressionKind.FunctionCall,
-                                Callee = new ExpressionDefinition 
-                                { 
-                                    Kind = ExpressionKind.Identifier,
-                                    Identifier = "address" 
-                                },
-                                Arguments = new List<ExpressionDefinition>
-                                {
-                                    new ExpressionDefinition 
-                                    { 
-                                        Kind = ExpressionKind.Literal,
-                                        LiteralValue = "0" 
-                                    }
-                                }
-                            }
-                        },
-                        new ExpressionDefinition 
-                        { 
-                            Kind = ExpressionKind.Literal,
-                            LiteralValue = "\"Transfer to zero address\"" 
-                        }
-                    }
-                }
+            var toExpr = new ExpressionDefinition 
+            { 
+                Kind = ExpressionKind.Identifier,
+                Identifier = "to" 
+            };
+            var valueExpr = new ExpressionDefinition 
+            { 
+                Kind = ExpressionKind.Identifier,
+                Identifier = "value" 
             };
             #endregion
 
-            #region Basic Transfer Logic
-            var fromBalanceUpdate = new FunctionStatementDefinition
+            #region Function Call to _update
+            var updateCall = new ExpressionDefinition
             {
-                Kind = FunctionStatementKind.Assignment,
-                ParameterAssignment = new AssignmentDefinition
-                {
-                    Left = new ExpressionDefinition
-                    {
-                        Kind = ExpressionKind.IndexAccess,
-                        Target = new ExpressionDefinition 
-                        { 
-                            Kind = ExpressionKind.Identifier,
-                            Identifier = "_balances" 
-                        },
-                        Index = new ExpressionDefinition 
-                        { 
-                            Kind = ExpressionKind.Identifier,
-                            Identifier = "from" 
-                        }
-                    },
-                    Right = new ExpressionDefinition
-                    {
-                        Kind = ExpressionKind.Binary,
-                        Left = new ExpressionDefinition
-                        {
-                            Kind = ExpressionKind.IndexAccess,
-                            Target = new ExpressionDefinition 
-                            { 
-                                Kind = ExpressionKind.Identifier,
-                                Identifier = "_balances" 
-                            },
-                            Index = new ExpressionDefinition 
-                            { 
-                                Kind = ExpressionKind.Identifier,
-                                Identifier = "from" 
-                            }
-                        },
-                        Operator = BinaryOperator.Subtract,
-                        Right = new ExpressionDefinition 
-                        { 
-                            Kind = ExpressionKind.Identifier,
-                            Identifier = "value"
-                        }
-                    }
-                }
-            };
-
-            var toBalanceUpdate = new FunctionStatementDefinition
-            {
-                Kind = FunctionStatementKind.Assignment,
-                ParameterAssignment = new AssignmentDefinition
-                {
-                    Left = new ExpressionDefinition
-                    {
-                        Kind = ExpressionKind.IndexAccess,
-                        Target = new ExpressionDefinition 
-                        { 
-                            Kind = ExpressionKind.Identifier,
-                            Identifier = "_balances" 
-                        },
-                        Index = new ExpressionDefinition 
-                        { 
-                            Kind = ExpressionKind.Identifier,
-                            Identifier = "to" 
-                        }
-                    },
-                    Right = new ExpressionDefinition
-                    {
-                        Kind = ExpressionKind.Binary,
-                        Left = new ExpressionDefinition
-                        {
-                            Kind = ExpressionKind.IndexAccess,
-                            Target = new ExpressionDefinition 
-                            { 
-                                Kind = ExpressionKind.Identifier,
-                                Identifier = "_balances" 
-                            },
-                            Index = new ExpressionDefinition 
-                            { 
-                                Kind = ExpressionKind.Identifier,
-                                Identifier = "to" 
-                            }
-                        },
-                        Operator = BinaryOperator.Add,
-                        Right = new ExpressionDefinition 
-                        { 
-                            Kind = ExpressionKind.Identifier,
-                            Identifier = "value"
-                        }
-                    }
-                }
-            };
-
-            var transferEvent = new FunctionStatementDefinition
-            {
-                Kind = FunctionStatementKind.Trigger,
-                Trigger = new TriggerDefinition
-                {
-                    Kind = TriggerKind.Log,
-                    Name = "Transfer",
-                    Parameters = new List<ParameterDefinition>
-                    {
-                        new() { Name = "from", Type = DataTypeReference.Address },
-                        new() { Name = "to", Type = DataTypeReference.Address },
-                        new() { Name = "value", Type = DataTypeReference.Uint256 }
-                    }
+                Kind = ExpressionKind.FunctionCall,
+                Callee = new ExpressionDefinition 
+                {  
+                    Kind = ExpressionKind.Identifier,
+                    Identifier = "_update" 
                 },
-                TriggerArguments = new List<ExpressionDefinition>
-                {
-                    new ExpressionDefinition 
-                    { 
-                        Kind = ExpressionKind.Identifier,
-                        Identifier = "from" 
-                    },
-                    new ExpressionDefinition 
-                    { 
-                        Kind = ExpressionKind.Identifier,
-                        Identifier = "to" 
-                    },
-                    new ExpressionDefinition 
-                    { 
-                        Kind = ExpressionKind.Identifier,
-                        Identifier = "value" 
-                    }
-                }
+                Arguments = new List<ExpressionDefinition> { fromExpr, toExpr, valueExpr }
+            };
+
+            var updateStatement = new FunctionStatementDefinition
+            {
+                Kind = FunctionStatementKind.Expression,
+                Expression = updateCall
             };
             #endregion
 
@@ -247,11 +56,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
                 Parameters = parameters,
                 Body = new List<FunctionStatementDefinition>
                 {
-                    fromNotZeroRequire,
-                    toNotZeroRequire,
-                    fromBalanceUpdate,
-                    toBalanceUpdate,
-                    transferEvent
+                    updateStatement
                 }
             };
             #endregion

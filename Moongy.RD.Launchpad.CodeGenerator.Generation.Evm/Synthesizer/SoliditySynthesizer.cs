@@ -43,8 +43,14 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
             { "transferFrom", (SolidityFunctionMutabilityEnum.None, true) },
             { "approve", (SolidityFunctionMutabilityEnum.None, true) },
             { "owner", (SolidityFunctionMutabilityEnum.View, true) },
+            { "_checkOwner", (SolidityFunctionMutabilityEnum.View, false) },
+            { "renounceOwnership", (SolidityFunctionMutabilityEnum.None, true) },
+            { "transferOwnership", (SolidityFunctionMutabilityEnum.None, true) },
+            { "_transferOwnership", (SolidityFunctionMutabilityEnum.None, false) },
             { "_transfer", (SolidityFunctionMutabilityEnum.None, false) },
-            { "_spendAllowance", (SolidityFunctionMutabilityEnum.None, false) }
+            { "_update", (SolidityFunctionMutabilityEnum.None, false) },
+            { "_approve", (SolidityFunctionMutabilityEnum.None, false) },
+            { "_spendAllowance", (SolidityFunctionMutabilityEnum.None, true) }
         };
 
         private readonly Dictionary<string, (SolidityFunctionMutabilityEnum State, bool Virtual)> _functionOverloadConfig = new()
@@ -60,8 +66,6 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
             var result = new SolidityLanguageMetamodel() { FileHeader = fileHeader, Contracts = contracts };
             return result;
         }
-
-        #region File Header
 
         private FileHeaderModel GenerateFileHeader(ModuleFileDefinition file) 
         {
@@ -140,9 +144,6 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
             return tokens;
         }
 
-        #endregion
-
-        #region Contract
         private SolidityContractModel[] GenerateContracts(ModuleFileDefinition file)
         {
             var result = new List<SolidityContractModel>();
@@ -167,6 +168,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
             var events = GenerateEvents(module);
             var functions = GenerateFunctions(module);
             var constructorParameters = GenerateConstructorParameters(module);
+            var constructorStatements = GenerateConstructorStatements(module);
 
             var result = new SolidityContractModel()
             {
@@ -182,8 +184,37 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
                 Events = events,
                 Functions = functions,
                 ConstructorParameters = constructorParameters,
+                ConstructorStatements = constructorStatements,
             };
             return result;
+        }
+
+        private List<string> GenerateConstructorStatements(ModuleDefinition module)
+        {
+            var statements = new List<string>();
+            
+            var constructor = module.Functions.FirstOrDefault(f => f.Kind == FunctionKind.Constructor);
+            if (constructor?.Body != null)
+            {
+                foreach (var statement in constructor.Body)
+                {
+                    if (statement.Kind == FunctionStatementKind.Assignment && 
+                        statement.ParameterAssignment != null)
+                    {
+                        var assignment = statement.ParameterAssignment;
+                        
+                        if (assignment.Left?.Identifier == "_owner" && 
+                            assignment.Right?.Kind == ExpressionKind.MemberAccess &&
+                            assignment.Right?.Target?.Identifier == "msg" &&
+                            assignment.Right?.MemberName == "sender")
+                        {
+                            statements.Add("_owner = msg.sender;");
+                        }
+                    }
+                }
+            }
+            
+            return statements;
         }
 
         private List<ConstructorParameterModel> GenerateConstructorParameters(ModuleDefinition module)
@@ -231,7 +262,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
                         Name = parameter.Name,
                         Index = paramIdx,
                         Value = parameter.Value,
-                        Location = SolidityMemoryLocation.Memory,
+                        Location = DetermineMemoryLocationForParameter(parameter.Type),
                         AssignedTo = assignedTo
                     };
                     
@@ -259,7 +290,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
                     Type = ContextTypeReferenceSyntaxHelper.MapToSolidityTypeReference(p.Type),
                     Index = index, 
                     Value = p.Value,
-                    Location = SolidityMemoryLocation.None
+                    Location = DetermineMemoryLocationForParameter(p.Type)
                 }).ToList();
 
                 var returnParameters = function.ReturnParameters.Select((p, index) => new ReturnParameterModel
@@ -268,7 +299,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
                     Type = ContextTypeReferenceSyntaxHelper.MapToSolidityTypeReference(p.Type),
                     Index = index,
                     Value = p.Value,
-                    Location = SolidityMemoryLocation.None
+                    Location = DetermineMemoryLocationForReturn(p.Type)
                 }).ToList();
 
                 var statements = function.Body.Select(s => StatementSoliditySyntaxHelper.MapStatement(s))
@@ -303,6 +334,32 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
                 result.Add(funcModel);
             }
             return result;
+        }
+
+        private SolidityMemoryLocation DetermineMemoryLocationForParameter(TypeReference typeReference)
+        {
+            return typeReference.Kind switch
+            {
+                TypeReferenceKind.Simple when typeReference.Primitive == PrimitiveType.String => SolidityMemoryLocation.Memory,
+                TypeReferenceKind.Simple when typeReference.Primitive == PrimitiveType.Bytes => SolidityMemoryLocation.Memory,
+                TypeReferenceKind.Array => SolidityMemoryLocation.Memory,
+                TypeReferenceKind.Custom => SolidityMemoryLocation.Memory,
+                TypeReferenceKind.Tuple => SolidityMemoryLocation.Memory,
+                _ => SolidityMemoryLocation.None
+            };
+        }
+
+        private SolidityMemoryLocation DetermineMemoryLocationForReturn(TypeReference typeReference)
+        {
+            return typeReference.Kind switch
+            {
+                TypeReferenceKind.Simple when typeReference.Primitive == PrimitiveType.String => SolidityMemoryLocation.Memory,
+                TypeReferenceKind.Simple when typeReference.Primitive == PrimitiveType.Bytes => SolidityMemoryLocation.Memory,
+                TypeReferenceKind.Array => SolidityMemoryLocation.Memory,
+                TypeReferenceKind.Custom => SolidityMemoryLocation.Memory,
+                TypeReferenceKind.Tuple => SolidityMemoryLocation.Memory,
+                _ => SolidityMemoryLocation.None
+            };
         }
 
         private bool DetermineFunctionVirtual(FunctionDefinition function)
@@ -551,6 +608,10 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
 
         private string GenerateModifierBody(ModifierDefinition modifierDefinition)
         {
+            if (modifierDefinition.Name == "onlyOwner")
+            {
+                return "_checkOwner();";
+            }
             return $"// Modifier {modifierDefinition.Name} implementation";
         }
 
@@ -725,7 +786,5 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
             }
             return result;
         }
-        #endregion
-
     }
 }

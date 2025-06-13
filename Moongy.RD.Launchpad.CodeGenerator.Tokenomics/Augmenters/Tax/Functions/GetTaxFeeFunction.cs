@@ -25,6 +25,11 @@ public class GetTaxFeeFunction
             Visibility = Visibility.Public,
             ReturnParameters = new List<ParameterDefinition>
             {
+                new ParameterDefinition
+                {
+                    Name = "",
+                    Type = new TypeReference { Kind = TypeReferenceKind.Simple, Primitive = PrimitiveType.Uint256 }
+                }
             },
             Body = new List<FunctionStatementDefinition>
             {

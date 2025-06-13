@@ -10,6 +10,7 @@ using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.State;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Structs;
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels;
+
 public class SolidityContractModel : SolidityModel
 {
     public required string Name { get; set; }
@@ -18,6 +19,7 @@ public class SolidityContractModel : SolidityModel
     public List<InterfaceImportModel> Interfaces { get; set; } = [];
     public List<TypeUtilityImportModel> TypeUtilities { get; set; } = [];
     public List<ConstructorParameterModel> ConstructorParameters { get; set; } = [];
+    public List<string> ConstructorStatements { get; set; } = [];
     public List<StatePropertyModel> StateProperties { get; set; } = [];
     public List<EnumModel> Enums { get; set; } = [];
     public List<StructModel> Structs { get; set; } = [];

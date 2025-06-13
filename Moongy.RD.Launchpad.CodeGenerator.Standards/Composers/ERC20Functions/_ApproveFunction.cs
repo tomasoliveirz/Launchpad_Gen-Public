@@ -11,10 +11,10 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
             var parameters = BuildParameters();
 
             #region Identifiers
-            var ownerExpr = new ExpressionDefinition 
+            var ownerAddrExpr = new ExpressionDefinition 
             { 
                 Kind = ExpressionKind.Identifier,
-                Identifier = "owner" 
+                Identifier = "ownerAddr" 
             };
             var spenderExpr = new ExpressionDefinition 
             { 
@@ -26,104 +26,77 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
                 Kind = ExpressionKind.Identifier,
                 Identifier = "value" 
             };
-            var emitEventExpr = new ExpressionDefinition 
-            { 
-                Kind = ExpressionKind.Identifier,
-                Identifier = "emitEvent" 
-            };
             var zeroAddress = new ExpressionDefinition
             {
-                Kind = ExpressionKind.FunctionCall,
-                Callee = new ExpressionDefinition 
-                { 
-                    Kind = ExpressionKind.Identifier,
-                    Identifier = "address" 
-                },
-                Arguments = new List<ExpressionDefinition>
-                {
-                    new ExpressionDefinition 
-                    { 
-                        Kind = ExpressionKind.Literal,
-                        LiteralValue = "0" 
-                    }
-                }
+                Kind = ExpressionKind.Identifier,
+                Identifier = "address(0)"
             };
             #endregion
 
-            #region Validation - Owner Check
-            var ownerZeroCondition = new ExpressionDefinition
-            {
-                Kind = ExpressionKind.Binary,
-                Left = ownerExpr,
-                Operator = BinaryOperator.Equal,
-                Right = zeroAddress
-            };
-
-            var ownerRevertStatement = new FunctionStatementDefinition
-            {
-                Kind = FunctionStatementKind.Trigger,
-                Trigger = new TriggerDefinition
-                {
-                    Kind = TriggerKind.Error,
-                    Name = "ERC20InvalidApprover"
-                },
-                TriggerArguments = new List<ExpressionDefinition>
-                {
-                    zeroAddress
-                }
-            };
-
-            var ownerValidation = new FunctionStatementDefinition
+            #region Validation with Custom Errors
+            var ownerNotZeroCheck = new FunctionStatementDefinition
             {
                 Kind = FunctionStatementKind.Condition,
                 ConditionBranches = new List<ConditionBranch>
                 {
                     new ConditionBranch
                     {
-                        Condition = ownerZeroCondition,
+                        Condition = new ExpressionDefinition
+                        {
+                            Kind = ExpressionKind.Binary,
+                            Left = ownerAddrExpr,
+                            Operator = BinaryOperator.Equal,
+                            Right = zeroAddress
+                        },
                         Body = new List<FunctionStatementDefinition>
                         {
-                            ownerRevertStatement
+                            new FunctionStatementDefinition
+                            {
+                                Kind = FunctionStatementKind.Trigger,
+                                Trigger = new TriggerDefinition
+                                {
+                                    Kind = TriggerKind.Error,
+                                    Name = "ERC20InvalidApprover"
+                                },
+                                TriggerArguments = new List<ExpressionDefinition>
+                                {
+                                    zeroAddress
+                                }
+                            }
                         }
                     }
                 }
             };
-            #endregion
 
-            #region Validation - Spender Check
-            var spenderZeroCondition = new ExpressionDefinition
-            {
-                Kind = ExpressionKind.Binary,
-                Left = spenderExpr,
-                Operator = BinaryOperator.Equal,
-                Right = zeroAddress
-            };
-
-            var spenderRevertStatement = new FunctionStatementDefinition
-            {
-                Kind = FunctionStatementKind.Trigger,
-                Trigger = new TriggerDefinition
-                {
-                    Kind = TriggerKind.Error,
-                    Name = "ERC20InvalidSpender"
-                },
-                TriggerArguments = new List<ExpressionDefinition>
-                {
-                    zeroAddress
-                }
-            };
-
-            var spenderValidation = new FunctionStatementDefinition
+            var spenderNotZeroCheck = new FunctionStatementDefinition
             {
                 Kind = FunctionStatementKind.Condition,
                 ConditionBranches = new List<ConditionBranch>
                 {
                     new ConditionBranch
                     {
-                        Condition = spenderZeroCondition,
+                        Condition = new ExpressionDefinition
+                        {
+                            Kind = ExpressionKind.Binary,
+                            Left = spenderExpr,
+                            Operator = BinaryOperator.Equal,
+                            Right = zeroAddress
+                        },
                         Body = new List<FunctionStatementDefinition>
                         {
-                            spenderRevertStatement
+                            new FunctionStatementDefinition
+                            {
+                                Kind = FunctionStatementKind.Trigger,
+                                Trigger = new TriggerDefinition
+                                {
+                                    Kind = TriggerKind.Error,
+                                    Name = "ERC20InvalidSpender"
+                                },
+                                TriggerArguments = new List<ExpressionDefinition>
+                                {
+                                    zeroAddress
+                                }
+                            }
                         }
                     }
                 }
@@ -139,15 +112,15 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
                     Left = new ExpressionDefinition
                     {
                         Kind = ExpressionKind.IndexAccess,
-                        IndexCollection = new ExpressionDefinition
+                        Target = new ExpressionDefinition
                         {
                             Kind = ExpressionKind.IndexAccess,
-                            IndexCollection = new ExpressionDefinition 
+                            Target = new ExpressionDefinition 
                             { 
                                 Kind = ExpressionKind.Identifier,
                                 Identifier = "_allowances" 
                             },
-                            Index = ownerExpr
+                            Index = ownerAddrExpr
                         },
                         Index = spenderExpr
                     },
@@ -156,7 +129,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
             };
             #endregion
 
-            #region Conditional Approval Event
+            #region Emit Approval Event
             var approvalEvent = new FunctionStatementDefinition
             {
                 Kind = FunctionStatementKind.Trigger,
@@ -173,25 +146,9 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
                 },
                 TriggerArguments = new List<ExpressionDefinition>
                 {
-                    ownerExpr,
+                    ownerAddrExpr,
                     spenderExpr,
                     valueExpr
-                }
-            };
-
-            var conditionalEvent = new FunctionStatementDefinition
-            {
-                Kind = FunctionStatementKind.Condition,
-                ConditionBranches = new List<ConditionBranch>
-                {
-                    new ConditionBranch
-                    {
-                        Condition = emitEventExpr,
-                        Body = new List<FunctionStatementDefinition>
-                        {
-                            approvalEvent
-                        }
-                    }
                 }
             };
             #endregion
@@ -205,10 +162,10 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
                 Parameters = parameters,
                 Body = new List<FunctionStatementDefinition>
                 {
-                    ownerValidation,
-                    spenderValidation,
+                    ownerNotZeroCheck,
+                    spenderNotZeroCheck,
                     setAllowance,
-                    conditionalEvent
+                    approvalEvent
                 }
             };
             #endregion
@@ -218,9 +175,9 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
 
         private List<ParameterDefinition> BuildParameters()
         {
-            var owner = new ParameterDefinition
+            var ownerAddr = new ParameterDefinition
             {
-                Name = "owner",
+                Name = "ownerAddr",
                 Type = DataTypeReference.Address
             };
             var spender = new ParameterDefinition
@@ -233,13 +190,8 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.ERC20Functions
                 Name = "value",
                 Type = DataTypeReference.Uint256
             };
-            var emitEvent = new ParameterDefinition
-            {
-                Name = "emitEvent",
-                Type = DataTypeReference.Bool
-            };
 
-            return new List<ParameterDefinition> { owner, spender, value, emitEvent };
+            return new List<ParameterDefinition> { ownerAddr, spender, value };
         }
     }
 }

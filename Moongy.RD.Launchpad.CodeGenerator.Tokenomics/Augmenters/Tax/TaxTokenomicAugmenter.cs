@@ -29,6 +29,17 @@ public class TaxTokenomicAugmenter : BaseTokenomicAugmenter<TaxTokenomicModel>
         Visibility = Visibility.Private
     };
     
+    private FieldDefinition _taxSharesField = new()
+    {
+        Name = "_taxShares",
+        Type = new TypeReference
+        {
+            Kind = TypeReferenceKind.Array,
+            ElementType = new TypeReference { Kind = TypeReferenceKind.Simple, Primitive = PrimitiveType.Uint256 }
+        },        
+        Visibility = Visibility.Private
+    };
+    
     public override void Augment(ContextMetamodel ctx, TaxTokenomicModel model)
     {
         var mod = Main(ctx);
@@ -42,6 +53,7 @@ public class TaxTokenomicAugmenter : BaseTokenomicAugmenter<TaxTokenomicModel>
     {
         AddOnce(contract.Fields, f => f.Name == "taxFee", () => _taxFeeField);
         AddOnce(contract.Fields, f => f.Name == "_taxRecipients", () => _taxRecipientsField);
+        AddOnce(contract.Fields, f => f.Name == "_taxShares", () => _taxSharesField);
     }
     
     private void InitializeVariables(ContextMetamodel ctx, TaxTokenomicModel model)
@@ -49,6 +61,18 @@ public class TaxTokenomicAugmenter : BaseTokenomicAugmenter<TaxTokenomicModel>
         var contract = Main(ctx);
         var constructor = contract.Functions.FirstOrDefault(f => f.Kind == FunctionKind.Constructor);
         
+        if (constructor == null)
+        {
+            constructor = new FunctionDefinition
+            {
+                Kind = FunctionKind.Constructor,
+                Name = "constructor",
+                Visibility = Visibility.Public,
+                Parameters = new List<ParameterDefinition>(),
+                Body = new List<FunctionStatementDefinition>()
+            };
+            contract.Functions.Add(constructor);
+        }
 
         var taxFeeAssignment = new FunctionStatementDefinition
         {
@@ -74,6 +98,8 @@ public class TaxTokenomicAugmenter : BaseTokenomicAugmenter<TaxTokenomicModel>
         {
             foreach (var recipient in model.TaxRecipients)
             {
+                if (string.IsNullOrEmpty(recipient.Address)) continue;
+
                 var recipientAssignment = new FunctionStatementDefinition
                 {
                     Kind = FunctionStatementKind.Expression,
@@ -95,29 +121,55 @@ public class TaxTokenomicAugmenter : BaseTokenomicAugmenter<TaxTokenomicModel>
                             new ExpressionDefinition 
                             { 
                                 Kind = ExpressionKind.Literal, 
-                                LiteralValue = $"\"{recipient.Address}\"" 
+                                LiteralValue = recipient.Address.StartsWith("0x") ? recipient.Address : $"0x{recipient.Address}"
                             }
                         }
                     }
                 };
+
+                var shareAssignment = new FunctionStatementDefinition
+                {
+                    Kind = FunctionStatementKind.Expression,
+                    Expression = new ExpressionDefinition
+                    {
+                        Kind = ExpressionKind.FunctionCall,
+                        Callee = new ExpressionDefinition
+                        {
+                            Kind = ExpressionKind.MemberAccess,
+                            Target = new ExpressionDefinition 
+                            { 
+                                Kind = ExpressionKind.Identifier, 
+                                Identifier = "_taxShares" 
+                            },
+                            MemberName = "push"
+                        },
+                        Arguments = new List<ExpressionDefinition>
+                        {
+                            new ExpressionDefinition 
+                            { 
+                                Kind = ExpressionKind.Literal, 
+                                LiteralValue = ((uint)Math.Round(recipient.Shares)).ToString()
+                            }
+                        }
+                    }
+                };
+
                 constructor.Body.Add(recipientAssignment);
+                constructor.Body.Add(shareAssignment);
             }
         }
     }
 
     private void AddAccessFunctions(ModuleDefinition contract)
     {
-        var ownerModifier = contract.Modifiers.FirstOrDefault(m => m.Name == "onlyOwner");
-        
         var getTaxFeeFunction = new GetTaxFeeFunction().Build();
         AddOnce(contract.Functions, f => f.Name == "getTaxFee", () => getTaxFeeFunction);
         
         var setTaxFeeFunction = new SetTaxFeeFunction().Build();
-        if (ownerModifier != null && !setTaxFeeFunction.Modifiers.Any(m => m.Name == "onlyOwner"))
-        {
-            setTaxFeeFunction.Modifiers.Add(ownerModifier);
-        }
         AddOnce(contract.Functions, f => f.Name == "setTaxFee", () => setTaxFeeFunction);
+        
+        var getTaxRecipientsFunction = new GetTaxRecipientsFunction().Build();
+        AddOnce(contract.Functions, f => f.Name == "getTaxRecipients", () => getTaxRecipientsFunction);
     }
 
     private void ModifyTransferFunction(ModuleDefinition mod)

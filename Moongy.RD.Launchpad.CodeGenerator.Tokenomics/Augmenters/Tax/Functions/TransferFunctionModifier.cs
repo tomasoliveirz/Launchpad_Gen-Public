@@ -7,15 +7,13 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Tokenomics.Augmenters.Tax.Functions
     {
         public void ModifyForTax(FunctionDefinition transferFunction)
         {
-            // verifies if the transfer function already has tax logic implemented
             if (HasTaxLogic(transferFunction))
             {
                 return;
             }
-            // add tax variable declarations
+
             AddTaxVariableDeclarations(transferFunction);
-            
-            // adds logic to distribute tax to the owner
+            ModifyTransferLogicForTax(transferFunction);
             AddTaxDistributionLogic(transferFunction);
         }
         
@@ -26,11 +24,9 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Tokenomics.Augmenters.Tax.Functions
                 (s.LocalParameter?.Name == "amountToTax"));
         }
 
-        // uint256 amountToTax = value * taxFee / 100;
-        // uint256 netValue = value - amountToTax;
         private void AddTaxVariableDeclarations(FunctionDefinition transferFunction)
         {
-            var insertionPoint = 2; // After require statements
+            var insertionPoint = GetSafeInsertionPoint(transferFunction);
 
             var amountToTaxDeclaration = new FunctionStatementDefinition
             {
@@ -38,8 +34,29 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Tokenomics.Augmenters.Tax.Functions
                 LocalParameter = new ParameterDefinition
                 {
                     Name = "amountToTax",
-                    Type = new TypeReference { Kind = TypeReferenceKind.Simple, Primitive = PrimitiveType.Uint256 },
-                    Value = "value * taxFee / 100" 
+                    Type = new TypeReference { Kind = TypeReferenceKind.Simple, Primitive = PrimitiveType.Uint256 }
+                }
+            };
+
+            var amountToTaxAssignment = new FunctionStatementDefinition
+            {
+                Kind = FunctionStatementKind.Assignment,
+                ParameterAssignment = new AssignmentDefinition
+                {
+                    Left = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "amountToTax" },
+                    Right = new ExpressionDefinition
+                    {
+                        Kind = ExpressionKind.Binary,
+                        Operator = BinaryOperator.Divide,
+                        Left = new ExpressionDefinition
+                        {
+                            Kind = ExpressionKind.Binary,
+                            Operator = BinaryOperator.Multiply,
+                            Left = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "value" },
+                            Right = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "taxFee" }
+                        },
+                        Right = new ExpressionDefinition { Kind = ExpressionKind.Literal, LiteralValue = "100" }
+                    }
                 }
             };
 
@@ -49,22 +66,55 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Tokenomics.Augmenters.Tax.Functions
                 LocalParameter = new ParameterDefinition
                 {
                     Name = "netValue",
-                    Type = new TypeReference { Kind = TypeReferenceKind.Simple, Primitive = PrimitiveType.Uint256 },
-                    Value = "value - amountToTax" 
+                    Type = new TypeReference { Kind = TypeReferenceKind.Simple, Primitive = PrimitiveType.Uint256 }
+                }
+            };
+
+            var netValueAssignment = new FunctionStatementDefinition
+            {
+                Kind = FunctionStatementKind.Assignment,
+                ParameterAssignment = new AssignmentDefinition
+                {
+                    Left = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "netValue" },
+                    Right = new ExpressionDefinition
+                    {
+                        Kind = ExpressionKind.Binary,
+                        Operator = BinaryOperator.Subtract,
+                        Left = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "value" },
+                        Right = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "amountToTax" }
+                    }
                 }
             };
 
             transferFunction.Body.Insert(insertionPoint, amountToTaxDeclaration);
-            transferFunction.Body.Insert(insertionPoint + 1, netValueDeclaration); 
+            transferFunction.Body.Insert(insertionPoint + 1, amountToTaxAssignment);
+            transferFunction.Body.Insert(insertionPoint + 2, netValueDeclaration);
+            transferFunction.Body.Insert(insertionPoint + 3, netValueAssignment);
         }
 
-        // if (amountToTax > 0) {
-        //     _balances[owner] += amountToTax;
-        //     emit Transfer(sender, owner, amountToTax);
-        // }
+        private void ModifyTransferLogicForTax(FunctionDefinition transferFunction)
+        {
+            var updateCallIndex = FindUpdateCallIndex(transferFunction);
+            if (updateCallIndex >= 0)
+            {
+                var updateCall = transferFunction.Body[updateCallIndex];
+                if (updateCall.Expression?.Arguments?.Count >= 3)
+                {
+                    updateCall.Expression.Arguments[2] = new ExpressionDefinition 
+                    { 
+                        Kind = ExpressionKind.Identifier, 
+                        Identifier = "netValue" 
+                    };
+                }
+            }
+        }
+
         private void AddTaxDistributionLogic(FunctionDefinition transferFunction)
         {
-            var insertionPoint = transferFunction.Body.Count; 
+            var updateCallIndex = FindUpdateCallIndex(transferFunction);
+            if (updateCallIndex < 0) return;
+
+            var insertionPoint = updateCallIndex;
 
             var taxCondition = new FunctionStatementDefinition
             {
@@ -88,84 +138,77 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Tokenomics.Augmenters.Tax.Functions
             transferFunction.Body.Insert(insertionPoint, taxCondition);
         }
         
-        // _balances[owner] += amountToTax;
-        // emit Transfer(from, owner, amountToTax);
         private List<FunctionStatementDefinition> CreateTaxDistributionBody()
         {
             var body = new List<FunctionStatementDefinition>();
 
-            var ownerBalanceUpdate = new FunctionStatementDefinition
+            var taxUpdateCall = new FunctionStatementDefinition
             {
-                Kind = FunctionStatementKind.Assignment,
-                ParameterAssignment = new AssignmentDefinition
+                Kind = FunctionStatementKind.Expression,
+                Expression = new ExpressionDefinition
                 {
-                    Left = new ExpressionDefinition
+                    Kind = ExpressionKind.FunctionCall,
+                    Callee = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "_update" },
+                    Arguments = new List<ExpressionDefinition>
                     {
-                        Kind = ExpressionKind.IndexAccess,
-                        Target = new ExpressionDefinition 
-                        { 
-                            Kind = ExpressionKind.Identifier, 
-                            Identifier = "_balances" 
-                        },
-                        Index = new ExpressionDefinition 
-                        { 
-                            Kind = ExpressionKind.Identifier, 
-                            Identifier = "_owner" 
-                        }
-                    },
-                    Right = new ExpressionDefinition
-                    {
-                        Kind = ExpressionKind.Binary,
-                        Operator = BinaryOperator.Add,
-                        Left = new ExpressionDefinition
-                        {
-                            Kind = ExpressionKind.IndexAccess,
-                            Target = new ExpressionDefinition 
-                            { 
-                                Kind = ExpressionKind.Identifier, 
-                                Identifier = "_balances" 
-                            },
-                            Index = new ExpressionDefinition 
-                            { 
-                                Kind = ExpressionKind.Identifier, 
-                                Identifier = "_owner" 
-                            }
-                        },
-                        Right = new ExpressionDefinition 
-                        { 
-                            Kind = ExpressionKind.Identifier, 
-                            Identifier = "amountToTax" 
-                        }
+                        new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "from" },
+                        new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "_owner" },
+                        new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "amountToTax" }
                     }
                 }
             };
 
-            var taxTransferEvent = new FunctionStatementDefinition
-            {
-                Kind = FunctionStatementKind.Trigger,
-                Trigger = new TriggerDefinition
-                {
-                    Kind = TriggerKind.Log,
-                    Name = "Transfer",
-                    Parameters = new List<ParameterDefinition>
-                    {
-                        new() { Name = "from", Type = new TypeReference { Kind = TypeReferenceKind.Simple, Primitive = PrimitiveType.Address } },
-                        new() { Name = "to", Type = new TypeReference { Kind = TypeReferenceKind.Simple, Primitive = PrimitiveType.Address } },
-                        new() { Name = "value", Type = new TypeReference { Kind = TypeReferenceKind.Simple, Primitive = PrimitiveType.Uint256 } }
-                    }
-                },
-                TriggerArguments = new List<ExpressionDefinition>
-                {
-                    new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "from" }, 
-                    new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "_owner" }, 
-                    new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "amountToTax" }
-                }
-            };
-
-            body.Add(ownerBalanceUpdate);
-            body.Add(taxTransferEvent);
-            
+            body.Add(taxUpdateCall);
             return body;
+        }
+
+        private int GetSafeInsertionPoint(FunctionDefinition transferFunction)
+        {
+            var validationCount = 0;
+            for (int i = 0; i < transferFunction.Body.Count; i++)
+            {
+                var statement = transferFunction.Body[i];
+                if (IsValidationStatement(statement))
+                {
+                    validationCount++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            
+            return Math.Min(validationCount, transferFunction.Body.Count);
+        }
+
+        private bool IsValidationStatement(FunctionStatementDefinition statement)
+        {
+            if (statement.Kind == FunctionStatementKind.Condition)
+            {
+                return true;
+            }
+
+            if (statement.Kind == FunctionStatementKind.Expression && 
+                statement.Expression?.Callee?.Identifier == "require")
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private int FindUpdateCallIndex(FunctionDefinition transferFunction)
+        {
+            for (int i = 0; i < transferFunction.Body.Count; i++)
+            {
+                var statement = transferFunction.Body[i];
+                if (statement.Kind == FunctionStatementKind.Expression &&
+                    statement.Expression?.Callee?.Identifier == "_update")
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
     }
 }

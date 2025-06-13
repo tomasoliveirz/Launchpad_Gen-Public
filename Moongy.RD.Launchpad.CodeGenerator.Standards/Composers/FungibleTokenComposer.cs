@@ -186,7 +186,7 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
         mainModule.Functions.Add(TransferFromFunctionDefinition());
         mainModule.Functions.Add(_TransferFunctionDefinition());
         mainModule.Functions.Add(_UpdateFunctionDefinition());
-        mainModule.Functions.Add(FirstApproveFunctionDefinition());
+//        mainModule.Functions.Add(FirstApproveFunctionDefinition());
         mainModule.Functions.Add(_ApproveFunction());
         mainModule.Functions.Add(SpendAllowanceDefinition());
     }
