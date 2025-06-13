@@ -25,17 +25,38 @@ const AboutPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                             <li>Customizable token parameters (name, symbol, supply, decimals)</li>
                             <li>Advanced features like minting, burning, and pausable functionality</li>
                             <li>Built-in tax system with multiple recipients</li>
-                            <li>Access control with owner or role-based permissions</li>
+                            <li>Access control with owner permissions</li>
                             <li>OpenZeppelin-based secure implementations</li>
                             <li>Instant contract generation and download</li>
                         </ul>
 
                         <h2 className="text-2xl font-semibold text-white mt-8 mb-4">Technology</h2>
-                        <p>
-                            Built with React, TypeScript, and modern web technologies, Launchpad provides a seamless
-                            user experience for smart contract creation. All generated contracts follow industry
-                            best practices and security standards.
+                        <p className="mb-6">
+                            Launchpad leverages a modern technology stack combining cutting-edge frontend and robust backend solutions
+                            to deliver a seamless smart contract generation experience.
                         </p>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-600">
+                                <h3 className="text-lg font-semibold text-blue-400 mb-3">Frontend Technologies</h3>
+                                <ul className="space-y-2 text-sm list-none" style={{ paddingLeft: '1.5rem' }}>
+                                    <li><strong>React</strong> - Modern component-based UI framework</li>
+                                    <li><strong>TypeScript</strong> - Type-safe development and better code quality</li>
+                                    <li><strong>Modern CSS</strong> - Responsive design and smooth animations</li>
+                                    <li><strong>Lucide React</strong> - Clean and professional iconography</li>
+                                </ul>
+                            </div>
+
+                            <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-600">
+                                <h3 className="text-lg font-semibold text-purple-400 mb-3">Backend & Contract Generation</h3>
+                                <ul className="space-y-2 text-sm list-none" style={{ paddingLeft: '1.5rem' }}>
+                                    <li><strong>C#</strong> - Development of the code generator engine</li>
+                                    <li><strong>Scriban</strong> - Template creation for Solidity contracts</li>
+                                    <li><strong>Solidity</strong> - Smart contract programming language used in templates</li>
+                                    <li><strong>OpenZeppelin</strong> - Secure contract implementations and standards</li>
+                                </ul>
+                            </div>
+                        </div>
 
                         <h2 className="text-2xl font-semibold text-white mt-8 mb-4">Security</h2>
                         <p>
