@@ -38,6 +38,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moongy.RD.Launchpad.Data", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Moongy.RD.Launchpad.CodeGenerator.Engine", "Moongy.RD.Launchpad.CodeGenerator.Engine\Moongy.RD.Launchpad.CodeGenerator.Engine.csproj", "{A364AEBB-CA64-4F4C-9D2D-7175E0C810E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Launchpad.Web", "Launchpad.Web\Launchpad.Web.csproj", "{752B10F5-55C9-43C6-8055-CA5DE8BDC715}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -156,6 +158,18 @@ Global
 		{A364AEBB-CA64-4F4C-9D2D-7175E0C810E9}.Release|arm64.Build.0 = Release|Any CPU
 		{A364AEBB-CA64-4F4C-9D2D-7175E0C810E9}.Release|x86.ActiveCfg = Release|Any CPU
 		{A364AEBB-CA64-4F4C-9D2D-7175E0C810E9}.Release|x86.Build.0 = Release|Any CPU
+		{752B10F5-55C9-43C6-8055-CA5DE8BDC715}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{752B10F5-55C9-43C6-8055-CA5DE8BDC715}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{752B10F5-55C9-43C6-8055-CA5DE8BDC715}.Debug|arm64.ActiveCfg = Debug|Any CPU
+		{752B10F5-55C9-43C6-8055-CA5DE8BDC715}.Debug|arm64.Build.0 = Debug|Any CPU
+		{752B10F5-55C9-43C6-8055-CA5DE8BDC715}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{752B10F5-55C9-43C6-8055-CA5DE8BDC715}.Debug|x86.Build.0 = Debug|Any CPU
+		{752B10F5-55C9-43C6-8055-CA5DE8BDC715}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{752B10F5-55C9-43C6-8055-CA5DE8BDC715}.Release|Any CPU.Build.0 = Release|Any CPU
+		{752B10F5-55C9-43C6-8055-CA5DE8BDC715}.Release|arm64.ActiveCfg = Release|Any CPU
+		{752B10F5-55C9-43C6-8055-CA5DE8BDC715}.Release|arm64.Build.0 = Release|Any CPU
+		{752B10F5-55C9-43C6-8055-CA5DE8BDC715}.Release|x86.ActiveCfg = Release|Any CPU
+		{752B10F5-55C9-43C6-8055-CA5DE8BDC715}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

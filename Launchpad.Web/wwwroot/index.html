@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Launchpad</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>Launchpad</h1>
+        <p>Smart Contract Generator</p>
+    </header>
+
+    <form id="contractForm">
+        <!-- Token Configuration -->
+        <section class="form-section">
+            <h2>Token Configuration</h2>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="name">Token Name</label>
+                    <input type="text" id="name" name="name" value="MyToken" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="symbol">Symbol</label>
+                    <input type="text" id="symbol" name="symbol" value="MTK" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="decimals">Decimals</label>
+                    <input type="number" id="decimals" name="decimals" value="18" min="0" max="18" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="totalSupply">Total Supply</label>
+                    <input type="number" id="totalSupply" name="totalSupply" value="1000000" min="0" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="premint">Initial Mint</label>
+                    <input type="number" id="premint" name="premint" value="100000" min="0" required>
+                </div>
+            </div>
+        </section>
+
+        <!-- Token Features -->
+        <section class="form-section">
+            <h2>Token Features</h2>
+
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    <input type="checkbox" id="hasMinting" name="hasMinting">
+                    <label for="hasMinting">Mintable</label>
+                    <span class="description">Allow minting new tokens</span>
+                </div>
+
+                <div class="checkbox-item">
+                    <input type="checkbox" id="hasBurning" name="hasBurning">
+                    <label for="hasBurning">Burnable</label>
+                    <span class="description">Allow burning tokens</span>
+                </div>
+
+                <div class="checkbox-item">
+                    <input type="checkbox" id="isPausable" name="isPausable">
+                    <label for="isPausable">Pausable</label>
+                    <span class="description">Emergency stop functionality</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Access Control -->
+        <section class="form-section">
+            <h2>Access Control</h2>
+
+            <div class="checkbox-item">
+                <input type="checkbox" id="hasAccessControl" name="hasAccessControl" checked>
+                <label for="hasAccessControl">Enable Access Control</label>
+            </div>
+
+            <div id="accessControlOptions" class="subsection">
+                <div class="form-group">
+                    <label for="accessControlType">Control Type</label>
+                    <select id="accessControlType" name="accessControlType">
+                        <option value="0">Ownable (Single Owner)</option>
+                        <option value="1">Role-Based Access Control</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tax System -->
+        <section class="form-section">
+            <h2>Tax System</h2>
+
+            <div class="checkbox-item">
+                <input type="checkbox" id="hasTax" name="hasTax">
+                <label for="hasTax">Enable Transaction Tax</label>
+            </div>
+
+            <div id="taxOptions" class="subsection" style="display: none;">
+                <div class="form-group">
+                    <label for="taxFee">Tax Rate (%)</label>
+                    <input type="number" id="taxFee" name="taxFee" value="2.5" min="0" max="100" step="0.1">
+                </div>
+
+                <div class="tax-recipients">
+                    <div class="recipients-header">
+                        <h3>Tax Recipients</h3>
+                        <button type="button" id="addRecipient" class="btn-secondary">Add Recipient</button>
+                    </div>
+
+                    <div id="recipientsList">
+                        <!-- Recipients will be added dynamically -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Generate Button -->
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">Generate Smart Contract</button>
+        </div>
+    </form>
+
+    <!-- Loading State -->
+    <div id="loading" class="loading" style="display: none;">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p>Generating smart contract...</p>
+        </div>
+    </div>
+
+    <!-- Results -->
+    <div id="result" class="result-section" style="display: none;">
+        <div class="result-header">
+            <h2>Generated Smart Contract</h2>
+            <div class="result-actions">
+                <button type="button" id="copyCode" class="btn-secondary">Copy to Clipboard</button>
+                <button type="button" id="downloadCode" class="btn-secondary">Download .sol</button>
+            </div>
+        </div>
+        <textarea id="contractCode" readonly></textarea>
+    </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
