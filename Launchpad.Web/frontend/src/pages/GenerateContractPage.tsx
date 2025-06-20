@@ -178,7 +178,7 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
             <div className="min-h-screen bg-slate-900 text-white">
                 <div className="container mx-auto px-6 py-8">
                     <div className="text-center mb-8">
-                        <h1 className="text-4xl font-bold mb-2">Generate a Smart Contract</h1>
+                        <h1 className="page-title-gradient-green">Generate a Smart Contract</h1>
                         <p className="text-slate-400">
                             Fill in the form and customize your contract code as desired. What you see is what you get,
                             but that doesn't mean you can't make a change or two.
@@ -187,7 +187,7 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
 
                     <div className="max-w-4xl mx-auto">
                         <div className="bg-slate-800 rounded-lg p-6 mb-6 border border-slate-700">
-                            <h2 className="text-xl font-semibold mb-4 pb-2 border-b border-slate-700">
+                            <h2 className="section-heading-darker-green">
                                 Token Configuration
                             </h2>
 
@@ -204,8 +204,7 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                             updateConfig({ name: e.target.value });
                                             clearError('name');
                                         }}
-                                        className={`w-full bg-slate-700 border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.name ? 'border-red-500' : 'border-slate-600'
-                                        }`}
+                                        className={`input-text-greish-green ${errors.name ? 'border-red-500' : ''}`}
                                         placeholder="MyToken"
                                     />
                                     <ErrorMessage error={errors.name} />
@@ -223,126 +222,124 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                             updateConfig({ symbol: e.target.value.toUpperCase() });
                                             clearError('symbol');
                                         }}
-                                        className={`w-full bg-slate-700 border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.symbol ? 'border-red-500' : 'border-slate-600'
-                                        }`}
+                                        className={`input-text-greish-green ${errors.symbol ? 'border-red-500' : ''}`}
                                         placeholder="MTK"
                                         maxLength={10}
                                     />
                                     <ErrorMessage error={errors.symbol} />
                                 </div>
-                            </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div>
-                                    <label htmlFor="decimals" className="block text-sm font-medium mb-2">
-                                        Decimals
-                                    </label>
-                                    <input
-                                        id="decimals"
-                                        type="number"
-                                        min="0"
-                                        max="18"
-                                        value={config.decimals}
-                                        onChange={(e) => {
-                                            updateConfig({ decimals: parseInt(e.target.value) || 0 });
-                                            clearError('decimals');
-                                        }}
-                                        className={`w-full bg-slate-700 border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.decimals ? 'border-red-500' : 'border-slate-600'
-                                        }`}
-                                    />
-                                    <ErrorMessage error={errors.decimals} />
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div>
+                                        <label htmlFor="decimals" className="block text-sm font-medium mb-2">
+                                            Decimals
+                                        </label>
+                                        <input
+                                            id="decimals"
+                                            type="number"
+                                            min="0"
+                                            max="18"
+                                            value={config.decimals}
+                                            onChange={(e) => {
+                                                updateConfig({ decimals: parseInt(e.target.value) || 0 });
+                                                clearError('decimals');
+                                            }}
+                                            className={`input-text-greish-green ${errors.decimals ? 'border-red-500' : ''}`}
+                                        />
+                                        <ErrorMessage error={errors.decimals} />
+                                    </div>
+
+                                    <div>
+                                        <label htmlFor="totalSupply" className="block text-sm font-medium mb-2">
+                                            Total Supply
+                                        </label>
+                                        <input
+                                            id="totalSupply"
+                                            type="number"
+                                            min="0"
+                                            value={config.totalSupply}
+                                            onChange={(e) => {
+                                                updateConfig({ totalSupply: parseInt(e.target.value) || 0 });
+                                                clearError('totalSupply');
+                                                clearError('premint');
+                                            }}
+                                            className={`input-text-greish-green ${errors.totalSupply ? 'border-red-500' : ''}`}
+                                        />
+                                        <ErrorMessage error={errors.totalSupply} />
+                                    </div>
+
+                                    <div>
+                                        <label htmlFor="premint" className="block text-sm font-medium mb-2">
+                                            Initial Mint
+                                        </label>
+                                        <input
+                                            id="premint"
+                                            type="number"
+                                            min="0"
+                                            value={config.premint}
+                                            onChange={(e) => {
+                                                updateConfig({ premint: parseInt(e.target.value) || 0 });
+                                                clearError('premint');
+                                            }}
+                                            className={`input-text-greish-green ${errors.premint ? 'border-red-500' : ''}`}
+                                        />
+                                        <ErrorMessage error={errors.premint} />
+                                    </div>
                                 </div>
 
-                                <div>
-                                    <label htmlFor="totalSupply" className="block text-sm font-medium mb-2">
-                                        Total Supply
-                                    </label>
-                                    <input
-                                        id="totalSupply"
-                                        type="number"
-                                        min="0"
-                                        value={config.totalSupply}
-                                        onChange={(e) => {
-                                            updateConfig({ totalSupply: parseInt(e.target.value) || 0 });
-                                            clearError('totalSupply');
-                                            clearError('premint');
-                                        }}
-                                        className={`w-full bg-slate-700 border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.totalSupply ? 'border-red-500' : 'border-slate-600'
-                                        }`}
-                                    />
-                                    <ErrorMessage error={errors.totalSupply} />
-                                </div>
-
-                                <div>
-                                    <label htmlFor="premint" className="block text-sm font-medium mb-2">
-                                        Initial Mint
-                                    </label>
-                                    <input
-                                        id="premint"
-                                        type="number"
-                                        min="0"
-                                        value={config.premint}
-                                        onChange={(e) => {
-                                            updateConfig({ premint: parseInt(e.target.value) || 0 });
-                                            clearError('premint');
-                                        }}
-                                        className={`w-full bg-slate-700 border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.premint ? 'border-red-500' : 'border-slate-600'
-                                        }`}
-                                    />
-                                    <ErrorMessage error={errors.premint} />
-                                </div>
                             </div>
                         </div>
 
                         <div className="bg-slate-800 rounded-lg p-6 mb-6 border border-slate-700">
-                            <h2 className="text-xl font-semibold mb-4 pb-2 border-b border-slate-700">
+                            <h2 className="section-heading-darker-green">
                                 Token Features
                             </h2>
 
                             <div className="space-y-3">
-                                <label className="flex items-center gap-3 p-3 bg-slate-700/50 rounded border border-slate-600 hover:bg-slate-700 transition-colors cursor-pointer">
+                                <label className="checkbox-label">
                                     <input
                                         type="checkbox"
                                         checked={config.hasMinting}
                                         onChange={(e) => updateConfig({ hasMinting: e.target.checked })}
-                                        className="w-4 h-4 text-blue-600 bg-slate-700 border-slate-600 rounded focus:ring-blue-500 focus:ring-2"
+                                        className="checkbox-input"
                                     />
                                     <div className="flex-1">
-                                        <div className="font-medium">Mintable</div>
-                                        <div className="text-sm text-slate-400">Allow minting new tokens</div>
+                                        <div className="checkbox-text-main">Mintable</div>
+                                        <div className="checkbox-text-sub">Allow minting new tokens</div>
                                     </div>
                                 </label>
 
-                                <label className="flex items-center gap-3 p-3 bg-slate-700/50 rounded border border-slate-600 hover:bg-slate-700 transition-colors cursor-pointer">
+                                <label className="checkbox-label">
                                     <input
                                         type="checkbox"
                                         checked={config.hasBurning}
                                         onChange={(e) => updateConfig({ hasBurning: e.target.checked })}
-                                        className="w-4 h-4 text-blue-600 bg-slate-700 border-slate-600 rounded focus:ring-blue-500 focus:ring-2"
+                                        className="checkbox-input"
                                     />
                                     <div className="flex-1">
-                                        <div className="font-medium">Burnable</div>
-                                        <div className="text-sm text-slate-400">Allow burning tokens</div>
+                                        <div className="checkbox-text-main">Burnable</div>
+                                        <div className="checkbox-text-sub">Allow burning tokens</div>
                                     </div>
                                 </label>
 
-                                <label className="flex items-center gap-3 p-3 bg-slate-700/50 rounded border border-slate-600 hover:bg-slate-700 transition-colors cursor-pointer">
+                                <label className="checkbox-label">
                                     <input
                                         type="checkbox"
                                         checked={config.isPausable}
                                         onChange={(e) => updateConfig({ isPausable: e.target.checked })}
-                                        className="w-4 h-4 text-blue-600 bg-slate-700 border-slate-600 rounded focus:ring-blue-500 focus:ring-2"
+                                        className="checkbox-input"
                                     />
                                     <div className="flex-1">
-                                        <div className="font-medium">Pausable</div>
-                                        <div className="text-sm text-slate-400">Emergency stop functionality</div>
+                                        <div className="checkbox-text-main">Pausable</div>
+                                        <div className="checkbox-text-sub">Emergency stop functionality</div>
                                     </div>
                                 </label>
                             </div>
+
                         </div>
 
                         <div className="bg-slate-800 rounded-lg p-6 mb-6 border border-slate-700">
-                            <h2 className="text-xl font-semibold mb-4 pb-2 border-b border-slate-700">
+                            <h2 className="section-heading-darker-green">
                                 Access Control
                             </h2>
 
@@ -351,27 +348,28 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                     type="checkbox"
                                     checked={config.hasAccessControl}
                                     onChange={(e) => updateConfig({ hasAccessControl: e.target.checked })}
-                                    className="w-4 h-4 text-blue-600 bg-slate-700 border-slate-600 rounded focus:ring-blue-500 focus:ring-2"
+                                    className="checkbox-input"  
                                 />
                                 <span className="font-medium">Enable Access Control</span>
                             </label>
 
                             {config.hasAccessControl && (
                                 <div className="bg-slate-700/30 rounded p-4 border border-slate-600">
-                                    <label htmlFor="accessControlType" className="block text-sm font-medium mb-2">
+                                    <label htmlFor="accessControlType" className="block text-sm font-medium mb-2 text-gray-300">
                                         Control Type
                                     </label>
                                     <select
                                         id="accessControlType"
                                         value={config.accessControlType}
                                         onChange={(e) => updateConfig({ accessControlType: parseInt(e.target.value) })}
-                                        className="w-full bg-slate-700 border border-slate-600 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="input-text-greish-no-focus"
                                     >
                                         <option value={0}>Ownable (Single Owner)</option>
                                         <option value={1}>Role-Based Access Control</option>
                                     </select>
                                 </div>
                             )}
+
 
                             {showDownloadSuccess && (
                                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -411,7 +409,7 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                         </div>
 
                         <div className="bg-slate-800 rounded-lg p-6 mb-6 border border-slate-700">
-                            <h2 className="text-xl font-semibold mb-4 pb-2 border-b border-slate-700">
+                            <h2 className="section-heading-darker-green">
                                 Tax System
                             </h2>
 
@@ -420,7 +418,7 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                     type="checkbox"
                                     checked={config.hasTax}
                                     onChange={(e) => handleTaxToggle(e.target.checked)}
-                                    className="w-4 h-4 text-blue-600 bg-slate-700 border-slate-600 rounded focus:ring-blue-500 focus:ring-2"
+                                    className="checkbox-input"
                                 />
                                 <span className="font-medium">Enable Transaction Tax</span>
                             </label>
@@ -442,8 +440,7 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                                 updateConfig({ taxFee: parseFloat(e.target.value) || 0 });
                                                 clearError('taxFee');
                                             }}
-                                            className={`w-full bg-slate-700 border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.taxFee ? 'border-red-500' : 'border-slate-600'
-                                            }`}
+                                            className={`input-text-greish-green ${errors.taxFee ? 'border-red-500' : ''}`}
                                         />
                                         <ErrorMessage error={errors.taxFee} />
                                     </div>
@@ -477,8 +474,11 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                                     <p className="text-sm">Click "Add Recipient" to start</p>
                                                 </div>
                                             ) : (
-                                                config.taxRecipients.map((recipient: any, index: number) => (
-                                                    <div key={recipient.id} className="grid grid-cols-1 md:grid-cols-3 gap-3 p-3 bg-slate-700/50 rounded border border-slate-600">
+                                                config.taxRecipients.map((recipient, index) => (
+                                                    <div
+                                                        key={recipient.id}
+                                                        className="grid grid-cols-1 md:grid-cols-3 gap-3 p-3 bg-slate-700/50 rounded border border-slate-600"
+                                                    >
                                                         <div className="md:col-span-2">
                                                             <label className="block text-sm font-medium mb-1">
                                                                 Recipient Address
@@ -491,8 +491,7 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                                                     clearError(`taxRecipient${index}Address`);
                                                                 }}
                                                                 placeholder="0x..."
-                                                                className={`w-full bg-slate-700 border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm ${errors[`taxRecipient${index}Address`] ? 'border-red-500' : 'border-slate-600'
-                                                                }`}
+                                                                className={`input-text-greish-green ${errors[`taxRecipient${index}Address`] ? 'border-red-500' : ''}`}
                                                             />
                                                             <ErrorMessage error={errors[`taxRecipient${index}Address`]} />
                                                         </div>
@@ -514,8 +513,7 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                                                             clearError(`taxRecipient${index}Share`);
                                                                             clearError('taxRecipients');
                                                                         }}
-                                                                        className={`w-full bg-slate-700 border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm ${errors[`taxRecipient${index}Share`] ? 'border-red-500' : 'border-slate-600'
-                                                                        }`}
+                                                                        className={`input-text-greish-green ${errors[`taxRecipient${index}Share`] ? 'border-red-500' : ''}`}
                                                                     />
                                                                 </div>
                                                                 <button
@@ -537,6 +535,7 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                 </div>
                             )}
                         </div>
+
 
                         <div className="text-center mb-8">
                             <button
