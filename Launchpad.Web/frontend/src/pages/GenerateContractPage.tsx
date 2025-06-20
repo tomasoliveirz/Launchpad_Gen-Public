@@ -52,22 +52,22 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
         setErrors({});
         setIsGenerating(true);
 
-        setTimeout(() => {
-            try {
-                const code = generateSolidityContract(config);
-                setGeneratedCode(code);
+        try {
+            const code = await generateSolidityContract(config);
+            setGeneratedCode(code);
 
-                setTimeout(() => {
-                    document.getElementById('result-section')?.scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                }, 100);
-            } catch (error) {
-                showToast('Failed to generate contract. Please try again.');
-            } finally {
-                setIsGenerating(false);
-            }
-        }, 2000);
+            setTimeout(() => {
+                document.getElementById('result-section')?.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }, 100);
+        } catch (error) {
+            console.error('Generation error:', error);
+            const errorMessage = error instanceof Error ? error.message : 'Failed to generate contract. Please try again.';
+            showToast(errorMessage);
+        } finally {
+            setIsGenerating(false);
+        }
     };
 
     const handleCopy = async () => {
@@ -205,7 +205,7 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                             clearError('name');
                                         }}
                                         className={`w-full bg-slate-700 border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.name ? 'border-red-500' : 'border-slate-600'
-                                            }`}
+                                        }`}
                                         placeholder="MyToken"
                                     />
                                     <ErrorMessage error={errors.name} />
@@ -224,7 +224,7 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                             clearError('symbol');
                                         }}
                                         className={`w-full bg-slate-700 border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.symbol ? 'border-red-500' : 'border-slate-600'
-                                            }`}
+                                        }`}
                                         placeholder="MTK"
                                         maxLength={10}
                                     />
@@ -248,7 +248,7 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                             clearError('decimals');
                                         }}
                                         className={`w-full bg-slate-700 border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.decimals ? 'border-red-500' : 'border-slate-600'
-                                            }`}
+                                        }`}
                                     />
                                     <ErrorMessage error={errors.decimals} />
                                 </div>
@@ -265,10 +265,10 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                         onChange={(e) => {
                                             updateConfig({ totalSupply: parseInt(e.target.value) || 0 });
                                             clearError('totalSupply');
-                                            clearError('premint'); 
+                                            clearError('premint');
                                         }}
                                         className={`w-full bg-slate-700 border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.totalSupply ? 'border-red-500' : 'border-slate-600'
-                                            }`}
+                                        }`}
                                     />
                                     <ErrorMessage error={errors.totalSupply} />
                                 </div>
@@ -287,7 +287,7 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                             clearError('premint');
                                         }}
                                         className={`w-full bg-slate-700 border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.premint ? 'border-red-500' : 'border-slate-600'
-                                            }`}
+                                        }`}
                                     />
                                     <ErrorMessage error={errors.premint} />
                                 </div>
@@ -376,10 +376,9 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                             {showDownloadSuccess && (
                                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                                     <div className="bg-slate-800 rounded-lg p-8 text-center border border-slate-700 max-w-md animate-success-popup">
-                                        
+
                                         <div className="mb-6 relative">
                                             <svg width="200" height="140" viewBox="0 0 200 140" className="mx-auto">
-                                               
                                                 <path d="M30 60 L30 110 Q30 115 35 115 L165 115 Q170 115 170 110 L170 60 Z" fill="#fbbf24" stroke="#f59e0b" strokeWidth="1" />
 
                                                 <path d="M30 60 L70 60 Q75 60 75 55 L75 50 Q75 45 80 45 L120 45 Q125 45 125 50 L125 55 Q125 60 130 60 L170 60" fill="#f59e0b" stroke="#d97706" strokeWidth="1" />
@@ -444,7 +443,7 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                                 clearError('taxFee');
                                             }}
                                             className={`w-full bg-slate-700 border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errors.taxFee ? 'border-red-500' : 'border-slate-600'
-                                                }`}
+                                            }`}
                                         />
                                         <ErrorMessage error={errors.taxFee} />
                                     </div>
@@ -493,7 +492,7 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                                                 }}
                                                                 placeholder="0x..."
                                                                 className={`w-full bg-slate-700 border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm ${errors[`taxRecipient${index}Address`] ? 'border-red-500' : 'border-slate-600'
-                                                                    }`}
+                                                                }`}
                                                             />
                                                             <ErrorMessage error={errors[`taxRecipient${index}Address`]} />
                                                         </div>
@@ -516,7 +515,7 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                                                             clearError('taxRecipients');
                                                                         }}
                                                                         className={`w-full bg-slate-700 border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm ${errors[`taxRecipient${index}Share`] ? 'border-red-500' : 'border-slate-600'
-                                                                            }`}
+                                                                        }`}
                                                                     />
                                                                 </div>
                                                                 <button
@@ -608,10 +607,10 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                 {isGenerating && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                         <div className="bg-slate-800 rounded-lg p-8 text-center border border-slate-700 max-w-md">
-                            
+
                             <div className="mb-6 relative">
                                 <svg width="200" height="140" viewBox="0 0 200 140" className="mx-auto">
-                                    
+
                                     <rect x="20" y="20" width="160" height="100" fill="#f8fafc" rx="4" stroke="#e2e8f0" strokeWidth="1" />
 
                                     <line x1="30" y1="40" x2="170" y2="40" stroke="#e2e8f0" strokeWidth="1" />

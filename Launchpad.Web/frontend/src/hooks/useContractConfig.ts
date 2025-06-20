@@ -1,5 +1,5 @@
 ﻿import { useState } from 'react';
-import type { ContractConfig, TaxRecipient } from '../types';
+import type { ContractConfig, TaxRecipient, AccessControlType } from '../types';
 
 const initialConfig: ContractConfig = {
     name: 'MyToken',
@@ -14,7 +14,8 @@ const initialConfig: ContractConfig = {
     taxFee: 2.5,
     taxRecipients: [],
     hasAccessControl: true,
-    accessControlType: 0
+    accessControlType: 0 as AccessControlType, // Ownable
+    roles: []
 };
 
 export const useContractConfig = () => {
