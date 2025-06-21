@@ -355,10 +355,10 @@
 }
 
     .generate-button:hover:not(:disabled) {
-        background-color: #166534; /* dark green */
+        background-color: #166534; 
         color: white;
         transform: scale(1.05);
-        box-shadow: 0 0 10px rgba(22, 101, 52, 0.6); /* dark green glow */
+        box-shadow: 0 0 10px rgba(22, 101, 52, 0.6);
     }
 
     .generate-button:disabled {
@@ -369,3 +369,84 @@
         box-shadow: none;
     }
 
+
+.code-container {
+    display: flex;
+    background-color: #1e1e1e;
+    border-radius: 0.5rem;
+    font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+    font-size: 0.9rem;
+    color: white;
+    overflow: hidden;
+    user-select: text;
+    align-items: flex-start;
+    justify-content: flex-start; 
+    max-height: 30rem; 
+    overflow-y: auto; 
+    border: 1px solid #333; 
+}
+
+.line-numbers {
+    background-color: #252526;
+    padding: 0.5rem 0.75rem;
+    text-align: right;
+    user-select: none;
+    color: #858585;
+    line-height: 1.4;
+    min-width: 3rem;
+    border-right: 1px solid #333;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.line-number {
+    padding: 0 0.5rem;
+    height: 1.4em;
+    line-height: 1.4em;
+}
+
+.code-block {
+    padding: 0.5rem 1rem;
+    margin: 0;
+    overflow-x: auto;
+    white-space: pre;
+    flex: 1;
+    line-height: 1.4;
+    text-align: left;
+    vertical-align: top;
+}
+
+/* Basic Solidity syntax highlighting */
+
+.keyword {
+    color: #22c55e; /* green */
+    font-weight: 600;
+}
+
+.type {
+    color: #3b82f6; /* blue */
+}
+
+.comment {
+    color: #6b7280; /* gray */
+    font-style: italic;
+}
+
+.string {
+    color: #f59e0b; /* orange */
+}
+
+.number {
+    color: #d946ef; /* purple */
+}
+
+.function-call {
+    color: #06b6d4; /* cyan */
+    font-weight: 600;
+}
+
+.contract-name {
+    color: #FFCC99; /* orange-cream */
+    font-weight: 600; 
+}

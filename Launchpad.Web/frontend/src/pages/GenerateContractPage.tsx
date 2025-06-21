@@ -6,6 +6,7 @@ import { validateContractConfig, ValidationErrors } from '../utils/validation';
 import { generateSolidityContract, downloadContract } from '../utils/contractGenerator';
 import { copyToClipboard } from '../utils/clipboard';
 import ScrollToTop from '../componnents/layout/ScrollToTop';
+import SolidityViewer from '../componnents/common/SolidityViewer';
 
 const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
     const {
@@ -564,7 +565,9 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                 className="bg-slate-800 rounded-lg p-6 border border-slate-700"
                             >
                                 <div className="flex justify-between items-center mb-4">
-                                    <h2 className="section-heading-darker-green">Generated Smart Contract</h2>
+                                    <h2 className="section-heading-darker-green" style={{ borderBottom: 'none' }}>
+                                        Generated Smart Contract
+                                    </h2>
                                     <div className="flex gap-2">
                                         <button
                                             onClick={handleCopy}
@@ -583,12 +586,8 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                     </div>
                                 </div>
 
-                                <textarea
-                                    value={generatedCode}
-                                    readOnly
-                                    className="w-full h-96 bg-slate-900 border border-slate-600 rounded p-4 font-mono text-sm resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white"
-                                    style={{ fontFamily: '"Monaco", "Menlo", "Ubuntu Mono", monospace' }}
-                                />
+                                <SolidityViewer generatedCode={generatedCode} />
+
 
                                 <div className="mt-4 p-4 bg-slate-700/50 rounded border border-slate-600">
                                     <h3 className="font-medium mb-2 section-heading-darker-green">Next Steps:</h3>
