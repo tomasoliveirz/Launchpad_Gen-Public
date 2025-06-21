@@ -541,7 +541,7 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                             <button
                                 onClick={handleGenerate}
                                 disabled={isGenerating}
-                                className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800 disabled:cursor-not-allowed px-8 py-3 rounded-lg font-medium transition-colors inline-flex items-center gap-2"
+                                className="generate-button"
                             >
                                 {isGenerating ? (
                                     <>
@@ -557,24 +557,25 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                             </button>
                         </div>
 
+
                         {generatedCode && (
                             <div
                                 id="result-section"
                                 className="bg-slate-800 rounded-lg p-6 border border-slate-700"
                             >
                                 <div className="flex justify-between items-center mb-4">
-                                    <h2 className="text-xl font-semibold">Generated Smart Contract</h2>
+                                    <h2 className="section-heading-darker-green">Generated Smart Contract</h2>
                                     <div className="flex gap-2">
                                         <button
                                             onClick={handleCopy}
-                                            className="flex items-center gap-2 px-3 py-2 bg-slate-700 hover:bg-slate-600 rounded text-sm transition-colors"
+                                            className="result-action-button"
                                         >
                                             {copySuccess ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                                             {copySuccess ? 'Copied!' : 'Copy'}
                                         </button>
                                         <button
                                             onClick={handleDownload}
-                                            className="flex items-center gap-2 px-3 py-2 bg-slate-700 hover:bg-slate-600 rounded text-sm transition-colors"
+                                            className="result-action-button"
                                         >
                                             <Download className="w-4 h-4" />
                                             Download
@@ -590,8 +591,8 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                 />
 
                                 <div className="mt-4 p-4 bg-slate-700/50 rounded border border-slate-600">
-                                    <h3 className="font-medium mb-2">Next Steps:</h3>
-                                    <ul className="text-sm text-slate-300 space-y-1">
+                                    <h3 className="font-medium mb-2 section-heading-darker-green">Next Steps:</h3>
+                                    <ul>
                                         <li>1. Review the generated contract code</li>
                                         <li>2. Test the contract on a testnet before mainnet deployment</li>
                                         <li>3. Consider getting a security audit for production use</li>
@@ -599,7 +600,9 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                     </ul>
                                 </div>
                             </div>
+
                         )}
+
                     </div>
                 </div>
 
