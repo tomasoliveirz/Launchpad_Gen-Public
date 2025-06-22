@@ -8,6 +8,9 @@ function highlightSolidity(code) {
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;");
 
+    const createSafePattern = (pattern) => {
+        return `(<span[^>]*>.*?<\\/span>)|(${pattern})`;
+    };
 
     escaped = escaped.replace(
         /(".*?"|'.*?')/g,
@@ -39,8 +42,16 @@ function highlightSolidity(code) {
     ];
 
     keywords.forEach(kw => {
-        const re = new RegExp(`\\b${kw}\\b`, "g");
-        escaped = escaped.replace(re, `<span class="keyword">${kw}</span>`);
+        const re = new RegExp(createSafePattern(`\\b${kw}\\b`), "g");
+        escaped = escaped.replace(re, (match, spanGroup, keywordGroup) => {
+            if (spanGroup) {
+                return spanGroup; 
+            }
+            if (keywordGroup) {
+                return `<span class="keyword">${keywordGroup}</span>`; 
+            }
+            return match;
+        });
     });
 
     const types = [
@@ -50,8 +61,16 @@ function highlightSolidity(code) {
     ];
 
     types.forEach(type => {
-        const re = new RegExp(`\\b${type}\\b`, "g");
-        escaped = escaped.replace(re, `<span class="type">${type}</span>`);
+        const re = new RegExp(createSafePattern(`\\b${type}\\b`), "g");
+        escaped = escaped.replace(re, (match, spanGroup, typeGroup) => {
+            if (spanGroup) {
+                return spanGroup;
+            }
+            if (typeGroup) {
+                return `<span class="type">${typeGroup}</span>`;
+            }
+            return match;
+        });
     });
 
     escaped = escaped.replace(
@@ -60,10 +79,23 @@ function highlightSolidity(code) {
             `${keywordSpan}<span class="contract-name">${contractName}</span>`
     );
 
-    escaped = escaped.replace(
-        /\b([a-zA-Z_$][a-zA-Z0-9_$]*)\s*\(/g,
-        (match, funcName) => `<span class="function-call">${funcName}</span>(`
-    );
+    const funcCallPattern = `([a-zA-Z_$][a-zA-Z0-9_$]*)\\s*\\(`; 
+    const funcCallRegex = new RegExp(createSafePattern(funcCallPattern), "g");
+
+    escaped = escaped.replace(funcCallRegex, (match, spanGroup, funcCallText) => {
+        if (spanGroup) {
+            return spanGroup; 
+        }
+        if (funcCallText) {
+            const funcNameMatch = funcCallText.match(/\b([a-zA-Z_$][a-zA-Z0-9_$]*)\b/);
+            if (funcNameMatch && funcNameMatch[1]) {
+                const funcName = funcNameMatch[1];
+                const restOfMatch = funcCallText.substring(funcName.length); 
+                return `<span class="function-call">${funcName}</span>${restOfMatch}`;
+            }
+        }
+        return match;
+    });
 
     return escaped;
 }
