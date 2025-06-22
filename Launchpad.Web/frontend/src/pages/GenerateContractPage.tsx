@@ -7,6 +7,7 @@ import { generateSolidityContract, downloadContract } from '../utils/contractGen
 import { copyToClipboard } from '../utils/clipboard';
 import ScrollToTop from '../componnents/layout/ScrollToTop';
 import SolidityViewer from '../componnents/common/SolidityViewer';
+import { useEffect } from 'react';
 
 const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
     const {
@@ -22,7 +23,31 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
     const [copySuccess, setCopySuccess] = useState(false);
     const [showDownloadSuccess, setShowDownloadSuccess] = useState(false);
     const [errors, setErrors] = useState<ValidationErrors>({});
+    const [decimalInput, setDecimalInput] = useState(config.decimals.toString());
+    const [isFocused, setIsFocused] = useState(false);
+    const [totalSupplyInput, setTotalSupplyInput] = useState(config.totalSupply.toString());
+    const [isTotalSupplyFocused, setIsTotalSupplyFocused] = useState(false);
+    const [premintInput, setPremintInput] = useState(config.premint.toString());
+    const [isPremintFocused, setIsPremintFocused] = useState(false);
 
+    useEffect(() => {
+        if (!isPremintFocused) {
+            setPremintInput(config.premint.toString());
+        }
+    }, [config.premint, isPremintFocused]);
+
+    useEffect(() => {
+        if (!isTotalSupplyFocused) {
+            setTotalSupplyInput(config.totalSupply.toString());
+        }
+    }, [config.totalSupply, isTotalSupplyFocused]);
+
+    useEffect(() => {
+        if (!isFocused) {
+            setDecimalInput(config.decimals.toString());
+        }
+    }, [config.decimals, isFocused]);
+  
     const showToast = (message: string) => {
         alert(message);
     };
@@ -240,13 +265,42 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                             type="number"
                                             min="0"
                                             max="18"
-                                            value={config.decimals}
+                                            value={decimalInput}
+                                            placeholder="0"
+                                            onFocus={() => setIsFocused(true)}
+                                            onBlur={(e) => {
+                                                setIsFocused(false);
+                                                let parsed = parseInt(e.target.value);
+                                                if (isNaN(parsed)) parsed = 0;
+                                                if (parsed > 18) parsed = 18;
+
+                                                updateConfig({ decimals: parsed });
+                                                setDecimalInput(parsed.toString());
+                                            }}
                                             onChange={(e) => {
-                                                updateConfig({ decimals: parseInt(e.target.value) || 0 });
+                                                const value = e.target.value;
+
+                                                if (value === '') {
+                                                    setDecimalInput('');
+                                                    return;
+                                                }
+
+                                                const parsed = parseInt(value);
+
+                                                if (!isNaN(parsed) && parsed <= 18) {
+                                                    updateConfig({ decimals: parsed });
+                                                    setDecimalInput(value);
+                                                } else if (!isNaN(parsed) && parsed > 18) {
+                                                    updateConfig({ decimals: 18 });
+                                                    setDecimalInput('18');
+                                                }
+
                                                 clearError('decimals');
                                             }}
                                             className={`input-text-greish-green ${errors.decimals ? 'border-red-500' : ''}`}
                                         />
+
+
                                         <ErrorMessage error={errors.decimals} />
                                     </div>
 
@@ -258,9 +312,31 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                             id="totalSupply"
                                             type="number"
                                             min="0"
-                                            value={config.totalSupply}
+                                            placeholder="0"
+                                            value={totalSupplyInput}
+                                            onFocus={() => setIsTotalSupplyFocused(true)}
+                                            onBlur={(e) => {
+                                                setIsTotalSupplyFocused(false);
+                                                let parsed = parseInt(e.target.value);
+                                                if (isNaN(parsed)) parsed = 0;
+                                                updateConfig({ totalSupply: parsed });
+                                                setTotalSupplyInput(parsed.toString());
+                                            }}
                                             onChange={(e) => {
-                                                updateConfig({ totalSupply: parseInt(e.target.value) || 0 });
+                                                const value = e.target.value;
+
+                                                if (value === '') {
+                                                    setTotalSupplyInput('');
+                                                    return;
+                                                }
+
+                                                const parsed = parseInt(value);
+
+                                                if (!isNaN(parsed)) {
+                                                    updateConfig({ totalSupply: parsed });
+                                                    setTotalSupplyInput(value);
+                                                }
+
                                                 clearError('totalSupply');
                                                 clearError('premint');
                                             }}
@@ -277,9 +353,31 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                             id="premint"
                                             type="number"
                                             min="0"
-                                            value={config.premint}
+                                            placeholder="0"
+                                            value={premintInput}
+                                            onFocus={() => setIsPremintFocused(true)}
+                                            onBlur={(e) => {
+                                                setIsPremintFocused(false);
+                                                let parsed = parseInt(e.target.value);
+                                                if (isNaN(parsed)) parsed = 0;
+                                                updateConfig({ premint: parsed });
+                                                setPremintInput(parsed.toString());
+                                            }}
                                             onChange={(e) => {
-                                                updateConfig({ premint: parseInt(e.target.value) || 0 });
+                                                const value = e.target.value;
+
+                                                if (value === '') {
+                                                    setPremintInput('');
+                                                    return;
+                                                }
+
+                                                const parsed = parseInt(value);
+
+                                                if (!isNaN(parsed)) {
+                                                    updateConfig({ premint: parsed });
+                                                    setPremintInput(value);
+                                                }
+
                                                 clearError('premint');
                                             }}
                                             className={`input-text-greish-green ${errors.premint ? 'border-red-500' : ''}`}
@@ -366,7 +464,6 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                         className="input-text-greish-no-focus"
                                     >
                                         <option value={0}>Ownable (Single Owner)</option>
-                                        <option value={1}>Role-Based Access Control</option>
                                     </select>
                                 </div>
                             )}
