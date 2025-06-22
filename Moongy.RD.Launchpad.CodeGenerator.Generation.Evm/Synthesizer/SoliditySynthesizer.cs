@@ -48,7 +48,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
             { "transferOwnership", (SolidityFunctionMutabilityEnum.None, true) },
             { "_transferOwnership", (SolidityFunctionMutabilityEnum.None, false) },
             { "_transfer", (SolidityFunctionMutabilityEnum.None, false) },
-            { "_update", (SolidityFunctionMutabilityEnum.None, false) },
+            { "_update", (SolidityFunctionMutabilityEnum.None, true) },
             { "_approve", (SolidityFunctionMutabilityEnum.None, false) },
             { "_spendAllowance", (SolidityFunctionMutabilityEnum.None, true) }
         };

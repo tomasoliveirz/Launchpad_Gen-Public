@@ -256,6 +256,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Models.Metamodels.Sta
                 OperatorEnum.Multiply => "*",
                 OperatorEnum.Divide => "/",
                 OperatorEnum.Modulo => "%",
+                OperatorEnum.Power => "**",
                 _ => "=="
             };
             

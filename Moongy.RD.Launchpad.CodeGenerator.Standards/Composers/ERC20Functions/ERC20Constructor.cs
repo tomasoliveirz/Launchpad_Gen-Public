@@ -6,7 +6,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
 {
     public class ERC20Constructor
     {
-        public FunctionDefinition Build()
+        public FunctionDefinition Build(ulong PremintValue)
         {
             #region Parameters
             var nameParam = new ParameterDefinition { Name = "name_", Type = DataTypeReference.String };
@@ -43,6 +43,35 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
             };
             #endregion
 
+            #region Function Call
+
+            var premintCall = new FunctionStatementDefinition
+            {
+                Kind = FunctionStatementKind.Expression,
+                Expression = new ExpressionDefinition
+                {
+                    Kind = ExpressionKind.FunctionCall,
+                    Callee = new ExpressionDefinition { Identifier = "_mint", Kind = ExpressionKind.Identifier },
+                    Arguments = new List<ExpressionDefinition>
+                    {
+                        new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "_owner" },
+                        new ExpressionDefinition
+                        {
+                            Kind = ExpressionKind.Binary,
+                            Operator = BinaryOperator.Multiply,
+                            Left = new ExpressionDefinition { Kind = ExpressionKind.Literal, LiteralValue = PremintValue.ToString() },
+                            Right = new ExpressionDefinition {
+                                Kind = ExpressionKind.Binary, 
+                                Left = new ExpressionDefinition { Kind = ExpressionKind.Literal, LiteralValue = "10"},
+                                Operator = BinaryOperator.Power,
+                                Right = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "_decimals" }
+                            } 
+                        }
+                    }
+                }
+            };
+            #endregion
+
             #region Function
             var res = new FunctionDefinition
             {
@@ -53,7 +82,8 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
                 Body = new List<FunctionStatementDefinition>
                 {
                     nameAssignment,
-                    symbolAssignment
+                    symbolAssignment,
+                    premintCall // TODO THIS MUST APPEAR IN THE CONSTRUCTOR
                 }
             };
             #endregion

@@ -13,5 +13,6 @@ public enum BinaryOperator
     Equal,
     NotEqual,
     And,
+    Power,
     Or
 }

@@ -174,7 +174,7 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
     {
         var mainModule = moduleFile.Modules.FirstOrDefault();
         if (mainModule == null) return;
-        mainModule.Functions.Add(ConstructorDefinition());
+        mainModule.Functions.Add(ConstructorDefinition(standard.Premint));
         mainModule.Functions.Add(NameFunctionDefinition());
         mainModule.Functions.Add(SymbolFunctionDefinition());
         mainModule.Functions.Add(DecimalsFunctionDefinition());
@@ -191,10 +191,10 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
         mainModule.Functions.Add(SpendAllowanceDefinition());
     }
 
-    private FunctionDefinition ConstructorDefinition()
+    private FunctionDefinition ConstructorDefinition(ulong PremintValue)
     {
         var constructor = new ERC20Constructor();
-        return constructor.Build();
+        return constructor.Build(PremintValue);
     }
 
     private FunctionDefinition TransferFunctionDefinition()

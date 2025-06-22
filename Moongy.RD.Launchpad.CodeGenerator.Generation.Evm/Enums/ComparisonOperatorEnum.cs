@@ -15,5 +15,6 @@ public enum OperatorEnum
     Multiply,
     Divide,
     Modulo,
+    Power,
     None
 }

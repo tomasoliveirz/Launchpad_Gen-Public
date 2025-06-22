@@ -144,6 +144,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers
                 BinaryOperator.Equal => OperatorEnum.Equal,
                 BinaryOperator.NotEqual => OperatorEnum.Different,
                 BinaryOperator.LessThan => OperatorEnum.LessThan,
+                BinaryOperator.Power => OperatorEnum.Power,
                 _ => throw new NotSupportedException($"Binary operator '{binaryOperator}' is not supported for Solidity mapping")
             };
         }
