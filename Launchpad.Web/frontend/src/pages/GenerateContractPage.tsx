@@ -399,7 +399,14 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                     <input
                                         type="checkbox"
                                         checked={config.hasMinting}
-                                        onChange={(e) => updateConfig({ hasMinting: e.target.checked })}
+                                        onChange={(e) => {
+                                            const hasMinting = e.target.checked;
+                                            updateConfig({
+                                                hasMinting,
+                                                // If Mintable turned on, enforce Access Control on
+                                                hasAccessControl: hasMinting ? true : config.hasAccessControl,
+                                            });
+                                        }}
                                         className="checkbox-input"
                                     />
                                     <div className="flex-1">
@@ -435,38 +442,44 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                 </label>
                             </div>
 
-                        </div>
+                            <div className="bg-slate-800 rounded-lg p-6 mb-6 border border-slate-700">
+                                <h2 className="section-heading-darker-green">Access Control</h2>
 
-                        <div className="bg-slate-800 rounded-lg p-6 mb-6 border border-slate-700">
-                            <h2 className="section-heading-darker-green">
-                                Access Control
-                            </h2>
+                                <label
+                                    className={`flex items-center gap-3 p-3 bg-slate-700/50 rounded border border-slate-600 hover:bg-slate-700 transition-colors cursor-pointer mb-4 ${config.hasMinting ? 'opacity-50 cursor-not-allowed' : ''
+                                        }`}
+                                >
+                                    <input
+                                        type="checkbox"
+                                        checked={config.hasAccessControl}
+                                        onChange={(e) => {
+                                            // Prevent turning off if Mintable is enabled
+                                            if (config.hasMinting) return;
+                                            updateConfig({ hasAccessControl: e.target.checked });
+                                        }}
+                                        className="checkbox-input"
+                                        disabled={config.hasMinting} // Disable if Mintable is checked
+                                    />
+                                    <span className="font-medium">Enable Access Control</span>
+                                </label>
 
-                            <label className="flex items-center gap-3 p-3 bg-slate-700/50 rounded border border-slate-600 hover:bg-slate-700 transition-colors cursor-pointer mb-4">
-                                <input
-                                    type="checkbox"
-                                    checked={config.hasAccessControl}
-                                    onChange={(e) => updateConfig({ hasAccessControl: e.target.checked })}
-                                    className="checkbox-input"  
-                                />
-                                <span className="font-medium">Enable Access Control</span>
-                            </label>
+                                {config.hasAccessControl && (
+                                    <div className="bg-slate-700/30 rounded p-4 border border-slate-600">
+                                        <label htmlFor="accessControlType" className="block text-sm font-medium mb-2 text-gray-300">
+                                            Control Type
+                                        </label>
+                                        <select
+                                            id="accessControlType"
+                                            value={config.accessControlType}
+                                            onChange={(e) => updateConfig({ accessControlType: parseInt(e.target.value) })}
+                                            className="input-text-greish-no-focus"
+                                        >
+                                            <option value={0}>Ownable (Single Owner)</option>
+                                        </select>
+                                    </div>
+                                )}
+                            </div>
 
-                            {config.hasAccessControl && (
-                                <div className="bg-slate-700/30 rounded p-4 border border-slate-600">
-                                    <label htmlFor="accessControlType" className="block text-sm font-medium mb-2 text-gray-300">
-                                        Control Type
-                                    </label>
-                                    <select
-                                        id="accessControlType"
-                                        value={config.accessControlType}
-                                        onChange={(e) => updateConfig({ accessControlType: parseInt(e.target.value) })}
-                                        className="input-text-greish-no-focus"
-                                    >
-                                        <option value={0}>Ownable (Single Owner)</option>
-                                    </select>
-                                </div>
-                            )}
 
 
                             {showDownloadSuccess && (
