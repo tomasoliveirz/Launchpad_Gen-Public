@@ -52,7 +52,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Engine.Test
                 Symbol = "TEST",
                 Decimals = 18,
                 Premint = 1000000,
-                Supply = 10000000,
+                MaxSupply = 10000000,
                 Tax = new TaxTokenomic
                 {
                     TaxFee = 2.5,
@@ -105,7 +105,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Engine.Test
             Console.WriteLine($"   Symbol: {form.Symbol}");
             Console.WriteLine($"   Decimals: {form.Decimals}");
             Console.WriteLine($"   Premint: {form.Premint:N0}");
-            Console.WriteLine($"   Supply: {form.Supply:N0}");
+            Console.WriteLine($"   Supply: {form.MaxSupply:N0}");
             
             if (form.Tax != null)
             {

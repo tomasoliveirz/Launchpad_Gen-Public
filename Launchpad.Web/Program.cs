@@ -26,7 +26,7 @@ app.MapPost("/api/generate", async (GenerateRequest request, ICodeGenerationEngi
             Symbol = request.Symbol,
             Decimals = (byte)request.Decimals,
             Premint = (ulong)request.Premint,
-            Supply = request.Supply,
+            MaxSupply = (ulong) request.Supply,
             HasMinting = request.HasMinting,
             HasBurning = request.HasBurning,
             IsPausable = request.IsPausable

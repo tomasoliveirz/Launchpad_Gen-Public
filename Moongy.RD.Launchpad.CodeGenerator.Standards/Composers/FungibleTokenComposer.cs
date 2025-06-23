@@ -186,6 +186,8 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
     private FunctionDefinition ConstructorDefinition(ulong premintValue)
     {
         var constructor = new ERC20Constructor();
+        
+        Console.WriteLine($"Creating constructor with premint value: {premintValue}");
         return constructor.Build(premintValue);
     }
 

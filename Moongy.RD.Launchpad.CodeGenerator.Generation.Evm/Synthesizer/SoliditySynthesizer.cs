@@ -195,30 +195,10 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
 
         private List<string> GenerateConstructorStatements(ModuleDefinition module)
         {
-            var statements = new List<string>();
-            
             var constructor = module.Functions.FirstOrDefault(f => f.Kind == FunctionKind.Constructor);
-            if (constructor?.Body != null)
-            {
-                foreach (var statement in constructor.Body)
-                {
-                    if (statement.Kind == FunctionStatementKind.Assignment && 
-                        statement.ParameterAssignment != null)
-                    {
-                        var assignment = statement.ParameterAssignment;
-                        
-                        if (assignment.Left?.Identifier == "_owner" && 
-                            assignment.Right?.Kind == ExpressionKind.MemberAccess &&
-                            assignment.Right?.Target?.Identifier == "msg" &&
-                            assignment.Right?.MemberName == "sender")
-                        {
-                            statements.Add("_owner = msg.sender;");
-                        }
-                    }
-                }
-            }
-            
-            return statements;
+            if (constructor == null) return new List<string>();
+
+            return ConstructorStatementHelper.GenerateStatements(constructor);
         }
 
         private List<ConstructorParameterModel> GenerateConstructorParameters(ModuleDefinition module)
@@ -272,8 +252,6 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
                     
                     paramIdx++;
                     result.Add(constructorParam);
-                    
-                    Console.WriteLine($"Parameter '{parameter.Name}' mapped to field '{assignedTo}'");
                 }
             }
 
@@ -619,37 +597,6 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
             return $"// Modifier {modifierDefinition.Name} implementation";
         }
 
-        private List<ModifierModel> GenerateModifiersFromFunctions(ModuleDefinition module)
-        {
-            var result = new List<ModifierModel>();
-            var distinctModifiers = new HashSet<string>();
-
-            foreach (var function in module.Functions)
-            {
-                if (function.Modifiers != null && function.Modifiers.Any())
-                {
-                    foreach (var modifierUsage in function.Modifiers)
-                    {
-                        if (!string.IsNullOrWhiteSpace(modifierUsage.Name) &&
-                            distinctModifiers.Add(modifierUsage.Name))
-                        {
-                            var modifierModel = new ModifierModel()
-                            {
-                                Name = modifierUsage.Name,
-                                Parameters = GenerateModifierParameters(modifierUsage.Arguments),
-                                Arguments = ExtractArgumentNames(modifierUsage.Arguments),
-                                Body = $"// Modifier {modifierUsage.Name} implementation\n_;"
-                            };
-
-                            result.Add(modifierModel);
-                        }
-                    }
-                }
-            }
-
-            return result;
-        }
-
         private List<StructModel> GenerateStructs(ModuleDefinition module, IEnumerable<ImportDefinition> importDefinitions)
         {
             var result = new List<StructModel>();
@@ -733,6 +680,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
             }
             return result;
         }
+        
         private bool GenerateConstant(FieldDefinition typeReference)
         {
 
@@ -748,6 +696,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
             }
             return true;
         }
+
         private List<AbstractionImportModel> GenerateBaseContracts(ModuleDefinition module, IEnumerable<ImportDefinition> importDefinitions)
         {
             var result = new List<AbstractionImportModel>();
