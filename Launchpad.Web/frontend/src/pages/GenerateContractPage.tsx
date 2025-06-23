@@ -908,6 +908,26 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                     </div>
 
                                     <div>
+                                        <label htmlFor="totalSupply" className="block text-sm font-medium mb-2">
+                                            Max Supply
+                                        </label>
+                                        <input
+                                            id="totalSupply"
+                                            type="number"
+                                            min="1"
+                                            placeholder="1000000"
+                                            value={config.totalSupply}
+                                            onChange={(e) => {
+                                                const value = parseInt(e.target.value) || 0;
+                                                updateConfig({ totalSupply: value });
+                                                clearError('totalSupply');
+                                            }}
+                                            className={`input-text-greish-green ${errors.totalSupply ? 'border-red-500' : ''}`}
+                                        />
+                                        <ErrorMessage error={errors.totalSupply} />
+                                    </div>
+
+                                    <div>
                                         <label htmlFor="premint" className="block text-sm font-medium mb-2">
                                             Initial Mint
                                         </label>
