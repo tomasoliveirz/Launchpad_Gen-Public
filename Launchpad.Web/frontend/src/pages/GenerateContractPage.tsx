@@ -25,22 +25,16 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
     const [errors, setErrors] = useState<ValidationErrors>({});
     const [decimalInput, setDecimalInput] = useState(config.decimals.toString());
     const [isFocused, setIsFocused] = useState(false);
-    const [totalSupplyInput, setTotalSupplyInput] = useState(config.totalSupply.toString());
-    const [isTotalSupplyFocused, setIsTotalSupplyFocused] = useState(false);
+ 
     const [premintInput, setPremintInput] = useState(config.premint.toString());
     const [isPremintFocused, setIsPremintFocused] = useState(false);
+
 
     useEffect(() => {
         if (!isPremintFocused) {
             setPremintInput(config.premint.toString());
         }
     }, [config.premint, isPremintFocused]);
-
-    useEffect(() => {
-        if (!isTotalSupplyFocused) {
-            setTotalSupplyInput(config.totalSupply.toString());
-        }
-    }, [config.totalSupply, isTotalSupplyFocused]);
 
     useEffect(() => {
         if (!isFocused) {
@@ -212,6 +206,36 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                     </div>
 
                     <div className="max-w-4xl mx-auto">
+                        <div className="selectors-wrapper">
+                            <div className="selector-container solidity-selector-wrapper">
+                                <div className="language-selector">
+                                    <div className="selector-button active">
+                                        <svg className="solidity-icon" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M12 2L2 8.5V15.5L12 22L22 15.5V8.5L12 2ZM12 4.47225L19.9815 9.15555L12 13.8388L4.01851 9.15555L12 4.47225ZM12 19.5278L4.01851 14.8445L12 10.1612L19.9815 14.8445L12 19.5278ZM12 15.5L8 13V9L12 6.5L16 9V13L12 15.5ZM12 14.075L14.7396 12.4417L12 10.8083L9.26043 12.4417L12 14.075Z" />
+                                        </svg>
+                                        Solidity
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="selector-container erc20-selector-wrapper">
+                                <div className="token-selector">
+                                    <div className="selector-button active">
+                                        <svg className="token-icon" viewBox="0 0 24 24">
+                                            <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2" />
+                                            <circle cx="12" cy="12" r="6" fill="currentColor" opacity="0.3" />
+                                            <circle cx="12" cy="12" r="2" fill="currentColor" />
+                                        </svg>
+                                        ERC20
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div className="max-w-4xl mx-auto">
                         <div className="bg-slate-800 rounded-lg p-6 mb-6 border border-slate-700">
                             <h2 className="section-heading-darker-green">
                                 Token Configuration
@@ -302,47 +326,6 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
 
 
                                         <ErrorMessage error={errors.decimals} />
-                                    </div>
-
-                                    <div>
-                                        <label htmlFor="totalSupply" className="block text-sm font-medium mb-2">
-                                            Total Supply
-                                        </label>
-                                        <input
-                                            id="totalSupply"
-                                            type="number"
-                                            min="0"
-                                            placeholder="0"
-                                            value={totalSupplyInput}
-                                            onFocus={() => setIsTotalSupplyFocused(true)}
-                                            onBlur={(e) => {
-                                                setIsTotalSupplyFocused(false);
-                                                let parsed = parseInt(e.target.value);
-                                                if (isNaN(parsed)) parsed = 0;
-                                                updateConfig({ totalSupply: parsed });
-                                                setTotalSupplyInput(parsed.toString());
-                                            }}
-                                            onChange={(e) => {
-                                                const value = e.target.value;
-
-                                                if (value === '') {
-                                                    setTotalSupplyInput('');
-                                                    return;
-                                                }
-
-                                                const parsed = parseInt(value);
-
-                                                if (!isNaN(parsed)) {
-                                                    updateConfig({ totalSupply: parsed });
-                                                    setTotalSupplyInput(value);
-                                                }
-
-                                                clearError('totalSupply');
-                                                clearError('premint');
-                                            }}
-                                            className={`input-text-greish-green ${errors.totalSupply ? 'border-red-500' : ''}`}
-                                        />
-                                        <ErrorMessage error={errors.totalSupply} />
                                     </div>
 
                                     <div>

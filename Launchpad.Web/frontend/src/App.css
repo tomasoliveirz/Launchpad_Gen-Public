@@ -450,3 +450,84 @@
     color: #FFCC99; /* orange-cream */
     font-weight: 600; 
 }
+
+
+/* Updated CSS */
+/* The main container for both selector cards */
+.selectors-wrapper {
+    display: flex;
+    flex-direction: column; /* Stack the items vertically */
+    gap: 1rem; /* Space between the Solidity and ERC20 cards */
+    margin-bottom: 2rem;
+    align-items: center; /* Default for centering items in a column */
+    width: 100%; /* Ensure it takes full width to allow internal alignment */
+}
+
+/* Individual selector containers (the dark background cards) */
+.selector-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers content within the card */
+    padding: 0.75rem; /* Padding for the dark background card */
+    /* KEY CHANGE: Make the border very rounded, almost like a pill */
+    border-radius: 9999px; /* This makes it an elongated pill shape */
+    background-color: #1e293b;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    min-width: 140px; /* Adjust as needed */
+    width: fit-content; /* Make the background card only as wide as its content + padding */
+}
+
+/* This is the key for alignment */
+/* We'll use specific classes for each selector container */
+.solidity-selector-wrapper {
+    /* Inherits align-items: center from .selectors-wrapper */
+    /* This ensures the Solidity card remains centered */
+}
+
+.erc20-selector-wrapper {
+    align-self: flex-start; /* Aligns this item to the start (left) of the flex container */
+    /* Set margin-left to match the padding of your form container (p-6 is 1.5rem) */
+    margin-left: 1.5rem;
+}
+
+.language-selector, .token-selector {
+    display: flex;
+    justify-content: center; /* This centers the button within its immediate parent */
+}
+
+.selector-button {
+    background-color: #334155;
+    color: #cbd5e1;
+    padding: 0.7rem 1.4rem;
+    border-radius: 9999px; /* This already makes the button a pill shape */
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.2s ease-in-out;
+    border: 1px solid #374151;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+}
+
+    .selector-button:hover {
+        border-color: #22c55e;
+        background-color: #475569;
+    }
+
+    .selector-button.active {
+        background-color: #22c55e;
+        color: white;
+        border-color: #16a34a;
+    }
+
+.solidity-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.token-icon {
+    width: 16px;
+    height: 16px;
+}
