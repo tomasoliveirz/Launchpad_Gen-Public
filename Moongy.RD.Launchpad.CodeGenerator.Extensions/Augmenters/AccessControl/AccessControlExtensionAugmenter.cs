@@ -10,8 +10,6 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Extensions.Augmenters.AccessControl;
 
 public class AccessControlExtensionAugmenter : BaseExtensionAugmenter<AccessControlExtensionModel>
 {
-    public override IReadOnlyCollection<FeatureKind> Requires => Array.Empty<FeatureKind>();
-    public override IReadOnlyCollection<FeatureKind> Provides => new[] { FeatureKind.AccessControl };
 
     public override void Augment(ContextMetamodel ctx, AccessControlExtensionModel model)
     {

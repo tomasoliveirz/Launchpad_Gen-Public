@@ -11,9 +11,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Extensions.Augmenters;
 public abstract class BaseExtensionAugmenter<TModel> : IAugmenter<TModel>
 {
     public abstract void Augment(ContextMetamodel context, TModel model);
-
-    public virtual IReadOnlyCollection<FeatureKind> Requires { get; }
-    public virtual IReadOnlyCollection<FeatureKind> Provides { get; }
+    
     protected static ModuleDefinition Main(ContextMetamodel context) => context.Modules.Single();
     
     protected static void AddOnce<T>(ICollection<T> list, Func<T, bool> exists, Func<T> factory)

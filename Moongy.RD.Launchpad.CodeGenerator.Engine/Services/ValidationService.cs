@@ -11,6 +11,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Engine.Services
             return Task.Run(() =>
             {
                 ValidateTokenomicsRequirements(models);
+                ValidateExtensionRequirements(models);
             });
         }
 
@@ -27,6 +28,28 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Engine.Services
                 );
             }
         }
-        
+
+        private void ValidateExtensionRequirements(ExtractedModels models)
+        {
+            var hasMint = models.Extensions.Any(e => e is MintExtensionModel);
+            var hasBurn = models.Extensions.Any(e => e is BurnExtensionModel);
+            var hasAccessControl = models.Extensions.Any(e => e is AccessControlExtensionModel);
+
+            if (hasMint && !hasAccessControl)
+            {
+                throw new InvalidOperationException(
+                    "Mint functionality requires Access Control to be enabled. " +
+                    "Mint functions need proper permission controls to prevent unauthorized token creation."
+                );
+            }
+
+            if (hasBurn && !hasAccessControl)
+            {
+                throw new InvalidOperationException(
+                    "Burn functionality requires Access Control to be enabled. " +
+                    "While users can burn their own tokens, burnFrom needs allowance controls."
+                );
+            }
+        }
     }
 }

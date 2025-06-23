@@ -50,7 +50,11 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
             { "_transfer", (SolidityFunctionMutabilityEnum.None, false) },
             { "_update", (SolidityFunctionMutabilityEnum.None, true) },
             { "_approve", (SolidityFunctionMutabilityEnum.None, false) },
-            { "_spendAllowance", (SolidityFunctionMutabilityEnum.None, true) }
+            { "_spendAllowance", (SolidityFunctionMutabilityEnum.None, true) },
+            { "mint", (SolidityFunctionMutabilityEnum.None, true) },
+            { "burn", (SolidityFunctionMutabilityEnum.None, true) },
+            {"_mint", (SolidityFunctionMutabilityEnum.None, false) },
+            {"_burn", (SolidityFunctionMutabilityEnum.None, false) }
         };
 
         private readonly Dictionary<string, (SolidityFunctionMutabilityEnum State, bool Virtual)> _functionOverloadConfig = new()
@@ -722,13 +726,28 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
                     Type = ContextTypeReferenceSyntaxHelper.MapToSolidityTypeReference(fieldDefinition.Type),
                     Visibility = ContextTypeReferenceSyntaxHelper.MapToSolidityVisibility(fieldDefinition.Visibility),
                     IsImmutable = fieldDefinition.IsImmutable,
-                    InitialValue = fieldDefinition.Value
+                    InitialValue = fieldDefinition.Value,
+                    IsConstant = GenerateConstant(fieldDefinition),
                 };
                 result.Add(stateVariable);
             }
             return result;
         }
+        private bool GenerateConstant(FieldDefinition typeReference)
+        {
 
+            if (typeReference.Name == "totalSupply" || typeReference.Name == "_totalSupply" ||
+                typeReference.Name == "allowances" || typeReference.Name == "_allowances" ||
+                typeReference.Name == "name" || typeReference.Name == "_name" ||
+                typeReference.Name == "symbol" || typeReference.Name == "_symbol" ||
+                typeReference.Name == "owner" || typeReference.Name == "_owner" ||
+                typeReference.Name == "balances" || typeReference.Name == "_balances" ||
+                typeReference.Type.Kind == TypeReferenceKind.Mapping)
+            {
+                return false;
+            }
+            return true;
+        }
         private List<AbstractionImportModel> GenerateBaseContracts(ModuleDefinition module, IEnumerable<ImportDefinition> importDefinitions)
         {
             var result = new List<AbstractionImportModel>();

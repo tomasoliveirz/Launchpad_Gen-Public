@@ -17,13 +17,15 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
     {
         var moduleFile = base.Compose(standard);
         
-        AddERC20Fields(moduleFile, standard);
+        AddERC20Storage(moduleFile, standard);
+        AddERC20Events(moduleFile);
+        AddERC20Errors(moduleFile);
         AddERC20Functions(moduleFile, standard);
         
         return moduleFile;
     }
 
-    private void AddERC20Fields(ModuleFileDefinition moduleFile, FungibleTokenModel standard)
+    private void AddERC20Storage(ModuleFileDefinition moduleFile, FungibleTokenModel standard)
     {
         var mainModule = moduleFile.Modules.FirstOrDefault();
         if (mainModule == null) return;
@@ -31,13 +33,13 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
         mainModule.Fields.Add(TokenBalancesDefinition());
         mainModule.Fields.Add(TokenAllowancesDefinition());
         mainModule.Fields.Add(TokenTotalSupplyDefinition());
-        
-        AddERC20Events(mainModule);
-        AddERC20Errors(mainModule);
     }
 
-    private void AddERC20Events(ModuleDefinition module)
+    private void AddERC20Events(ModuleFileDefinition moduleFile)
     {
+        var mainModule = moduleFile.Modules.FirstOrDefault();
+        if (mainModule == null) return;
+
         var transferEvent = new TriggerDefinition
         {
             Name = "Transfer",
@@ -62,111 +64,90 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
             }
         };
 
-        if (!module.Triggers.Any(t => t.Name == "Transfer"))
-        {
-            module.Triggers.Add(transferEvent);
-        }
-
-        if (!module.Triggers.Any(t => t.Name == "Approval"))
-        {
-            module.Triggers.Add(approvalEvent);
-        }
+        mainModule.Triggers.Add(transferEvent);
+        mainModule.Triggers.Add(approvalEvent);
     }
 
-    private void AddERC20Errors(ModuleDefinition module)
+    private void AddERC20Errors(ModuleFileDefinition moduleFile)
     {
-        var insufficientBalanceError = new TriggerDefinition
+        var mainModule = moduleFile.Modules.FirstOrDefault();
+        if (mainModule == null) return;
+
+        var errors = new[]
         {
-            Name = "ERC20InsufficientBalance",
-            Kind = TriggerKind.Error,
-            Parameters = new List<ParameterDefinition>
+            new TriggerDefinition
             {
-                new() { Name = "sender", Type = DataTypeReference.Address },
-                new() { Name = "balance", Type = DataTypeReference.Uint256 },
-                new() { Name = "needed", Type = DataTypeReference.Uint256 }
+                Name = "ERC20InsufficientBalance",
+                Kind = TriggerKind.Error,
+                Parameters = new List<ParameterDefinition>
+                {
+                    new() { Name = "sender", Type = DataTypeReference.Address },
+                    new() { Name = "balance", Type = DataTypeReference.Uint256 },
+                    new() { Name = "needed", Type = DataTypeReference.Uint256 }
+                }
+            },
+            new TriggerDefinition
+            {
+                Name = "ERC20InvalidApprover",
+                Kind = TriggerKind.Error,
+                Parameters = new List<ParameterDefinition>
+                {
+                    new() { Name = "approver", Type = DataTypeReference.Address }
+                }
+            },
+            new TriggerDefinition
+            {
+                Name = "ERC20InvalidSpender",
+                Kind = TriggerKind.Error,
+                Parameters = new List<ParameterDefinition>
+                {
+                    new() { Name = "spender", Type = DataTypeReference.Address }
+                }
+            },
+            new TriggerDefinition
+            {
+                Name = "ERC20InsufficientAllowance",
+                Kind = TriggerKind.Error,
+                Parameters = new List<ParameterDefinition>
+                {
+                    new() { Name = "spender", Type = DataTypeReference.Address },
+                    new() { Name = "allowance", Type = DataTypeReference.Uint256 },
+                    new() { Name = "needed", Type = DataTypeReference.Uint256 }
+                }
+            },
+            new TriggerDefinition
+            {
+                Name = "ERC20InvalidSender",
+                Kind = TriggerKind.Error,
+                Parameters = new List<ParameterDefinition>
+                {
+                    new() { Name = "sender", Type = DataTypeReference.Address }
+                }
+            },
+            new TriggerDefinition
+            {
+                Name = "ERC20InvalidReceiver",
+                Kind = TriggerKind.Error,
+                Parameters = new List<ParameterDefinition>
+                {
+                    new() { Name = "receiver", Type = DataTypeReference.Address }
+                }
+            },
+            new TriggerDefinition
+            {
+                Name = "ERC20ExceedsMaxSupply",
+                Kind = TriggerKind.Error,
+                Parameters = new List<ParameterDefinition>
+                {
+                    new() { Name = "totalSupply", Type = DataTypeReference.Uint256 },
+                    new() { Name = "maxSupply", Type = DataTypeReference.Uint256 }
+                }
             }
         };
 
-        var invalidApproverError = new TriggerDefinition
+        foreach (var error in errors)
         {
-            Name = "ERC20InvalidApprover",
-            Kind = TriggerKind.Error,
-            Parameters = new List<ParameterDefinition>
-            {
-                new() { Name = "approver", Type = DataTypeReference.Address }
-            }
-        };
-
-        var invalidSpenderError = new TriggerDefinition
-        {
-            Name = "ERC20InvalidSpender",
-            Kind = TriggerKind.Error,
-            Parameters = new List<ParameterDefinition>
-            {
-                new() { Name = "spender", Type = DataTypeReference.Address }
-            }
-        };
-
-        var insufficientAllowanceError = new TriggerDefinition
-        {
-            Name = "ERC20InsufficientAllowance",
-            Kind = TriggerKind.Error,
-            Parameters = new List<ParameterDefinition>
-            {
-                new() { Name = "spender", Type = DataTypeReference.Address },
-                new() { Name = "allowance", Type = DataTypeReference.Uint256 },
-                new() { Name = "needed", Type = DataTypeReference.Uint256 }
-            }
-        };
-
-        var invalidSenderError = new TriggerDefinition
-        {
-            Name = "ERC20InvalidSender",
-            Kind = TriggerKind.Error,
-            Parameters = new List<ParameterDefinition>
-            {
-                new() { Name = "sender", Type = DataTypeReference.Address }
-            }
-        };
-
-        var invalidReceiverError = new TriggerDefinition
-        {
-            Name = "ERC20InvalidReceiver",
-            Kind = TriggerKind.Error,
-            Parameters = new List<ParameterDefinition>
-            {
-                new() { Name = "receiver", Type = DataTypeReference.Address }
-            }
-        };
-
-        if (!module.Triggers.Any(t => t.Name == "ERC20InsufficientBalance"))
-        {
-            module.Triggers.Add(insufficientBalanceError);
-        }
-
-        if (!module.Triggers.Any(t => t.Name == "ERC20InvalidApprover"))
-        {
-            module.Triggers.Add(invalidApproverError);
-        }
-
-        if (!module.Triggers.Any(t => t.Name == "ERC20InvalidSpender"))
-        {
-            module.Triggers.Add(invalidSpenderError);
-        }
-
-        if (!module.Triggers.Any(t => t.Name == "ERC20InsufficientAllowance"))
-        {
-            module.Triggers.Add(insufficientAllowanceError);
-        }
-
-        if (!module.Triggers.Any(t => t.Name == "ERC20InvalidSender"))
-        {
-            module.Triggers.Add(invalidSenderError);
-        }
-
-        if (!module.Triggers.Any(t => t.Name == "ERC20InvalidReceiver"))
-        {
-            module.Triggers.Add(invalidReceiverError);
+            mainModule.Triggers.Add(error);
         }
     }
 
@@ -174,27 +155,50 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
     {
         var mainModule = moduleFile.Modules.FirstOrDefault();
         if (mainModule == null) return;
+
+        // Constructor - ONLY premint if specified 
         mainModule.Functions.Add(ConstructorDefinition(standard.Premint));
+        
+        // View functions
         mainModule.Functions.Add(NameFunctionDefinition());
         mainModule.Functions.Add(SymbolFunctionDefinition());
         mainModule.Functions.Add(DecimalsFunctionDefinition());
         mainModule.Functions.Add(TotalSupplyFunctionDefinition());
         mainModule.Functions.Add(BalanceOfFunctionDefinition());
-        mainModule.Functions.Add(TransferFunctionDefinition());
         mainModule.Functions.Add(AllowanceFunctionDefinition());
+        
+        // State-changing functions
+        mainModule.Functions.Add(TransferFunctionDefinition());
         mainModule.Functions.Add(ApproveFunctionDefinition());
         mainModule.Functions.Add(TransferFromFunctionDefinition());
+        
+        // Internal functions
         mainModule.Functions.Add(_TransferFunctionDefinition());
         mainModule.Functions.Add(_UpdateFunctionDefinition());
-//        mainModule.Functions.Add(FirstApproveFunctionDefinition());
         mainModule.Functions.Add(_ApproveFunction());
         mainModule.Functions.Add(SpendAllowanceDefinition());
+        mainModule.Functions.Add(_MintFunctionDefinition());
+        mainModule.Functions.Add(_BurnFunctionDefinition());
     }
 
-    private FunctionDefinition ConstructorDefinition(ulong PremintValue)
+    #region Function Builders
+
+    private FunctionDefinition ConstructorDefinition(ulong premintValue)
     {
         var constructor = new ERC20Constructor();
-        return constructor.Build(PremintValue);
+        return constructor.Build(premintValue);
+    }
+
+    private FunctionDefinition _MintFunctionDefinition()
+    {
+        var mint = new MintFunction();
+        return mint.Build();
+    }
+
+    private FunctionDefinition _BurnFunctionDefinition()
+    {
+        var burn = new BurnFunction();
+        return burn.Build();
     }
 
     private FunctionDefinition TransferFunctionDefinition()
@@ -203,12 +207,6 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
         return transfer.Build();
     }
 
-    private FieldDefinition TokenTotalSupplyDefinition() 
-    {
-        var totalSupply = new TokenTotalSupplyField();
-        return totalSupply.Build();
-    }
-   
     private FunctionDefinition TotalSupplyFunctionDefinition()
     {
         var totalSupply = new TotalSupplyFunction();
@@ -231,18 +229,6 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
     {
         var name = new NameFunction();
         return name.Build();
-    }
-
-    private FieldDefinition TokenBalancesDefinition()
-    {
-        var tokenBalance = new TokenBalancesField();
-        return tokenBalance.Build();
-    }
-
-    private FieldDefinition TokenAllowancesDefinition()
-    {
-        var tokenAllowance = new TokenAllowancesField();
-        return tokenAllowance.Build();
     }
 
     private FunctionDefinition BalanceOfFunctionDefinition()
@@ -275,12 +261,6 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
         return approve.Build();
     }
 
-    private FunctionDefinition FirstApproveFunctionDefinition()
-    {
-        var approve = new FirstApproveFunction();
-        return approve.Build();
-    }
-
     private FunctionDefinition _UpdateFunctionDefinition()
     {
         var update = new _UpdateFunction();
@@ -298,4 +278,28 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
         var spendAllowance = new SpendAllowanceFunction();
         return spendAllowance.Build();
     }
+
+    #endregion
+
+    #region Field Builders
+
+    private FieldDefinition TokenTotalSupplyDefinition() 
+    {
+        var totalSupply = new TokenTotalSupplyField();
+        return totalSupply.Build();
+    }
+
+    private FieldDefinition TokenBalancesDefinition()
+    {
+        var tokenBalance = new TokenBalancesField();
+        return tokenBalance.Build();
+    }
+
+    private FieldDefinition TokenAllowancesDefinition()
+    {
+        var tokenAllowance = new TokenAllowancesField();
+        return tokenAllowance.Build();
+    }
+
+    #endregion
 }

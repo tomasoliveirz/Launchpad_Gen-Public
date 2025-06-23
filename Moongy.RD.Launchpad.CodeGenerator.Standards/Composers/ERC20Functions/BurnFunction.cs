@@ -1,7 +1,6 @@
 ﻿using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Functions;
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels.Others;
 using Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Base;
-using Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Helpers;
 
 namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
 {
@@ -11,66 +10,66 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
         {
             var parameters = BuildParameters();
 
-            #region Identifiers
             var accountExpr = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "account" };
             var valueExpr = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "value" };
             var zeroAddress = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "address(0)" };
-            #endregion
 
-            #region Errors
-            var revertParameters = new List<ExpressionDefinition>
+            var body = new List<FunctionStatementDefinition>();
+
+            // account != address(0)
+            var invalidSenderCheck = new FunctionStatementDefinition
             {
-                new ExpressionDefinition
+                Kind = FunctionStatementKind.Condition,
+                ConditionBranches = new List<ConditionBranch>
                 {
-                    Identifier = "address(0)",
-                    Kind = ExpressionKind.Identifier
+                    new ConditionBranch
+                    {
+                        Condition = new ExpressionDefinition
+                        {
+                            Kind = ExpressionKind.Binary,
+                            Left = accountExpr,
+                            Operator = BinaryOperator.Equal,
+                            Right = zeroAddress
+                        },
+                        Body = new List<FunctionStatementDefinition>
+                        {
+                            new FunctionStatementDefinition
+                            {
+                                Kind = FunctionStatementKind.Trigger,
+                                Trigger = new TriggerDefinition
+                                {
+                                    Kind = TriggerKind.Error,
+                                    Name = "ERC20InvalidSender"
+                                },
+                                TriggerArguments = new List<ExpressionDefinition> { zeroAddress }
+                            }
+                        }
+                    }
                 }
             };
+            body.Add(invalidSenderCheck);
 
-            var errorHelper = new IfRevertHelper(
-                condition: new ExpressionDefinition
-                {
-                    Kind = ExpressionKind.Binary,
-                    Left = accountExpr,
-                    Operator = BinaryOperator.Equal,
-                    Right = zeroAddress
-                },
-                errorName: "ERC20InvalidSender",
-                revertParameters: revertParameters
-            ).Build();
-            #endregion
-
-            #region FunctionCalls
-            var updateCall = new ExpressionDefinition
-            {
-                Kind = ExpressionKind.FunctionCall,
-                Callee = new ExpressionDefinition { Identifier = "_update" },
-                Arguments = new List<ExpressionDefinition> { accountExpr, zeroAddress, valueExpr }
-            };
-
-            var updateStatement = new FunctionStatementDefinition
+            // Chama _update(account, address(0), value)
+            var updateCall = new FunctionStatementDefinition
             {
                 Kind = FunctionStatementKind.Expression,
-                Expression = updateCall
+                Expression = new ExpressionDefinition
+                {
+                    Kind = ExpressionKind.FunctionCall,
+                    Callee = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "_update" },
+                    Arguments = new List<ExpressionDefinition> { accountExpr, zeroAddress, valueExpr }
+                }
             };
-            #endregion
+            body.Add(updateCall);
 
-            #region FunctionDefinition
-            var res = new FunctionDefinition
+            return new FunctionDefinition
             {
                 Name = "_burn",
                 Kind = FunctionKind.Normal,
                 Visibility = Visibility.Internal,
                 Parameters = parameters,
-                Body = new List<FunctionStatementDefinition>
-                {
-                    errorHelper,
-                    updateStatement
-                }
+                Body = body
             };
-            #endregion
-
-            return res;
         }
 
         private List<ParameterDefinition> BuildParameters() =>
