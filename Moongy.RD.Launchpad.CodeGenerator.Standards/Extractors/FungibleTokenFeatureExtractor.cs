@@ -12,6 +12,7 @@ public class FungibleTokenFeatureExtractor() : BaseStandardFeatureExtractor<Fung
 
         var premint = form.GetFormProperty<ulong>(StandardEnum.FungibleToken, nameof(FungibleTokenModel.Premint));
         var maxSupply = form.GetFormProperty<ulong>(StandardEnum.FungibleToken, nameof(FungibleTokenModel.MaxSupply));
+        Console.WriteLine($"Premint: {premint}, MaxSupply: {maxSupply}");
         if (maxSupply > 0)
         {
             if (maxSupply == premint) model.SupplyType = SupplyType.Fixed;

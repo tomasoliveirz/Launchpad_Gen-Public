@@ -23,8 +23,8 @@ public class FungibleTokenForm
     
     [StandardProperty(Source = StandardEnum.FungibleToken, Name =(nameof(FungibleTokenModel.Decimals)))]
     public byte Decimals { get; set; }
-
-    public long Supply {  get; set; }
+    [StandardProperty(Source = StandardEnum.FungibleToken, Name =(nameof(FungibleTokenModel.MaxSupply)))]
+    public ulong MaxSupply {  get; set; }
 
     #region Tokenomics
     public TaxTokenomic? Tax { get; set; }
