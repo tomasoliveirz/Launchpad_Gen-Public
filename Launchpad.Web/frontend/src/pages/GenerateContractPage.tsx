@@ -603,7 +603,7 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                 <span style={{ animation: 'blink 1s infinite', marginLeft: '2px' }}>|</span>
                             </div>
                             <div style={{ color: '#3b82f6', marginBottom: '5px', animationDelay: '0.5s' }}>
-                                <span className="code-line">import "@openzeppelin/contracts/token/ERC20/ERC20.sol";</span>
+                                <span className="code-line">import "@MoOngy/contracts/token/ERC20/ERC20.sol";</span>
                             </div>
                             <div style={{ color: '#a78bfa', animationDelay: '1s' }}>
                                 <span className="code-line">{'contract YourToken is ERC20 {'}</span>
