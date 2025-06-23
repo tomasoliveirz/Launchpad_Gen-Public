@@ -14,7 +14,6 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
             
             var body = new List<FunctionStatementDefinition>();
 
-            // set name
             var nameAssignment = new FunctionStatementDefinition
             {
                 Kind = FunctionStatementKind.Assignment,
@@ -26,7 +25,6 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
             };
             body.Add(nameAssignment);
 
-            // set symbol
             var symbolAssignment = new FunctionStatementDefinition
             {
                 Kind = FunctionStatementKind.Assignment,
@@ -38,7 +36,6 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
             };
             body.Add(symbolAssignment);
 
-            // premint only  if > 0
             if (premintValue > 0)
             {
                 var premintCall = new FunctionStatementDefinition
