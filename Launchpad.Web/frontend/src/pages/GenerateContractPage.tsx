@@ -65,7 +65,6 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
         }, 3000);
     };
 
-    // Clipboard Icon baseado na imagem
     const ClipboardIcon = () => (
         <svg width="100" height="100" viewBox="0 0 100 100" style={{ margin: '0 auto' }}>
             <rect x="20" y="15" width="60" height="70" fill="#a0d2db" stroke="#000" strokeWidth="4" rx="6" />
@@ -88,7 +87,6 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
         </svg>
     );
 
-    // Progress squares with animation
     const ProgressSquares = ({ step1Done, step2Done }: { step1Done: boolean, step2Done: boolean }) => (
         <svg width="80" height="30" viewBox="0 0 80 30" style={{ margin: '20px auto', display: 'block' }}>
             <rect
@@ -128,7 +126,6 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
         </svg>
     );
 
-    // Gear Icon baseado na imagem
     const GearIcon = () => (
         <svg width="80" height="80" viewBox="0 0 80 80" style={{ margin: '0 auto' }}>
             <defs>
@@ -146,7 +143,6 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                 transformOrigin: '40px 40px',
                 animation: 'spin 2s linear infinite'
             }}>
-                {/* Outer gear with teeth */}
                 <path
                     d="M40 8 L42 12 L46 8 L48 12 L52 8 L54 12 L58 10 L62 14 L66 12 L68 16 L72 16 L72 20 L76 22 L74 26 L78 28 L76 32 L78 36 L74 38 L76 42 L72 44 L72 48 L68 48 L66 52 L62 50 L58 54 L54 52 L52 56 L48 54 L46 56 L42 52 L40 56 L38 52 L34 56 L32 52 L28 54 L26 50 L22 52 L20 48 L16 48 L16 44 L12 42 L14 38 L10 36 L12 32 L10 28 L14 26 L12 22 L16 20 L16 16 L20 16 L22 12 L26 14 L28 10 L32 12 L34 8 L38 12 L40 8 Z"
                     fill="url(#gearGradient)"
@@ -154,7 +150,6 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                     strokeWidth="1"
                 />
 
-                {/* Inner ring */}
                 <circle
                     cx="40"
                     cy="40"
@@ -164,7 +159,6 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                     strokeWidth="1"
                 />
 
-                {/* Center white circle */}
                 <circle
                     cx="40"
                     cy="40"
@@ -174,7 +168,6 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                     strokeWidth="2"
                 />
 
-                {/* Inner gray ring */}
                 <circle
                     cx="40"
                     cy="40"
@@ -187,7 +180,6 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
         </svg>
     );
 
-    // Popup 1 - Language Selection
     if (currentStep === 'language-selection') {
         return (
             <>
@@ -318,7 +310,6 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
         );
     }
 
-    // Popup 2 - Model Selection
     if (currentStep === 'model-selection') {
         return (
             <>
@@ -449,7 +440,6 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
         );
     }
 
-    // Loading Screen
     if (currentStep === 'loading') {
         return (
             <div style={{
@@ -536,17 +526,14 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                     }
                 `}</style>
 
-                {/* Main Container */}
                 <div style={{ textAlign: 'center', maxWidth: '600px', padding: '0 20px' }}>
 
-                    {/* Blockchain Visual */}
                     <div style={{ marginBottom: '40px' }}>
                         <svg width="300" height="100" viewBox="0 0 300 100" style={{ margin: '0 auto' }}>
-                            {/* Connecting Lines */}
+                            
                             <line x1="70" y1="50" x2="130" y2="50" stroke="#22c55e" strokeWidth="3" className="connecting-line" />
                             <line x1="170" y1="50" x2="230" y2="50" stroke="#22c55e" strokeWidth="3" className="connecting-line" style={{ animationDelay: '0.5s' }} />
 
-                            {/* Blockchain Blocks */}
                             <g className="blockchain-block">
                                 <rect x="20" y="25" width="50" height="50" fill="#1e293b" stroke="#22c55e" strokeWidth="2" rx="5" />
                                 <rect x="25" y="30" width="40" height="8" fill="#22c55e" opacity="0.7" rx="2" />
@@ -573,7 +560,6 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                         </svg>
                     </div>
 
-                    {/* Progress Steps */}
                     <div style={{ marginBottom: '30px' }}>
                         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px', marginBottom: '20px' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -590,13 +576,11 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                             </div>
                         </div>
 
-                        {/* Progress Bar */}
                         <div style={{ width: '100%', height: '4px', backgroundColor: '#1e293b', borderRadius: '2px', overflow: 'hidden' }}>
                             <div style={{ height: '100%', backgroundColor: '#22c55e', borderRadius: '2px' }} className="loading-progress"></div>
                         </div>
                     </div>
 
-                    {/* Code Preview Window */}
                     <div style={{
                         backgroundColor: '#1e1e1e',
                         borderRadius: '8px',
@@ -627,7 +611,6 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                         </div>
                     </div>
 
-                    {/* Main Message */}
                     <div style={{ marginBottom: '20px' }}>
                         <h2 style={{
                             fontSize: '28px',
@@ -652,7 +635,6 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                         </p>
                     </div>
 
-                    {/* Floating Particles */}
                     <div style={{ position: 'absolute', top: '20%', left: '10%', animation: 'pulse 3s infinite' }}>
                         <div style={{ width: '6px', height: '6px', backgroundColor: '#22c55e', borderRadius: '50%', opacity: 0.6 }}></div>
                     </div>
