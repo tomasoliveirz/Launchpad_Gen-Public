@@ -34,6 +34,8 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
     const [isFocused, setIsFocused] = useState(false);
     const [premintInput, setPremintInput] = useState(config.premint.toString());
     const [isPremintFocused, setIsPremintFocused] = useState(false);
+    const [totalSupplyInput, setTotalSupplyInput] = useState(config.totalSupply.toString());
+    const [taxFeeInput, setTaxFeeInput] = useState(config.taxFee.toString());
 
     useEffect(() => {
         if (!isPremintFocused) {
@@ -915,15 +917,40 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                             id="totalSupply"
                                             type="number"
                                             min="1"
-                                            placeholder="1000000"
-                                            value={config.totalSupply}
+                                            placeholder="1"
+                                            value={totalSupplyInput}
+                                            onFocus={() => setIsFocused(true)}
+                                            onBlur={(e) => {
+                                                setIsFocused(false);
+                                                let parsed = parseInt(e.target.value);
+                                                if (isNaN(parsed) || parsed < 1) parsed = 1;
+
+                                                updateConfig({ totalSupply: parsed });
+                                                setTotalSupplyInput(parsed.toString());
+                                            }}
                                             onChange={(e) => {
-                                                const value = parseInt(e.target.value) || 0;
-                                                updateConfig({ totalSupply: value });
+                                                const value = e.target.value;
+
+                                                if (value === '') {
+                                                    setTotalSupplyInput('');
+                                                    return;
+                                                }
+
+                                                const parsed = parseInt(value);
+
+                                                if (!isNaN(parsed) && parsed >= 1) {
+                                                    updateConfig({ totalSupply: parsed });
+                                                    setTotalSupplyInput(value);
+                                                } else if (!isNaN(parsed) && parsed < 1) {
+                                                    updateConfig({ totalSupply: 1 });
+                                                    setTotalSupplyInput('1');
+                                                }
+
                                                 clearError('totalSupply');
                                             }}
                                             className={`input-text-greish-green ${errors.totalSupply ? 'border-red-500' : ''}`}
                                         />
+
                                         <ErrorMessage error={errors.totalSupply} />
                                     </div>
 
@@ -1009,18 +1036,7 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                     </div>
                                 </label>
 
-                                <label className="checkbox-label">
-                                    <input
-                                        type="checkbox"
-                                        checked={config.isPausable}
-                                        onChange={(e) => updateConfig({ isPausable: e.target.checked })}
-                                        className="checkbox-input"
-                                    />
-                                    <div className="flex-1">
-                                        <div className="checkbox-text-main">Pausable</div>
-                                        <div className="checkbox-text-sub">Emergency stop functionality</div>
-                                    </div>
-                                </label>
+                                
                             </div>
 
                             <div className="bg-slate-800 rounded-lg p-6 mb-6 border border-slate-700">
@@ -1110,21 +1126,36 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                 <div className="space-y-4">
                                     <div>
                                         <label htmlFor="taxFee" className="block text-sm font-medium mb-2">
-                                            Tax Rate (%)
+                                            Tax Fee (%)
                                         </label>
                                         <input
                                             id="taxFee"
                                             type="number"
-                                            min="0"
+                                            min="0.1"
                                             max="100"
                                             step="0.1"
-                                            value={config.taxFee}
+                                            placeholder="0.1"  
+                                            value={taxFeeInput}
+                                            onFocus={() => setIsFocused(true)}
+                                            onBlur={(e) => {
+                                                setIsFocused(false);
+                                                let parsed = parseFloat(e.target.value.replace(',', '.'));
+                                                if (isNaN(parsed) || parsed < 0.1) parsed = 0.1;
+                                                if (parsed > 100) parsed = 100;
+
+                                                updateConfig({ taxFee: parsed });
+                                                setTaxFeeInput(parsed.toString());
+                                            }}
                                             onChange={(e) => {
-                                                updateConfig({ taxFee: parseInt(e.target.value) || 0 });
+                                                const value = e.target.value;
+
+                                                setTaxFeeInput(value);
+
                                                 clearError('taxFee');
                                             }}
                                             className={`input-text-greish-green ${errors.taxFee ? 'border-red-500' : ''}`}
                                         />
+
                                         <ErrorMessage error={errors.taxFee} />
                                     </div>
 
@@ -1149,7 +1180,7 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                                 Add Recipient
                                             </button>
                                         </div>
-
+                                    
                                         <div className="space-y-3">
                                             {config.taxRecipients.length === 0 ? (
                                                 <div className="text-center py-8 text-slate-400">
