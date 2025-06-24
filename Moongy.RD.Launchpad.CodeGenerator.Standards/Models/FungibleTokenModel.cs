@@ -12,7 +12,7 @@ public class FungibleTokenModel:BaseContractModel
     [ContextProperty(Name= "_decimals", Type =PrimitiveType.Uint8, Visibility =Visibility.Private, HasDefaultValue =true)]
     public byte Decimals { get; set; } = 18;
 
-    [ContextProperty(Name = "_max_supply", Type = PrimitiveType.Uint256, Visibility = Visibility.Private, HasDefaultValue = true)]
+    [ContextProperty(Name = "_max_supply", Type = PrimitiveType.Uint256, Visibility = Visibility.Private, HasDefaultValue = false)]
     public ulong MaxSupply { get; set; } = 0;
 
     public ulong Premint { get; set; } = 0;

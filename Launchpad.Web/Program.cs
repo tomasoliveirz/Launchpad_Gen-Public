@@ -80,7 +80,7 @@ public record GenerateRequest(
     bool HasBurning,
     bool IsPausable,
     bool HasTax,
-    double TaxFee,
+    int TaxFee,
     List<TaxRecipientRequest>? TaxRecipients,
     bool HasAccessControl,
     AccessControlType AccessControlType,

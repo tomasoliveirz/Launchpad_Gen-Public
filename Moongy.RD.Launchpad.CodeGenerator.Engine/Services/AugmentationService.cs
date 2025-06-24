@@ -18,7 +18,8 @@ public class AugmentationService : IAugmentationService
 
     public AugmentationService(
         TaxTokenomicAugmenter taxAugmenter, 
-        AccessControlExtensionAugmenter accessControlAugmenter, BurnableExtensionAugmenter burnableExtensionAugmenter,
+        AccessControlExtensionAugmenter accessControlAugmenter, 
+        BurnableExtensionAugmenter burnableExtensionAugmenter,
         MintExtensionAugmenter mintExtensionAugmenter)
     {
         _taxAugmenter = taxAugmenter;
@@ -31,16 +32,15 @@ public class AugmentationService : IAugmentationService
     {
         await Task.Run(() =>
         {
-            // apply tokenomics augmenters
-            foreach (var tokenomic in models.Tokenomics)
-            {
-                ApplyTokenomicAugmenter(context, tokenomic);
-            }
-
-            // apply extension augmenters  
             foreach (var extension in models.Extensions)
             {
                 ApplyExtensionAugmenter(context, extension);
+            }
+
+            //  apply tokenomics augmenters (which may depend on Access Control)
+            foreach (var tokenomic in models.Tokenomics)
+            {
+                ApplyTokenomicAugmenter(context, tokenomic);
             }
         });
     }
@@ -65,6 +65,7 @@ public class AugmentationService : IAugmentationService
             case AccessControlExtensionModel accessControl:
                 _accessControlAugmenter.Augment(context, accessControl);
                 break;
+                
             case BurnExtensionModel burn:
                 _burnableAugmenter.Augment(context, burn);
                 break;

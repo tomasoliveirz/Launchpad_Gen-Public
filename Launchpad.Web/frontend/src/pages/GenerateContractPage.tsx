@@ -1120,7 +1120,7 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                             step="0.1"
                                             value={config.taxFee}
                                             onChange={(e) => {
-                                                updateConfig({ taxFee: parseFloat(e.target.value) || 0 });
+                                                updateConfig({ taxFee: parseInt(e.target.value) || 0 });
                                                 clearError('taxFee');
                                             }}
                                             className={`input-text-greish-green ${errors.taxFee ? 'border-red-500' : ''}`}

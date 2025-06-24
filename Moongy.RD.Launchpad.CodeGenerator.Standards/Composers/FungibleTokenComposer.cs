@@ -157,7 +157,7 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
         if (mainModule == null) return;
 
         // Constructor - ONLY premint if specified 
-        mainModule.Functions.Add(ConstructorDefinition(standard.Premint));
+        mainModule.Functions.Add(ConstructorDefinition(standard.Premint, standard.MaxSupply));
         
         // View functions
         mainModule.Functions.Add(NameFunctionDefinition());
@@ -183,12 +183,12 @@ public class FungibleTokenComposer : BaseStandardComposer<FungibleTokenModel>, I
 
     #region Function Builders
 
-    private FunctionDefinition ConstructorDefinition(ulong premintValue)
+    private FunctionDefinition ConstructorDefinition(ulong premintValue, ulong maxSuppyValue)
     {
         var constructor = new ERC20Constructor();
         
         Console.WriteLine($"Creating constructor with premint value: {premintValue}");
-        return constructor.Build(premintValue);
+        return constructor.Build(premintValue, maxSuppyValue);
     }
 
     private FunctionDefinition _MintFunctionDefinition()

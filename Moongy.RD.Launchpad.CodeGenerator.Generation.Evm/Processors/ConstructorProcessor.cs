@@ -183,11 +183,11 @@ public class ConstructorProcessor() : BaseSolidityTemplateProcessor<SolidityCont
 
         foreach (var kvp in immutableAssignments)
         {
-            if (kvp.Value == 0)
+            /*if (kvp.Value == 0)
             {
                 throw new ArgumentException($"Immutable state variable '{kvp.Key}' must be assigned in the constructor.");
             }
-            else if (kvp.Value > 1)
+            else */if (kvp.Value > 1)
             {
                 throw new ArgumentException($"Immutable state variable '{kvp.Key}' is assigned multiple times.");
             }

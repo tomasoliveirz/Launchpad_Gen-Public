@@ -14,7 +14,7 @@
 
         #region Binary Operations
         public ExpressionDefinition? Left { get; set; }
-        public BinaryOperator? Operator { get; set; }
+        public BinaryOperator Operator { get; set; }
         public ExpressionDefinition? Right { get; set; }
         #endregion
 

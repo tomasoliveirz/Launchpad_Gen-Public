@@ -48,14 +48,14 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers
                 return "_owner = msg.sender;";
             }
 
-            if (IsSimpleFieldAssignment(assignment))
+            if (assignment.Left?.Kind == ExpressionKind.Identifier)
             {
-                var leftSide = GenerateExpression(assignment.Left!);
+                var leftSide = assignment.Left.Identifier ?? "";
                 var rightSide = GenerateExpression(assignment.Right!);
                 return $"{leftSide} = {rightSide};";
             }
 
-            return $"// TODO: Handle assignment {assignment.Left?.Identifier} = {assignment.Right?.Identifier};";
+            return $"// TODO: Handle complex assignment";
         }
 
         private static string GenerateFunctionCallStatement(ExpressionDefinition functionCall)
@@ -83,6 +83,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers
                 return false;
 
             var isConstructorParam = constructorParameters?.Any(p => p.Name == rightParam) == true;
+            
             var followsPattern = IsParameterToFieldPattern(rightParam, leftField);
 
             return isConstructorParam && followsPattern;
@@ -112,12 +113,6 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers
                    assignment.Right?.Kind == ExpressionKind.MemberAccess &&
                    assignment.Right?.Target?.Identifier == "msg" &&
                    assignment.Right?.MemberName == "sender";
-        }
-
-        private static bool IsSimpleFieldAssignment(AssignmentDefinition assignment)
-        {
-            return assignment.Left?.Kind == ExpressionKind.Identifier &&
-                   assignment.Right?.Kind == ExpressionKind.Identifier;
         }
 
         private static string GenerateMintCall(ExpressionDefinition functionCall)
@@ -156,7 +151,9 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers
                 ExpressionKind.Identifier => expr.Identifier ?? "",
                 ExpressionKind.Literal => FormatLiteral(expr.LiteralValue),
                 ExpressionKind.Binary => GenerateBinaryExpression(expr),
-                ExpressionKind.MemberAccess when expr.Target?.Identifier == "msg" && expr.MemberName == "sender" => "msg.sender",
+                ExpressionKind.MemberAccess => GenerateMemberAccess(expr),
+                ExpressionKind.FunctionCall => GenerateFunctionCallExpression(expr),
+                ExpressionKind.IndexAccess => GenerateIndexAccess(expr),
                 _ => expr.ToString() ?? ""
             };
         }
@@ -174,10 +171,55 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers
                 BinaryOperator.Add => "+",
                 BinaryOperator.Subtract => "-",
                 BinaryOperator.Power => "**",
+                BinaryOperator.Equal => "==",
+                BinaryOperator.NotEqual => "!=",
+                BinaryOperator.LessThan => "<",
+                BinaryOperator.LessOrEqualThan => "<=",
+                BinaryOperator.GreaterThan => ">",
+                BinaryOperator.GreaterOrEqualThan => ">=",
+                BinaryOperator.And => "&&",
+                BinaryOperator.Or => "||",
                 _ => ""
             };
 
-            return $"({left} {op} {right})";
+            if (IsArithmeticOperator(expr.Operator))
+            {
+                return $"({left} {op} {right})";
+            }
+
+            return $"{left} {op} {right}";
+        }
+
+        private static bool IsArithmeticOperator(BinaryOperator op)
+        {
+            return op is BinaryOperator.Multiply or BinaryOperator.Divide or 
+                   BinaryOperator.Add or BinaryOperator.Subtract or BinaryOperator.Power;
+        }
+
+        private static string GenerateMemberAccess(ExpressionDefinition expr)
+        {
+            if (expr.Target?.Identifier == "msg" && expr.MemberName == "sender")
+                return "msg.sender";
+            
+            if (expr.Target?.Identifier == "type" && expr.MemberName == "max")
+                return "type(uint256).max";
+
+            var target = GenerateExpression(expr.Target!);
+            return $"{target}.{expr.MemberName}";
+        }
+
+        private static string GenerateFunctionCallExpression(ExpressionDefinition expr)
+        {
+            var functionName = expr.Callee?.Identifier ?? "";
+            var args = expr.Arguments?.Select(GenerateExpression) ?? Enumerable.Empty<string>();
+            return $"{functionName}({string.Join(", ", args)})";
+        }
+
+        private static string GenerateIndexAccess(ExpressionDefinition expr)
+        {
+            var target = GenerateExpression(expr.Target!);
+            var index = GenerateExpression(expr.Index!);
+            return $"{target}[{index}]";
         }
 
         private static string FormatLiteral(string? literal)
@@ -199,6 +241,17 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers
                 return literal;
             }
             
+            if (literal.Equals("true", StringComparison.OrdinalIgnoreCase) || 
+                literal.Equals("false", StringComparison.OrdinalIgnoreCase))
+            {
+                return literal.ToLower();
+            }
+
+            if (literal.Equals("address(0)", StringComparison.OrdinalIgnoreCase))
+            {
+                return "address(0)";
+            }
+
             return $"\"{literal}\"";
         }
     }

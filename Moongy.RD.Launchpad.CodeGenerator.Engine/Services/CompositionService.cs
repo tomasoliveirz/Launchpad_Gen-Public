@@ -1,9 +1,10 @@
 using Moongy.RD.Launchpad.CodeGenerator.Core.Metamodels;
 using Moongy.RD.Launchpad.CodeGenerator.Engine.Models;
+using Moongy.RD.Launchpad.CodeGenerator.Engine.Services;
 using Moongy.RD.Launchpad.CodeGenerator.Standards.Composers;
 using Moongy.RD.Launchpad.CodeGenerator.Standards.Models;
 
-namespace Moongy.RD.Launchpad.CodeGenerator.Engine.Services
+namespace Engine.Services
 {
     public class CompositionService : ICompositionService
     {
@@ -31,5 +32,4 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Engine.Services
             });
         }
     }
-
 }

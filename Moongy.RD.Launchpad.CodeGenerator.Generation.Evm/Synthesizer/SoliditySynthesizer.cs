@@ -54,7 +54,8 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
             { "mint", (SolidityFunctionMutabilityEnum.None, true) },
             { "burn", (SolidityFunctionMutabilityEnum.None, true) },
             {"_mint", (SolidityFunctionMutabilityEnum.None, false) },
-            {"_burn", (SolidityFunctionMutabilityEnum.None, false) }
+            {"_burn", (SolidityFunctionMutabilityEnum.None, false) },
+            {"burnFrom", (SolidityFunctionMutabilityEnum.None, true) }
         };
 
         private readonly Dictionary<string, (SolidityFunctionMutabilityEnum State, bool Virtual)> _functionOverloadConfig = new()
@@ -672,7 +673,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
                     Name = fieldDefinition.Name,
                     Type = ContextTypeReferenceSyntaxHelper.MapToSolidityTypeReference(fieldDefinition.Type),
                     Visibility = ContextTypeReferenceSyntaxHelper.MapToSolidityVisibility(fieldDefinition.Visibility),
-                    IsImmutable = fieldDefinition.IsImmutable,
+                    IsImmutable = GetMutability(fieldDefinition),
                     InitialValue = fieldDefinition.Value,
                     IsConstant = GenerateConstant(fieldDefinition),
                 };
@@ -680,17 +681,28 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
             }
             return result;
         }
-        
+
+        private bool GetMutability(FieldDefinition fieldDefinition)
+        {
+            // if max_supply retorna true
+            if (fieldDefinition.Name == "_max_supply")
+                return true;
+            return false;
+        }
+
         private bool GenerateConstant(FieldDefinition typeReference)
         {
 
-            if (typeReference.Name == "totalSupply" || typeReference.Name == "_totalSupply" ||
-                typeReference.Name == "allowances" || typeReference.Name == "_allowances" ||
-                typeReference.Name == "name" || typeReference.Name == "_name" ||
-                typeReference.Name == "symbol" || typeReference.Name == "_symbol" ||
-                typeReference.Name == "owner" || typeReference.Name == "_owner" ||
-                typeReference.Name == "balances" || typeReference.Name == "_balances" ||
-                typeReference.Type.Kind == TypeReferenceKind.Mapping)
+            if (typeReference.Name == "_totalSupply" ||
+                typeReference.Name == "_allowances" ||
+                typeReference.Name == "_name" ||
+                typeReference.Name == "_symbol" ||
+                typeReference.Name == "_owner" ||
+                typeReference.Name == "_balances" ||
+                typeReference.Name == "_max_supply" ||
+                typeReference.Name == "taxFee" ||
+                typeReference.Type.Kind == TypeReferenceKind.Mapping ||
+                typeReference.Type.Kind == TypeReferenceKind.Array )
             {
                 return false;
             }

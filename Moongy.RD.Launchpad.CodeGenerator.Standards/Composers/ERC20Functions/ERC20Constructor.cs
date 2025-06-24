@@ -6,7 +6,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
 {
     public class ERC20Constructor
     {
-        public FunctionDefinition Build(ulong premintValue)
+        public FunctionDefinition Build(ulong premintValue, ulong maxSupplyValue)
         {
             var nameParam = new ParameterDefinition { Name = "name_", Type = DataTypeReference.String };
             var symbolParam = new ParameterDefinition { Name = "symbol_", Type = DataTypeReference.String };
@@ -35,7 +35,33 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
                 }
             };
             body.Add(symbolAssignment);
-
+            
+            if (maxSupplyValue > 0)
+            {
+                var maxSupplyAssignment = new FunctionStatementDefinition
+                {
+                    Kind = FunctionStatementKind.Assignment,
+                    ParameterAssignment = new AssignmentDefinition
+                    {
+                        Left = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "_max_supply" },
+                        Right = new ExpressionDefinition
+                        {
+                            Kind = ExpressionKind.Binary,
+                            Operator = BinaryOperator.Multiply,
+                            Left = new ExpressionDefinition { Kind = ExpressionKind.Literal, LiteralValue = maxSupplyValue.ToString() },
+                            Right = new ExpressionDefinition
+                            {
+                                Kind = ExpressionKind.Binary,
+                                Left = new ExpressionDefinition { Kind = ExpressionKind.Literal, LiteralValue = "10" },
+                                Operator = BinaryOperator.Power,
+                                Right = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "_decimals" }
+                            }
+                        }
+                    }
+                };
+                body.Add(maxSupplyAssignment);
+            }
+            
             if (premintValue > 0)
             {
                 var premintCall = new FunctionStatementDefinition

@@ -13,7 +13,7 @@ namespace Moongy.RD.Launchpad.Data.Forms.Tokenomics
     public class TaxTokenomic
     {
         [TokenomicProperty(Name = nameof(TaxTokenomicModel.TaxFee), Source = TokenomicEnum.Tax)]
-        public double TaxFee { get; set; }
+        public int TaxFee { get; set; }
         public List<TaxRecipient> Recipients { get; set; } = [];
     }
 

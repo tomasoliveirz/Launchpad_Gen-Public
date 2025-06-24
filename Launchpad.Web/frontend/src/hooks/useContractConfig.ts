@@ -11,9 +11,9 @@ const initialConfig: ContractConfig = {
     hasBurning: false,
     isPausable: false,
     hasTax: false,
-    taxFee: 2.5,
+    taxFee: 2,
     taxRecipients: [],
-    hasAccessControl: true,
+    hasAccessControl: false,
     accessControlType: 0 as AccessControlType, // Ownable
     roles: []
 };
