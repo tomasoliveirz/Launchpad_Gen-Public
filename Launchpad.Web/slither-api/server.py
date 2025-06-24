@@ -4,17 +4,9 @@ import os
 import tempfile
 import json
 import logging
-from solcx import install_solc, set_solc_version
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-try:
-    install_solc('0.8.19')
-    set_solc_version('0.8.19')
-    logger.info("Solidity compiler installed successfully")
-except Exception as e:
-    logger.error(f"Failed to install Solidity compiler: {e}")
 
 app = Flask(__name__)
 
@@ -24,23 +16,23 @@ def analyze():
         data = request.get_json()
         if not data:
             return jsonify({"error": "No JSON data provided"}), 400
-            
+
         code = data.get("sourceCode")
         logger.info(f"Received source code: {len(code) if code else 0} characters")
-        
+
         if not code:
             return jsonify({"error": "No source code provided"}), 400
 
         with tempfile.TemporaryDirectory() as tmpdir:
             file_path = os.path.join(tmpdir, "Contract.sol")
-            
+
             with open(file_path, "w") as f:
                 f.write(code)
-            
+
             logger.info(f"Written source code to: {file_path}")
 
+            output_file = os.path.join(tmpdir, "output.json")
             try:
-                output_file = os.path.join(tmpdir, "output.json")
                 result = subprocess.run(
                     ["slither", file_path, "--json", output_file],
                     cwd=tmpdir,
@@ -48,56 +40,65 @@ def analyze():
                     text=True,
                     timeout=30
                 )
-                
                 logger.info(f"Slither exit code: {result.returncode}")
-                
+
                 if os.path.exists(output_file):
                     with open(output_file, "r") as f:
                         output_content = f.read()
-                    
-                    # Validate JSON
                     try:
                         json.loads(output_content)
                         return output_content, 200, {"Content-Type": "application/json"}
                     except json.JSONDecodeError as e:
-                        logger.error(f"Invalid JSON output: {e}")
+                        logger.error(f"Invalid JSON output from Slither: {e}")
                         return jsonify({"error": "Slither produced invalid JSON output"}), 500
+
+                complete_output = {
+                    "success": False,
+                    "exit_code": result.returncode,
+                    "stdout": result.stdout.strip(),
+                    "stderr": result.stderr.strip(),
+                    "error": (result.stdout + result.stderr).strip()
+                }
                 
-                #  no output file, check for errors
-                error_msg = result.stderr.strip() if result.stderr else result.stdout.strip()
-                logger.error(f"Slither error: {error_msg}")
+                error_msg = result.stderr.strip() or result.stdout.strip()
+                if error_msg:
+                    complete_output["error_summary"] = error_msg
                 
-                # Try to extract meaningful error message
-                if "Error:" in error_msg:
-                    error_lines = [line for line in error_msg.split('\n') if 'Error:' in line]
-                    if error_lines:
-                        return jsonify({"error": error_lines[-1]}), 400
+                logger.error(f"Slither failed with exit code {result.returncode}")
+                logger.error(f"STDOUT: {result.stdout}")
+                logger.error(f"STDERR: {result.stderr}")
                 
-                return jsonify({
-                    "error": error_msg or "Slither analysis failed without output",
-                    "stdout": result.stdout,
-                    "stderr": result.stderr
-                }), 400
+                return jsonify(complete_output), 400
 
             except subprocess.TimeoutExpired:
                 logger.error("Slither analysis timed out")
-                return jsonify({"error": "Slither analysis timed out"}), 500
-            
+                return jsonify({
+                    "success": False,
+                    "error": "Slither analysis timed out",
+                    "timeout": True
+                }), 500
+
             except FileNotFoundError:
                 logger.error("Slither command not found")
-                return jsonify({"error": "Slither is not installed or not in PATH"}), 500
+                return jsonify({
+                    "success": False,
+                    "error": "Slither is not installed or not in PATH",
+                    "installation_error": True
+                }), 500
 
     except Exception as e:
-        logger.error(f"Unexpected error: {e}")
-        return jsonify({"error": f"Internal server error: {str(e)}"}), 500
+        logger.error(f"Unexpected server error: {e}")
+        return jsonify({
+            "success": False,
+            "error": f"Internal server error: {str(e)}",
+            "server_error": True
+        }), 500
 
 @app.route("/api/health", methods=["GET"])
 def health_check():
-    """Health check endpoint"""
     try:
         result = subprocess.run(["slither", "--version"], capture_output=True, text=True, timeout=5)
         slither_version = result.stdout.strip() if result.returncode == 0 else "Not available"
-        
         return jsonify({
             "status": "healthy",
             "slither_version": slither_version,
