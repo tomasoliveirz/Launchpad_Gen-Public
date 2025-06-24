@@ -28,7 +28,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Forms
         [TokenomicProperty(
             Name = nameof(TaxTokenomicModel.TaxFee),
             Source = TokenomicEnum.Tax)]
-        public double TaxFee { get; set; }
+        public int TaxFee { get; set; }
 
         [TokenomicProperty(
             Name = nameof(TaxTokenomicModel.TaxRecipients),

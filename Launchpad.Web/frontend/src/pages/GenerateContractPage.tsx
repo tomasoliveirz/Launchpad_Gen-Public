@@ -1090,7 +1090,7 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                         onFocus={() => setIsFocused(true)}
                                         onBlur={(e) => {
                                             setIsFocused(false);
-                                            let parsed = parseFloat(e.target.value.replace(',', '.'));
+                                            let parsed = parseInt(e.target.value);
                                             if (isNaN(parsed) || parsed < 0.1) parsed = 0.1;
                                             if (parsed > 100) parsed = 100;
 

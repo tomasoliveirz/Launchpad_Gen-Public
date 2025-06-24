@@ -76,7 +76,7 @@ public record GenerateRequest(
     bool HasBurning,
     bool IsPausable,
     bool HasTax,
-    double TaxFee,
+    int TaxFee,
     bool HasAccessControl,
     AccessControlType AccessControlType,
     List<string>? Roles
