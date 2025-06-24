@@ -142,6 +142,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Tokenomics.Augmenters.Tax.Functions
         {
             var body = new List<FunctionStatementDefinition>();
 
+            // Send tax to owner
             var taxUpdateCall = new FunctionStatementDefinition
             {
                 Kind = FunctionStatementKind.Expression,

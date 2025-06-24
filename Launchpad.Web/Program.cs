@@ -34,17 +34,12 @@ app.MapPost("/api/generate", async (GenerateRequest request, ICodeGenerationEngi
             IsPausable = request.IsPausable
         };
 
-        // add tax if enabled
         if (request.HasTax)
         {
             form.Tax = new TaxTokenomic
             {
                 TaxFee = request.TaxFee,
-                Recipients = request.TaxRecipients?.Select(r => new TaxRecipient 
-                { 
-                    Address = r.Address, 
-                    Share = (int)r.Share 
-                }).ToList() ?? new List<TaxRecipient>()
+                Recipients = new List<TaxRecipient>() 
             };
         }
 
@@ -70,7 +65,6 @@ app.MapPost("/api/generate", async (GenerateRequest request, ICodeGenerationEngi
 
 app.Run();
 
-
 // request models
 public record GenerateRequest(
     string Name,
@@ -82,11 +76,8 @@ public record GenerateRequest(
     bool HasBurning,
     bool IsPausable,
     bool HasTax,
-    int TaxFee,
-    List<TaxRecipientRequest>? TaxRecipients,
+    double TaxFee,
     bool HasAccessControl,
     AccessControlType AccessControlType,
     List<string>? Roles
 );
-
-public record TaxRecipientRequest(string Address, double Share);

@@ -1,13 +1,6 @@
-﻿import type { ContractConfig, GenerateRequest, ApiResponse, ApiTaxRecipient } from '../types';
+﻿import type { ContractConfig, GenerateRequest, ApiResponse } from '../types';
 
 const mapConfigToRequest = (config: ContractConfig): GenerateRequest => {
-    const taxRecipients: ApiTaxRecipient[] = config.hasTax
-        ? config.taxRecipients.map(r => ({
-            address: r.address,
-            share: r.share
-        }))
-        : [];
-
     return {
         name: config.name,
         symbol: config.symbol,
@@ -19,7 +12,6 @@ const mapConfigToRequest = (config: ContractConfig): GenerateRequest => {
         isPausable: config.isPausable,
         hasTax: config.hasTax,
         taxFee: config.taxFee,
-        taxRecipients: taxRecipients.length > 0 ? taxRecipients : undefined,
         hasAccessControl: config.hasAccessControl,
         accessControlType: config.accessControlType,
         roles: config.roles

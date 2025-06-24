@@ -9,26 +9,14 @@
     isPausable: boolean;
     hasTax: boolean;
     taxFee: number;
-    taxRecipients: TaxRecipient[];
     hasAccessControl: boolean;
     accessControlType: AccessControlType;
     roles?: string[];
 }
 
-export interface TaxRecipient {
-    id: number;
-    address: string;
-    share: number;
-}
-
 export enum AccessControlType {
     Ownable = 0,
     RoleBased = 1
-}
-
-export interface ApiTaxRecipient {
-    address: string;
-    share: number;
 }
 
 export interface GenerateRequest {
@@ -42,7 +30,6 @@ export interface GenerateRequest {
     isPausable: boolean;
     hasTax: boolean;
     taxFee: number;
-    taxRecipients?: ApiTaxRecipient[];
     hasAccessControl: boolean;
     accessControlType: AccessControlType;
     roles?: string[];

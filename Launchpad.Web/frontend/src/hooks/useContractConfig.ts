@@ -1,5 +1,5 @@
 ﻿import { useState } from 'react';
-import type { ContractConfig, TaxRecipient, AccessControlType } from '../types';
+import type { ContractConfig, AccessControlType } from '../types';
 
 const initialConfig: ContractConfig = {
     name: 'MyToken',
@@ -12,54 +12,20 @@ const initialConfig: ContractConfig = {
     isPausable: false,
     hasTax: false,
     taxFee: 2,
-    taxRecipients: [],
     hasAccessControl: false,
-    accessControlType: 0 as AccessControlType, // Ownable
+    accessControlType: 0 as AccessControlType,
     roles: []
 };
 
 export const useContractConfig = () => {
     const [config, setConfig] = useState<ContractConfig>(initialConfig);
-    const [nextRecipientId, setNextRecipientId] = useState(1);
 
     const updateConfig = (updates: Partial<ContractConfig>) => {
         setConfig(prev => ({ ...prev, ...updates }));
     };
 
-    const addTaxRecipient = () => {
-        const newRecipient: TaxRecipient = {
-            id: nextRecipientId,
-            address: '',
-            share: 0
-        };
-        setConfig(prev => ({
-            ...prev,
-            taxRecipients: [...prev.taxRecipients, newRecipient]
-        }));
-        setNextRecipientId(prev => prev + 1);
-    };
-
-    const removeTaxRecipient = (id: number) => {
-        setConfig(prev => ({
-            ...prev,
-            taxRecipients: prev.taxRecipients.filter(r => r.id !== id)
-        }));
-    };
-
-    const updateTaxRecipient = (id: number, field: 'address' | 'share', value: string | number) => {
-        setConfig(prev => ({
-            ...prev,
-            taxRecipients: prev.taxRecipients.map(r =>
-                r.id === id ? { ...r, [field]: value } : r
-            )
-        }));
-    };
-
     return {
         config,
-        updateConfig,
-        addTaxRecipient,
-        removeTaxRecipient,
-        updateTaxRecipient
+        updateConfig
     };
 };

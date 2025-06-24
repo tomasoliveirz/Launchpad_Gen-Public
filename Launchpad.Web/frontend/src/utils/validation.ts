@@ -35,26 +35,6 @@ export const validateContractConfig = (config: ContractConfig): ValidationErrors
         if (config.taxFee < 0 || config.taxFee > 100) {
             errors.taxFee = 'Tax rate must be between 0% and 100%';
         }
-
-        const totalShares = config.taxRecipients.reduce((sum: number, r: any) => sum + r.share, 0);
-
-        if (config.taxRecipients.length === 0) {
-            errors.taxRecipients = 'At least one tax recipient is required when tax is enabled';
-        } else if (totalShares > 100) {
-            errors.taxRecipients = 'Total tax recipient shares cannot exceed 100%';
-        }
-
-        config.taxRecipients.forEach((recipient: any, index: number) => {
-            if (!recipient.address.trim()) {
-                errors[`taxRecipient${index}Address`] = 'Address is required';
-            } else if (!isValidEthereumAddress(recipient.address)) {
-                errors[`taxRecipient${index}Address`] = 'Invalid Ethereum address';
-            }
-
-            if (recipient.share <= 0) {
-                errors[`taxRecipient${index}Share`] = 'Share must be greater than 0%';
-            }
-        });
     }
 
     return errors;

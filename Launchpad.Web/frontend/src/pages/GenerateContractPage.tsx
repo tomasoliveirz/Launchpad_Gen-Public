@@ -1,5 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react';
-import { Code, Copy, Download, Check, Plus, Trash2, ChevronDown } from 'lucide-react';
+import { Code, Copy, Download, Check, ChevronDown } from 'lucide-react';
 import type { NavigationProps } from '../types';
 import { useContractConfig } from '../hooks/useContractConfig';
 import { validateContractConfig, ValidationErrors } from '../utils/validation';
@@ -17,13 +17,7 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
     const [step1Complete, setStep1Complete] = useState(false);
     const [step2Complete, setStep2Complete] = useState(false);
 
-    const {
-        config,
-        updateConfig,
-        addTaxRecipient,
-        removeTaxRecipient,
-        updateTaxRecipient
-    } = useContractConfig();
+    const { config, updateConfig } = useContractConfig();
 
     const [isGenerating, setIsGenerating] = useState(false);
     const [generatedCode, setGeneratedCode] = useState('');
@@ -532,7 +526,7 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
 
                     <div style={{ marginBottom: '40px' }}>
                         <svg width="300" height="100" viewBox="0 0 300 100" style={{ margin: '0 auto' }}>
-                            
+
                             <line x1="70" y1="50" x2="130" y2="50" stroke="#22c55e" strokeWidth="3" className="connecting-line" />
                             <line x1="170" y1="50" x2="230" y2="50" stroke="#22c55e" strokeWidth="3" className="connecting-line" style={{ animationDelay: '0.5s' }} />
 
@@ -720,16 +714,6 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
             showToast('Failed to download contract');
         }
     };
-
-    const handleTaxToggle = (enabled: boolean) => {
-        updateConfig({ hasTax: enabled });
-        if (enabled && config.taxRecipients.length === 0) {
-            addTaxRecipient();
-        }
-        clearError('taxRecipients');
-    };
-
-    const totalShares = config.taxRecipients.reduce((sum: number, r: any) => sum + r.share, 0);
 
     const ErrorMessage: React.FC<{ error?: string }> = ({ error }) => {
         if (!error) return null;
@@ -1035,74 +1019,42 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                         <div className="checkbox-text-sub">Allow burning tokens</div>
                                     </div>
                                 </label>
-
-                                
                             </div>
+                        </div>
 
-                            <div className="bg-slate-800 rounded-lg p-6 mb-6 border border-slate-700">
-                                <h2 className="section-heading-darker-green">Access Control</h2>
+                        <div className="bg-slate-800 rounded-lg p-6 mb-6 border border-slate-700">
+                            <h2 className="section-heading-darker-green">Access Control</h2>
 
-                                <label
-                                    className={`flex items-center gap-3 p-3 bg-slate-700/50 rounded border border-slate-600 hover:bg-slate-700 transition-colors cursor-pointer mb-4 ${config.hasMinting ? 'opacity-50 cursor-not-allowed' : ''
-                                        }`}
-                                >
-                                    <input
-                                        type="checkbox"
-                                        checked={config.hasAccessControl}
-                                        onChange={(e) => {
-                                            if (config.hasMinting) return;
-                                            updateConfig({ hasAccessControl: e.target.checked });
-                                        }}
-                                        className="checkbox-input"
-                                        disabled={config.hasMinting}
-                                    />
-                                    <span className="font-medium">Enable Access Control</span>
-                                </label>
+                            <label
+                                className={`flex items-center gap-3 p-3 bg-slate-700/50 rounded border border-slate-600 hover:bg-slate-700 transition-colors cursor-pointer mb-4 ${config.hasMinting ? 'opacity-50 cursor-not-allowed' : ''
+                                }`}
+                            >
+                                <input
+                                    type="checkbox"
+                                    checked={config.hasAccessControl}
+                                    onChange={(e) => {
+                                        if (config.hasMinting) return;
+                                        updateConfig({ hasAccessControl: e.target.checked });
+                                    }}
+                                    className="checkbox-input"
+                                    disabled={config.hasMinting}
+                                />
+                                <span className="font-medium">Enable Access Control</span>
+                            </label>
 
-                                {config.hasAccessControl && (
-                                    <div className="bg-slate-700/30 rounded p-4 border border-slate-600">
-                                        <label htmlFor="accessControlType" className="block text-sm font-medium mb-2 text-gray-300">
-                                            Control Type
-                                        </label>
-                                        <select
-                                            id="accessControlType"
-                                            value={config.accessControlType}
-                                            onChange={(e) => updateConfig({ accessControlType: parseInt(e.target.value) })}
-                                            className="input-text-greish-no-focus"
-                                        >
-                                            <option value={0}>Ownable (Single Owner)</option>
-                                        </select>
-                                    </div>
-                                )}
-                            </div>
-
-                            {showDownloadSuccess && (
-                                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                                    <div className="bg-slate-800 rounded-lg p-8 text-center border border-slate-700 max-w-md animate-success-popup">
-                                        <div className="mb-6 relative">
-                                            <svg width="200" height="140" viewBox="0 0 200 140" className="mx-auto">
-                                                <path d="M30 60 L30 110 Q30 115 35 115 L165 115 Q170 115 170 110 L170 60 Z" fill="#fbbf24" stroke="#f59e0b" strokeWidth="1" />
-                                                <path d="M30 60 L70 60 Q75 60 75 55 L75 50 Q75 45 80 45 L120 45 Q125 45 125 50 L125 55 Q125 60 130 60 L170 60" fill="#f59e0b" stroke="#d97706" strokeWidth="1" />
-                                                <path d="M30 60 L170 60 L170 65 Q170 70 165 70 L35 70 Q30 70 30 65 Z" fill="#f59e0b" className="animate-folder-close" style={{ transformOrigin: "100px 60px" }}></path>
-                                                <g className="animate-paper-folder">
-                                                    <rect x="60" y="20" width="80" height="100" fill="#f8fafc" rx="2" stroke="#e2e8f0" strokeWidth="1" />
-                                                    <line x1="70" y1="35" x2="130" y2="35" stroke="#3b82f6" strokeWidth="1" />
-                                                    <line x1="70" y1="45" x2="130" y2="45" stroke="#3b82f6" strokeWidth="1" />
-                                                    <line x1="70" y1="55" x2="120" y2="55" stroke="#3b82f6" strokeWidth="1" />
-                                                    <line x1="70" y1="65" x2="125" y2="65" stroke="#3b82f6" strokeWidth="1" />
-                                                </g>
-                                            </svg>
-                                        </div>
-                                        <div className="mb-4">
-                                            <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-3">
-                                                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                                                </svg>
-                                            </div>
-                                            <p className="text-white text-lg font-medium">Congratulations!</p>
-                                            <p className="text-slate-300 text-sm mt-1">Your contract was downloaded successfully!</p>
-                                        </div>
-                                    </div>
+                            {config.hasAccessControl && (
+                                <div className="bg-slate-700/30 rounded p-4 border border-slate-600">
+                                    <label htmlFor="accessControlType" className="block text-sm font-medium mb-2 text-gray-300">
+                                        Control Type
+                                    </label>
+                                    <select
+                                        id="accessControlType"
+                                        value={config.accessControlType}
+                                        onChange={(e) => updateConfig({ accessControlType: parseInt(e.target.value) })}
+                                        className="input-text-greish-no-focus"
+                                    >
+                                        <option value={0}>Ownable (Single Owner)</option>
+                                    </select>
                                 </div>
                             )}
                         </div>
@@ -1116,139 +1068,79 @@ const GenerateContractPage: React.FC<NavigationProps> = ({ onNavigate }) => {
                                 <input
                                     type="checkbox"
                                     checked={config.hasTax}
-                                    onChange={(e) => handleTaxToggle(e.target.checked)}
+                                    onChange={(e) => updateConfig({ hasTax: e.target.checked })}
                                     className="checkbox-input"
                                 />
                                 <span className="font-medium">Enable Transaction Tax</span>
                             </label>
 
                             {config.hasTax && (
-                                <div className="space-y-4">
-                                    <div>
-                                        <label htmlFor="taxFee" className="block text-sm font-medium mb-2">
-                                            Tax Fee (%)
-                                        </label>
-                                        <input
-                                            id="taxFee"
-                                            type="number"
-                                            min="0.1"
-                                            max="100"
-                                            step="0.1"
-                                            placeholder="0.1"  
-                                            value={taxFeeInput}
-                                            onFocus={() => setIsFocused(true)}
-                                            onBlur={(e) => {
-                                                setIsFocused(false);
-                                                let parsed = parseFloat(e.target.value.replace(',', '.'));
-                                                if (isNaN(parsed) || parsed < 0.1) parsed = 0.1;
-                                                if (parsed > 100) parsed = 100;
+                                <div>
+                                    <label htmlFor="taxFee" className="block text-sm font-medium mb-2">
+                                        Tax Fee (%)
+                                    </label>
+                                    <input
+                                        id="taxFee"
+                                        type="number"
+                                        min="0.1"
+                                        max="100"
+                                        step="0.1"
+                                        placeholder="0.1"
+                                        value={taxFeeInput}
+                                        onFocus={() => setIsFocused(true)}
+                                        onBlur={(e) => {
+                                            setIsFocused(false);
+                                            let parsed = parseFloat(e.target.value.replace(',', '.'));
+                                            if (isNaN(parsed) || parsed < 0.1) parsed = 0.1;
+                                            if (parsed > 100) parsed = 100;
 
-                                                updateConfig({ taxFee: parsed });
-                                                setTaxFeeInput(parsed.toString());
-                                            }}
-                                            onChange={(e) => {
-                                                const value = e.target.value;
-
-                                                setTaxFeeInput(value);
-
-                                                clearError('taxFee');
-                                            }}
-                                            className={`input-text-greish-green ${errors.taxFee ? 'border-red-500' : ''}`}
-                                        />
-
-                                        <ErrorMessage error={errors.taxFee} />
-                                    </div>
-
-                                    <div>
-                                        <div className="flex justify-between items-center mb-3">
-                                            <div>
-                                                <h3 className="font-medium">Tax Recipients</h3>
-                                                <p className="text-sm text-slate-400">
-                                                    Total allocated: {totalShares.toFixed(2)}%
-                                                    {totalShares > 100 && (
-                                                        <span className="text-red-400 ml-2">⚠ Exceeds 100%</span>
-                                                    )}
-                                                </p>
-                                                <ErrorMessage error={errors.taxRecipients} />
-                                            </div>
-                                            <button
-                                                type="button"
-                                                onClick={addTaxRecipient}
-                                                className="flex items-center gap-2 px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded text-sm transition-colors"
-                                            >
-                                                <Plus className="w-4 h-4" />
-                                                Add Recipient
-                                            </button>
-                                        </div>
-                                    
-                                        <div className="space-y-3">
-                                            {config.taxRecipients.length === 0 ? (
-                                                <div className="text-center py-8 text-slate-400">
-                                                    <p>No tax recipients configured</p>
-                                                    <p className="text-sm">Click "Add Recipient" to start</p>
-                                                </div>
-                                            ) : (
-                                                config.taxRecipients.map((recipient, index) => (
-                                                    <div
-                                                        key={recipient.id}
-                                                        className="grid grid-cols-1 md:grid-cols-3 gap-3 p-3 bg-slate-700/50 rounded border border-slate-600"
-                                                    >
-                                                        <div className="md:col-span-2">
-                                                            <label className="block text-sm font-medium mb-1">
-                                                                Recipient Address
-                                                            </label>
-                                                            <input
-                                                                type="text"
-                                                                value={recipient.address}
-                                                                onChange={(e) => {
-                                                                    updateTaxRecipient(recipient.id, 'address', e.target.value);
-                                                                    clearError(`taxRecipient${index}Address`);
-                                                                }}
-                                                                placeholder="0x..."
-                                                                className={`input-text-greish-green ${errors[`taxRecipient${index}Address`] ? 'border-red-500' : ''}`}
-                                                            />
-                                                            <ErrorMessage error={errors[`taxRecipient${index}Address`]} />
-                                                        </div>
-
-                                                        <div>
-                                                            <label className="block text-sm font-medium mb-1">
-                                                                Share (%)
-                                                            </label>
-                                                            <div className="flex gap-2 items-end">
-                                                                <div className="flex-1">
-                                                                    <input
-                                                                        type="number"
-                                                                        min="0"
-                                                                        max="100"
-                                                                        step="0.01"
-                                                                        value={recipient.share}
-                                                                        onChange={(e) => {
-                                                                            updateTaxRecipient(recipient.id, 'share', parseFloat(e.target.value) || 0);
-                                                                            clearError(`taxRecipient${index}Share`);
-                                                                            clearError('taxRecipients');
-                                                                        }}
-                                                                        className={`input-text-greish-green ${errors[`taxRecipient${index}Share`] ? 'border-red-500' : ''}`}
-                                                                    />
-                                                                </div>
-                                                                <button
-                                                                    type="button"
-                                                                    onClick={() => removeTaxRecipient(recipient.id)}
-                                                                    className="px-3 py-2 text-red-400 hover:text-red-300 hover:bg-red-500/20 rounded transition-colors border border-transparent h-10 flex items-center justify-center"
-                                                                    title="Remove recipient"
-                                                                >
-                                                                    <Trash2 className="w-4 h-4" />
-                                                                </button>
-                                                            </div>
-                                                            <ErrorMessage error={errors[`taxRecipient${index}Share`]} />
-                                                        </div>
-                                                    </div>
-                                                ))
-                                            )}
-                                        </div>
-                                    </div>
+                                            updateConfig({ taxFee: parsed });
+                                            setTaxFeeInput(parsed.toString());
+                                        }}
+                                        onChange={(e) => {
+                                            const value = e.target.value;
+                                            setTaxFeeInput(value);
+                                            clearError('taxFee');
+                                        }}
+                                        className={`input-text-greish-green ${errors.taxFee ? 'border-red-500' : ''}`}
+                                    />
+                                    <ErrorMessage error={errors.taxFee} />
+                                    <p className="text-sm text-slate-400 mt-1">
+                                        Tax collected will be sent to the contract owner
+                                    </p>
                                 </div>
                             )}
                         </div>
+
+                        {showDownloadSuccess && (
+                            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                                <div className="bg-slate-800 rounded-lg p-8 text-center border border-slate-700 max-w-md animate-success-popup">
+                                    <div className="mb-6 relative">
+                                        <svg width="200" height="140" viewBox="0 0 200 140" className="mx-auto">
+                                            <path d="M30 60 L30 110 Q30 115 35 115 L165 115 Q170 115 170 110 L170 60 Z" fill="#fbbf24" stroke="#f59e0b" strokeWidth="1" />
+                                            <path d="M30 60 L70 60 Q75 60 75 55 L75 50 Q75 45 80 45 L120 45 Q125 45 125 50 L125 55 Q125 60 130 60 L170 60" fill="#f59e0b" stroke="#d97706" strokeWidth="1" />
+                                            <path d="M30 60 L170 60 L170 65 Q170 70 165 70 L35 70 Q30 70 30 65 Z" fill="#f59e0b" className="animate-folder-close" style={{ transformOrigin: "100px 60px" }}></path>
+                                            <g className="animate-paper-folder">
+                                                <rect x="60" y="20" width="80" height="100" fill="#f8fafc" rx="2" stroke="#e2e8f0" strokeWidth="1" />
+                                                <line x1="70" y1="35" x2="130" y2="35" stroke="#3b82f6" strokeWidth="1" />
+                                                <line x1="70" y1="45" x2="130" y2="45" stroke="#3b82f6" strokeWidth="1" />
+                                                <line x1="70" y1="55" x2="120" y2="55" stroke="#3b82f6" strokeWidth="1" />
+                                                <line x1="70" y1="65" x2="125" y2="65" stroke="#3b82f6" strokeWidth="1" />
+                                            </g>
+                                        </svg>
+                                    </div>
+                                    <div className="mb-4">
+                                        <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                                            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                                            </svg>
+                                        </div>
+                                        <p className="text-white text-lg font-medium">Congratulations!</p>
+                                        <p className="text-slate-300 text-sm mt-1">Your contract was downloaded successfully!</p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
                         <div className="text-center mb-8">
                             <button
