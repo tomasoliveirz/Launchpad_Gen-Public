@@ -1,3 +1,4 @@
+using Engine.Services;
 using Moongy.RD.Launchpad.CodeGenerator.Engine.Interfaces;
 using Moongy.RD.Launchpad.CodeGenerator.Engine.Services;
 using Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Generators;
@@ -12,19 +13,22 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Engine
         private readonly IAugmentationService _augmentationService;
         private readonly SoliditySynthesizer _synthesizer;
         private readonly SolidityCodeGenerator _generator;
-
+        private readonly SlitherAnalyzerService _slitherAnalyzerService;    
         public CodeGenerationEngine(
             IExtractionService extractionService,
             ICompositionService compositionService,
             IAugmentationService augmentationService,
             SoliditySynthesizer synthesizer,
-            SolidityCodeGenerator generator)
+            SolidityCodeGenerator generator,
+            SlitherAnalyzerService slitherAnalyzerService
+            )
         {
             _extractionService = extractionService;
             _compositionService = compositionService;
             _augmentationService = augmentationService;
             _synthesizer = synthesizer;
             _generator = generator;
+            _slitherAnalyzerService = slitherAnalyzerService;
         }
 
         public async Task<string> GenerateAsync<TForm>(TForm form) where TForm : class
@@ -38,7 +42,12 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Engine
             // synthesize the context metamodel into a solidity model
             var solidityModel = _synthesizer.Synthesize(moduleFile);
             // generate the solidity code from the solidity model
-            return _generator.Generate(solidityModel);
+            var solidityFile = _generator.Generate(solidityModel); 
+            // Compile solidity code and check for errors
+            var slitherReport = await _slitherAnalyzerService.AnalyzeAsync(solidityFile);
+            Console.WriteLine(slitherReport);
+
+            return solidityFile;
         }
     }
 }

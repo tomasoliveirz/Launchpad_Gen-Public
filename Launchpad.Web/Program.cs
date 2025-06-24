@@ -1,3 +1,4 @@
+using Engine.Services;
 using Moongy.RD.Launchpad.CodeGenerator.Engine.Extensions;
 using Moongy.RD.Launchpad.CodeGenerator.Engine.Interfaces;
 using Moongy.RD.Launchpad.Data.Forms;
@@ -8,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // add code generation engine services
 builder.Services.AddCodeGenerationEngine();
+builder.Services.AddHttpClient<SlitherAnalyzerService>();
 
 var app = builder.Build();
 

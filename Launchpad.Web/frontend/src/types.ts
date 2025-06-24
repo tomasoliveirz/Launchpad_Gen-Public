@@ -23,7 +23,6 @@ export interface TaxRecipient {
 
 export enum AccessControlType {
     Ownable = 0,
-    RoleBased = 1
 }
 
 export interface ApiTaxRecipient {
