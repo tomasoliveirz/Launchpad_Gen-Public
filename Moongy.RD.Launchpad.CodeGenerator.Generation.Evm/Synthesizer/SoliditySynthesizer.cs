@@ -39,7 +39,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
             { "totalSupply", (SolidityFunctionMutabilityEnum.View, true) },
             { "balanceOf", (SolidityFunctionMutabilityEnum.View, true) },
             { "allowance", (SolidityFunctionMutabilityEnum.View, true) },
-            { "transfer", (SolidityFunctionMutabilityEnum.None, true) },
+            { "transfer", (SolidityFunctionMutabilityEnum.Payable, true) },
             { "transferFrom", (SolidityFunctionMutabilityEnum.None, true) },
             { "approve", (SolidityFunctionMutabilityEnum.None, true) },
             { "owner", (SolidityFunctionMutabilityEnum.View, true) },
@@ -197,9 +197,14 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
         private List<string> GenerateConstructorStatements(ModuleDefinition module)
         {
             var constructor = module.Functions.FirstOrDefault(f => f.Kind == FunctionKind.Constructor);
-            if (constructor == null) return new List<string>();
-
-            return ConstructorStatementHelper.GenerateStatements(constructor);
+            var statements = new List<string>();
+            
+            if (constructor != null)
+            {
+                statements = ConstructorStatementHelper.GenerateStatements(constructor);
+            }
+            
+            return statements;
         }
 
         private List<ConstructorParameterModel> GenerateConstructorParameters(ModuleDefinition module)
@@ -250,12 +255,12 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
                         Location = DetermineMemoryLocationForParameter(parameter.Type),
                         AssignedTo = assignedTo
                     };
-                    
+                    Console.WriteLine($"Constructor parameter: {constructorParam.Name}, Type: {constructorParam.Type}, AssignedTo: {constructorParam.AssignedTo}");
                     paramIdx++;
                     result.Add(constructorParam);
                 }
             }
-
+            Console.WriteLine($"Generated {result.Count} constructor parameters.");
             return result;
         }
 
@@ -684,7 +689,6 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
 
         private bool GetMutability(FieldDefinition fieldDefinition)
         {
-            // if max_supply retorna true
             if (fieldDefinition.Name == "_max_supply")
                 return true;
             return false;
@@ -695,8 +699,6 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Synthesizer
 
             if (typeReference.Name == "_totalSupply" ||
                 typeReference.Name == "_allowances" ||
-                typeReference.Name == "_name" ||
-                typeReference.Name == "_symbol" ||
                 typeReference.Name == "_owner" ||
                 typeReference.Name == "_balances" ||
                 typeReference.Name == "_max_supply" ||

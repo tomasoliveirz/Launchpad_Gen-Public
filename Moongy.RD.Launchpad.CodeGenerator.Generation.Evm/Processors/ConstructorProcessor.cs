@@ -30,7 +30,7 @@ public class ConstructorProcessor() : BaseSolidityTemplateProcessor<SolidityCont
         }
         catch (Exception ex)
         {
-            return $"// Error rendering constructor for {model.Name}: {ex.Message}";
+            return $"constructor() {{ /* Error: {ex.Message} */ }}";
         }
     }
 
@@ -127,9 +127,6 @@ public class ConstructorProcessor() : BaseSolidityTemplateProcessor<SolidityCont
 
     private static List<string> TransformArguments(SolidityContractModel model)
     {
-        if (model.ConstructorParameters.Count == 0)
-            return [];
-
         return [.. model.ConstructorParameters
             .OrderBy(p => p.Index)
             .Select(p =>
@@ -183,11 +180,7 @@ public class ConstructorProcessor() : BaseSolidityTemplateProcessor<SolidityCont
 
         foreach (var kvp in immutableAssignments)
         {
-            /*if (kvp.Value == 0)
-            {
-                throw new ArgumentException($"Immutable state variable '{kvp.Key}' must be assigned in the constructor.");
-            }
-            else */if (kvp.Value > 1)
+            if (kvp.Value > 1)
             {
                 throw new ArgumentException($"Immutable state variable '{kvp.Key}' is assigned multiple times.");
             }

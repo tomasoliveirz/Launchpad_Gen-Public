@@ -8,33 +8,8 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
     {
         public FunctionDefinition Build(ulong premintValue, ulong maxSupplyValue)
         {
-            var nameParam = new ParameterDefinition { Name = "name_", Type = DataTypeReference.String };
-            var symbolParam = new ParameterDefinition { Name = "symbol_", Type = DataTypeReference.String };
-            var parameters = new List<ParameterDefinition> { nameParam, symbolParam };
-            
+            var parameters = new List<ParameterDefinition>();
             var body = new List<FunctionStatementDefinition>();
-
-            var nameAssignment = new FunctionStatementDefinition
-            {
-                Kind = FunctionStatementKind.Assignment,
-                ParameterAssignment = new AssignmentDefinition
-                {
-                    Left = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "_name" },
-                    Right = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "name_" }
-                }
-            };
-            body.Add(nameAssignment);
-
-            var symbolAssignment = new FunctionStatementDefinition
-            {
-                Kind = FunctionStatementKind.Assignment,
-                ParameterAssignment = new AssignmentDefinition
-                {
-                    Left = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "_symbol" },
-                    Right = new ExpressionDefinition { Kind = ExpressionKind.Identifier, Identifier = "symbol_" }
-                }
-            };
-            body.Add(symbolAssignment);
             
             if (maxSupplyValue > 0)
             {

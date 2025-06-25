@@ -109,7 +109,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Generators
                         contractBuilder.AppendLine();
                     }
 
-                    if (contract.ConstructorParameters.Any())
+                    if (contract.ConstructorParameters.Any() || contract.ConstructorStatements.Any())
                     {
                         var constructorCode = SolidityTemplateProcessor.Constructor.Render(contract);
                         contractBuilder.AppendLine(AddIndentation(constructorCode));
@@ -153,4 +153,3 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Generators
             }
         }
     }
-

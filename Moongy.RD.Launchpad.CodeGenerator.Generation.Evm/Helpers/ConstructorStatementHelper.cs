@@ -8,7 +8,10 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers
         public static List<string> GenerateStatements(FunctionDefinition constructor)
         {
             var statements = new List<string>();
-            if (constructor?.Body == null) return statements;
+            if (constructor?.Body == null || !constructor.Body.Any()) 
+            {
+                return statements;
+            }
 
             foreach (var statement in constructor.Body)
             {
@@ -38,14 +41,14 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Generation.Evm.Helpers
 
         private static string GenerateAssignmentStatement(AssignmentDefinition assignment, List<ParameterDefinition> constructorParameters)
         {
-            if (IsAutomaticParameterAssignment(assignment, constructorParameters))
-            {
-                return ""; 
-            }
-
             if (IsOwnerAssignment(assignment))
             {
                 return "_owner = msg.sender;";
+            }
+            
+            if (IsAutomaticParameterAssignment(assignment, constructorParameters))
+            {
+                return ""; 
             }
 
             if (assignment.Left?.Kind == ExpressionKind.Identifier)

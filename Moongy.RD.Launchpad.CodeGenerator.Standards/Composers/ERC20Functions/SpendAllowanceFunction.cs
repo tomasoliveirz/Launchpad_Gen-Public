@@ -14,7 +14,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
             var ownerAddress = new ExpressionDefinition 
             { 
                 Kind = ExpressionKind.Identifier,
-                Identifier = "owner" 
+                Identifier = "owner_" 
             };
             var spenderAddress = new ExpressionDefinition 
             { 
@@ -214,7 +214,7 @@ namespace Moongy.RD.Launchpad.CodeGenerator.Standards.Composers.Generator
         {
             var owner = new ParameterDefinition
             {
-                Name = "owner",
+                Name = "owner_",
                 Type = DataTypeReference.Address
             };
             var spender = new ParameterDefinition
